@@ -21,6 +21,7 @@ const ListPost = () => {
 
   return (
     <div>
+      <h1>Recent Posts</h1>
       {posts.map((post) => (
         <Card
           className="post-card"

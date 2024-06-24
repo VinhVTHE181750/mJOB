@@ -70,6 +70,7 @@ const EnlistJob = () => {
     insertJob(jobData);
   };
   
+ 
 /* 
 
        COL 1 | COL 2 | COL 3

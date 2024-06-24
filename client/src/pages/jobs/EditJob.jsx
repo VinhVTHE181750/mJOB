@@ -61,7 +61,7 @@ const EditJob = () => {
           </div>
           <div className="section">
             <h2 className="label">Requirements:</h2>
-            <textarea className="textarea" name="job_requirements" value={job.job_requirements} onChange={handleInputChange} />
+            <textarea rows={4} className="textarea" name="job_requirements" value={job.job_requirements} onChange={handleInputChange} />
           </div>
           <div className="section">
             <h2 className="label">Compensation Type:</h2>
@@ -97,7 +97,7 @@ const EditJob = () => {
           </div>
           <div className="section">
             <h2 className="label">Description:</h2>
-            <textarea className="textarea" name="job_description" value={job.job_description} onChange={handleInputChange} />
+            <textarea rows={5} className="textarea" name="job_description" value={job.job_description} onChange={handleInputChange} />
           </div>
           <div className="section">
             <h2 className="label">Contact Info:</h2>

@@ -19,9 +19,13 @@ const SQL_SELECT_USER = `
 `;
 
 // Login route with 2 params: username and password in the request body
-router.post("/login", async (req, res) => {
+router.get("/login", async (req, res) => {
   // Get params from the request body
-  const { username, password } = req.body;
+// get username and password from req authorization instead
+  const auth = req.headers.authorization;
+  const base64Credentials = auth.split(" ")[1];
+  const credentials = Buffer.from(base64Credentials, "base64").toString("ascii");
+  const [username, password] = credentials.split(":");
   const hash = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
 
   try {

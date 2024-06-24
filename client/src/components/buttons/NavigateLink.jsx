@@ -1,18 +1,18 @@
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 
-const NavigateButton = ({
+const NavigateLink = ({
   path,
   text,
   variant,
   confirm,
   confirmMsg,
   className,
-  action
+  action,
 }) => {
   const navigate = useNavigate();
   return (
-    <Button
+    <a
       className={className}
       variant={variant}
       onClick={() => {
@@ -29,8 +29,8 @@ const NavigateButton = ({
       }}
     >
       {text}
-    </Button>
+    </a>
   );
 };
 
-export default NavigateButton;
+export default NavigateLink;
