@@ -22,6 +22,7 @@ import EnlistJob from "./pages/jobs/EnlistJob";
 import JobDetail from "./pages/jobs/JobDetail";
 import MyJobs from "./pages/jobs/MyJobs";
 import EditJob from "./pages/jobs/EditJob";
+import ConfirmJob from "./pages/jobs/ConfirmJob";
 
 // Technical
 import PageNotFound from "./pages/technical/PageNotFound";
@@ -79,6 +80,7 @@ function App() {
               <Route exact path="/jobs/add" element={<EnlistJob />} />
               <Route exact path="/myjobs" element={<MyJobs />} />
               <Route exact path="/jobs/edit/:id" element={<EditJob />} />
+              <Route path="/confirm-job" element={<ConfirmJob />} />
 
               {/* USERS ROUTES */}
               <Route exact path="/profile" element={<Profile />} />
