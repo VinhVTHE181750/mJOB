@@ -1,5 +1,5 @@
 import useCommentsQuery from "../../hooks/forum/comments/useCommentsQuery";
-import { Pagination, Row } from "react-bootstrap";
+import { Card, Pagination, Row } from "react-bootstrap";
 import "../../assets/css/Forum.css";
 import { useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
@@ -47,13 +47,13 @@ const ListComment = ({ post_id }) => {
   }
 
   return (
-    <div>
+    <div className="border border-primary">
       {currentComments.map((comment) => (
-        <Card>
-          <Row>ID: {comment.comment_id}</Row>
-          <Row>Content: {comment.comment_content}</Row>
-          <Row>Author: {comment.username}</Row>
-        </Card>
+        <div className="border border-secondary">
+          <div>ID: {comment.comment_id}</div>
+          <div>Content: {comment.comment_content}</div>
+          <div>Author: {comment.username}</div>
+        </div>
       ))}
       <Pagination className="justify-content-center mt-4">
         {pageNumbers.map((number) => (

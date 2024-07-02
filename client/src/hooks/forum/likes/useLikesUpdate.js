@@ -3,15 +3,15 @@ import { useState, useEffect } from "react";
 
 const API_URL = "http://localhost:8000/api";
 
-const usePostLikesUpdate = (postId, userId, isDislike) => {
+const useLikesUpdate = (postId, commentId, userId, isDislike) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const updateLikes = async () => {
     try {
-      const url = `${API_URL}/forum/likes/post/`;
+      const url = `${API_URL}/forum/likes/like`;
       const response = await axios.put(url, {
-        postId, userId, isDislike
+        postId, commentId, userId, isDislike
       });
       setLikes(response.data);
       setLoading(false);
@@ -28,4 +28,4 @@ const usePostLikesUpdate = (postId, userId, isDislike) => {
   return { loading, error, updateLikes };
 };
 
-export default usePostLikesUpdate;
+export default useLikesUpdate;

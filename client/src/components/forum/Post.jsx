@@ -8,12 +8,11 @@ import NavigateButton from "../ui/buttons/NavigateButton";
 import usePostDelete from "../../hooks/forum/posts/usePostDelete";
 import { AuthContext } from "../../context/AuthContext";
 import Skeleton from "react-loading-skeleton";
-import usePostLikesQuery from "../../hooks/forum/likes/usePostLikesQuery";
-import usePostLikesUpdate from "../../hooks/forum/likes/usePostLikesUpdate";
-import useIsPostLiked from "../../hooks/forum/likes/useIsPostLiked";
+import useLikesQuery from "../../hooks/forum/likes/useLikesQuery";
+import useLikesUpdate from "../../hooks/forum/likes/useLikesUpdate";
+import useIsLiked from "../../hooks/forum/likes/useIsLiked";
 
 const Post = ({ post_id }) => {
-
   // post related data
   // external userId
   const { userId } = useContext(AuthContext);
@@ -21,20 +20,17 @@ const Post = ({ post_id }) => {
   const navigate = useNavigate();
   const { deletePost } = usePostDelete();
 
-
   // external like state, whether if it is like or dislike
-  const { liked } = useIsPostLiked(post_id, userId);
+  const { liked } = useIsLiked(userId, post_id, null);
 
   // external likes counter
-  const { likes, dislikes } = usePostLikesQuery(post_id);
+  const { likes, dislikes } = useLikesQuery(post_id, null);
 
   // external dislike state (not implemented)
   const [isDislike, setIsDislike] = useState(false);
 
   // external like update function
-  const { updateLikes } = usePostLikesUpdate(post_id, userId, isDislike);
-
-  
+  // const { updateLikes } = usePostLikesUpdate(post_id, userId, isDislike);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -90,7 +86,6 @@ const Post = ({ post_id }) => {
           )}
         </Col>
       </Row>
-
       <Row className="ms-2 mt-2">
         <Row>
           <div className="border">{post.post_content}</div>
@@ -108,7 +103,7 @@ const Post = ({ post_id }) => {
             <Button
               variant={
                 liked
-                  ? isDislike
+                  ? !isDislike
                     ? "success"
                     : "outline-success"
                   : "secondary"

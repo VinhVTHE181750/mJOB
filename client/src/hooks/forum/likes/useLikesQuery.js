@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 const API_URL = "http://localhost:8000/api";
 
-const usePostLikesQuery = (postId) => {
+const useLikesQuery = (postId, commentId) => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -12,18 +12,20 @@ const usePostLikesQuery = (postId) => {
   useEffect(() => {
     const fetchLikes = async () => {
       try {
-        const url = `${API_URL}/forum/likes/post/${postId}`;
+        let url = `${API_URL}/forum/likes`;
+        if (postId) url += `?postId=${postId}`;
+        if (commentId) url += `?commentId=${commentId}`;
         const response = await axios.get(url);
-        setLikes(response.data.likes);
-        setDislikes(response.data.dislikes);
+        setLikes(response.data[0].likes);
+        setDislikes(response.data[0].dislikes);
         setLoading(false);
       } catch (error) {
         // navigate("/error", {
-          // state: {
-          //   message: error.response
-          //     ? error.response.data.message
-          //     : "An error occurred",
-          // },
+        // state: {
+        //   message: error.response
+        //     ? error.response.data.message
+        //     : "An error occurred",
+        // },
         // });
         setError(error);
         setLoading(false);
@@ -36,4 +38,4 @@ const usePostLikesQuery = (postId) => {
   return { likes, dislikes, loading, error };
 };
 
-export default usePostLikesQuery;
+export default useLikesQuery;
