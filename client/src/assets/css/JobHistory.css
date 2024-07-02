@@ -24,3 +24,29 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adding shadow */
 
   }
+  /* .custom-legend {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.legend-label {
+  margin-right: 5px;
+}
+
+.legend-value {
+  font-weight: bold;
+} */
