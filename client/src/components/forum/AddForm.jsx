@@ -26,6 +26,8 @@ const AddForm = () => {
 
     if (result) {
       navigate("/forum");
+    } else {
+      setError("Failed to create post.");
     }
   };
 

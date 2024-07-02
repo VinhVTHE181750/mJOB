@@ -3,7 +3,7 @@ import avatar from "../../assets/img/default_avatar.webp";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Container, Row, Col } from "react-bootstrap";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import NavigateButton from "../ui/buttons/NavigateButton";
 import usePostDelete from "../../hooks/forum/posts/usePostDelete";
 import { AuthContext } from "../../context/AuthContext";
@@ -21,13 +21,10 @@ const Post = ({ post_id }) => {
   const { deletePost } = usePostDelete();
 
   // external like state, whether if it is like or dislike
-  const { liked } = useIsLiked(userId, post_id, null);
+  const { liked, isDislike } = useIsLiked(userId, post_id, null);
 
   // external likes counter
   const { likes, dislikes } = useLikesQuery(post_id, null);
-
-  // external dislike state (not implemented)
-  const [isDislike, setIsDislike] = useState(false);
 
   // external like update function
   // const { updateLikes } = usePostLikesUpdate(post_id, userId, isDislike);
@@ -50,7 +47,60 @@ const Post = ({ post_id }) => {
     }
   };
 
-  if (loading) return <Container className="post"></Container>;
+  if (loading)
+    return (
+      <div className="post">
+        <Row className="post-title">
+          <Col sm={2}>
+            <div className="border">
+              <div>
+                <Skeleton
+                  className="mt-5"
+                  height={100}
+                  width={100}
+                  circle={true}
+                />
+              </div>
+              <div>
+                <Skeleton count={0.5} className="mt-5" />
+              </div>
+              <div>
+                <p className="text-center mx-5">
+                  <Skeleton />
+                </p>
+              </div>
+            </div>
+          </Col>
+          <Col sm={10}>
+            <Row className="mx-5">
+              <h1>
+                <Skeleton count={1.2} />
+              </h1>
+            </Row>
+          </Col>
+        </Row>
+        <Row className="ms-2 mt-4">
+          <Row>
+            <div className="border">
+              <Skeleton count={3.5} />
+            </div>
+          </Row>
+        </Row>
+      </div>
+    );
+
+  if (error) {
+    if (error.response.status === 404) {
+      return <h3>Post not found.</h3>;
+    } else {
+      return (
+        <>
+          <h3>Something went wrong while fetching the post.</h3>
+          <NavigateButton path="/report" text="Report this problem" variant="danger" /> 
+        </>
+      );
+    }
+  }
 
   return (
     <div className="post">
@@ -67,7 +117,7 @@ const Post = ({ post_id }) => {
           </div>
         </Col>
         <Col sm={10}>
-          <Row>
+          <Row className="mx-5">
             <h1>{post.post_title} </h1>
           </Row>
 
@@ -88,7 +138,7 @@ const Post = ({ post_id }) => {
       </Row>
       <Row className="ms-2 mt-2">
         <Row>
-          <div className="border">{post.post_content}</div>
+          <div className="border mt-4">{post.post_content}</div>
         </Row>
         <Row>
           {/* Add a like button */}

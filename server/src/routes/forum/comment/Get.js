@@ -52,6 +52,7 @@ const getComments = async (req, res) => {
 const getCommentById = async (req, res) => {
   try {
     const { id } = req.params;
+    if(id < 1) res.status(400).json({ message: "Invalid ID" });
     const pool = await db.poolPromise;
     const result = await pool
       .request()

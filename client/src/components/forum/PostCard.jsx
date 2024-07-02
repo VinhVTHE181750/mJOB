@@ -17,7 +17,7 @@ const PostCard = ({ post, onClick }) => {
             className="ms-2"
             style={{ textAlign: "right", float: "right", fontSize: "small" }}
           >
-            {views} <span>👁</span> {/* UPDATE */}
+            {post.post_view_count} <span>👁</span> {/* UPDATE */}
           </Card.Text>
           <Card.Text
             className="ms-2"

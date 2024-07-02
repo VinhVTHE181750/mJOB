@@ -1,14 +1,20 @@
 const db = require("../../../models/DBContext");
 
 const SELECT_RECENT_POSTS = `
-SELECT post_id, post_title, post_content, post.user_id, username, post_updated_time
+SELECT post_id, post_title, post_content, post.user_id, post_view_count, username, post_updated_time
 FROM post JOIN [user] ON post.user_id = [user].user_id
 ORDER BY post_updated_time DESC;
 `;
 
 const SELECT_POST_BY_ID = `
-SELECT post_id, post_title, post_content, username, post.user_id, post_updated_time
+SELECT post_id, post_title, post_content, post_view_count, username, post.user_id, post_updated_time
 FROM post JOIN [user] ON post.user_id = [user].user_id
+WHERE post_id = @id;
+`;
+
+const ADD_VIEW_COUNT = `
+UPDATE post
+SET post_view_count = post_view_count + 1
 WHERE post_id = @id;
 `;
 
@@ -27,6 +33,7 @@ const getPostById = async (req, res) => {
     const { id } = req.params;
 
     const pool = await db.poolPromise;
+    await pool.request().input("id", db.sql.Int, id).query(ADD_VIEW_COUNT);
     const result = await pool
       .request()
       .input("id", db.sql.Int, id)

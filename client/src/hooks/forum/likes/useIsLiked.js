@@ -38,7 +38,7 @@ const useIsLiked = (userId, postId, commentId) => {
     fetchLiked();
   }, []);
 
-  return { liked, loading, error };
+  return { liked, isDislike, loading, error };
 };
 
 export default useIsLiked;

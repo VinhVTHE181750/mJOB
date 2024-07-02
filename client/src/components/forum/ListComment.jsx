@@ -1,17 +1,18 @@
 import useCommentsQuery from "../../hooks/forum/comments/useCommentsQuery";
-import { Card, Pagination, Row } from "react-bootstrap";
+import { Form, Button, Card, Pagination, Row } from "react-bootstrap";
 import "../../assets/css/Forum.css";
 import { useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import PostCard from "./PostCard";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 // ...
 
 const ListComment = ({ post_id }) => {
   const navigate = useNavigate();
   const { comments, loading, error } = useCommentsQuery(post_id);
+  const { userId } = useContext(AuthContext);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [commentsPerPage, setCommentsPerPage] = useState(4);
@@ -29,6 +30,12 @@ const ListComment = ({ post_id }) => {
     pageNumbers.push(i);
   }
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    navigate("/login");
+  };
+
+
   if (loading) {
     return (
       <>
@@ -43,16 +50,45 @@ const ListComment = ({ post_id }) => {
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    if (error.response.status === 404) {
+      return (
+        <>
+          <h3>No comments found.</h3>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Leave a comment</Form.Label>
+              <Form.Control as="textarea" rows={3} />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </>
+      );
+    } else {
+      return <h3>Something went wrong while fetching the comments.</h3>;
+    }
   }
 
   return (
-    <div className="border border-primary">
+    <div className="">
+      {comments.length === 0 && (
+        <h3>Be the first to leave a comment on this post!</h3>
+      )}
       {currentComments.map((comment) => (
-        <div className="border border-secondary">
-          <div>ID: {comment.comment_id}</div>
-          <div>Content: {comment.comment_content}</div>
+        <div className="mt-2 border" key={comment.comment_id}>
+          {comment.comment_content}
           <div>Author: {comment.username}</div>
+          {comment.comment_id === userId ? (
+            <>
+              <Button className="mt-2">Edit</Button>
+              <Button variant="danger" className="mt-2">
+                Delete
+              </Button>
+            </>
+          ) : (
+            <Button variant="danger">Report</Button>
+          )}
         </div>
       ))}
       <Pagination className="justify-content-center mt-4">
@@ -66,6 +102,15 @@ const ListComment = ({ post_id }) => {
           </Pagination.Item>
         ))}
       </Pagination>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label>Leave a comment</Form.Label>
+          <Form.Control as="textarea" rows={3} />
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
     </div>
   );
 };

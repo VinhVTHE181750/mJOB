@@ -24,7 +24,6 @@ const useCommentsQuery = (post_id) => {
     };
 
     fetchComments();
-
   }, []);
 
   return { comments, loading, error };
