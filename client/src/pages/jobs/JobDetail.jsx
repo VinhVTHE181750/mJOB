@@ -197,7 +197,7 @@ const JobDetail = () => {
         </Section>
         <Section>
           <Label>Compensation:</Label>
-          <Text>Type: {job.job_compensation_types}</Text>
+          <Text>Type: {job.job_compensation_type}</Text>
           <Text>Amount: {job.job_compensation_amounts} {job.job_compensation_currencies} per {job.job_compensation_periods}</Text>
         </Section>
         <Section>

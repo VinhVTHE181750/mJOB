@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
     job_end_date,
     job_number_of_recruits,
     job_requirements,
-    job_compensation_types,
+    job_compensation_type,
     job_compensation_amounts ,
     job_compensation_currencies ,
     job_compensation_periods ,
@@ -71,14 +71,14 @@ router.post('/', async (req, res) => {
     .input('job_end_date', sql.Date, job_end_date)
     .input('job_number_of_recruits', sql.Int, job_number_of_recruits)
     .input('job_requirements', sql.NVarChar, job_requirements)
-    .input('job_compensation_types', sql.NVarChar, job_compensation_types)
+    .input('job_compensation_type', sql.NVarChar, job_compensation_type)
     .input('job_compensation_amounts', sql.NVarChar, job_compensation_amounts)
     .input('job_compensation_currencies', sql.NVarChar, job_compensation_currencies)
     .input('job_compensation_periods', sql.NVarChar, job_compensation_periods)
     .input('job_custom_iterations', sql.NVarChar, job_custom_iterations)
       .query(`
-        INSERT INTO job (user_id, job_title, job_work_location, job_tags, job_max_applications, job_approval_method, job_description, job_contact_info, job_start_date, job_end_date, job_number_of_recruits, job_requirements, job_compensation_types, job_compensation_amounts, job_compensation_currencies, job_compensation_periods, job_custom_iterations)
-        VALUES (@user_id, @job_title,  @job_work_location, @job_tags, @job_max_applications, @job_approval_method,  @job_description, @job_contact_info, @job_start_date, @job_end_date, @job_number_of_recruits, @job_requirements, @job_compensation_types, @job_compensation_amounts, @job_compensation_currencies, @job_compensation_periods, @job_custom_iterations);
+        INSERT INTO job (user_id, job_title, job_work_location, job_tags, job_max_applications, job_approval_method, job_description, job_contact_info, job_start_date, job_end_date, job_number_of_recruits, job_requirements, job_compensation_type, job_compensation_amounts, job_compensation_currencies, job_compensation_periods, job_custom_iterations)
+        VALUES (@user_id, @job_title,  @job_work_location, @job_tags, @job_max_applications, @job_approval_method,  @job_description, @job_contact_info, @job_start_date, @job_end_date, @job_number_of_recruits, @job_requirements, @job_compensation_type, @job_compensation_amounts, @job_compensation_currencies, @job_compensation_periods, @job_custom_iterations);
       `);
 
     res.status(201).send({ message: 'Job successfully inserted' });
@@ -102,7 +102,7 @@ router.put('/update', async (req, res) => {
     job_end_date,
     job_number_of_recruits,
     job_requirements,
-    job_compensation_types,
+    job_compensation_type,
     job_compensation_amounts ,
     job_compensation_currencies ,
     job_compensation_periods ,
@@ -130,7 +130,7 @@ router.put('/update', async (req, res) => {
     .input('job_end_date', sql.Date, job_end_date)
     .input('job_number_of_recruits', sql.Int, job_number_of_recruits)
     .input('job_requirements', sql.NVarChar, job_requirements)
-    .input('job_compensation_types', sql.NVarChar, job_compensation_types)
+    .input('job_compensation_type', sql.NVarChar, job_compensation_type)
     .input('job_compensation_amounts', sql.NVarChar, job_compensation_amounts)
     .input('job_compensation_currencies', sql.NVarChar, job_compensation_currencies)
     .input('job_compensation_periods', sql.NVarChar, job_compensation_periods)
@@ -148,7 +148,7 @@ router.put('/update', async (req, res) => {
         job_end_date = @job_end_date,
         job_number_of_recruits = @job_number_of_recruits,
         job_requirements = @job_requirements,
-        job_compensation_types = @job_compensation_types,
+        job_compensation_type = @job_compensation_type,
         job_compensation_amounts = @job_compensation_amounts,
         job_compensation_currencies = @job_compensation_currencies,
         job_compensation_periods = @job_compensation_periods,
@@ -177,7 +177,7 @@ router.post('/upload', async (req, res) => {
     const fileArray = Array.isArray(files) ? files : [files];
 
     // Ensure the uploads directory exists
-    const uploadDir = path.join(__dirname, '..', 'client', 'src', 'assets' , 'uploads');
+    const uploadDir = path.join(__dirname,  'uploads');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }

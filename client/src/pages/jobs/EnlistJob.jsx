@@ -18,7 +18,7 @@ const EnlistJob = () => {
     job_number_of_recruits: '',
     job_start_date: '',
     job_end_date: '',
-    job_compensation_types: '',
+    job_compensation_type: '',
     //isChecked: false,
     job_compensation_amounts: '',
     job_compensation_currencies: '',
@@ -231,8 +231,8 @@ return (
               <Form.Label>Compensation type</Form.Label>
               <Form.Control 
                 as="select" 
-                name="job_compensation_types"
-                value={formValues.job_compensation_types}
+                name="job_compensation_type"
+                value={formValues.job_compensation_type}
                 onChange={handleChange}
               >
                 <option>One-time</option>
