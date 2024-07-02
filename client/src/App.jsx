@@ -24,6 +24,7 @@ import MyJobs from "./pages/jobs/MyJobs";
 import EditJob from "./pages/jobs/EditJob";
 import ConfirmJob from "./pages/jobs/ConfirmJob";
 
+
 // Technical
 import PageNotFound from "./pages/technical/PageNotFound";
 import Dashboard from "./pages/home/Dashboard";
@@ -81,6 +82,7 @@ function App() {
               <Route exact path="/myjobs" element={<MyJobs />} />
               <Route exact path="/jobs/edit/:id" element={<EditJob />} />
               <Route path="/confirm-job" element={<ConfirmJob />} />
+
 
               {/* USERS ROUTES */}
               <Route exact path="/profile" element={<Profile />} />

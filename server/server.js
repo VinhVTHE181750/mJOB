@@ -48,6 +48,9 @@ app.use("/api/marketing", marketingRoute);
 const dataPostRoute = require("./src/routes/datapost");
 app.use("/api/datapost", dataPostRoute);
 
+const hotJobRoute = require("./src/routes/job/top3job");
+app.use("/api/jobs/top3", hotJobRoute);
+
 const ticketRoute = require("./src/routes/ticket");
 app.use("/api/ticket", ticketRoute);
 
@@ -60,7 +63,11 @@ app.use("/api/dashboard/count/user/active", countActiveUserRoute);
 const jobsRoute = require("./src/routes/jobs");
 app.use("/api/jobs", jobsRoute);
 
+const dashboardRoute = require("./src/routes/Dashboard");
+app.use("/api/myjobs", dashboardRoute);
 
+const jobListRoute = require("./src/routes/JobList");
+app.use("/api/joblist", jobListRoute);
 
 // Start the server, if port is already in use, try the next port
 var port = config.boot.port;
