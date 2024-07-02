@@ -9,87 +9,39 @@ import usePostDelete from "../../hooks/forum/posts/usePostDelete";
 import { AuthContext } from "../../context/AuthContext";
 import Skeleton from "react-loading-skeleton";
 import usePostLikesQuery from "../../hooks/forum/likes/usePostLikesQuery";
+import usePostLikesUpdate from "../../hooks/forum/likes/usePostLikesUpdate";
+import useIsPostLiked from "../../hooks/forum/likes/useIsPostLiked";
 
 const Post = ({ post_id }) => {
-  const [hasRecentChanges, setHasRecentChanges] = useState(false);
+
+  // post related data
+  // external userId
+  const { userId } = useContext(AuthContext);
+  const { post, loading, error } = usePostDetail(post_id);
+  const navigate = useNavigate();
+  const { deletePost } = usePostDelete();
+
+
+  // external like state, whether if it is like or dislike
+  const { liked } = useIsPostLiked(post_id, userId);
+
+  // external likes counter
+  const { likes, dislikes } = usePostLikesQuery(post_id);
+
+  // external dislike state (not implemented)
+  const [isDislike, setIsDislike] = useState(false);
+
+  // external like update function
+  const { updateLikes } = usePostLikesUpdate(post_id, userId, isDislike);
+
+  
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  useEffect(() => {
-    let timer;
-    let logTimer;
-    if (hasRecentChanges) {
-      timer = setTimeout(() => {
-        setHasRecentChanges(false);
-        if(liked) {
-          setLiked(false);
-          setLikes(likes - 1);
-        } else if (disliked) {
-          setDisliked(false);
-          setDislikes(dislikes - 1);
-        }
-      }, 5000);
-
-      let seconds = 0;
-      logTimer = setInterval(() => {
-        seconds += 1;
-        console.log(`Timer: ${seconds}s`);
-      }, 1000);
-    }
-    // Cleanup function to clear the timers if the component unmounts
-    return () => {
-      clearTimeout(timer);
-      clearInterval(logTimer);
-    };
-  }, [hasRecentChanges]);
-
-  const navigate = useNavigate();
-  const { post, loading, error } = usePostDetail(post_id);
-  const { deletePost } = usePostDelete();
-  const { userId } = useContext(AuthContext);
-
-  const [likes, setLikes] = useState(10);
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
-  // const [likes, setLikes] = useState(0);
-  const [dislikes, setDislikes] = useState(0);
-
-  const handleLike = () => {
-    setHasRecentChanges(true);
-    // console.log(postLikes);
-    // if already liked, remove like
-    // if disliked, remove dislike and add like
-    // if not liked, add like
-    if (liked) {
-      setLiked(false);
-      setLikes(likes - 1);
-    } else {
-      if (disliked) {
-        setDisliked(false);
-        setDislikes(dislikes - 1);
-      }
-      setLiked(true);
-      setLikes(likes + 1);
-    }
-  };
-
-  const handleDislike = () => {
-    // if already disliked, remove dislike
-    // if liked, remove like and add dislike
-    // if not disliked, add dislike
-    if (disliked) {
-      setDisliked(false);
-      setDislikes(dislikes - 1);
-    } else {
-      if (liked) {
-        setLiked(false);
-        setLikes(likes - 1);
-      }
-      setDisliked(true);
-      setDislikes(dislikes + 1);
-    }
+  const handleLike = (isDislike) => {
+    updateLikes(isDislike);
   };
 
   const handleDeletePost = async () => {
@@ -147,14 +99,20 @@ const Post = ({ post_id }) => {
           {/* Add a like button */}
           <div className="d-flex justify-content-end mt-2 gap-2">
             <Button
-              variant={disliked ? "danger" : "outline-danger"}
-              onClick={() => handleDislike()}
+              variant={
+                liked ? (isDislike ? "danger" : "outline-danger") : "secondary"
+              }
             >
               {dislikes} 👎
             </Button>
             <Button
-              variant={liked ? "success" : "outline-success"}
-              onClick={() => handleLike()}
+              variant={
+                liked
+                  ? isDislike
+                    ? "success"
+                    : "outline-success"
+                  : "secondary"
+              }
             >
               {likes} 👍
             </Button>
