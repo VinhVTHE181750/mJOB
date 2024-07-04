@@ -4,9 +4,7 @@ const router = express.Router();
 
 // GET without parameter
 router.get("/", async (req, res) => {
-  const { input } = req.body;
-  const { passBlacklist } = require("../validators/StringBlacklist");
-  res.json({ message: "Hello, World!", passBlacklist: passBlacklist(input) });
+  res.status(200).send("Hello, world! 123");
 });
 
 module.exports = router;
