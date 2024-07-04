@@ -26,7 +26,7 @@ const isPhoneNumber = (value, locale) => {
   }
 };
 
-const isValidCardNumber = (number) => {
+const isCreditCardNumber = (number) => {
   //Check if the number contains only numeric value
   //and is of between 13 to 19 digits
   const regex = new RegExp("^[0-9]{13,19}$");
@@ -66,4 +66,11 @@ const luhnCheck = (val) => {
 
   //Check if it is divisible by 10 or not.
   return checksum % 10 == 0;
+};
+
+module.exports = {
+  isNumeric,
+  isInteger,
+  isPhoneNumber,
+  isCreditCardNumber,
 };
