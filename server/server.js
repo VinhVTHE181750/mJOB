@@ -73,40 +73,41 @@ app.use("/api/myjobs", dashboardRoute);
 const jobListRoute = require("./src/routes/JobList");
 app.use("/api/joblist", jobListRoute);
 
-const { passwordComplexity } = require("./src/validators/StringValidator");
-
-const testRoute = async (req, res) => {
-  const password = req.body.password;
-  if (!password) {
-    res.status(400).json({ error: "Password is required" });
-  } else {
-    const response = {
-      password: password,
-      length: password.length,
-      complexity: passwordComplexity(password),
-    };
-    res.status(200).json(response);
-  }
-};
+const testRoute = require("./src/routes/test");
 app.use("/api/test", testRoute);
 
 // Start the server, if port is already in use, try the next port
-var port = config.boot.port;
-app
-  .listen(port, () => {
-    console.log(`(server.js) Server is running on port ${port}`);
-  })
-  .on("error", (err) => {
-    const maxTries = config.boot.maxBootRetries;
-    if (err.code === "EADDRINUSE") {
-      console.log(
-        `(server.js) Port ${port} is already in use. Trying the next port...`
-      );
-      port++;
-      app.listen(port, () => {
-        console.log(`(server.js) Server is running on port ${port}`);
+async function startServer() {
+  var port = config.boot.port;
+  var delay = config.boot.retryDelay;
+
+  while (true) {
+    try {
+      await new Promise((resolve, reject) => {
+        const server = app.listen(port, () => {
+          console.log(`(server.js) Server is running on port ${port}`);
+          resolve(server);
+        });
+
+        server.on("error", (err) => {
+          if (err.code === "EADDRINUSE") {
+            console.log(
+              `(server.js) Port ${port} is already in use. Trying the next port...`
+            );
+            port++;
+          } else {
+            console.log(`Unexpected error: ${err}. Retrying in ${delay}s...`);
+          }
+          reject(err);
+        });
       });
-    } else {
-      console.error(`(server.js) Failed to start server: ${err}`);
+      break; // If server starts successfully, break the loop
+    } catch (err) {
+      // Wait for delay milliseconds before next iteration in case of an error
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
-  });
+  }
+}
+
+// Call your function
+startServer();

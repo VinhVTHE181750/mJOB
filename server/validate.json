@@ -1,0 +1,15 @@
+{
+  "string": {
+    "enable-blacklist": true,
+    "tolerance": 3,
+    "use-database": false,
+    "columns": {
+      "blocked-words": "words",
+      "blocked-regex": "regex"
+    },
+    "fallback": {
+      "blocked-words": ["bad", "evil", "nasty", ""],
+      "blocked-regex": ["*.cc", "[a-z].com"]
+    }
+  }
+}
