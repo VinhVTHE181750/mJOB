@@ -1,14 +1,14 @@
 const express = require("express");
-const db = require("../models/DBContext");
+const db = require("../../models/DBContext");
 
 const router = express.Router();
 
-const SELECT_POSTS_CONTENT = "SELECT TOP 3 p.post_id, p.post_title, p.post_content, u.username FROM post p JOIN auth u ON p.user_id = u.user_id";
+const SELECT_TOP3_JOBS=`select TOP 3 * from job j join job_view jv on j.job_id=jv.job_id order by jv.job_view desc;`
 
 router.get("/", async (req, res) => {
   try {
     const pool = await db.poolPromise;
-    const result = await pool.request().query(SELECT_POSTS_CONTENT);
+    const result = await pool.request().query(SELECT_TOP3_JOBS);
     res.json(result.recordset);
   } catch (err) {
     console.log(err);
