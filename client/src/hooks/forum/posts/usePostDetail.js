@@ -8,7 +8,6 @@ const usePostDetail = (id) => {
   const [post, setPost] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -23,7 +22,7 @@ const usePostDetail = (id) => {
       }
     };
     fetchPost();
-  }, []);
+  }, [id]);
   return { post, loading, error };
 };
 
