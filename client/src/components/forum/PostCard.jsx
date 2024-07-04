@@ -2,35 +2,22 @@ import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { getMoment } from "../../functions/Converter";
 import { useState } from "react";
+import ViewCount from "./micro/ViewCount";
+import CommentCount from "./micro/CommentCount";
+import LikeCount from "./micro/LikeCount";
 
 const PostCard = ({ post, onClick }) => {
-  const [likes] = useState(20);
-  const [dislikes] = useState(2);
-  const [comments] = useState(5);
-  const [views] = useState(100);
+  const [likes] = useState(0);
+  const [dislikes] = useState(0);
+  const [comments] = useState(0);
   return (
     <Card className="post-card" key={post.id} onClick={onClick}>
       <Card.Body>
         <Card.Title as="h2" className="post-card-title">
           {post.post_title}
-          <Card.Text
-            className="ms-2"
-            style={{ textAlign: "right", float: "right", fontSize: "small" }}
-          >
-            {post.post_view_count} <span>👁</span> {/* UPDATE */}
-          </Card.Text>
-          <Card.Text
-            className="ms-2"
-            style={{ textAlign: "right", float: "right", fontSize: "small" }}
-          >
-            {comments} <span>💬</span> {/* UPDATE */}
-          </Card.Text>
-          <Card.Text
-            className="ms-2"
-            style={{ textAlign: "right", float: "right", fontSize: "small" }}
-          >
-            {likes - dislikes} <span>👎👍</span> {/* UPDATE */}
-          </Card.Text>
+          <ViewCount postId={post.post_id} />
+          <CommentCount postId={post.post_id} />
+          <LikeCount postId={post.post_id} />
         </Card.Title>
         <Card.Text className="post-card-content">{post.post_content}</Card.Text>
 
