@@ -4,11 +4,11 @@ const DELETE_POST = `DELETE FROM post WHERE post_id = @post_id;`;
 
 const deleteById = async (req, res) => {
   try {
-    const { post_id } = req.body;
+    const { id } = req.params;
     const pool = await db.poolPromise;
     const result = await pool
       .request()
-      .input("post_id", db.sql.Int, post_id)
+      .input("post_id", db.sql.Int, id)
       .query(DELETE_POST);
     if (result.rowsAffected[0] === 0) {
       res.status(404).send();
@@ -21,5 +21,5 @@ const deleteById = async (req, res) => {
 };
 
 module.exports = {
-  deleteById
-}
+  deleteById,
+};
