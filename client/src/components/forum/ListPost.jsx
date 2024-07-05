@@ -31,7 +31,6 @@ const ListPost = () => {
 
   if (loading) {
     return <>
-      <Skeleton height={50} count={0.2} className="mt-2"/>
       <Skeleton height={160} className="mt-2"/>
       <Skeleton height={160} className="mt-2"/>
       <Skeleton height={160} className="mt-2"/>
@@ -51,9 +50,9 @@ const ListPost = () => {
       {currentPosts.map((post) => (
         <PostCard key={post.post_id} post={post} onClick={() => navigate(`/posts/${post.post_id}`)}/>
       ))}
-      <Pagination className="justify-content-center mt-4">
+      <Pagination className="justify-content-center mt-2">
         {pageNumbers.map(number => (
-          <Pagination.Item key={number} onClick={() => paginate(number)} active={number === currentPage}>
+          <Pagination.Item className="px-0" key={number} onClick={() => paginate(number)} active={number === currentPage}>
             {number}
           </Pagination.Item>
         ))}

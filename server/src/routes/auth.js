@@ -52,7 +52,7 @@ router.get("/login", async (req, res) => {
       res.status(400).json({ message: "Username does not exist" });
     }
   } catch (err) {
-    res.status(500).json({ message: "Register failed." });
+    res.status(500).json({ message: "Login failed." });
   }
 });
 
@@ -78,7 +78,7 @@ router.post("/register", async (req, res) => {
       res.status(201).json({ message: "User created successfully" });
     }
   } catch (err) {
-    res.status(500).json({ message: "Login failed." });
+    res.status(500).json({ message: "Register failed." });
   }
 });
 

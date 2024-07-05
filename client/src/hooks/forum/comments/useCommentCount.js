@@ -4,34 +4,26 @@ import { useNavigate } from "react-router";
 
 const API_URL = "http://localhost:8000/api";
 
-const useCommentDetail = (id) => {
+const useCommentCount = (id) => {
   const [comment, setComment] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchComment = async () => {
       try {
-        const url = `${API_URL}/forum/comments/${id}`;
+        const url = `${API_URL}/forum/comments/count/${id}`;
         const response = await axios.get(url);
         setComment(response.data);
         setLoading(false);
       } catch (error) {
-        navigate("/error", {
-          state: {
-            message: error.response
-              ? error.response.data.message
-              : "An error occurred",
-          },
-        });
         setError(error);
         setLoading(false);
       }
     };
     fetchComment();
-  }, []);
+  }, [id]);
   return { comment, loading, error };
 };
 
-export default useCommentDetail;
+export default useCommentCount;
