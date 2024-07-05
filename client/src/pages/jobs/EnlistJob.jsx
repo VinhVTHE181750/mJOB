@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import '../../assets/css/EnlistJob.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Button, Row, Form, Col } from 'react-bootstrap';
-import backgroundImg from '../../assets/img/Stole.jpg'; 
+import { Container, Button, Row, Form, Col,} from 'react-bootstrap';
 import useJobInsert from "../../hooks/useJobInsert.js";
 const EnlistJob = () => {
   const [additionalRequirements, setAdditionalRequirements] = useState([]);
@@ -82,8 +81,7 @@ ROW 3  TAGS
 */
 
 return (
-  <>
-    <img src={backgroundImg} alt="Image" className="background-img"/>
+ 
     <Container className='container'>
       <Form className='form' onSubmit={handleSubmit}>
         <Button href="/" className='back-button'>Back</Button>
@@ -344,7 +342,7 @@ return (
         {success && <p className="success-message">Job successfully enlisted!</p>}
       </Form>
     </Container>
-  </>
+  
 );
 };
 
