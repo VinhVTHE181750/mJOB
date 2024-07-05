@@ -10,15 +10,20 @@
     },
     "rateLimiter": {
       "windowMs": 60000,
-      "max": 100
+      "max": 10000
     }
   },
 
   "database": {
     "user": "sa",
-    "password": "123",
+    "password": "1400",
     "server": "localhost",
-    "database": "mJOB",
-    "encrypt": false
+    "database": "mJob",
+    "schema": "dbo",
+    "encrypt": false,
+    "pool": {
+      "max": 8,
+      "min": 0
+    }
   }
 }

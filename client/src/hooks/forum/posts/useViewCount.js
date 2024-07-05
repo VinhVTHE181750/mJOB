@@ -4,26 +4,27 @@ import { useNavigate } from "react-router";
 
 const API_URL = "http://localhost:8000/api";
 
-const usePostDetail = (id) => {
-  const [post, setPost] = useState([]);
+const useViewCount = (id) => {
+  const [view, setView] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchPost = async () => {
+    const fetchView = async () => {
       try {
-        const url = `${API_URL}/forum/posts/${id}`;
+        const url = `${API_URL}/forum/posts/views/${id}`;
         const response = await axios.get(url);
-        setPost(response.data);
+        setView(response.data);
         setLoading(false);
       } catch (error) {
         setError(error);
         setLoading(false);
       }
     };
-    fetchPost();
+    fetchView();
   }, [id]);
-  return { post, loading, error };
+
+  return { view, loading, error };
 };
 
-export default usePostDetail;
+export default useViewCount;
