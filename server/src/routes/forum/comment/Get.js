@@ -36,7 +36,7 @@ const getComments = async (req, res) => {
         .query(SELECT_COMMENTS_BY_POST_ID);
       // if length == 0 return 404
       if (result.recordset.length === 0) {
-        return res.status(404);
+        return res.status(404).json({ message: "No comments found" });
       } else return res.status(200).json(result.recordset);
     }
 
@@ -47,7 +47,7 @@ const getComments = async (req, res) => {
         .input("id", db.sql.Int, id)
         .query(SELECT_COMMENT_BY_ID);
       if (result.recordset.length === 0) {
-        return res.status(404);
+        return res.status(404).json({ message: "No comment found" });
       } else return res.status(200).json(result.recordset);
     }
   } catch (err) {
