@@ -1,7 +1,8 @@
 {
   "boot": {
     "port": 8000,
-    "maxRetries": 3
+    "maxRetries": 3,
+    "retryDelay": 6000
   },
 
   "middleware": {
