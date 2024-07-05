@@ -49,6 +49,8 @@ import React from "react";
 // import ErrorPage from "./pages/error/ErrorPage";
 import CreateTicketPage from "./pages/user/CreateTicket";
 import { AuthProvider } from "./context/AuthContext";
+import Balance from "./pages/payment/micro/Balance";
+import PaymentPortal from "./pages/payment/PaymentPortal";
 
 function App() {
   return (
@@ -82,6 +84,9 @@ function App() {
               <Route exact path="/myjobs" element={<MyJobs />} />
               <Route exact path="/jobs/edit/:id" element={<EditJob />} />
               <Route path="/confirm-job" element={<ConfirmJob />} />
+
+              {/* PAYMENT ROUTES */}
+              <Route exact path="/payment" element={<PaymentPortal />} />
 
 
               {/* USERS ROUTES */}
