@@ -206,6 +206,49 @@ router.post('/upload', async (req, res) => {
     res.status(500).send({ error: 'An error occurred while uploading files' });
   }
 });
+router.get('/job-requirements/:job_id', async (req, res) => {
+  const { job_id } = req.params;
+
+  try {
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('job_id', sql.Int, job_id)
+      .query(`
+        SELECT requirement_id, job_requirement
+        FROM job_requirement
+        WHERE job_id = @job_id
+      `);
+
+    res.send(result.recordset);
+  } catch (err) {
+    console.error('Error fetching job requirements:', err);
+    res.status(500).send({ error: 'Error fetching job requirements' });
+  }
+});
+
+router.get('/download/:file_name', (req, res) => {
+  const { file_name } = req.params;
+  const file_path = path.join(__dirname, 'uploads', file_name);
+  
+  res.download(file_path, (err) => {
+    if (err) {
+      console.error('Error downloading file:', err);
+      res.status(500).send('Error downloading file');
+    }
+  });
+});
+router.get('/images/:file_name', (req, res) => {
+  const { file_name } = req.params;
+  const file_path = path.join(__dirname, 'uploads', file_name);
+  
+  res.sendFile(file_path, (err) => {
+    if (err) {
+      console.error('Error fetching image:', err);
+      res.status(500).send('Error fetching image');
+    }
+  });
+});
+
 
 
 router.get("/:id", async (req, res) => {
