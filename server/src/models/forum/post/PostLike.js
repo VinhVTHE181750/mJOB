@@ -1,11 +1,11 @@
 const { Model, DataTypes } = require("sequelize");
-const sequelize = require("./SQLize"); // adjust this path to your sequelize instance
+const { sequelize } = require("../../SQLize");
 
 class PostLike extends Model {}
 
 PostLike.init(
   {
-    like: DataTypes.BOOLEAN,
+    isDislike: DataTypes.BOOLEAN,
   },
   {
     sequelize,

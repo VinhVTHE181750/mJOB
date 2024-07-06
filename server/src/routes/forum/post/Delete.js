@@ -1,4 +1,4 @@
-const Post = require("../../../models/Post");
+const Post = require("../../../models/forum/post/Post");
 
 const deleteById = async (req, res) => {
   try {
@@ -15,6 +15,7 @@ const deleteById = async (req, res) => {
     }
 
     await post.destroy();
+    
 
     res.status(200).send();
   } catch (err) {

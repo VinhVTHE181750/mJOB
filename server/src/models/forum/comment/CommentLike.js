@@ -1,7 +1,5 @@
 const { Model, DataTypes } = require("sequelize");
-const sequelize = require("./SQLize"); // adjust this path to your sequelize instance
-const Comment = require("./Comment"); // adjust this path to your Comment model
-const Post = require("./Post");
+const { sequelize } = require("../../SQLize");
 
 class CommentLike extends Model {}
 

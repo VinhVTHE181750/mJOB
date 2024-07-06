@@ -1,6 +1,3 @@
-const { pool } = require("mssql");
-const db = require("../../../models/DBContext");
-
 const INSERT_POST = `
 INSERT INTO post (post_title, post_content, user_id, post_status) 
 OUTPUT INSERTED.post_id

@@ -41,4 +41,7 @@ sequelize.sync();
 
 // sequelize.sync( force = true, alter = true, logging = console.log);
 
-module.exports = sequelize;
+module.exports = {
+  sequelize,
+  Sequelize,
+};
