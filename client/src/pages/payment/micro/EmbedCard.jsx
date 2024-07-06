@@ -30,8 +30,8 @@ const EmbedCard = ({
   return (
     <div style={cardStyle}>
       <div className="card-body">
-        <h5 className="card-title">{title}</h5>
-        <p className="card-text">{content}</p>
+        <div className="card-title">{title}</div>
+        <div className="card-text">{content}</div>
       </div>
       <div className="card-footer">{footer}</div>
     </div>
