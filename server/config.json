@@ -1,7 +1,8 @@
 {
   "boot": {
     "port": 8000,
-    "maxRetries": 3
+    "maxRetries": 3,
+    "retryDelay": 5000
   },
 
   "middleware": {
@@ -10,7 +11,7 @@
     },
     "rateLimiter": {
       "windowMs": 60000,
-      "max": 100
+      "max": 10000
     }
   },
 
@@ -24,9 +25,7 @@
     "encrypt": false,
     "pool": {
       "max": 8,
-      "min": 0,
-      "idle": 10000,
-      "acquire": 30000
+      "min": 0
     }
   }
 }

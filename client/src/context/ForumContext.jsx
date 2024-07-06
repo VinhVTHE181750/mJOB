@@ -6,7 +6,9 @@ const ForumProvider = ({ children }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPostID, setSelectedPostID] = useState(null);
-  const [seletecdPost, setSelectedPost] = useState(null);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState({});
+  
   return (
     <ForumContext.Provider
       value={{

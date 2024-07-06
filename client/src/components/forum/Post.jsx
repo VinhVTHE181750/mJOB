@@ -3,59 +3,38 @@ import avatar from "../../assets/img/default_avatar.webp";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Container, Row, Col } from "react-bootstrap";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import NavigateButton from "../ui/buttons/NavigateButton";
 import usePostDelete from "../../hooks/forum/posts/usePostDelete";
 import { AuthContext } from "../../context/AuthContext";
 import Skeleton from "react-loading-skeleton";
+import useLikesQuery from "../../hooks/forum/likes/useLikesQuery";
+import useLikesUpdate from "../../hooks/forum/likes/useLikesUpdate";
+import useIsLiked from "../../hooks/forum/likes/useIsLiked";
 
 const Post = ({ post_id }) => {
+  // post related data
+  // external userId
+  const { userId } = useContext(AuthContext);
+  const { post, loading, error } = usePostDetail(post_id);
+  const navigate = useNavigate();
+  const { deletePost } = usePostDelete();
+
+  // external like state, whether if it is like or dislike
+  const { liked, isDislike } = useIsLiked(userId, post_id, null);
+
+  // external likes counter
+  const { likes, dislikes } = useLikesQuery(post_id, null);
+
+  // external like update function
+  // const { updateLikes } = usePostLikesUpdate(post_id, userId, isDislike);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const navigate = useNavigate();
-  const { post, loading, error } = usePostDetail(post_id);
-  const { deletePost } = usePostDelete();
-  const { userId } = useContext(AuthContext);
- 
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
-  const [likes, setLikes] = useState(0);
-  const [dislikes, setDislikes] = useState(0);
-
-  const handleLike = () => {
-    // if already liked, remove like
-    // if disliked, remove dislike and add like
-    // if not liked, add like
-    if(liked) {
-      setLiked(false);
-      setLikes(likes - 1);
-    } else {
-      if(disliked) {
-        setDisliked(false);
-        setDislikes(dislikes - 1);
-      }
-      setLiked(true);
-      setLikes(likes + 1);
-    }
-  };
-
-  const handleDislike = () => {
-    // if already disliked, remove dislike
-    // if liked, remove like and add dislike
-    // if not disliked, add dislike
-    if(disliked) {
-      setDisliked(false);
-      setDislikes(dislikes - 1);
-    } else {
-      if(liked) {
-        setLiked(false);
-        setLikes(likes - 1);
-      }
-      setDisliked(true);
-      setDislikes(dislikes + 1);
-    }
+  const handleLike = (isDislike) => {
+    updateLikes(isDislike);
   };
 
   const handleDeletePost = async () => {
@@ -68,11 +47,64 @@ const Post = ({ post_id }) => {
     }
   };
 
-  if (loading) return <Container className="post"></Container>;
+  if (loading)
+    return (
+      <div className="post">
+        <Row className="post-title">
+          <Col sm={2}>
+            <div className="border">
+              <div>
+                <Skeleton
+                  className="mt-5"
+                  height={100}
+                  width={100}
+                  circle={true}
+                />
+              </div>
+              <div>
+                <Skeleton count={0.5} className="mt-5" />
+              </div>
+              <div>
+                <p className="text-center mx-5">
+                  <Skeleton />
+                </p>
+              </div>
+            </div>
+          </Col>
+          <Col sm={10}>
+            <Row className="mx-5">
+              <h1>
+                <Skeleton count={1.2} />
+              </h1>
+            </Row>
+          </Col>
+        </Row>
+        <Row className="ms-2 mt-4">
+          <Row>
+            <div className="border">
+              <Skeleton count={3.5} />
+            </div>
+          </Row>
+        </Row>
+      </div>
+    );
+
+  if (error) {
+    if (error.response.status === 404) {
+      return <h3>Post not found.</h3>;
+    } else {
+      return (
+        <>
+          <h3>Something went wrong while fetching the post.</h3>
+          <NavigateButton path="/report" text="Report this problem" variant="danger" /> 
+        </>
+      );
+    }
+  }
 
   return (
     <div className="post">
-      <Row className="post-title mt-2">
+      <Row className="post-title">
         <Col sm={2}>
           <div className="border">
             <div>
@@ -85,7 +117,7 @@ const Post = ({ post_id }) => {
           </div>
         </Col>
         <Col sm={10}>
-          <Row>
+          <Row className="mx-5">
             <h1>{post.post_title} </h1>
           </Row>
 
@@ -104,19 +136,30 @@ const Post = ({ post_id }) => {
           )}
         </Col>
       </Row>
-
-      <Row className="mt-2">
+      <Row className="ms-2 mt-2">
         <Row>
-          <div className="border">{post.post_content}</div>
+          <div className="border mt-4">{post.post_content}</div>
         </Row>
         <Row>
           {/* Add a like button */}
           <div className="d-flex justify-content-end mt-2 gap-2">
-            <Button variant={liked ? "success" : "outline-success"} onClick={() => handleLike()}>
-              {likes} 👎
+            <Button
+              variant={
+                liked ? (isDislike ? "danger" : "outline-danger") : "secondary"
+              }
+            >
+              {dislikes} 👎
             </Button>
-            <Button variant={disliked ? "danger" : "outline-danger"} onClick={() => handleDislike()}>
-              {dislikes} 👍
+            <Button
+              variant={
+                liked
+                  ? !isDislike
+                    ? "success"
+                    : "outline-success"
+                  : "secondary"
+              }
+            >
+              {likes} 👍
             </Button>
           </div>
         </Row>
