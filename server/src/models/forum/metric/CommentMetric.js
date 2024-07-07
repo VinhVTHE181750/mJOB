@@ -1,4 +1,4 @@
-const { Model } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
 const { sequelize } = require("../../SQLize");
 
 class CommentMetric extends Model {}
@@ -10,6 +10,7 @@ CommentMetric.init(
         dislikes: DataTypes.INTEGER,
     }, {
         sequelize,
+        timestamps: false,
     }
 
 

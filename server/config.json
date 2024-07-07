@@ -27,5 +27,7 @@
       "max": 8,
       "min": 0
     }
-  }
+  },
+  "jwtSecret": "notSoSecretKey",
+  "sessionSecret": "notSoSecret"
 }

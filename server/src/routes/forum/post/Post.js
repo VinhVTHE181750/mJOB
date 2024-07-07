@@ -1,84 +1,100 @@
-const INSERT_POST = `
-INSERT INTO post (post_title, post_content, user_id, post_status) 
-OUTPUT INSERTED.post_id
-VALUES (@post_title, @post_content, @user_id, @post_status);
-`;
+const User = require("../../../models/User");
+const PostCategory = require("../../../models/forum/PostCategory");
+const Post = require("../../../models/forum/post/Post");
+const PostHistory = require("../../../models/forum/post/PostHistory");
 
-const INSERT_POST_HISTORY = `
-INSERT INTO post_history (post_id, post_title, post_content)
-VALUES (@post_id, @post_title, @post_content);
-`;
+const insertPost = async (title, content, userId, status, categoryId, tags) => {
+  const post = await Post.create({
+    title,
+    content,
+    userId,
+    status,
+    PostCategoryId: categoryId,
+  });
+  return post.id;
+};
+
+const insertPostHistory = async (postId, title, content) => {
+  await PostHistory.create({
+    postId,
+    title,
+    content,
+  });
+};
 
 const post = async (req, res) => {
   try {
-    const { title, content, user_id, post_status } = req.body;
-    // if post_status is not in PUBLSIHED, DRAFT, DELISTED, return 400
-    if (
-      post_status !== "PUBLISHED" &&
-      post_status !== "DRAFT" &&
-      post_status !== "DELISTED"
-    ) {
+    const { title, content, userId, username, status, tags, category, categoryId } = req.body;
+    if (status !== "PUBLISHED" && status !== "DRAFT" && status !== "DELISTED") {
       res.status(400).json({ message: "Invalid post status." });
       return;
     }
-    // if post_title is empty, return 400
+
     if (title === "") {
       res.status(400).json({ message: "Post title cannot be empty." });
       return;
     }
 
-    // if post_content is empty, return 400
     if (content === "") {
       res.status(400).json({ message: "Post content cannot be empty." });
       return;
     }
 
-    // if user_id is not a number or less than 0, return 400
-    if (isNaN(user_id) || user_id <= 0) {
+    if (isNaN(userId) || userId <= 0) {
       res.status(400).json({ message: "Invalid user id." });
       return;
     }
 
-    const pool = await db.poolPromise;
-    // First query: Insert into post
-    const result = await pool
-      .request()
-      .input("post_title", db.sql.NVarChar, title)
-      .input("post_content", db.sql.NVarChar, content)
-      .input("user_id", db.sql.Int, user_id)
-      .input("post_status", db.sql.NVarChar, post_status)
-      .query(INSERT_POST);
-    inserted = true;
+    if (username === "") {
+      res.status(400).json({ message: "Username cannot be empty." });
+      return;
+    }
 
-    const post_id = result.recordset[0].post_id;
+    if (tags && tags.length > 0) {
+      for (let tag of tags) {
+        if (tag === "") {
+          res.status(400).json({ message: "Tag cannot be empty." });
+          return;
+        }
+      }
+    }
 
-    await pool // Second query: Insert into post_history
-      .request()
-      .input("post_id", db.sql.Int, post_id)
-      .input("post_title", db.sql.NVarChar, title)
-      .input("post_content", db.sql.NVarChar, content)
-      .query(INSERT_POST_HISTORY);
-    logged = true;
+    // if username is used without userId, find userId from username
+    if(!userId && username) {
+      const userId = await User.findOne({ where: { username } }).id;
+      if (!userId) {
+        res.status(404).json({ message: "User not found." });
+        return;
+      }
+    }
+
+    // if both userId and username are provided, use userId
+    // if none are provided, return 400
+    if (userId && username) {
+      res.status(400).json({ message: "Provide either userId or username." });
+      return;
+    }
+
+
+
+    if (category) {
+      const categoryExists = await PostCategory.findOne({ where: { name: category } });
+      if (!categoryExists) {
+        res.status(404).json({ message: "Category not found." });
+        return;
+      }
+      const categoryId = categoryExists.id;
+    }
+
+    const postId = await insertPost(title, content, userId, status, categoryId, tags);
+    await insertPostHistory(postId, title, content);
+    res.status(201).send();
   } catch (err) {
     console.log(err);
-  }
-
-  // Second query: Insert into post_history
-  if (!inserted) {
-    // INSERT to error log: post cannot be created
-    res.status(500).json({ message: "Error occurred while creating post." });
-    return;
-  } else {
-    if (!logged) {
-      /* INSERT to error log: post cannot be logged into history*/
-      res.status(201).json({ message: "Post created but not logged." });
-    } else {
-      res.status(201).send();
-    }
-    return;
+    res.status(500).send();
   }
 };
 
 module.exports = {
   post,
-};
+}

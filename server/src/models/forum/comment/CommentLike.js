@@ -9,6 +9,7 @@ CommentLike.init(
   },
   {
     sequelize,
+    updatedAt: false,
   }
 );
 

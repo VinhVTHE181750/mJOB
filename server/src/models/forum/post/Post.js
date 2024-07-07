@@ -5,16 +5,38 @@ const { Model, DataTypes } = require("sequelize");
 const PostCategory = require("../PostCategory");
 const PostTag = require("../PostTag");
 const PostMetric = require("../metric/PostMetric");
+const PostHistory = require("./PostHistory");
 
 class Post extends Model {}
 
 Post.init(
   {
-    title: DataTypes.STRING,
-    content: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    }, 
+    tags: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    status: {
+      type: DataTypes.ENUM("PUBLISHED", "DRAFT", "DELISTED"),
+      allowNull: false,
+    },
   },
   {
     sequelize,
+    paranoid: true,
+    getterMethods: {
+      _tags() {
+        if(this.getDataValue("tags") === null) return null;
+        return this.getDataValue("tags").split(",");
+      },
+    },
   }
 );
 
@@ -24,15 +46,13 @@ Comment.belongsTo(Post);
 Post.hasMany(PostLike);
 PostLike.belongsTo(Post);
 
-Post.hasOne(PostCategory);
-PostCategory.belongsTo(Post);
-
-Post.hasMany(PostTag);
-PostTag.belongsTo(Post);
-
 Post.hasMany(PostMetric);
 PostMetric.belongsTo(Post);
 
-Post.sync();
+Post.hasMany(PostHistory);
+PostHistory.belongsTo(Post);
+
+Post.belongsTo(PostCategory);
+PostCategory.hasMany(Post);
 
 module.exports = Post;

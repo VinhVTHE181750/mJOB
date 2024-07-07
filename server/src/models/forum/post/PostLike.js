@@ -9,6 +9,7 @@ PostLike.init(
   },
   {
     sequelize,
+    updatedAt: false,
   }
 );
 

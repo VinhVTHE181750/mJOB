@@ -4,6 +4,7 @@ class PostMetric extends Model {}
 
 PostMetric.init(
     {
+        
         day: DataTypes.DATEONLY,
         likes: DataTypes.INTEGER,
         dislikes: DataTypes.INTEGER,
@@ -11,6 +12,7 @@ PostMetric.init(
         views: DataTypes.INTEGER,
     }, {
         sequelize,
+        timestamps: false,
     }
 )
 

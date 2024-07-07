@@ -1,9 +1,9 @@
 const Auth = require("./Auth");
-const Comment = require("./Comment");
-const CommentLike = require("./CommentLike");
-const Post = require("./Post");
-const PostLike = require("./PostLike");
-const sequelize = require("./SQLize");
+const Comment = require("./forum/comment/Comment");
+const CommentLike = require("./forum/comment/CommentLike");
+const Post = require("./forum/post/Post");
+const PostLike = require("./forum/post/PostLike");
+const { sequelize } = require("./SQLize");
 const { Model, DataTypes } = require("sequelize");
 
 class User extends Model {}
@@ -12,11 +12,17 @@ User.init(
   {
     username: {
       type: DataTypes.STRING,
-      validate: {
-        isAlphanumeric: true,
-      },
       allowNull: false,
     },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    isStudent: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    
   },
   {
     sequelize,
@@ -33,9 +39,9 @@ User.hasMany(Comment);
 Comment.belongsTo(User);
 
 User.hasMany(PostLike);
-PostLike.hasMany(User);
+PostLike.belongsTo(User);
 
 User.hasMany(CommentLike);
-CommentLike.hasMany(User);
+CommentLike.belongsTo(User);
 
 module.exports = User;

@@ -4,11 +4,18 @@ const { sequelize } = require("../SQLize");
 class PostCategory extends Model {}
 
 PostCategory.init(
-    {
-        name: DataTypes.STRING,
-    }, {
-        sequelize,
-    }
-)
+  {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize,
+    timestamps: false,
+  }
+);
+
+
 
 module.exports = PostCategory;

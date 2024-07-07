@@ -1,84 +1,107 @@
-const CryptoJS = require("crypto-js");
 const express = require("express");
-const db = require("../models/DBContext");
+const User = require("../models/User");
+const Auth = require("../models/Auth");
+const Hasher = require("../utils/Hasher");
 const router = express.Router();
 
-const SQL_CHECK_USERNAME = `
-  SELECT * FROM auth JOIN [user] ON auth.user_id = [user].user_id
-  WHERE username = @username;
-`;
-
-const SQL_INSERT_USER = `
-  INSERT INTO auth (user_id, hash)
-  VALUES (@user_id, @hash);
-`;
-
-const SQL_SELECT_USER = `
-  SELECT auth.user_id, username FROM auth JOIN [user] ON auth.user_id = [user].user_id
-  WHERE username = @username AND hash = @hash;
-`;
-
-// Login route with 2 params: username and password in the request body
-router.get("/login", async (req, res) => {
-  // Get params from the request body
-// get username and password from req authorization instead
-  const auth = req.headers.authorization;
-  const base64Credentials = auth.split(" ")[1];
-  const credentials = Buffer.from(base64Credentials, "base64").toString("ascii");
-  const [username, password] = credentials.split(":");
-  const hash = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
-
+// /register POST
+router.post("/register", async (req, res) => {
   try {
-    const pool = await db.poolPromise;
-    const checkUserResult = await pool
-      .request()
-      .input("username", db.sql.NVarChar, username)
-      .query(SQL_CHECK_USERNAME);
+    const { username, password } = req.body;
 
-    if (checkUserResult.recordset.length > 0) {
-      const userResult = await pool
-        .request()
-        .input("username", db.sql.NVarChar, username)
-        .input("hash", db.sql.NVarChar, hash)
-        .query(SQL_SELECT_USER);
+    const salt = await Hasher.generateSalt();
+    const hash = await Hasher.getHash(password, salt);
 
-        console.log(userResult.recordset);
-      if (userResult.recordset.length > 0) {
-        res.status(200).json(userResult.recordset[0]);
-      } else {
-        res.status(400).json({ message: "Password does not match" });
-      }
-    } else {
-      res.status(400).json({ message: "Username does not exist" });
-    }
-  } catch (err) {
-    res.status(500).json({ message: "Login failed." });
+    const user = await User.create({ username });
+    await Auth.create({ UserId: user.id, hash, salt });
+
+    // Store the user ID in the session
+    req.session.userId = user.id;
+
+    res.json({ message: "Registration successful" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// Register route with 2 params: username and password in the request body
-router.post("/register", async (req, res) => {
-  // Get params from the request body
-  const { username, password } = req.body;
-  const hash = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
+// /login POST
+router.post("/login", async (req, res) => {
   try {
-    const pool = await db.poolPromise;
-    const checkUserResult = await pool
-      .request()
-      .input("username", db.sql.NVarChar, username)
-      .query(SQL_CHECK_USERNAME);
+    const { username, password } = req.body;
 
-    if (checkUserResult.recordset.length > 0) {
-      res.status(409).json({ message: "Username already exists" });
-    } else {
-      await pool.request()
-        .input("username", db.sql.NVarChar, username)
-        .input("hash", db.sql.NVarChar, hash)
-        .query(SQL_INSERT_USER);
-      res.status(201).json({ message: "User created successfully" });
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(400).json({ error: "Invalid username or password" });
     }
-  } catch (err) {
-    res.status(500).json({ message: "Register failed." });
+
+    const auth = await Auth.findOne({ where: { UserId: user.id } });
+    const hash = await Hasher.getHash(password, auth.salt);
+    const isValidPassword = hash === auth.hash;
+    if (!isValidPassword) {
+      return res.status(400).json({ error: "Invalid username or password" });
+    }
+
+    // Store the user ID in the session
+    req.session.userId = user.id;
+    res.json({ message: "Login successful" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// /request-reset-password POST
+router.post("/request-reset-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: "Email is required" });
+    }
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      const message = "If the email is registered, a reset code will be sent";
+      return res.status(200).json({ message });
+    }
+
+    const code = Math.floor(100000 + Math.random() * 900000); // generate a 6-digit code
+    console.log(`Reset code for ${email}: ${code}`);
+
+    await Auth.update({ resetCode: code, resetCodeExpires: Date.now() + 15*60*1000 }, { where: { UserId: user.id } });
+
+    res.status(200).json({ message: "Reset code has been sent" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// /reset-password POST
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { email, code, newPassword } = req.body;
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(400).json({ error: "Invalid email or code" });
+    }
+
+    const auth = await Auth.findOne({ where: { UserId: user.id } });
+    if (auth.resetCode !== code || Date.now() > auth.resetCodeExpires) {
+      return res.status(400).json({ error: "Invalid email or code" });
+    }
+
+    const newSalt = await Hasher.generateSalt();
+    const newHash = await Hasher.getHash(newPassword, newSalt);
+
+    await Auth.update({ hash: newHash, salt: newSalt, resetCode: null, resetCodeExpires: null }, { where: { UserId: user.id } });
+
+    res.json({ message: "Password reset successful" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

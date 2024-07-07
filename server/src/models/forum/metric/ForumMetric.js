@@ -25,6 +25,7 @@ ForumMetric.init(
     },
     {
         sequelize,
+        timestamps: false,
     }
 )
 
