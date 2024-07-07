@@ -5,7 +5,7 @@ class CommentLike extends Model {}
 
 CommentLike.init(
   {
-    like: DataTypes.BOOLEAN,
+    isDislike: DataTypes.BOOLEAN,
   },
   {
     sequelize,

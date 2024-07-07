@@ -31,4 +31,5 @@ yarn-debug.log*
 yarn-error.log*
 node_modules
 /server/scripts/.vs
-/.idea
+/.idea/*
+!.idea/rcb-settings.xml
