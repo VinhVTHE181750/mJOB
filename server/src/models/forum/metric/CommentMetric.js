@@ -5,7 +5,21 @@ class CommentMetric extends Model {}
 
 CommentMetric.init(
     {
-        day: DataTypes.DATEONLY,
+        CommentId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            primaryKey: true,
+            references: {
+                model: "Comments",
+                key: "id",
+            },
+        },
+        day: {
+            type: DataTypes.DATEONLY,
+            primaryKey: true,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+        },
         likes: DataTypes.INTEGER,
         dislikes: DataTypes.INTEGER,
     }, {

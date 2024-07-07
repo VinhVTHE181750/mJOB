@@ -1,5 +1,5 @@
 const express = require("express");
-const PostCategory = require("../../models/forum/PostCategory");
+const PostCategory = require("../../models/forum/post/PostCategory");
 const router = express.Router();
 
 

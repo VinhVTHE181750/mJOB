@@ -1,5 +1,5 @@
 const User = require("../../../models/User");
-const PostCategory = require("../../../models/forum/PostCategory");
+const PostCategory = require("../../../models/forum/post/PostCategory");
 const Post = require("../../../models/forum/post/Post");
 const PostHistory = require("../../../models/forum/post/PostHistory");
 

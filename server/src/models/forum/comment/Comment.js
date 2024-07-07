@@ -1,18 +1,19 @@
-const { Model, DataTypes } = require("sequelize");
-const { sequelize } = require("../../SQLize");
+const {Model, DataTypes} = require("sequelize");
+const {sequelize} = require("../../SQLize");
 const CommentLike = require("./CommentLike");
 const CommentMetric = require("../metric/CommentMetric");
 
-class Comment extends Model {}
+class Comment extends Model {
+}
 
 Comment.init(
-  {
-    content: DataTypes.STRING,
-  },
-  {
-    sequelize,
-    paranoid: true,
-  }
+    {
+        content: DataTypes.STRING,
+    },
+    {
+        sequelize,
+        paranoid: true,
+    }
 );
 
 Comment.hasMany(CommentLike);

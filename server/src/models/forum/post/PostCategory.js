@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
-const { sequelize } = require("../SQLize");
+const { sequelize } = require("../../SQLize");
+const CategoryMetric = require("../metric/CategoryMetric");
 
 class PostCategory extends Model {}
 
@@ -12,10 +13,12 @@ PostCategory.init(
   },
   {
     sequelize,
-    timestamps: false,
+    updatedAt: false,
   }
 );
 
+PostCategory.hasMany(CategoryMetric);
+CategoryMetric.belongsTo(PostCategory);
 
 
 module.exports = PostCategory;
