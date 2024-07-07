@@ -3,98 +3,99 @@ const PostCategory = require("../../../models/forum/post/PostCategory");
 const Post = require("../../../models/forum/post/Post");
 const PostHistory = require("../../../models/forum/post/PostHistory");
 
-const insertPost = async (title, content, userId, status, categoryId, tags) => {
-  const post = await Post.create({
-    title,
-    content,
-    userId,
-    status,
-    PostCategoryId: categoryId,
-  });
-  return post.id;
-};
-
-const insertPostHistory = async (postId, title, content) => {
-  await PostHistory.create({
-    postId,
-    title,
-    content,
-  });
-};
-
 const post = async (req, res) => {
-  try {
-    const { title, content, userId, username, status, tags, category, categoryId } = req.body;
-    if (status !== "PUBLISHED" && status !== "DRAFT" && status !== "DELISTED") {
-      res.status(400).json({ message: "Invalid post status." });
-      return;
-    }
+    try {
+        const {title, content, userId, username, status, tags, category, categoryId} = req.body;
 
-    if (title === "") {
-      res.status(400).json({ message: "Post title cannot be empty." });
-      return;
-    }
+        let msg;
+        let PostCategoryId;
 
-    if (content === "") {
-      res.status(400).json({ message: "Post content cannot be empty." });
-      return;
-    }
-
-    if (isNaN(userId) || userId <= 0) {
-      res.status(400).json({ message: "Invalid user id." });
-      return;
-    }
-
-    if (username === "") {
-      res.status(400).json({ message: "Username cannot be empty." });
-      return;
-    }
-
-    if (tags && tags.length > 0) {
-      for (let tag of tags) {
-        if (tag === "") {
-          res.status(400).json({ message: "Tag cannot be empty." });
-          return;
+        if (!category && !categoryId) {
+            res.status(400).json({message: "Category or category ID must be provided."});
+            return;
         }
-      }
+        if (categoryId) {
+            const cId = await PostCategory.findByPk(categoryId)
+            if (!cId) {
+                res.status(404).json({message: "Category not found."});
+                return;
+            }
+            PostCategoryId = categoryId;
+        }
+
+
+        if (category) {
+            const cName = await PostCategory.findOne({
+                where: {
+                    name: category
+                }
+            })
+            if (!cName) {
+                res.status(404).json({message: "Category not found."});
+                return;
+            }
+            if (PostCategoryId) {
+                msg = "Category ID and name provided. Using Category ID.";
+            } else {
+                PostCategoryId = cName.id;
+            }
+        }
+        if (!title || title === "") {
+            res.status(400).json({message: "Post title cannot be empty."});
+            return;
+        }
+
+        if (!content || content === "") {
+            res.status(400).json({message: "Post content cannot be empty."});
+            return;
+        }
+
+        let UserId;
+
+        if (!userId && !username) {
+            res.status(400).json({message: "User ID or username must be provided."});
+            return;
+        }
+        if (userId) {
+            const userExists = await User.findByPk(userId);
+            if (!userExists) {
+                res.status(404).json({message: "User not found."});
+                return;
+            }
+            UserId = userId;
+        }
+
+
+        if (username) {
+            const userExists = await User.findOne({where: {username}});
+            if (!userExists) {
+                res.status(404).json({message: "User not found."});
+                return;
+            }
+            if (UserId) {
+                message = "User ID and username provided. Using User ID.";
+            } else {
+                UserId = userExists.id;
+            }
+        }
+
+        if (tags && tags.length > 0) {
+            for (let tag of tags) {
+                if (tag === "") {
+                    res.status(400).json({message: "Tag cannot be empty."});
+                    return;
+                }
+            }
+        }
+
+        const post = await Post.create({title, content, UserId, status, PostCategoryId, tags});
+        res.status(201).send(post);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
     }
-
-    // if username is used without userId, find userId from username
-    if(!userId && username) {
-      const userId = await User.findOne({ where: { username } }).id;
-      if (!userId) {
-        res.status(404).json({ message: "User not found." });
-        return;
-      }
-    }
-
-    // if both userId and username are provided, use userId
-    // if none are provided, return 400
-    if (userId && username) {
-      res.status(400).json({ message: "Provide either userId or username." });
-      return;
-    }
-
-
-
-    if (category) {
-      const categoryExists = await PostCategory.findOne({ where: { name: category } });
-      if (!categoryExists) {
-        res.status(404).json({ message: "Category not found." });
-        return;
-      }
-      const categoryId = categoryExists.id;
-    }
-
-    const postId = await insertPost(title, content, userId, status, categoryId, tags);
-    await insertPostHistory(postId, title, content);
-    res.status(201).send();
-  } catch (err) {
-    console.log(err);
-    res.status(500).send();
-  }
 };
 
 module.exports = {
-  post,
+    post,
 }

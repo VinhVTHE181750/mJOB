@@ -12,20 +12,66 @@ ForumMetric.init(
             allowNull: false,
             defaultValue: DataTypes.NOW,
         },
-        postCreated: DataTypes.INTEGER,
-        postEdited: DataTypes.INTEGER,
-        postDeleted: DataTypes.INTEGER,
-        postLiked: DataTypes.INTEGER,
-        postDisliked: DataTypes.INTEGER,
-        postReported: DataTypes.INTEGER,
-        postViewed: DataTypes.INTEGER,
-        visitor: DataTypes.TEXT,
-        commentCreated: DataTypes.INTEGER,
-        commentEdited: DataTypes.INTEGER,
-        commentDeleted: DataTypes.INTEGER,
-        commentLiked: DataTypes.INTEGER,
-        commentDisliked: DataTypes.INTEGER,
-        commentReported: DataTypes.INTEGER,
+        postCreated: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+
+        postEdited: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+        postDeleted: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+
+        postLiked: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+
+        postDisliked: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+
+        postReported: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+        postViewed: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+        visitor: {
+            type: DataTypes.TEXT,
+            defaultValue: 0,
+        },
+        commentCreated: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+        commentEdited: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+        commentDeleted: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+        commentLiked: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+        commentDisliked: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
+        commentReported: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
         tagSearched: DataTypes.TEXT,
         tagCreated: DataTypes.TEXT,
     },
