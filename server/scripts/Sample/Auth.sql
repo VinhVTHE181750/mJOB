@@ -1,28 +1,70 @@
 USE mJOB;
 GO
 
--- Add 10 random users
-INSERT INTO auth (username, hash, salt)
+-- Auth flow
+---- register:
+------ 1. Insert user
+------ 2. Insert auth
+------ 3. Insert auth_log
+---- login:
+------ 1. join user - auth
+------ 2. compare input1 with email or username AND input2 with hash, if any fail -> display: username/email or password is incorrect (never display username does not exist)
+------ 3. if auth.status = ONLINE -> deny login: already logged in elsewhere
+------ 4. if auth.status = LOCKED -> deny login: account locked
+------ 5. insert session
+------ 6. send session data to client
+------ 7. now client can use session data to access platform
+---- logout: on /logout or session timeout
+------ 1. delete session
+------ 2. set auth.status = OFFLINE
+---- reset password:
+------ 1. user input email
+------ 2. generate a code and send to that email
+------ 3. if (2) success, check if user with that mail exist
+------ 3. if (3) true, insert code as auth.auth_code
+------    else navigate user to register page
+------ 
+------ 
+------ Mindset 1: notify user if account does not exist -> potential security risk as they can scan user list, but more convenient for users
+------ Mindset 2: don't notify user if account does not exist -> better security but need extra implementations (e.g: send to unregistered email "there is no account associated with this email, but someone tried resetting their password of that..." and also have to send first login credentials to email, since user cannot register if account is exist or not is unknown, plus usually users have to change password at first login attempt
+
+-- Add 10 random user
+INSERT INTO [user] (username)
+VALUES
+('andz1207'),
+('DeNhatQuocSu'),
+('trannam29'),
+('__OwO__'),
+('TheRealAdmin'),
+('admin01'),
+('he250178'),
+('hoang_tuna'),
+('NguyenKhanh'),
+('TrumBacKi');
+GO
+
+-- Add 10 random user credentials
+INSERT INTO auth (user_id, hash, salt)
 VALUES 
-('andz1207', 'a6f63a5fb10b3bba180a79f2fc565b1db2101040ce71ea80692d671857fe2117', ''),
+(1, 'a6f63a5fb10b3bba180a79f2fc565b1db2101040ce71ea80692d671857fe2117', ''),
 -- andz1207 | passWord
-('DeNhatQuocSu', 'ea6cecea0bafcc1b93a80230e42cde46710c4212787453beced211ebbd342326', ''),
+(2, 'ea6cecea0bafcc1b93a80230e42cde46710c4212787453beced211ebbd342326', ''),
 -- passWord2
-('trannam29', '97b9f0055e1e2ddde718eb79d5ba18c2cc4af174c29ff2a49869dfce4b334342', ''),
+(3, '97b9f0055e1e2ddde718eb79d5ba18c2cc4af174c29ff2a49869dfce4b334342', ''),
 -- passWord3
-('__OwO__', '4cde37e3789f19ed189b1f81f8cd36ba8420ebe505d79ebc9803ae579073de7a', ''),
+(4, '4cde37e3789f19ed189b1f81f8cd36ba8420ebe505d79ebc9803ae579073de7a', ''),
 -- passWord4
-('TheRealAdmin', 'b912027fd35321538ec00c1a3e7a1d7e565d9a05af17697179f3ebff238fb581', ''),
+(5, 'b912027fd35321538ec00c1a3e7a1d7e565d9a05af17697179f3ebff238fb581', ''),
 -- passWord5
-('admin01', 'b20e740845579ac8b50edb08f61dea0f0a573f3f5f2a3d6337c824193a59627f', ''),
+(6, 'b20e740845579ac8b50edb08f61dea0f0a573f3f5f2a3d6337c824193a59627f', ''),
 -- passWord6
-('he250178', 'd12d9f42c6caf07537a1fb0c43ccab990f4883d73d05c7612de9bb93d8e33f3f', ''),
+(7, 'd12d9f42c6caf07537a1fb0c43ccab990f4883d73d05c7612de9bb93d8e33f3f', ''),
 -- passWord7
-('hoang_tuna', '3f36c04a18c1d77e273404ca9ccfbeb508611cecc514ac0961b46f0fb28d2bf1', ''),
+(8, '3f36c04a18c1d77e273404ca9ccfbeb508611cecc514ac0961b46f0fb28d2bf1', ''),
 -- passWord8
-('NguyenKhanh', '6e038144402f05839a8e2491ee89a455bed0acec6379a622a6b0ad3c2c4e1108', ''),
+(9, '6e038144402f05839a8e2491ee89a455bed0acec6379a622a6b0ad3c2c4e1108', ''),
 -- passWord9
-('TrumBacKi', 'a70cc00b99169c648c41762aa456f89099eb7236dfb8cf6b5c1f57c946b19d5d', '');
+(10, 'a70cc00b99169c648c41762aa456f89099eb7236dfb8cf6b5c1f57c946b19d5d', '');
 -- passWord10
 GO
 

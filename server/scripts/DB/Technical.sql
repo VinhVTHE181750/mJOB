@@ -8,6 +8,8 @@ CREATE TABLE daily_activity (
 	new_user INT NOT NULL DEFAULT 0,
 	unique_visitor INT NOT NULL DEFAULT 0,
 	post_created INT NOT NULL DEFAULT 0,
+	comment_created INT NOT NULL DEFAULT 0,
+	like_added INT NOT NULL DEFAULT 0
 );
 GO
 

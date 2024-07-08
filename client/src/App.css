@@ -1,8 +1,6 @@
-#root {
+.page {
   overflow: hidden;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-  font-family: JetBrains Mono, monospace;
+  overflow-y: hidden;
 }
 
 .navbar {
@@ -10,7 +8,7 @@
   background: #0062a7;
   margin: auto;
   /* make this navbar always at top, no matter how much the content is */
-  position: fixed;
+  
   top: 0;
   left: 0;
   right: 0;

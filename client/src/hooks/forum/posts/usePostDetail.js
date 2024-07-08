@@ -8,7 +8,6 @@ const usePostDetail = (id) => {
   const [post, setPost] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -18,19 +17,12 @@ const usePostDetail = (id) => {
         setPost(response.data);
         setLoading(false);
       } catch (error) {
-        navigate("/error", {
-          state: {
-            message: error.response
-              ? error.response.data.message
-              : "An error occurred",
-          },
-        });
         setError(error);
         setLoading(false);
       }
     };
     fetchPost();
-  }, []);
+  }, [id]);
   return { post, loading, error };
 };
 

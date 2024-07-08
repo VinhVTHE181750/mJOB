@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap";
-import NavigateButton from "../../components/buttons/NavigateButton";
+import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Navbar, Nav, NavDropdown, Container, NavItem } from "react-bootstrap";
-import NavigateLink from "./buttons/NavigateLink";
+import NavigateLink from "./ui/buttons/NavigateLink";
 import { AuthContext } from "../context/AuthContext";
 
 const AppNavbar = () => {
   const { userId } = useContext(AuthContext);
   return (
-    <Navbar className="navbar">
+    <Navbar className="navbar mb-auto">
       <Container className="nav-container">
         <Navbar.Brand href="/">LOGO</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />

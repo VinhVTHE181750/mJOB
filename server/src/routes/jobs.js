@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const sql = require('mssql');
 const dbConfig = require('../../config.json');
+const fileUpload = require('express-fileupload');
+const fs = require('fs');
+const path = require('path');
 
 // SQL Server connection pool
 const poolPromise = new sql.ConnectionPool(dbConfig.database).connect().then(pool => {
@@ -10,6 +13,8 @@ const poolPromise = new sql.ConnectionPool(dbConfig.database).connect().then(poo
 }).catch(err => {
   console.error('Database Connection Failed!', err);
 });
+
+router.use(fileUpload());
 
 const checkUserIdExists = async (user_id) => {
   try {
@@ -82,6 +87,7 @@ router.post('/', async (req, res) => {
     res.status(500).send({ error: 'An error occurred while inserting the job' });
   }
 });
+
 router.put('/update', async (req, res) => {
   const {
     job_id,
@@ -156,6 +162,51 @@ router.put('/update', async (req, res) => {
     res.status(500).send({ error: 'An error occurred while updating the job' });
   }
 });
+
+router.post('/upload', async (req, res) => {
+  const job_id = req.body.job_id;
+  const files = req.files.files;
+
+  if (!job_id || !files) {
+    return res.status(400).send({ error: 'Job ID and files are required' });
+  }
+
+  try {
+    const pool = await poolPromise;
+
+    const fileArray = Array.isArray(files) ? files : [files];
+
+    // Ensure the uploads directory exists
+    const uploadDir = path.join(__dirname, '..', 'client', 'src', 'assets' , 'uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    for (const file of fileArray) {
+      const filePath = path.join(uploadDir, file.name);
+      await file.mv(filePath);
+
+      const jobRequirement = {
+        requirement_id: null,
+        job_id: job_id,
+        job_requirement: JSON.stringify({ file_name: file.name, file_path: filePath })
+      };
+
+      await pool.request()
+        .input('job_id', sql.Int, jobRequirement.job_id)
+        .input('job_requirement', sql.NVarChar, jobRequirement.job_requirement)
+        .query(
+          'INSERT INTO job_requirement (job_id, job_requirement) VALUES (@job_id, @job_requirement)'
+        );
+    }
+
+    res.status(201).send({ message: 'Files successfully uploaded and job requirements added' });
+  } catch (error) {
+    console.error('Error uploading files:', error);
+    res.status(500).send({ error: 'An error occurred while uploading files' });
+  }
+});
+
 
 router.get("/:id", async (req, res) => {
 

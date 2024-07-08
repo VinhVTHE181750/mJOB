@@ -3,7 +3,7 @@ GO
 
 CREATE TABLE job (
 	job_id INT IDENTITY(1,1) PRIMARY KEY,
-	user_id INT NOT NULL FOREIGN KEY REFERENCES auth(user_id),
+	user_id INT NOT NULL FOREIGN KEY REFERENCES [user](user_id),
 	job_title NVARCHAR(MAX) NOT NULL,
 	job_work_location NVARCHAR(MAX),
 	job_tags VARCHAR(MAX),
@@ -15,7 +15,7 @@ CREATE TABLE job (
     job_end_date DATE,
     job_number_of_recruits INT DEFAULT 0,
 	job_requirements NVARCHAR(MAX),
-	job_compensation_types NVARCHAR(MAX),
+	job_compensation_type VARCHAR(16),
     job_compensation_amounts NVARCHAR(MAX),
     job_compensation_currencies NVARCHAR(MAX),
     job_compensation_periods NVARCHAR(MAX),
@@ -92,7 +92,7 @@ GO
 
 CREATE TABLE job_application (
 	job_id INT NOT NULL FOREIGN KEY REFERENCES job(job_id),
-	user_id INT NOT NULL FOREIGN KEY REFERENCES auth(user_id),
+	user_id INT NOT NULL FOREIGN KEY REFERENCES [user](user_id),
 	job_requirement_data NVARCHAR(MAX) -- JSON
 );
 GO
@@ -102,7 +102,7 @@ VALUES ('INFO', 'Created table: job_application');
 GO
 
 CREATE TABLE job_history (
-	user_id INT NOT NULL FOREIGN KEY REFERENCES auth(user_id),
+	user_id INT NOT NULL FOREIGN KEY REFERENCES [user](user_id),
 	job_id INT NOT NULL FOREIGN KEY REFERENCES job(job_id),
 	job_status CHAR(12) NOT NULL, -- ongoing, done, pending, cancelled
 	PRIMARY KEY (user_id, job_id)

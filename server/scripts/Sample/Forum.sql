@@ -190,7 +190,7 @@ INSERT INTO
         post_id,
         post_title,
         post_content,
-        post_updated_time
+        post_history_time
     )
 VALUES
     (
@@ -358,7 +358,7 @@ INSERT INTO
     comment (
         post_id,
         user_id,
-        comment
+        comment_content
     )
 VALUES
     (
@@ -500,7 +500,7 @@ VALUES
     );
 GO
 INSERT INTO
-    comment_history (comment_id, comment)
+    comment_history (comment_id, comment_content)
 VALUES
     (
         1,

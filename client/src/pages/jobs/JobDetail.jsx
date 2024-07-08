@@ -12,7 +12,7 @@ const BackgroundContainer = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 65px;
+  padding: 10px;
 `;
 
 const JobDetailContainer = styled.div`
@@ -27,6 +27,7 @@ const JobDetailContainer = styled.div`
   @media (max-width: 600px) {
     padding: 15px;
   }
+    margin-bottom: 30px;
 `;
 
 const BackButton = styled.button`
@@ -211,7 +212,7 @@ const JobDetail = () => {
           <Label>Contact Info:</Label>
           <Text>{job.job_contact_info}</Text>
         </Section>
-        <ApplyButton>Apply</ApplyButton>
+        <ApplyButton onClick={() => navigate('/confirm-job', { state: { job } })}>Apply</ApplyButton>
       </JobDetailContainer>
     </BackgroundContainer>
   );

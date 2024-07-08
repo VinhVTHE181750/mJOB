@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { AuthContext } from "../../context/AuthContext";
-import NavigateButton from "../../components/buttons/NavigateButton";
+import NavigateButton from "../../components/ui/buttons/NavigateButton";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -30,7 +30,7 @@ const Login = () => {
           <Row className="justify-content-md-center">
             <Col md={4}>
               <h2>Login</h2>
-              <p>Current userID: {userId}</p>
+              {/* <p>Current userID: {userId}</p> */}
               <p>{error}</p>
               <Form onSubmit={handleLogin}>
                 <Form.Group controlId="formBasicUsername">
