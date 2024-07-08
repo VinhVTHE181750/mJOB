@@ -111,4 +111,4 @@ async function startServer() {
 }
 
 // Call your function
-startServer();
+startServer().then(r => console.log("Server started successfully"));

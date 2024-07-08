@@ -3,30 +3,92 @@ const Comment = require("./forum/comment/Comment");
 const CommentLike = require("./forum/comment/CommentLike");
 const Post = require("./forum/post/Post");
 const PostLike = require("./forum/post/PostLike");
-const { sequelize } = require("./SQLize");
-const { Model, DataTypes } = require("sequelize");
+const PublicChatMessage = require("./forum/chat/PublicChatMessage");
+const {sequelize} = require("./SQLize");
+const {Model, DataTypes} = require("sequelize");
 
-class User extends Model {}
+class User extends Model {
+}
 
 User.init(
-  {
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    {
+        // basic user info
+        username: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        email: {
+            type: DataTypes.STRING,
+        },
+        phone: {
+            type: DataTypes.STRING,
+        },
+        citizenId: {
+            type: DataTypes.STRING,
+        },
+
+        // personal info
+        firstName: {
+            type: DataTypes.STRING,
+        },
+        lastName: {
+            type: DataTypes.STRING,
+        },
+        dob: {
+            type: DataTypes.DATE,
+        },
+        address: {
+            type: DataTypes.STRING,
+        },
+        avatar: {
+            type: DataTypes.STRING,
+        },
+        bio: {
+            type: DataTypes.STRING,
+        },
+
+
+        // role info
+        isStudent: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        isAdmin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        isStaff: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+
+        // moderation info
+        isMuted: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+
+
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    isStudent: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    
-  },
-  {
-    sequelize,
-  }
+    {
+        sequelize,
+        getterMethods: {
+            _fullName(locale) {
+                if (locale === "vi-VN") {
+                    return this.lastName + " " + this.firstName;
+                }
+                return this.firstName + " " + this.lastName;
+            },
+            _role() {
+                // return the highest role of the user
+                if (this.isAdmin) return "Admin";
+                if (this.isStaff) return "Staff";
+                if (this.isStudent) return "Student";
+                return "User";
+            }
+
+        }
+    }
 );
 
 User.hasOne(Auth);
@@ -43,5 +105,41 @@ PostLike.belongsTo(User);
 
 User.hasMany(CommentLike);
 CommentLike.belongsTo(User);
+
+// missing LinkedProfile
+
+// missing WorkExperience
+
+// missing Education
+
+// missing Skill
+
+// missing JobPreference
+
+// missing ProfileLog
+
+// missing ProfileHistory
+
+// missing ProfileMetric
+
+// missing Follow
+// UserId1, UserId2, with createdAt
+// if one-way -> follow
+// if two-way -> friend
+
+// missing ChatRoom
+// id, createdAt, lastMessageAt, messageCount
+// ChatRoom with 2 members -> private chat (should create a getter method to return chat room type)
+// ChatRoom with 3+ members -> group chat
+
+// missing ChatRoomMember: 1 ChatRoom -> N members => allow group chat
+// ChatRoomId, UserId, with createdAt
+
+// missing ChatMessage: 1 ChatRoomMember -> N messages
+// ChatRoomId, UserId, content, with createdAt
+
+// missing Notification
+// UserId, content, isRead, with createdAt, readAt
+
 
 module.exports = User;

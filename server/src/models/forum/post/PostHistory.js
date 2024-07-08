@@ -16,17 +16,44 @@ PostHistory.init(
             type: DataTypes.TEXT,
             allowNull: false,
         },
+        tags: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         action: {
             type: DataTypes.ENUM("CREATE", "UPDATE", "DELETE", "DRAFT", "DELIST", "PUBLISH"),
-        }
+            allowNull: false,
+        },
+        PostCategoryId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: "PostCategories",
+                key: "id",
+            },
+        },
+        UserId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: "Users",
+                key: "id",
+            },
+        },
+        PostId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: "Posts",
+                key: "id",
+            },
+        },
+
     },
     {
         sequelize,
-        timestamps: false,
+        updatedAt: false,
     }
 );
-
-PostCategory.hasMany(PostHistory);
-PostHistory.belongsTo(PostCategory);
 
 module.exports = PostHistory;

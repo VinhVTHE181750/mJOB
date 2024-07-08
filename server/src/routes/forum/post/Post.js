@@ -65,7 +65,7 @@ const post = async (req, res) => {
             UserId = userId;
         }
 
-
+        let message
         if (username) {
             const userExists = await User.findOne({where: {username}});
             if (!userExists) {
@@ -89,7 +89,16 @@ const post = async (req, res) => {
         }
 
         const post = await Post.create({title, content, UserId, status, PostCategoryId, tags});
-        res.status(201).send(post);
+        await PostHistory.create({
+            title: post.title,
+            content: post.content,
+            tags: post.tags,
+            action: "CREATE",
+            PostCategoryId: post.PostCategoryId,
+            UserId: post.UserId,
+            PostId: post.id,
+        })
+        res.status(201).send({post, message, msg});
     } catch (err) {
         console.log(err);
         res.status(500).send();
