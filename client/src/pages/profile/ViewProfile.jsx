@@ -6,15 +6,18 @@ const ViewProfile = () => {
   const userData = {
     userAvatar: 'https://via.placeholder.com/150',
     username: '',
-    fullName: 'Minh',
-    dob: '02/08/2004',
-    email: 'ducminhh1708@gmail.com',
-    contactNumber: '11131212312',
-    citizenId: '1111',
-    address: 'Ho Tay',
-    strengths: '',
-    weaknesses: '',
-    bio: ''
+    fullName: '',
+    dob: '',
+    email: '',
+    contactNumber: '',
+    citizenId: '',
+    address: '',
+    jobTitle: '',
+    jobDescription: '',
+    company: '',
+    startDate: '',
+    endDate: '',
+    otherInformation: '',
   };
 
   return (
@@ -73,15 +76,24 @@ const ViewProfile = () => {
             <Card.Body>
               <h4>More Information</h4>
               <p>
-                <strong>Strengths:</strong> <span id="strengths">{userData.strengths}</span>
+                <strong>Job title:</strong> <span id="jobTitle">{userData.jobTitle}</span>
               </p>
               <p>
-                <strong>Weaknesses:</strong> <span id="weaknesses">{userData.weaknesses}</span>
+                <strong>Job Description:</strong> <span id="jobDescription">{userData.jobDescription}</span>
               </p>
               <p>
-                <strong>Bio:</strong> <span id="bio">{userData.bio}</span>
+                <strong>Company:</strong> <span id="company">{userData.company}</span>
               </p>
-              <Button href='information' variant="primary" className="edit-btn">Edit</Button>
+              <p>
+                <strong>Start Date:</strong> <span id="startDate">{userData.startDate}</span>
+              </p>
+              <p>
+                <strong>End Date:</strong> <span id="endDate">{userData.endDate}</span>
+              </p>
+              <p>
+                <strong>Other Information:</strong> <span id="otherInformation">{userData.otherInformation}</span>
+              </p>
+              <Button href='workinformation' variant="primary" className="edit-btn">Edit</Button>
             </Card.Body>
           </Card>
         </Col>

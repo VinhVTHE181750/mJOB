@@ -32,7 +32,7 @@ import Dashboard from "./pages/home/Dashboard";
   import Users from "./pages/home/Users";
   import Security from "./pages/profile/Security";
   import Profile from "./pages/profile/Profile";
-  import Information from "./pages/profile/Information";
+  import WorkInformation from "./pages/profile/WorkInformation";
   import ViewProfile from "./pages/profile/ViewProfile";
 
 
@@ -82,7 +82,7 @@ function App() {
           {/* USERS ROUTES */}
           <Route exact path="/profile" element={<Profile />} /> 
           <Route exact path="/security" element={<Security />} /> 
-          <Route exact path="/information" element={<Information />} /> 
+          <Route exact path="/workinformation" element={<WorkInformation />} /> 
           <Route exact path="/users" element={<Users />} /> 
           <Route exact path="/settings" element={<Setting />} /> 
           <Route exact path="/ticket" element={<CreateTicketPage />} />

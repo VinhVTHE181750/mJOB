@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Form, Button, Card, Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const Information = () => {
+const WorkInformation = () => {
   
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
@@ -170,4 +170,4 @@ const Information = () => {
   );
 };
 
-export default Information;
+export default WorkInformation;
