@@ -12,7 +12,7 @@ const SecurityPage = () => {
             
             <Nav className="flex-column">
             <h2><Nav.Link href="/profile" className="text-white">Profile</Nav.Link></h2>
-              <Nav.Link href="/workinformation" className="text-white">Information</Nav.Link>
+              <Nav.Link href="/workinformation" className="text-white">Work Information</Nav.Link>
               <Nav.Link href="/security" className="text-white">Security</Nav.Link>
               <Row>
                 <Col><Button variant="danger" href="/logout">Log Out</Button></Col>
