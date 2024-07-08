@@ -1,5 +1,6 @@
 const config = require("../../config.json");
 const Sequelize = require("sequelize");
+const { log } = require("../utils/Logger");
 const sequelize = new Sequelize(
     config.database.database,
     config.database.user,
@@ -23,6 +24,14 @@ const sequelize = new Sequelize(
                 idle: config.database.pool.idle,
                 acquire: config.database.pool.acquire,
             },
+        },
+        logging: (msg, object) => {
+            let level;
+            if(msg.includes('SequelizeDatabaseError')) level = 'ERROR';
+            else if(msg.startsWith('Executing')) level = 'DEBUG';
+
+            log(msg, level, 'sequelize')
+            if(object) log(object, 'DEBUG', 'sequelize')
         },
     }
 );

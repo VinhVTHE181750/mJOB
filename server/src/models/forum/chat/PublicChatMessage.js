@@ -24,6 +24,4 @@ PublicChatMessage.init(
     }
 );
 
-
-
 module.exports = PublicChatMessage;

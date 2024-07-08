@@ -4,6 +4,9 @@
     "maxRetries": 3,
     "retryDelay": 5000
   },
+  "logger": {
+    "level": "info"
+  },
 
   "middleware": {
     "cors": {

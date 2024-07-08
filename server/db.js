@@ -3,8 +3,15 @@ const cors = require("cors");
 const db = require("./src/models/SQLize");
 const config = require("./config.json");
 const rateLimit = require("express-rate-limit");
+const { log: logger } = require("./src/utils/Logger");
+
+const log = (msg, level) => {
+    logger(msg, level, 'Main');
+}
 
 const app = express();
+// Example usage
+log('Server started', 'INFO');
 
 // auth middleware with JWT
 const JwtMiddleware = require("./src/middlewares/JWT");
@@ -51,18 +58,19 @@ app.use("/api/test", JwtMiddleware, routeRoute);
 // Start the server, if port is already in use, try the next port
 var port = config.boot.port;
 app.listen(port, () => {
-    console.log(`(server.js) Server is running on port ${port}`);
+    log(`Server is running on port ${port}`, 'INFO');
 }).on("error", (err) => {
     const maxTries = config.boot.maxBootRetries;
     if (err.code === "EADDRINUSE") {
-        console.log(
-            `(server.js) Port ${port} is already in use. Trying the next port...`
+        log(
+            `Port ${port} is already in use. Trying the next port...`,
+            'WARN'
         );
         port++;
         app.listen(port, () => {
-            console.log(`(server.js) Server is running on port ${port}`);
+            log(`Server is running on port ${port}`, 'INFO');
         });
     } else {
-        console.error(`(server.js) Failed to start server: ${err}`);
+        log(`Failed to start server: ${err}`, 'ERROR');
     }
 });
