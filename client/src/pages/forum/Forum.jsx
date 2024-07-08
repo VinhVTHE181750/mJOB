@@ -1,6 +1,7 @@
-import { Button, Col, Container, FloatingLabel, Row } from "react-bootstrap";
-import { Suspense, lazy } from "react";
+import {Col, Container, Row} from "react-bootstrap";
+import {lazy, Suspense} from "react";
 import PostSearch from "../../components/forum/PostSearch";
+
 const NavigateButton = lazy(() =>
   import("../../components/ui/buttons/NavigateButton")
 );

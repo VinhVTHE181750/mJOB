@@ -1,100 +1,120 @@
-const db = require("../../../models/DBContext");
-
-const UPDATE_POST_TITLE = `
-UPDATE post 
-SET post_title = @post_title, post_updated_time = GETDATE()
-WHERE post_id = @post_id;
-`;
-
-const UPDATE_POST_CONTENT = `
-UPDATE post
-SET post_content = @post_content, post_updated_time = GETDATE()
-WHERE post_id = @post_id;
-`;
-
-const UPDATE_POST_STATUS = `
-UPDATE post
-SET post_status = @post_status, post_updated_time = GETDATE()
-WHERE post_id = @post_id;
-`;
-
-const UPDATE_POST = `
-UPDATE post
-SET post_title = @post_title, post_content = @post_content, post_status = @post_status, post_updated_time = GETDATE()
-WHERE post_id = @post_id;
-`;
+const Post = require("../../../models/forum/post/Post");
+const PostCategory = require("../../../models/forum/post/PostCategory");
+const User = require("../../../models/User");
+const PostHistory = require("../../../models/forum/post/PostHistory");
 
 const put = async (req, res) => {
   try {
-    const { title, content, post_id, status } = req.body;
-    const pool = await db.poolPromise;
-    // if only status provided, use the UPDATE_POST_STATUS query
-    if (!title && !content && status && post_id) {
-      if (
-        status !== "PUBLISHED" &&
-        status !== "DRAFT" &&
-        status !== "DELISTED"
-      ) {
-        return res.status(400).json({ message: "Invalid post status" });
+    let {id, title, content, userId, username, status, tags, category, categoryId} = req.body;
+
+    let msg;
+
+    let post = await Post.findByPk(id);
+    if(!post) {
+        res.status(404).json({message: "Post not found."});
+        return;
+    }
+
+
+    let PostCategoryId;
+    if (!category && !categoryId) {
+      PostCategoryId = post.PostCategoryId;
+    }
+
+    if (categoryId) {
+      const cId = await PostCategory.findByPk(categoryId)
+      if (!cId) {
+        res.status(404).json({message: "Category not found."});
+        return;
       }
+      PostCategoryId = categoryId;
+    }
 
-      const result = await pool
-        .request()
-        .input("post_id", db.sql.Int, post_id)
-        .input("post_status", db.sql.NVarChar, status)
-        .query(UPDATE_POST_STATUS);
 
-      if (result.rowsAffected[0] === 0) {
-        return res.status(404).send();
+    if (category) {
+      const cName = await PostCategory.findOne({
+        where: {
+          name: category
+        }
+      })
+      if (!cName) {
+        res.status(404).json({message: "Category not found."});
+        return;
+      }
+      if (PostCategoryId) {
+        msg = "Category ID and name provided. Using Category ID.";
       } else {
-        return res.status(200).send();
+        PostCategoryId = cName.id;
       }
     }
 
-    if (status) {
-      if (
-        status !== "PUBLISHED" &&
-        status !== "DRAFT" &&
-        status !== "DELISTED"
-      ) {
-        return res.status(400).json({ message: "Invalid post status" });
+    if(!title) {
+        title = post.title;
+    }
+
+    if (title === "") {
+      res.status(400).json({message: "Post title cannot be empty."});
+      return;
+    }
+
+    if(!content) {
+        content = post.content;
+    }
+
+    if (content === "") {
+      res.status(400).json({message: "Post content cannot be empty."});
+      return;
+    }
+
+    let UserId;
+
+    if (!userId && !username) {
+      UserId = post.UserId;
+      return;
+    }
+
+    if (userId) {
+      const userExists = await User.findByPk(userId);
+      if (!userExists) {
+        res.status(404).json({message: "User not found."});
+        return;
+      }
+      UserId = userId;
+    }
+
+    let message
+    if (username) {
+      const userExists = await User.findOne({where: {username}});
+      if (!userExists) {
+        res.status(404).json({message: "User not found."});
+        return;
+      }
+      if (UserId) {
+        message = "User ID and username provided. Using User ID.";
+      } else {
+        UserId = userExists.id;
       }
     }
 
-    if (title) {
-      if (title === "") {
-        return res.status(400).json({ message: "Post title cannot be empty" });
+    if(!tags) {
+      tags = post.tags;
+    }
+
+    if (tags && tags.length > 0) {
+      for (let tag of tags) {
+        if (tag === "") {
+          res.status(400).json({message: "Tag cannot be empty."});
+          return;
+        }
       }
     }
 
-    if (content) {
-      if (content === "") {
-        return res
-          .status(400)
-          .json({ message: "Post content cannot be empty" });
-      }
-    }
-
-    if (isNaN(post_id) || post_id <= 0) {
-      return res.status(400).json({ message: "Invalid post id" });
-    }
-
-    const result = await pool
-      .request()
-      .input("post_id", db.sql.Int, post_id)
-      .input("post_title", db.sql.NVarChar, title)
-      .input("post_content", db.sql.NVarChar, content)
-      .input("post_status", db.sql.NVarChar, status)
-      .query(UPDATE_POST);
-
-    if (result.rowsAffected[0] === 0) {
-      return res.status(404).send();
-    } else {
-      return res.status(200).send();
-    }
+    await post.update({title, content, id, status, PostCategoryId, tags, UserId});
+    let PostId = id;
+    await PostHistory.create({PostId, title, content, UserId, PostCategoryId, tags, action: "UPDATE"});
+    res.status(200).send();
   } catch (err) {
-    console.log(err);
-    return res.status(500).send();
+    res.status(500).send();
   }
 };
 

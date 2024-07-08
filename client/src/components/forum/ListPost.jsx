@@ -1,11 +1,11 @@
 import usePostsQuery from "../../hooks/forum/posts/usePostsQuery";
-import { Pagination } from "react-bootstrap";
+import {Pagination} from "react-bootstrap";
 import "../../assets/css/Forum.css";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css'
 import PostCard from "./PostCard";
-import { useState } from "react";
+import {useState} from "react";
 
 // ...
 

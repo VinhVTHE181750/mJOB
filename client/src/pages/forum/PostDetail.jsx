@@ -1,8 +1,8 @@
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import "../../assets/css/Forum.css";
 import NavigateButton from "../../components/ui/buttons/NavigateButton.jsx";
 import Post from "../../components/forum/Post.jsx";
-import { Container } from "react-bootstrap";
+import {Container} from "react-bootstrap";
 import ListComment from "../../components/forum/ListComment.jsx";
 
 const PostDetail = () => {

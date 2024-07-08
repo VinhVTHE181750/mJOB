@@ -1,4 +1,4 @@
-import { FloatingLabel, Form } from "react-bootstrap";
+import {FloatingLabel, Form} from "react-bootstrap";
 
 const PostSearch = () => {
   return (

@@ -1,11 +1,11 @@
 import useCommentsQuery from "../../hooks/forum/comments/useCommentsQuery";
-import { Form, Button, Card, Pagination, Row } from "react-bootstrap";
+import {Button, Form, Pagination} from "react-bootstrap";
 import "../../assets/css/Forum.css";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import {useContext, useState} from "react";
+import {AuthContext} from "../../context/AuthContext";
 
 // ...
 

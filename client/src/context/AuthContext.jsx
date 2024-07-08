@@ -1,6 +1,5 @@
-import React, { createContext, useState, useEffect } from "react";
-import { useLoginQuery } from "../hooks/useLoginQuery";
-import { useNavigate } from "react-router";
+import React, {createContext, useEffect, useState} from "react";
+import {useLoginQuery} from "../hooks/useLoginQuery";
 
 const AuthContext = createContext();
 

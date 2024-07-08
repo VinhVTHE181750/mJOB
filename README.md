@@ -10,37 +10,44 @@ Developed in SWP391 subject (SU24 semester, FPT-University).
 5. (HE181237) Nguyễn Quốc Khánh
 
 ## Technologies used for development
-### Client: ReactJS with Node.js
-+-- @types/react-dom@18.3.0
-+-- @types/react@18.3.2
-+-- @vitejs/plugin-react@4.2.1
-+-- axios@1.7.2
-+-- bootstrap@5.3.3
-+-- chart.js@4.4.3
-+-- eslint-plugin-react-hooks@4.6.2
-+-- eslint-plugin-react-refresh@0.4.7
-+-- eslint-plugin-react@7.34.1
-+-- eslint@8.57.0
-+-- react-bootstrap@2.10.2
-+-- react-chartjs-2@5.2.0
-+-- react-cookie@7.1.4
-+-- react-dom@18.3.1
-+-- react-icons@5.2.1
-+-- react-router-dom@6.23.1
-+-- react-router@6.23.1
-+-- react@18.3.1
-+-- styled-components@6.1.11
-`-- vite@5.2.11
+### Client: ReactJS
+- @types/react-dom@18.3.0
+- @types/react@18.3.3
+- @vitejs/plugin-react@4.3.1
+- axios@1.7.2
+- bootstrap@5.3.3
+- chart.js@4.4.3
+- eslint-plugin-react-hooks@4.6.2
+- eslint-plugin-react-refresh@0.4.7
+- eslint-plugin-react@7.34.3
+- eslint@8.57.0
+- jquery@3.7.1
+- react-bootstrap@2.10.4
+- react-chartjs-2@5.2.0
+- react-cookie@7.1.4
+- react-dom@18.3.1
+- react-icons@5.2.1
+- react-loading-skeleton@3.4.0
+- react-router-dom@6.24.1
+- react-router@6.24.1
+- react@18.3.1
+- styled-components@6.1.11
+- vite@5.3.3
 
-### Server:
-+-- cors@2.8.5
-+-- crypto-js@4.2.0
-+-- express-rate-limit@7.3.0
-+-- express@4.19.2
-+-- joi@17.13.1
-+-- jsonwebtoken@9.0.2
-+-- mssql@11.0.0
-`-- nodemon@3.1.0
+### Server: Node.js
+- compression@1.7.4
+- cors@2.8.5
+- express-fileupload@1.5.0
+- express-rate-limit@7.3.1
+- express-session@1.18.0
+- express@4.19.2
+- helmet@7.1.0
+- joi@17.13.3
+- jsonwebtoken@9.0.2
+- mssql@11.0.1
+- nodemon@3.1.4
+- sequelize@6.37.3
+- tedious@18.2.3
 
 ## Installation Guide
 - For Windows: use the included `start.bat`

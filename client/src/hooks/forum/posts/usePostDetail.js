@@ -1,6 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+import {useEffect, useState} from "react";
 
 const API_URL = "http://localhost:8000/api";
 
@@ -14,8 +13,11 @@ const usePostDetail = (id) => {
       try {
         const url = `${API_URL}/forum/posts/${id}`;
         const response = await axios.get(url);
-        setPost(response.data);
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+          setPost(response.data);
+        }, 1000);
+        
       } catch (error) {
         setError(error);
         setLoading(false);

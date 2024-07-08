@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import React, {useState} from "react";
+import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import usePostInsert from "../../hooks/forum/posts/usePostInsert";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const AddForm = () => {
   const [title, setTitle] = useState("");

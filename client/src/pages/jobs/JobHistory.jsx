@@ -2,11 +2,9 @@
 
 //jobs list
 
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import '../../assets/css/JobDashboard.css';
-import {Row,Col} from 'react-bootstrap';
 import SideBar from '../../components/job/SideBar';
-import Dashboard from '../../components/job/DashBoard';
 import History from '../../components/job/History';
 
 const JobHistory = () => {

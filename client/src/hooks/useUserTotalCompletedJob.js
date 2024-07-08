@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router";
 
 const API_URL = "http://localhost:8000/api";
 

@@ -1,15 +1,14 @@
-import { getMoment } from "../../functions/Converter";
+import {getMoment} from "../../functions/Converter";
 import avatar from "../../assets/img/default_avatar.webp";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
-import { Link, useNavigate } from "react-router-dom";
-import { Button, Container, Row, Col } from "react-bootstrap";
-import { useContext, useEffect, useMemo, useState } from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {Button, Col, Row} from "react-bootstrap";
+import {useContext, useEffect} from "react";
 import NavigateButton from "../ui/buttons/NavigateButton";
 import usePostDelete from "../../hooks/forum/posts/usePostDelete";
-import { AuthContext } from "../../context/AuthContext";
+import {AuthContext} from "../../context/AuthContext";
 import Skeleton from "react-loading-skeleton";
 import useLikesQuery from "../../hooks/forum/likes/useLikesQuery";
-import useLikesUpdate from "../../hooks/forum/likes/useLikesUpdate";
 import useIsLiked from "../../hooks/forum/likes/useIsLiked";
 
 const Post = ({ post_id }) => {
