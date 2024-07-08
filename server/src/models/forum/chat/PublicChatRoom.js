@@ -1,8 +1,6 @@
 const { sequelize } = require("../../SQLize");
 const {Model, DataTypes} = require("sequelize");
 const PublicChatMetric = require("../metric/PublicChatMetric");
-const User = require("../../User");
-const PublicRoomUser = require("./PublicRoomUser");
 
 class PublicChatRoom extends Model {}
 // This is a model of a public chat room
@@ -29,9 +27,6 @@ PublicChatRoom.init(
         sequelize,
     }
 );
-
-PublicChatRoom.belongsToMany(User, {through: PublicRoomUser});
-User.belongsToMany(PublicChatRoom, {through: PublicRoomUser});
 
 PublicChatRoom.hasMany(PublicChatMetric);
 PublicChatMetric.belongsTo(PublicChatRoom);

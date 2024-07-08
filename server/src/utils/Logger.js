@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { format } = require('date-fns');
+const {format} = require('date-fns');
 const config = require('../../config.json');
 
 const logsDir = path.join(__dirname, '../../logs');
@@ -8,10 +8,10 @@ const latestLogPath = path.join(logsDir, 'latest.log');
 
 // Log levels and their corresponding console colors
 const levels = {
-    ERROR: { value: 0, color: '\x1b[31m' }, // Red
-    WARN: { value: 1, color: '\x1b[33m' },  // Yellow
-    INFO: { value: 2, color: '\x1b[32m' },  // Green
-    DEBUG: { value: 3, color: '\x1b[34m' }  // Blue
+    ERROR: {value: 0, color: '\x1b[31m'}, // Red
+    WARN: {value: 1, color: '\x1b[33m'},  // Yellow
+    INFO: {value: 2, color: '\x1b[32m'},  // Green
+    DEBUG: {value: 3, color: '\x1b[34m'}  // Blue
 };
 
 // Current log level
@@ -30,29 +30,31 @@ if (fs.existsSync(latestLogPath)) {
 
 let logBuffer = '';
 
-function log(message, level, prefix) {
+async function log(message, level, prefix) {
     if (!level) {
         level = 'INFO';
     }
     const logLevel = levels[level];
-    if(!logLevel) {
+    if (!logLevel) {
         throw new Error(`Invalid log level: ${level}`);
     }
-    if (logLevel <= consoleLogLevel) {
-        const timestamp = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        const logMessage = `[${timestamp}] [${level}] [${prefix}] ${message}`;
+
+    const timestamp = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+    const logMessage = `[${timestamp}] [${level}] [${prefix}] ${message}`;
+    if (logLevel.value <= levels[consoleLogLevel].value) {
         const consoleMessage = `${logLevel.color}${logMessage}\x1b[0m`;
         console.log(consoleMessage);
-        logBuffer += `${logMessage}\n`;
     }
+    logBuffer += `${logMessage}\n`;
 }
 
-function flushLogBuffer() {
+async function flushLogBuffer() {
     fs.appendFileSync(latestLogPath, logBuffer);
     logBuffer = '';
 }
 
 setInterval(flushLogBuffer, 5000);
+log('Logger initialized', 'INFO', 'Logger');
 process.on('exit', flushLogBuffer);
 
 module.exports = {

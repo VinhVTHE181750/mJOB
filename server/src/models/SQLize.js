@@ -25,16 +25,17 @@ const sequelize = new Sequelize(
                 acquire: config.database.pool.acquire,
             },
         },
-        logging: (msg, object) => {
+        logging: async (msg, object) => {
             let level;
             if(msg.includes('SequelizeDatabaseError')) level = 'ERROR';
             else if(msg.startsWith('Executing')) level = 'DEBUG';
 
-            log(msg, level, 'sequelize')
-            if(object) log(object, 'DEBUG', 'sequelize')
+            await log(msg, level, 'sequelize')
+            // if(object) log(object.toString(), 'DEBUG', 'sequelize')
         },
     }
 );
+log("Connecting to database...", 'INFO', 'sequelize');
 
 // async () => {
 //   try {
@@ -47,6 +48,7 @@ const sequelize = new Sequelize(
 
 // Create tables if not exist
 sequelize.sync();
+log('Syncing tables...', 'INFO', 'sequelize');
 
 // Update columns
 // sequelize.sync({alter: true});

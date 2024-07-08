@@ -6,6 +6,8 @@ const PostLike = require("./forum/post/PostLike");
 const PublicChatMessage = require("./forum/chat/PublicChatMessage");
 const {sequelize} = require("./SQLize");
 const {Model, DataTypes} = require("sequelize");
+const PublicRoomUser = require("./forum/chat/PublicRoomUser");
+const PublicChatRoom = require("./forum/chat/PublicChatRoom");
 
 class User extends Model {
 }
@@ -105,6 +107,12 @@ PostLike.belongsTo(User);
 
 User.hasMany(CommentLike);
 CommentLike.belongsTo(User);
+
+User.hasMany(PublicChatMessage)
+PublicChatMessage.belongsTo(User)
+
+User.belongsToMany(PublicChatRoom, {through: PublicRoomUser});
+PublicChatRoom.belongsToMany(User, {through: PublicRoomUser});
 
 // missing LinkedProfile
 
