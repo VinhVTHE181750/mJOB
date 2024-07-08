@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button } from 'react-bootstrap';
+import React from 'react';
+import {Button, Table} from 'react-bootstrap';
 import useUserJobHistory from '../../hooks/job/dashboard/useUserJobHistory';
 import '../../assets/css/JobHistory.css';
-import { Link } from 'react-router-dom';
-import { Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import {Link} from 'react-router-dom';
+import {Doughnut} from 'react-chartjs-2';
+import {ArcElement, Chart as ChartJS, Legend, Tooltip} from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

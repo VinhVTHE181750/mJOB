@@ -42,13 +42,13 @@ import HomeFooter from "./components/HomeFooter";
 import AppNavbar from "./components/Navbar";
 
 // Misc
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import "./App.css";
 import React from "react";
 
 // import ErrorPage from "./pages/error/ErrorPage";
 import CreateTicketPage from "./pages/user/CreateTicket";
-import { AuthProvider } from "./context/AuthContext";
+import {AuthProvider} from "./context/AuthContext";
 
 function App() {
   return (

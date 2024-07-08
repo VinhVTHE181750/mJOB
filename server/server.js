@@ -18,14 +18,14 @@ const log = async (msg, level) => {
     await logger(msg, level, 'Main');
 }
 
-const app = express();
 log("Starting server...", 'INFO');
+const app = express();
 
 // auth middleware with JWT
 const JwtMiddleware = require("./src/utils/JWT");
 const LoggerMiddleware = async (req, res, next) => {
     const clientIp = req.ip || req.connection.remoteAddress;
-    await log(`Request to ${req.originalUrl} from ${clientIp}`, 'INFO');
+    await log(`Request to ${req.originalUrl} from ${clientIp}`, 'DEBUG');
     next();
 }
 
@@ -76,12 +76,47 @@ log("Enabled middleware: JSON parser", 'INFO');
 
 const authRoute = require("./src/routes/Auth");
 app.use("/api/auth", authRoute);
-log("Route enabled: /api/auth", 'INFO');
+log("Enabled route: /api/auth", 'INFO');
 
 const forumRoute = require("./src/routes/Forum");
 app.use("/api/forum", forumRoute);
-log("Route enabled: /api/forum", 'INFO');
+log("Enabled route: /api/forum", 'INFO');
 
+// const marketingRoute = require("./src/routes/marketing");
+// app.use("/api/marketing", marketingRoute);
+// log("Enabled route: /api/marketing", 'INFO');
+//
+// const dataPostRoute = require("./src/routes/datapost");
+// app.use("/api/datapost", dataPostRoute);
+// log("Enabled route: /api/datapost", 'INFO');
+//
+// const hotJobRoute = require("./src/routes/job/top3job");
+// app.use("/api/jobs/top3", hotJobRoute);
+// log("Enabled route: /api/jobs/top3", 'INFO');
+//
+// const ticketRoute = require("./src/routes/ticket");
+// app.use("/api/ticket", ticketRoute);
+// log("Enabled route: /api/ticket", 'INFO');
+//
+// const countTotalUserRoute = require("./src/routes/dashboard/countTotalUser");
+// app.use("/api/dashboard/count/user/total", countTotalUserRoute);
+// log("Enabled route: /api/dashboard/count/user/total", 'INFO');
+//
+// const countActiveUserRoute = require("./src/routes/dashboard/countActiveUser");
+// app.use("/api/dashboard/count/user/active", countActiveUserRoute);
+// log("Enabled route: /api/dashboard/count/user/active", 'INFO');
+//
+// const jobsRoute = require("./src/routes/jobs");
+// app.use("/api/jobs", jobsRoute);
+// log("Enabled route: /api/jobs", 'INFO');
+//
+// const dashboardRoute = require("./src/routes/Dashboard");
+// app.use("/api/myjobs", dashboardRoute);
+// log("Enabled route: /api/myjobs", 'INFO');
+//
+// const jobListRoute = require("./src/routes/JobList");
+// app.use("/api/joblist", jobListRoute);
+// log("Enabled route: /api/joblist", 'INFO');
 
 const routeRoute = async (req, res) => {
     // send all routes address to the client
@@ -89,7 +124,11 @@ const routeRoute = async (req, res) => {
     res.status(200).json({message});
 };
 app.use("/api/test", LoggerMiddleware, routeRoute)
-log("Route enabled: /api/test", 'INFO');
+log("Enabled route: /api/test", 'INFO');
+
+log("Other routes are not updated to use sequelize", 'WARN');
+log('Use the old.js instead to run old routes', 'WARN');
+log("cmd: \x1b[1m\x1b[34m" + 'node old.js', 'INFO');
 
 // Start the server, if port is already in use, try the next port
 let port = config.boot.port;

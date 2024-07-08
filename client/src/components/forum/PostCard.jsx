@@ -1,7 +1,7 @@
-import { Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { getMoment } from "../../functions/Converter";
-import { useState } from "react";
+import {Card} from "react-bootstrap";
+import {Link} from "react-router-dom";
+import {getMoment} from "../../functions/Converter";
+import {useState} from "react";
 import ViewCount from "./micro/ViewCount";
 import CommentCount from "./micro/CommentCount";
 import LikeCount from "./micro/LikeCount";

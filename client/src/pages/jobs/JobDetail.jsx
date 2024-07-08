@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import styled, { keyframes } from 'styled-components';
-import { useParams, useNavigate } from 'react-router-dom';
-import { FaArrowLeft } from 'react-icons/fa';
+import styled, {keyframes} from 'styled-components';
+import {useNavigate, useParams} from 'react-router-dom';
+import {FaArrowLeft} from 'react-icons/fa';
 
 
 const BackgroundContainer = styled.div`

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import React, {useEffect, useState} from "react";
+import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import usePostUpdate from "../../hooks/forum/posts/usePostUpdate";
-import { useNavigate, useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 
 const EditForm = () => {
