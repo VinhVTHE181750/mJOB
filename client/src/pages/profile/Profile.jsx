@@ -66,7 +66,7 @@ const Profile = () => {
                   Profile
                 </Nav.Link>
               </h2>
-              <Nav.Link href="/information" className="text-white">
+              <Nav.Link href="/workinformation" className="text-white">
                 Information
               </Nav.Link>
               <Nav.Link href="/security" className="text-white">
