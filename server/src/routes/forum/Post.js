@@ -6,9 +6,10 @@ const { getAllPosts, getPostById, getPostOfUser } = require("./post/Get");
 const { put } = require("./post/Put");
 const { deleteById } = require("./post/Delete");
 const { post } = require("./post/Post");
+const { JwtMiddleware } = require("../../utils/JWT");
 
 // Define routes
-router.get("/", getAllPosts);
+router.get("/", JwtMiddleware, getAllPosts);
 router.get("/:id", getPostById);
 router.get("/user/:id", getPostOfUser);
 router.put("/", put);

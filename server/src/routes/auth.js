@@ -1,10 +1,11 @@
-const jwt = require('jsonwebtoken');
-const config = require('../../config.json');
-const router = require('express').Router();
-const Hasher = require('../utils/Hasher');
-const Auth = require('../models/Auth');
-const User = require('../models/User');
-
+const jwt = require("jsonwebtoken");
+const config = require("../../config.json");
+const router = require("express").Router();
+const Hasher = require("../utils/Hasher");
+const Auth = require("../models/Auth");
+const User = require("../models/User");
+const { createToken } = require("../utils/JWT");
+const cookieParser = require("cookie-parser");
 
 // Updated /login route
 router.post("/login", async (req, res) => {
@@ -14,19 +15,18 @@ router.post("/login", async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: "Invalid username or password" });
     }
-
     const auth = await Auth.findOne({ where: { UserId: user.id } });
     const hash = await Hasher.getHash(password, auth.salt);
     const isValidPassword = hash === auth.hash;
     if (!isValidPassword) {
       return res.status(400).json({ error: "Invalid username or password" });
     }
-
-    const token = jwt.sign({ id: user.id, role: user._role }, config.jwtSecret, { expiresIn: '24h' });
-    res.json({ message: "Login successful", token });
+    const token = createToken({ id: user.id, role: auth.role});
+    res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
+    return res.json({ message: "Login successful", token });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -34,8 +34,8 @@ router.post("/login", async (req, res) => {
 router.post("/register", async (req, res) => {
   try {
     const { username, password } = req.body;
-    if(!username || !password) {
-        return res.status(400).json({ error: "Invalid username or password" });
+    if (!username || !password) {
+      return res.status(400).json({ error: "Invalid username or password" });
     }
 
     // if already existed
@@ -49,20 +49,21 @@ router.post("/register", async (req, res) => {
 
     // validate user: existed? invalid username? weak password?
     const user = await User.create({ username });
-    if(!user) {
-        return res.status(400).json({ error: "Failed to create user" });
+    if (!user) {
+      return res.status(400).json({ error: "Failed to create user" });
     }
 
     const auth = await Auth.create({ UserId: user.id, hash, salt });
-    if(!auth) {
-        return res.status(400).json({ error: "Authentication failed" });
+    if (!auth) {
+      return res.status(400).json({ error: "Authentication failed" });
     }
 
-    const token = jwt.sign({ id: user.id, role: user._role }, config.jwtSecret, { expiresIn: '24h' });
-    res.json({ message: "Registration successful", token });
+    const token = createToken({ id: user.id, role: auth.role});
+    res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
+    return res.json({ message: "Registration successful", token });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 

@@ -1,8 +1,8 @@
 const Post = require("../../../models/forum/post/Post");
 const {where} = require("sequelize");
+const { log } = require("../../../utils/Logger");
 
 const getAllPosts = async (req, res) => {
-    // This route, despite the name, only returns published and not deleted posts
     try {
         const posts = await Post.findAll({
             where: {

@@ -5,7 +5,7 @@
     "retryDelay": 5000
   },
   "logger": {
-    "level": "INFO"
+    "level": "DEBUG"
   },
 
   "middleware": {
@@ -31,6 +31,11 @@
       "min": 0
     }
   },
-  "jwtSecret": "notSoSecretKey",
+  "jwt": {
+    "secret": "notSoSecret",
+    "expiresIn": 86400,
+    "issuer": "mJob",
+    "algorithm": "HS256"
+  },
   "sessionSecret": "notSoSecret"
 }

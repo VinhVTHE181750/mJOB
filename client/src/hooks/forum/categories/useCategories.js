@@ -7,6 +7,7 @@ const useCategories = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [category, setCategory] = useState({});
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -22,7 +23,20 @@ const useCategories = () => {
     };
     fetchPost();
   }, []);
-  return { categories, loading, error };
+
+  const getCategory = async (id) => {
+    try {
+      const url = `${API_URL}/forum/categories/${id}`;
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      setError(error);
+      return null;
+    }
+  };
+  
+
+  return { categories, getCategory, loading, error };
 };
 
 export default useCategories;
