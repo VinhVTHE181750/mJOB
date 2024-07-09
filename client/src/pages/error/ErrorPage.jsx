@@ -1,7 +1,8 @@
-import { Card, CardBody, Container } from "react-bootstrap";
+import {Card, CardBody, Container} from "react-bootstrap";
 import "./error.css";
-import { useLocation } from "react-router";
-import { useState } from "react";
+import {useLocation} from "react-router";
+import {useState} from "react";
+
 function ErrorPage() {
   const params = useLocation();
   const { state } = params;

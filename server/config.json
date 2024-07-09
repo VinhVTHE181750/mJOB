@@ -2,7 +2,10 @@
   "boot": {
     "port": 8000,
     "maxRetries": 3,
-    "retryDelay": 6000
+    "retryDelay": 5000
+  },
+  "logger": {
+    "level": "DEBUG"
   },
 
   "middleware": {
@@ -16,6 +19,7 @@
   },
 
   "database": {
+    "dialect": "mssql",
     "user": "sa",
     "password": "1400",
     "server": "localhost",
@@ -26,5 +30,12 @@
       "max": 8,
       "min": 0
     }
-  }
+  },
+  "jwt": {
+    "secret": "notSoSecret",
+    "expiresIn": 86400,
+    "issuer": "mJob",
+    "algorithm": "HS256"
+  },
+  "sessionSecret": "notSoSecret"
 }

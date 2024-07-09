@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { Container, Row, Col, Form, Button, Card, Nav } from 'react-bootstrap';
+import React, {useRef, useState} from 'react';
+import {Button, Card, Col, Container, Form, Nav, Row} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Profile = () => {

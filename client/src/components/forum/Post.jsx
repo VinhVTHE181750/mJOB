@@ -1,48 +1,47 @@
-import { getMoment } from "../../functions/Converter";
+import {getMoment} from "../../functions/Converter";
 import avatar from "../../assets/img/default_avatar.webp";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
-import { Link, useNavigate } from "react-router-dom";
-import { Button, Container, Row, Col } from "react-bootstrap";
-import { useContext, useEffect, useMemo, useState } from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {Button, Col, Row} from "react-bootstrap";
+import {useContext, useEffect} from "react";
 import NavigateButton from "../ui/buttons/NavigateButton";
 import usePostDelete from "../../hooks/forum/posts/usePostDelete";
-import { AuthContext } from "../../context/AuthContext";
+import {AuthContext} from "../../context/AuthContext";
 import Skeleton from "react-loading-skeleton";
 import useLikesQuery from "../../hooks/forum/likes/useLikesQuery";
-import useLikesUpdate from "../../hooks/forum/likes/useLikesUpdate";
 import useIsLiked from "../../hooks/forum/likes/useIsLiked";
 
-const Post = ({ post_id }) => {
+const Post = ({ id }) => {
   // post related data
   // external userId
   const { userId } = useContext(AuthContext);
-  const { post, loading, error } = usePostDetail(post_id);
+  const { post, loading, error } = usePostDetail(id);
   const navigate = useNavigate();
   const { deletePost } = usePostDelete();
 
   // external like state, whether if it is like or dislike
-  const { liked, isDislike } = useIsLiked(userId, post_id, null);
+  const { liked, isDislike } = useIsLiked(userId, id, null);
 
   // external likes counter
-  const { likes, dislikes } = useLikesQuery(post_id, null);
+  const { likes, dislikes } = useLikesQuery(id, null);
 
   // external like update function
-  // const { updateLikes } = usePostLikesUpdate(post_id, userId, isDislike);
+  // const { updateLikes } = usePostLikesUpdate(id, userId, isDislike);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const handleLike = (isDislike) => {
-    updateLikes(isDislike);
-  };
+  // const handleLike = (isDislike) => {
+  //   updateLikes(isDislike);
+  // };
 
   const handleDeletePost = async () => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this post? " + post_id
+      "Are you sure you want to delete this post? "
     );
     if (confirmDelete) {
-      deletePost(post_id);
+      deletePost(id);
       navigate("/forum");
     }
   };
@@ -110,21 +109,21 @@ const Post = ({ post_id }) => {
             <div>
               <img className="avatar" src={avatar} alt="Default Avatar" />
             </div>
-            <Link to={`/users/${post.username}`}>{post.username}</Link>
+            <Link to={`/users/${post.username}`}>#AUTHOR</Link>
             <div>
-              <p className="text-center">{getMoment(post.post_updated_time)}</p>
+              <p className="text-center">{getMoment(post.updatedAt)}</p>
             </div>
           </div>
         </Col>
         <Col sm={10}>
           <Row className="mx-5">
-            <h1>{post.post_title} </h1>
+            <h1>{post.title} </h1>
           </Row>
 
-          {post.user_id == userId && (
+          {post.UserId == 1 && (
             <>
               <NavigateButton
-                path={`/forum/edit/${post_id}`}
+                path={`/forum/edit/${id}`}
                 text="Edit"
                 variant="primary"
                 className="me-2"
@@ -138,7 +137,7 @@ const Post = ({ post_id }) => {
       </Row>
       <Row className="ms-2 mt-2">
         <Row>
-          <div className="border mt-4">{post.post_content}</div>
+          <div className="border mt-4">{post.content}</div>
         </Row>
         <Row>
           {/* Add a like button */}

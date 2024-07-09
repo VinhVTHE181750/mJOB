@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row, Col, Container } from 'react-bootstrap';
+import {Card, Col, Container, Row} from 'react-bootstrap';
 import useTop3Jobs from '../../hooks/useTop3Jobs';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../assets/css/HotJobs.css';

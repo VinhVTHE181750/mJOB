@@ -1,6 +1,6 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { FaArrowLeft } from 'react-icons/fa';
+import {useNavigate, useParams} from 'react-router-dom';
+import {FaArrowLeft} from 'react-icons/fa';
 import '../../assets/css/EditJob.css';
 import useJobUpdate from '../../hooks/useJobUpdate.js';
 

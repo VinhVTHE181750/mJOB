@@ -1,6 +1,6 @@
 import React from 'react';
-import { Navbar, Nav, Button, NavDropdown, Container } from 'react-bootstrap';
-import '../assets/css/Navbar.css';    
+import {Button, Nav, Navbar, NavDropdown} from 'react-bootstrap';
+import '../assets/css/Navbar.css';
 
 const HomeNavbar = ({ user }) => {
     return (

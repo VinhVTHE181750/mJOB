@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pagination as BootstrapPagination } from 'react-bootstrap';
+import {Pagination as BootstrapPagination} from 'react-bootstrap';
 
 const JobPagination = ({ jobsPerPage, totalJobs, paginate, currentPage }) => {
   const pageNumbers = [];

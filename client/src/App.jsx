@@ -46,13 +46,15 @@ import HomeFooter from "./components/HomeFooter";
 import AppNavbar from "./components/Navbar";
 
 // Misc
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import "./App.css";
 import React from "react";
 
 // import ErrorPage from "./pages/error/ErrorPage";
 import CreateTicketPage from "./pages/user/CreateTicket";
 import { AuthProvider } from "./context/AuthContext";
+import Balance from "./pages/payment/micro/Balance";
+import PaymentPortal from "./pages/payment/PaymentPortal";
 
 function App() {
   return (
@@ -90,6 +92,9 @@ function App() {
               <Route exact path="/active-job" element={<ActiveJob />} />
               <Route exact path="/created-job-details/:job_id" element={<CreatedJobDetail />} />
               <Route exact path="/applied-job-details/:job_id" element={<AppliedJobDetail />} />
+
+              {/* PAYMENT ROUTES */}
+              <Route exact path="/payment" element={<PaymentPortal />} />
 
 
               {/* USERS ROUTES */}

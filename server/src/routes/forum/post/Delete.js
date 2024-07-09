@@ -1,22 +1,23 @@
-const db = require("../../../models/DBContext");
-
-const DELETE_POST = `DELETE FROM post WHERE post_id = @post_id;`;
+const Post = require("../../../models/forum/post/Post");
+const {log} = require("../../../utils/Logger");
 
 const deleteById = async (req, res) => {
   try {
-    const { id } = req.query;
-    const pool = await db.poolPromise;
-    const result = await pool
-      .request()
-      .input("post_id", db.sql.Int, id)
-      .query(DELETE_POST);
-    if (result.rowsAffected[0] === 0) {
-      res.status(404).send();
-    } else {
-      res.status(200).send();
+    const { id } = req.params;
+    const post = await Post.findByPk(id);
+    log(JSON.stringify(post), 'ERROR', 'FORUM')
+    log(id, 'ERROR', 'FORUM')
+
+    if (!post) {
+      return res.status(404).json({message: "Post not found"});
     }
+
+    await post.destroy();
+    res.status(200).json({message: "Post deleted"});
+
   } catch (err) {
-    res.status(500).send();
+    console.error(err);
+    res.status(500).json({message: ""});
   }
 };
 

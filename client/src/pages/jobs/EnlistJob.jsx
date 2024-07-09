@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import '../../assets/css/EnlistJob.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Button, Row, Form, Col,} from 'react-bootstrap';
 import useJobInsert from "../../hooks/useJobInsert.js";
+
 const EnlistJob = () => {
   const [additionalRequirements, setAdditionalRequirements] = useState([]);
   const { insertJob, loading, error, success } = useJobInsert();
