@@ -60,13 +60,21 @@ body {
   text-align: center; /* Center align the header */
 }
 
-.header2, .header3, .header4 {
+.header2, .header4 {
   text-align: center; /* Center align these headers */
   color: var(--fg-6, #0062A7);
   font-family: 'Times New Roman', Times, serif;
   font-size: 25px;
   font-weight: 200;
   margin: 20px 0;
+}
+.header3{
+  text-align: center; /* Center align these headers */
+  color: var(--fg-6, #0062A7);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 17px;
+  font-weight: 200;
+  
 }
 
 label {
