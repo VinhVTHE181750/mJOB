@@ -1,6 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap";
 import PostSearch from "../../components/forum/PostSearch";
-import NavigateButton from "../../components/ui/buttons/NavigateButton.jsx";
+import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import ListPost from "../../components/forum/ListPost";
 
 const Forum = () => {
@@ -28,6 +28,7 @@ const Forum = () => {
               </NavigateButton>
             </Col>
           </Row>
+          <ListPost />
           <ListPost />
         </Col>
       </Row>
