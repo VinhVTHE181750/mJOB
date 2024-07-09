@@ -1,8 +1,8 @@
 import React from 'react';
-import { Container, Row, Col, Card, Nav, Button } from 'react-bootstrap';
+import {Button, Card, Col, Container, Nav, Row} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import {Bar} from 'react-chartjs-2';
+import {BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip} from 'chart.js';
 import useCountUser from '../../hooks/useCountUser.js';
 
 ChartJS.register(

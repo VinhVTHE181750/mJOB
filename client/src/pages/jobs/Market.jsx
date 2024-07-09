@@ -1,11 +1,9 @@
 // Marketplace.js
-import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button, Dropdown, Card } from 'react-bootstrap';
+import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import HomeNavbar from '../../components/HomeNavbar.jsx';
 import HelpCenter from '../../components/HelpCenter.jsx';
 import Footer from '../../components/HomeFooter.jsx';
-import  useJobList  from "../../hooks/useJobList";
+import useJobList from "../../hooks/useJobList";
 import JobList from '../../components/job/JobList.jsx';
 
 // import './Marketplace.css'; // Custom styles (optional)

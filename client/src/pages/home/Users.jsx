@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Navbar, Nav, Button, Card, Row, Col } from 'react-bootstrap';
+import {Button, Card, Col, Container, Nav, Navbar, Row} from 'react-bootstrap';
 
 const Users = () => {
     

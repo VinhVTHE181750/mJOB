@@ -1,5 +1,4 @@
-import { Button, Col, Container, FloatingLabel, Row } from "react-bootstrap";
-import { Suspense, lazy } from "react";
+import { Col, Container, Row } from "react-bootstrap";
 import PostSearch from "../../components/forum/PostSearch";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import ListPost from "../../components/forum/ListPost";
@@ -29,6 +28,7 @@ const Forum = () => {
               </NavigateButton>
             </Col>
           </Row>
+          <ListPost />
           <ListPost />
         </Col>
       </Row>

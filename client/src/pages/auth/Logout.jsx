@@ -1,7 +1,7 @@
-import { Container } from "react-bootstrap";
+import {Container} from "react-bootstrap";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import {useContext} from "react";
+import {AuthContext} from "../../context/AuthContext";
 
 const Logout = () => {
   const { logout } = useContext(AuthContext);

@@ -1,17 +1,17 @@
 import useCommentsQuery from "../../hooks/forum/comments/useCommentsQuery";
-import { Form, Button, Card, Pagination, Row } from "react-bootstrap";
+import {Button, Form, Pagination} from "react-bootstrap";
 import "../../assets/css/Forum.css";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import {useContext, useState} from "react";
+import {AuthContext} from "../../context/AuthContext";
 
 // ...
 
-const ListComment = ({ post_id }) => {
+const ListComment = ({ id }) => {
   const navigate = useNavigate();
-  const { comments, loading, error } = useCommentsQuery(post_id);
+  const { comments, loading, error } = useCommentsQuery(id);
   const { userId } = useContext(AuthContext);
 
   const [currentPage, setCurrentPage] = useState(1);

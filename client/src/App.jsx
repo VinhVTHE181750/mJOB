@@ -42,7 +42,7 @@ import HomeFooter from "./components/HomeFooter";
 import AppNavbar from "./components/Navbar";
 
 // Misc
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import "./App.css";
 import React from "react";
 

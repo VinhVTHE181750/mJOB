@@ -1,33 +1,38 @@
 const express = require("express");
+const createError = require("http-errors");
 const cors = require("cors");
 const compression = require("compression");
 const helmet = require("helmet");
+const server = require("./src/models/SQLize");
+const { log: logger } = require("./src/utils/Logger");
 const config = require("./config.json");
 const rateLimit = require("express-rate-limit");
-
+const log = async (msg, level) => {
+  await logger(msg, level, "Main");
+};
+log("Starting server...", "INFO");
 const app = express();
-// Explicitly parse request body as JSON
-app.use(express.json());
-
-// CORS rule
+const JwtMiddleware = require("./src/utils/JWT");
+const LoggerMiddleware = async (req, res, next) => {
+  const clientIp = req.ip || req.connection.remoteAddress;
+  await log(`Request to ${req.originalUrl} from ${clientIp}`, "DEBUG");
+  next();
+};
 app.use(
   cors({
     origin: config.middleware.cors.origin,
   })
 );
-
-// Rate limiter
+log("Enabled middleware: CORS", "INFO");
 app.use(
   rateLimit({
     windowMs: config.middleware.rateLimiter.windowMs,
     max: config.middleware.rateLimiter.max,
   })
 );
-
-// Compression
+log("Enabled middleware: Rate limiter", "INFO");
 app.use(compression());
-
-// Helmet
+log("Enabled middleware: Compression", "INFO");
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -35,79 +40,103 @@ app.use(
     },
   })
 );
+log("Enabled middleware: Helmet", "INFO");
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+log("Enabled middleware: Cookie parser", "INFO");
 
-// Import and define routes
-const exampleRoutes = require("./src/routes/Example");
-app.use("/api/example", exampleRoutes);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+log("Enabled middleware: JSON parser", "INFO");
+//// DO NOT EDIT ABOVE THIS LINE
+
+
+
+
+
+
+const authRoute = require("./src/routes/Auth");
+app.use("/api/auth", authRoute);
+log("Enabled route: /api/auth", "INFO");
 
 const forumRoute = require("./src/routes/Forum");
 app.use("/api/forum", forumRoute);
+log("Enabled route: /api/forum", "INFO");
 
-const authRoute = require("./src/routes/auth");
-app.use("/api/auth", authRoute);
+// Add routes here
 
-const marketingRoute = require("./src/routes/marketing");
-app.use("/api/marketing", marketingRoute);
+// const marketingRoute = require("./src/routes/marketing");
+// app.use("/api/marketing", marketingRoute);
 
-const dataPostRoute = require("./src/routes/datapost");
-app.use("/api/datapost", dataPostRoute);
+// const dataPostRoute = require("./src/routes/datapost");
+// app.use("/api/datapost", dataPostRoute);
 
-const hotJobRoute = require("./src/routes/job/top3job");
-app.use("/api/jobs/top3", hotJobRoute);
+// const hotJobRoute = require("./src/routes/job/top3job");
+// app.use("/api/jobs/top3", hotJobRoute);
 
-const ticketRoute = require("./src/routes/ticket");
-app.use("/api/ticket", ticketRoute);
+// const ticketRoute = require("./src/routes/ticket");
+// app.use("/api/ticket", ticketRoute);
 
-const countTotalUserRoute = require("./src/routes/dashboard/countTotalUser");
-app.use("/api/dashboard/count/user/total", countTotalUserRoute);
+// const countTotalUserRoute = require("./src/routes/dashboard/countTotalUser");
+// app.use("/api/dashboard/count/user/total", countTotalUserRoute);
 
-const countActiveUserRoute = require("./src/routes/dashboard/countActiveUser");
-app.use("/api/dashboard/count/user/active", countActiveUserRoute);
+// const countActiveUserRoute = require("./src/routes/dashboard/countActiveUser");
+// app.use("/api/dashboard/count/user/active", countActiveUserRoute);
 
-const jobsRoute = require("./src/routes/jobs");
-app.use("/api/jobs", jobsRoute);
+// const jobsRoute = require("./src/routes/jobs");
+// app.use("/api/jobs", jobsRoute);
 
-const dashboardRoute = require("./src/routes/Dashboard");
-app.use("/api/myjobs", dashboardRoute);
+// const dashboardRoute = require("./src/routes/Dashboard");
+// app.use("/api/myjobs", dashboardRoute);
 
-const jobListRoute = require("./src/routes/JobList");
-app.use("/api/joblist", jobListRoute);
+// const jobListRoute = require("./src/routes/JobList");
+// app.use("/api/joblist", jobListRoute);
 
-const testRoute = require("./src/routes/test");
-app.use("/api/test", testRoute);
+// const testRoute = require("./src/routes/test");
+// app.use("/api/test", testRoute);
 
-// Start the server, if port is already in use, try the next port
-async function startServer() {
-  var port = config.boot.port;
-  var delay = config.boot.retryDelay;
 
-  while (true) {
-    try {
-      await new Promise((resolve, reject) => {
-        const server = app.listen(port, () => {
-          console.log(`(server.js) Server is running on port ${port}`);
-          resolve(server);
-        });
 
-        server.on("error", (err) => {
-          if (err.code === "EADDRINUSE") {
-            console.log(
-              `(server.js) Port ${port} is already in use. Trying the next port...`
-            );
-            port++;
-          } else {
-            console.log(`Unexpected error: ${err}. Retrying in ${delay}s...`);
-          }
-          reject(err);
-        });
+
+
+
+
+
+//// DO NOT EDIT BELOW THIS LINE
+app.get("/", (req, res) => {
+  res.send("Server is running...");
+});
+app.use((req, res, next) => {
+  next(createError(404));
+});
+app.use((err, req, res) => {
+  console.log(err.stack);
+  res.status(err.status || 500).send(err.message);
+});
+const routeRoute = require("./src/routes/test");
+app.use("/api/test", LoggerMiddleware, routeRoute);
+log("Enabled route: /api/test", "INFO");
+
+// TEMPORARY WARNING
+log("Other routes are not updated to use sequelize", "WARN");
+log("Use the old.js instead to run old routes", "WARN");
+log("cmd: \x1b[1m\x1b[34m" + "node old.js", "INFO");
+
+// DO NOT EDIT BELOW THIS LINE
+let port = config.boot.port;
+app
+  .listen(port, () => {
+    log(`Server is running on port ${port}`, "INFO");
+  })
+  .on("error", (err) => {
+    // const maxTries = config.boot.maxRetries;
+    if (err.code === "EADDRINUSE") {
+      log(`Port ${port} is already in use. Trying the next port...`, "WARN");
+      port++;
+      app.listen(port, () => {
+        log(`Server is running on port ${port}`, "INFO");
       });
-      break; // If server starts successfully, break the loop
-    } catch (err) {
-      // Wait for delay milliseconds before next iteration in case of an error
-      await new Promise(resolve => setTimeout(resolve, delay));
+    } else {
+      log(`Failed to start server: ${err}`, "ERROR");
     }
-  }
-}
-
-// Call your function
-startServer();
+  });
