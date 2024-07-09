@@ -1,5 +1,5 @@
 import axios from "axios";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 const API_URL = "http://localhost:8000/api";
 
@@ -13,11 +13,8 @@ const usePostDetail = (id) => {
       try {
         const url = `${API_URL}/forum/posts/${id}`;
         const response = await axios.get(url);
-        setTimeout(() => {
-          setLoading(false);
-          setPost(response.data);
-        }, 1000);
-        
+        setLoading(false);
+        setPost(response.data);
       } catch (error) {
         setError(error);
         setLoading(false);

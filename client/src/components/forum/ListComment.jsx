@@ -9,9 +9,9 @@ import {AuthContext} from "../../context/AuthContext";
 
 // ...
 
-const ListComment = ({ post_id }) => {
+const ListComment = ({ id }) => {
   const navigate = useNavigate();
-  const { comments, loading, error } = useCommentsQuery(post_id);
+  const { comments, loading, error } = useCommentsQuery(id);
   const { userId } = useContext(AuthContext);
 
   const [currentPage, setCurrentPage] = useState(1);

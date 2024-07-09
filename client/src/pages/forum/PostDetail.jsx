@@ -16,9 +16,9 @@ const PostDetail = () => {
         variant="primary"
         className="mb-2"
       />
-      <Post post_id={id} />
+      <Post id={id} />
       <Container className="mt-5 border">
-        <ListComment post_id={id} />
+        <ListComment id={id} />
       </Container>
     </div>
   );

@@ -6,14 +6,14 @@ class Auth extends Model {
 
 Auth.init(
     {
-        hash: DataTypes.STRING(60),
+        hash: DataTypes.STRING(128),
         salt: {
-            type: DataTypes.STRING(16),
+            type: DataTypes.STRING(64),
             allowNull: false,
         },
         role: {
-            type: DataTypes.ENUM("USER", "STAFF", "SUPPORT", "ADMIN"),
-            defaultValue: "user",
+            type: DataTypes.ENUM("USER", "SUPPORT", "MOD", "ADMIN"),
+            defaultValue: "USER",
         },
         code: {
             // Verification code, used for email verification and password reset
@@ -52,7 +52,7 @@ Auth.init(
             _lastOnline() {
                 if (isOnline) return new Date();
                 return this.lastOnline ? this.lastOnline : null;
-            }
+            },
         },
         setterMethods: {}
     }

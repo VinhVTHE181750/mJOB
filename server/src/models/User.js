@@ -4,97 +4,77 @@ const CommentLike = require("./forum/comment/CommentLike");
 const Post = require("./forum/post/Post");
 const PostLike = require("./forum/post/PostLike");
 const PublicChatMessage = require("./forum/chat/PublicChatMessage");
-const {sequelize} = require("./SQLize");
-const {Model, DataTypes} = require("sequelize");
+const { sequelize } = require("./SQLize");
+const { Model, DataTypes } = require("sequelize");
 const PublicRoomUser = require("./forum/chat/PublicRoomUser");
 const PublicChatRoom = require("./forum/chat/PublicChatRoom");
 
-class User extends Model {
-}
+class User extends Model {}
 
 User.init(
-    {
-        // basic user info
-        username: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        email: {
-            type: DataTypes.STRING,
-        },
-        phone: {
-            type: DataTypes.STRING,
-        },
-        citizenId: {
-            type: DataTypes.STRING,
-        },
-
-        // personal info
-        firstName: {
-            type: DataTypes.STRING,
-        },
-        lastName: {
-            type: DataTypes.STRING,
-        },
-        dob: {
-            type: DataTypes.DATE,
-        },
-        address: {
-            type: DataTypes.STRING,
-        },
-        avatar: {
-            type: DataTypes.STRING,
-        },
-        bio: {
-            type: DataTypes.STRING,
-        },
-
-
-        // role info
-        isStudent: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-        },
-        isAdmin: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-        },
-        isStaff: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-        },
-
-        // moderation info
-        isMuted: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-        },
-
-
+  {
+    // basic user info
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    {
-        sequelize,
-        getterMethods: {
-            _fullName(locale) {
-                if (locale === "vi-VN") {
-                    return this.lastName + " " + this.firstName;
-                }
-                return this.firstName + " " + this.lastName;
-            },
-            _role() {
-                // return the highest role of the user
-                if (this.isAdmin) return "Admin";
-                if (this.isStaff) return "Staff";
-                if (this.isStudent) return "Student";
-                return "User";
-            }
+    email: {
+      type: DataTypes.STRING,
+    },
+    phone: {
+      type: DataTypes.STRING,
+    },
+    citizenId: {
+      type: DataTypes.STRING,
+    },
 
+    // personal info
+    firstName: {
+      type: DataTypes.STRING,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+    },
+    dob: {
+      type: DataTypes.DATE,
+    },
+    address: {
+      type: DataTypes.STRING,
+    },
+    avatar: {
+      type: DataTypes.STRING,
+    },
+    bio: {
+      type: DataTypes.STRING,
+    },
+
+    // actor info
+    isStudent: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },    
+
+    // moderation info
+    isMuted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+  },
+  {
+    sequelize,
+    getterMethods: {
+      _fullName(locale) {
+        if (locale === "vi-VN") {
+          return this.lastName + " " + this.firstName;
         }
-    }
+        return this.firstName + " " + this.lastName;
+      },
+    },
+  }
 );
 
 User.hasOne(Auth);
-Auth.belongsTo(User)
+Auth.belongsTo(User);
 
 User.hasMany(Post);
 Post.belongsTo(User);
@@ -108,11 +88,8 @@ PostLike.belongsTo(User);
 User.hasMany(CommentLike);
 CommentLike.belongsTo(User);
 
-User.hasMany(PublicChatMessage)
-PublicChatMessage.belongsTo(User)
-
-User.belongsToMany(PublicChatRoom, {through: PublicRoomUser});
-PublicChatRoom.belongsToMany(User, {through: PublicRoomUser});
+User.belongsToMany(PublicChatRoom, { through: PublicRoomUser });
+PublicChatRoom.belongsToMany(User, { through: PublicRoomUser });
 
 // missing LinkedProfile
 
@@ -148,6 +125,5 @@ PublicChatRoom.belongsToMany(User, {through: PublicRoomUser});
 
 // missing Notification
 // UserId, content, isRead, with createdAt, readAt
-
 
 module.exports = User;

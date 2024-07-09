@@ -1,11 +1,7 @@
-import {Col, Container, Row} from "react-bootstrap";
-import {lazy, Suspense} from "react";
+import { Col, Container, Row } from "react-bootstrap";
 import PostSearch from "../../components/forum/PostSearch";
-
-const NavigateButton = lazy(() =>
-  import("../../components/ui/buttons/NavigateButton")
-);
-const ListPost = lazy(() => import("../../components/forum/ListPost"));
+import NavigateButton from "../../components/ui/buttons/NavigateButton.jsx";
+import ListPost from "../../components/forum/ListPost";
 
 const Forum = () => {
   return (
@@ -32,9 +28,7 @@ const Forum = () => {
               </NavigateButton>
             </Col>
           </Row>
-          <Suspense fallback={<div>Loading...</div>}>
-            <ListPost />
-          </Suspense>
+          <ListPost />
         </Col>
       </Row>
       <Row className="border">

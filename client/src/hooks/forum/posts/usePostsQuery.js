@@ -1,6 +1,6 @@
 import axios from "axios";
-import {useEffect, useState} from "react";
-import {useNavigate} from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 const API_URL = "http://localhost:8000/api";
 
@@ -19,13 +19,19 @@ const usePostsQuery = () => {
         setLoading(false);
       } catch (error) {
         // navigate("/error", {
-          // state: {
-          //   message: error.response
-          //     ? error.response.data.message
-          //     : "An error occurred",
-          // },
+        // state: {
+        //   message: error.response
+        //     ? error.response.data.message
+        //     : "An error occurred",
+        // },
         // });
-        setError(error);
+        
+        // if error code = 404 but has a message, return empty array of posts
+        if (error.response.status === 404) {
+          setPosts([]);
+        } else {
+          setError(error);
+        };
         setLoading(false);
       }
     };
