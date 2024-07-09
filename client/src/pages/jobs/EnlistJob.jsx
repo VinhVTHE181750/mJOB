@@ -271,7 +271,7 @@ return (
               <Form.Control 
                 as="select" 
                 name="job_compensation_currencies"
-                value={formValues.job_compensation_currencies}
+                value={formValues.job_compensation_currencies || 'VND'}
                 onChange={handleChange}
               >
                 <option>VND</option>
