@@ -118,11 +118,7 @@ log("Enabled route: /api/forum", 'INFO');
 // app.use("/api/joblist", jobListRoute);
 // log("Enabled route: /api/joblist", 'INFO');
 
-const routeRoute = async (req, res) => {
-    // send all routes address to the client
-    const message = 1 + 1;
-    res.status(200).json({message});
-};
+const routeRoute = require("./src/routes/test");
 app.use("/api/test", LoggerMiddleware, routeRoute)
 log("Enabled route: /api/test", 'INFO');
 

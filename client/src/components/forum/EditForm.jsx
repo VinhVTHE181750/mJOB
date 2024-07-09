@@ -1,24 +1,30 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import usePostUpdate from "../../hooks/forum/posts/usePostUpdate";
 import {useNavigate, useParams} from "react-router-dom";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
+import useCategories from "../../hooks/forum/categories/useCategories";
 
-const EditForm = () => {
+const EditForm = ({id}) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [error, setError] = useState(null);
+  // id, title, content, userId, username, status, category, categoryId, tags
+  const userId = 1; // get from context instead
+  const username = "admin"; // get from context instead
+  const [status, setStatus] = useState("PUBLISHED"); 
+  const { categories } = useCategories();
+  const [categoryId, setCategoryId] = useState(1);
+  const [category, setCategory] = useState("GENERAL");
+  const [tags, setTags] = useState("");
   const navigate = useNavigate();
-  const { id } = useParams();
-  const [post_id, setPost_id] = useState(id);
   const { updatePost } = usePostUpdate();
   const { post, loading, error: postError } = usePostDetail(id);
 
   useEffect(() => {
     if (post) {
-      setTitle(post.post_title || "");
-      setContent(post.post_content || "");
-      setPost_id(post.post_id);
+      setTitle(post.title || "");
+      setContent(post.content || "");
     }
   }, [post]);
 
@@ -32,11 +38,11 @@ const EditForm = () => {
     }
 
     //const user_id = userContext.user_id;
-    const user_id = 1; // Set author here
-    const result = await updatePost(title, content, user_id, post_id);
+    const UserId = 1; // Set author here
+    const result = await updatePost(Number(id), title, content, userId, username, status, category, categoryId, tags);
     console.log(result);
     if (result) {
-      navigate(`/posts/${post_id}`);
+      navigate(`/posts/${id}`);
     }
   };
 

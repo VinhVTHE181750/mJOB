@@ -13,6 +13,9 @@ router.use("/likes", likeRoutes);
 const categoryRoutes = require("./forum/Category.js");
 router.use("/categories", categoryRoutes);
 
+const metricsRoutes = require("./forum/Metrics.js")
+router.use("/metrics", metricsRoutes);
+
 // tagRoutes
 
 // metric routes

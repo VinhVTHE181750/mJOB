@@ -1,15 +1,13 @@
 import usePostsQuery from "../../hooks/forum/posts/usePostsQuery";
-import {Pagination} from "react-bootstrap";
+import { Pagination } from "react-bootstrap";
 import "../../assets/css/Forum.css";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
-import 'react-loading-skeleton/dist/skeleton.css'
+import "react-loading-skeleton/dist/skeleton.css";
 import PostCard from "./PostCard";
-import {useState} from "react";
+import { useState } from "react";
 
 // ...
-
-
 
 const ListPost = () => {
   const navigate = useNavigate();
@@ -28,31 +26,37 @@ const ListPost = () => {
     pageNumbers.push(i);
   }
 
-
   if (loading) {
-    return <>
-      <Skeleton height={160} className="mt-2"/>
-      <Skeleton height={160} className="mt-2"/>
-      <Skeleton height={160} className="mt-2"/>
-      <Skeleton height={160} className="mt-2"/>
-      <Skeleton height={160} className="mt-2"/>
-    </>;
+    return (
+      <>
+        {Array.from({ length: postsPerPage }, (_, index) => (
+          <Skeleton key={index} height={160} className="mt-2" />
+        ))}
+      </>
+    );
   }
 
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
-
-
   return (
     <div>
       {currentPosts.map((post) => (
-        <PostCard key={post.post_id} post={post} onClick={() => navigate(`/posts/${post.post_id}`)}/>
+        <PostCard
+          key={post.id}
+          post={post}
+          onClick={() => navigate(`/posts/${post.id}`)}
+        />
       ))}
       <Pagination className="justify-content-center mt-2">
-        {pageNumbers.map(number => (
-          <Pagination.Item className="px-0" key={number} onClick={() => paginate(number)} active={number === currentPage}>
+        {pageNumbers.map((number) => (
+          <Pagination.Item
+            className="px-0"
+            key={number}
+            onClick={() => paginate(number)}
+            active={number === currentPage}
+          >
             {number}
           </Pagination.Item>
         ))}

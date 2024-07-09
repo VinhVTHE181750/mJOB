@@ -12,7 +12,7 @@ router.get("/", getAllPosts);
 router.get("/:id", getPostById);
 router.get("/user/:id", getPostOfUser);
 router.put("/", put);
-router.delete("/", deleteById);
+router.delete("/:id", deleteById);
 router.post("/", post);
 
 module.exports = router;
