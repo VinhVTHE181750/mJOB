@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import backgroundImg from '../../assets/img/apply.jpg';
+import backgroundImg from '../../assets/img/Stole.jpg';
 
 const PageContainer = styled.div`
   background-image: url(${backgroundImg});

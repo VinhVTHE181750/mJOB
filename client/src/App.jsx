@@ -116,6 +116,7 @@ function App() {
       </div>
       <HomeFooter />
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 export default App;
