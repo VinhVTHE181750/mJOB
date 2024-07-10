@@ -6,39 +6,30 @@ const PostHistory = require("../../../models/forum/post/PostHistory");
 const post = async (req, res) => {
   try {
     console.log(req.body)
-    const {
-      title,
-      content,
-      userId,
-      username,
-      status,
-      tags,
-      category,
-      categoryId,
-    } = req.body;
+    let postInput = req.body.post;
 
     let msg;
     let PostCategoryId;
 
-    if (!category && !categoryId) {
+    if (!postInput.category && !postInput.categoryId) {
       res
         .status(400)
         .json({ message: "Category or category ID must be provided." });
       return;
     }
-    if (categoryId) {
-      const cId = await PostCategory.findByPk(categoryId);
+    if (postInput.categoryId) {
+      const cId = await PostCategory.findByPk(postInput.categoryId);
       if (!cId) {
         res.status(404).json({ message: "Category not found." });
         return;
       }
-      PostCategoryId = categoryId;
+      PostCategoryId = postInput.categoryId;
     }
 
-    if (category) {
+    if (postInput.category) {
       const cName = await PostCategory.findOne({
         where: {
-          name: category,
+          name: postInput.category,
         },
       });
       if (!cName) {
@@ -51,36 +42,36 @@ const post = async (req, res) => {
         PostCategoryId = cName.id;
       }
     }
-    if (!title || title === "") {
+    if (!postInput.title || postInput.title === "") {
       res.status(400).json({ message: "Post title cannot be empty." });
       return;
     }
 
-    if (!content || content === "") {
+    if (!postInput.content || postInput.content === "") {
       res.status(400).json({ message: "Post content cannot be empty." });
       return;
     }
 
     let UserId;
 
-    if (!userId && !username) {
+    if (!postInput.userId && !postInput.username) {
       res
         .status(400)
         .json({ message: "User ID or username must be provided." });
       return;
     }
-    if (userId) {
-      const userExists = await User.findByPk(userId);
+    if (postInput.userId) {
+      const userExists = await User.findByPk(postInput.userId);
       if (!userExists) {
         res.status(404).json({ message: "User not found." });
         return;
       }
-      UserId = userId;
+      UserId = postInput.userId;
     }
 
     let message;
-    if (username) {
-      const userExists = await User.findOne({ where: { username } });
+    if (postInput.username) {
+      const userExists = await User.findOne({ where: { username: postInput.username } });
       if (!userExists) {
         res.status(404).json({ message: "User not found." });
         return;
@@ -92,8 +83,8 @@ const post = async (req, res) => {
       }
     }
 
-    if (tags && tags.length > 0) {
-      for (let tag of tags) {
+    if (postInput.tags && postInput.tags.length > 0) {
+      for (let tag of postInput.tags) {
         if (tag === "") {
           res.status(400).json({ message: "Tag cannot be empty." });
           return;
@@ -102,12 +93,12 @@ const post = async (req, res) => {
     }
 
     const post = await Post.create({
-      title,
-      content,
+      title: postInput.title,
+      content: postInput.content,
       UserId,
-      status,
+      status: postInput.status,
       PostCategoryId,
-      tags,
+      tags: postInput.tags,
     });
     await PostHistory.create({
       title: post.title,
@@ -121,7 +112,7 @@ const post = async (req, res) => {
     res.status(201).send({ post, message, msg });
   } catch (err) {
     console.log(err);
-    res.status(500).send();
+    res.status(500).json({ message: "Unexpected error while creating post" });
   }
 };
 

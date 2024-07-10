@@ -9,10 +9,6 @@ import useCategories from "../../hooks/forum/categories/useCategories";
 import Skeleton from "react-loading-skeleton";
 
 const PostCard = ({ post, onClick }) => {
-  const [likes] = useState(0);
-  const [dislikes] = useState(0);
-  const [comments] = useState(0);
-
   const { getCategory } = useCategories();
   const [category, setCategory] = useState(null);
 
@@ -46,9 +42,9 @@ const PostCard = ({ post, onClick }) => {
           <div><Skeleton count={0.2}/></div>
         )}
           <span>
-            <ViewCount id={post.id} />
+            {/* <ViewCount id={post.id} />
             <CommentCount id={post.id} />
-            <LikeCount postId={post.id} />
+            <LikeCount postId={post.id} /> */}
           </span>
         </Card.Subtitle>
 

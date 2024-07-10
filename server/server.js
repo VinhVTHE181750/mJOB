@@ -107,7 +107,7 @@ app.get("/", (req, res) => {
   res.send("Server is running...");
 });
 app.use((req, res, next) => {
-  next(createError(404));
+  return res.status(404).send("Not found");
 });
 app.use((err, req, res) => {
   console.log(err.stack);
