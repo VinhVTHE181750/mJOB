@@ -1,23 +1,30 @@
-import Skeleton from "react-loading-skeleton"; // Assuming you have this component for loading state
 import PropTypes from "prop-types";
+import Skeleton from "react-loading-skeleton";
 
 const Category = ({ category }) => {
+  const setSearchCategory = (e) => {
+    e.stopPropagation();
+    console.log(category.name);
+  };
+
   if (!category)
     return (
       <div>
-        <Skeleton count={.1}/>
+        <Skeleton count={0.1} />
       </div>
     );
 
   return (
     <div
+      className="border post-category"
       style={{
         backgroundColor: `#${category.bgColor}`,
         color: `#${category.fgColor}`,
         borderRadius: "5px",
-        padding: "5px",
+        padding: "10px",
         width: "fit-content",
       }}
+      onClick={(e) => setSearchCategory(e)}
     >
       {category.name}
     </div>
@@ -25,7 +32,7 @@ const Category = ({ category }) => {
 };
 
 Category.propTypes = {
-  category: PropTypes.object.isRequired, // or PropTypes.number.isRequired, depending on the data type
+  category: PropTypes.object.isRequired,
 };
 
 export default Category;
