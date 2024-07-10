@@ -1,3 +1,5 @@
+[![CodeQL](https://github.com/VinhVTHE181750/mJOB/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/VinhVTHE181750/mJOB/actions/workflows/github-code-scanning/codeql)
+
 ## Description
 mJOB is an online job market platform designed to help students find job opportunities.
 Developed in SWP391 subject (SU24 semester, FPT-University).

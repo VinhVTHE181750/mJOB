@@ -20,13 +20,6 @@ const useCountUser = () => {
       } catch (error) {
         setError(error);
         setLoading(false);
-        navigate("/error", {
-          state: {
-            message: error.response
-              ? error.response.data.message
-              : "An error occurred",
-          },
-        });
       }
     };
     fetchCount();

@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import '../../assets/css/EnlistJob.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button, Col, Container, Form, Row} from 'react-bootstrap';
-import backgroundImg from '../../assets/img/Stole.jpg';
+import { Container, Button, Row, Form, Col,} from 'react-bootstrap';
 import useJobInsert from "../../hooks/useJobInsert.js";
 
 const EnlistJob = () => {
@@ -19,7 +18,7 @@ const EnlistJob = () => {
     job_number_of_recruits: '',
     job_start_date: '',
     job_end_date: '',
-    job_compensation_types: '',
+    job_compensation_type: '',
     //isChecked: false,
     job_compensation_amounts: '',
     job_compensation_currencies: '',
@@ -83,8 +82,7 @@ ROW 3  TAGS
 */
 
 return (
-  <>
-    <img src={backgroundImg} alt="Image" className="background-img"/>
+ 
     <Container className='container'>
       <Form className='form' onSubmit={handleSubmit}>
         <Button href="/" className='back-button'>Back</Button>
@@ -232,8 +230,8 @@ return (
               <Form.Label>Compensation type</Form.Label>
               <Form.Control 
                 as="select" 
-                name="job_compensation_types"
-                value={formValues.job_compensation_types}
+                name="job_compensation_type"
+                value={formValues.job_compensation_type}
                 onChange={handleChange}
               >
                 <option>One-time</option>
@@ -274,7 +272,7 @@ return (
               <Form.Control 
                 as="select" 
                 name="job_compensation_currencies"
-                value={formValues.job_compensation_currencies}
+                value={formValues.job_compensation_currencies || 'VND'}
                 onChange={handleChange}
               >
                 <option>VND</option>
@@ -345,7 +343,7 @@ return (
         {success && <p className="success-message">Job successfully enlisted!</p>}
       </Form>
     </Container>
-  </>
+  
 );
 };
 
