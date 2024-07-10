@@ -77,11 +77,11 @@ log("Enabled route: /api/forum", "INFO");
 // const ticketRoute = require("./src/routes/ticket");
 // app.use("/api/ticket", ticketRoute);
 
-// const countTotalUserRoute = require("./src/routes/dashboard/countTotalUser");
-// app.use("/api/dashboard/count/user/total", countTotalUserRoute);
+const countTotalUserRoute = require("./src/routes/dashboard/countTotalUser");
+app.use("/api/dashboard/count/user/total", countTotalUserRoute);
 
-// const countActiveUserRoute = require("./src/routes/dashboard/countActiveUser");
-// app.use("/api/dashboard/count/user/active", countActiveUserRoute);
+const countActiveUserRoute = require("./src/routes/dashboard/countActiveUser");
+app.use("/api/dashboard/count/user/active", countActiveUserRoute);
 
 // const jobsRoute = require("./src/routes/jobs");
 // app.use("/api/jobs", jobsRoute);
