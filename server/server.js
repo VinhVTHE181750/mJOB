@@ -13,6 +13,7 @@ app.use(cors({
   origin: config.middleware.cors.origin
 }));
 
+
 // Rate limiter
 app.use(rateLimit({
   windowMs: config.middleware.rateLimiter.windowMs,
@@ -55,6 +56,12 @@ app.use("/api/jobs", jobsRoute);
 
 const profileRoute = require('./src/routes/profile/post');
 app.post('/submit', profileRoute.profile);
+
+const workInfoRoute = require('./src/routes/profile/wPost');
+app.post('/work', workInfoRoute.submitProfile);
+
+const viewProfileRoute = require('./src/routes/profile/wPost');
+app.get('/view-profile', viewProfileRoute.getProfiles);
 
 
 

@@ -28,7 +28,7 @@ const Profile = () => {
     setUsername(fullName);
 
     const userData = {
-      userId: 37, // Assuming a static user ID for this example
+      userId: 18, // Assuming a static user ID for this example
       userAvatar: selectedImage,
       userBio: fullName,
       userDob: dob,
@@ -66,8 +66,8 @@ const Profile = () => {
                   Profile
                 </Nav.Link>
               </h2>
-              <Nav.Link href="/workinformation" className="text-white">
-                Work Information
+              <Nav.Link href="/information" className="text-white">
+                Information
               </Nav.Link>
               <Nav.Link href="/security" className="text-white">
                 Security
