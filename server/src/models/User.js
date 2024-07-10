@@ -8,6 +8,7 @@ const { sequelize } = require("./SQLize");
 const { Model, DataTypes } = require("sequelize");
 const PublicRoomUser = require("./forum/chat/PublicRoomUser");
 const PublicChatRoom = require("./forum/chat/PublicChatRoom");
+const Balance = require("./payment/Balance");
 
 class User extends Model {}
 
@@ -90,6 +91,9 @@ CommentLike.belongsTo(User);
 
 User.belongsToMany(PublicChatRoom, { through: PublicRoomUser });
 PublicChatRoom.belongsToMany(User, { through: PublicRoomUser });
+
+User.hasOne(Balance);
+Balance.belongsTo(User);
 
 // missing LinkedProfile
 
