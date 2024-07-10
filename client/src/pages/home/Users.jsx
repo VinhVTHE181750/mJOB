@@ -27,7 +27,7 @@ const Users = () => {
                             <Nav.Link href="/users" className="text-white">Users</Nav.Link>
                             <Nav.Link href="/settings" className="text-white">Settings</Nav.Link>
                             <Row>
-                                <Col><Button variant="danger" href="/logout">Logout</Button></Col>
+                                <Col><Button variant="danger" href="/logout">Log Out</Button></Col>
                             </Row>
                         </Nav>
                     </Col>
@@ -76,7 +76,7 @@ const UserCard = ({ name, email, role, registered, onEdit, onDelete }) => (
             <Card.Text>Additional information...</Card.Text>
             <div className="d-flex justify-content-end">
                 <Button variant="primary" className="mr-2" onClick={onEdit}>
-                    Edit
+                    Detail
                 </Button>
                 <Button variant="danger" onClick={onDelete}>
                     Delete

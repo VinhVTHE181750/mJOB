@@ -1,13 +1,25 @@
 const sql = require('mssql');
-const configF = require('../../config.json');
 
-const poolPromise = new sql.ConnectionPool(configF.database)
+const dbConfig = {
+  user: 'sa',
+  password: '123',
+  server: 'localhost',
+  database: 'mJob',
+  options: {
+    encrypt: true,
+    trustServerCertificate: true,
+  },
+};
+
+const poolPromise = new sql.ConnectionPool(dbConfig)
   .connect()
   .then(pool => {
+    console.log('Connected to MSSQL');
     return pool;
   })
-  .catch(err => console.log(err));
+  .catch(err => console.error('Database connection failed:', err));
 
 module.exports = {
-  sql, poolPromise
+  sql,
+  poolPromise,
 };

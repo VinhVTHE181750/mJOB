@@ -76,7 +76,7 @@ const JobCard = ({ title, company, location, posted, onEdit, onDelete }) => (
             <Card.Text>.......</Card.Text>
             <div className="d-flex justify-content-end">
                 <Button variant="primary" className="mr-2" onClick={onEdit}>
-                    Edit
+                    Detail
                 </Button>
                 <Button variant="danger" onClick={onDelete}>
                     Delete

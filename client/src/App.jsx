@@ -35,10 +35,13 @@ import Dashboard from "./pages/home/Dashboard";
 import TestPage from "./pages/technical/TestPage";
 
 // Users
-// import Setting from "./pages/home/Setting";
-// import Users from "./pages/home/Users";
-import Security from "./pages/profile/Security";
-import Profile from "./pages/profile/Profile";
+  import Setting from "./pages/home/Setting";
+  import Users from "./pages/home/Users";
+  import Security from "./pages/profile/Security";
+  import Profile from "./pages/profile/Profile";
+  import WorkInformation from "./pages/profile/WorkInformation";
+  import ViewProfile from "./pages/profile/ViewProfile";
+
 
 // Components
 import HomeFooter from "./components/HomeFooter";
@@ -97,23 +100,22 @@ function App() {
               <Route exact path="/payment" element={<PaymentPortal />} />
 
 
-              {/* USERS ROUTES */}
-              <Route exact path="/profile" element={<Profile />} />
-              <Route exact path="/security" element={<Security />} />
-              {/* <Route exact path="/users" element={<Users />} /> */}
-              {/* <Route exact path="/settings" element={<Setting />} /> */}
-              <Route exact path="/ticket" element={<CreateTicketPage />} />
+          {/* USERS ROUTES */}
+           <Route exact path="/profile" element={<Profile />} /> 
+           <Route exact path="/security" element={<Security />} /> 
+          {/* <Route exact path="/users" element={<Users />} /> */}
+          {/* <Route exact path="/settings" element={<Setting />} /> */}
+          <Route exact path="/ticket" element={<CreateTicketPage />} />
 
-              {/* TECHNICAL ROUTES */}
-              <Route exact path="*" element={<PageNotFound />} />
-              <Route exact path="/dashboard" element={<Dashboard />} />
-              <Route exact path="/test" element={<TestPage />} />
-            </Routes>
-          </div>
-          <HomeFooter />
-        </BrowserRouter>
-      </AuthProvider>
-    
+          
+          {/* TECHNICAL ROUTES */}
+          <Route exact path="*" element={<PageNotFound />} />
+          <Route exact path="/dashboard" element={<Dashboard />} />
+
+        </Routes>
+      </div>
+      <HomeFooter />
+    </BrowserRouter>
   );
 }
 export default App;
