@@ -4,141 +4,79 @@ const User = require("../../../models/User");
 const PostHistory = require("../../../models/forum/post/PostHistory");
 
 const put = async (req, res) => {
-  try {
-    let {
-      id,
-      title,
-      content,
-      userId,
-      username,
-      status,
-      tags,
-      category,
-      categoryId,
-    } = req.body;
+  if (!req.loggedIn) return res.status(401).json({ message: "Unauthorized" });
 
-    let msg;
-    console.log(req.body);
-    let post = await Post.findByPk(id);
+  try {
+    let postInput = req.body.post;
+    let post = await Post.findByPk(postInput.id);
+
     if (!post) {
       res.status(404).json({ message: "Post not found." });
       return;
     }
 
-    let PostCategoryId;
-    if (!category && !categoryId) {
-      PostCategoryId = post.PostCategoryId;
-    }
-
-    if (categoryId) {
-      const cId = await PostCategory.findByPk(categoryId);
-      if (!cId) {
-        res.status(404).json({ message: "Category not found." });
-        return;
-      }
-      PostCategoryId = categoryId;
-    }
-
-    if (category) {
-      const cName = await PostCategory.findOne({
-        where: {
-          name: category,
-        },
-      });
-      if (!cName) {
-        res.status(404).json({ message: "Category not found." });
-        return;
-      }
-      if (PostCategoryId) {
-        msg = "Category ID and name provided. Using Category ID.";
-      } else {
-        PostCategoryId = cName.id;
-      }
-    }
-
-    if (!title) {
-      title = post.title;
-    }
-
-    if (title === "") {
-      res.status(400).json({ message: "Post title cannot be empty." });
+    if (post.UserId !== req.userId && !["ADMIN", "MOD"].includes(req.role)) {
+      res.status(401).json({ message: "Unauthorized" });
       return;
     }
 
-    if (!content) {
-      content = post.content;
-    }
-
-    if (content === "") {
-      res.status(400).json({ message: "Post content cannot be empty." });
+    if (post.status === "DELISTED" && !["ADMIN", "MOD"].includes(req.role)) {
+      res.status(400).json({ message: "Cannot update a delisted post." });
       return;
     }
 
-    let UserId;
-
-    if (!userId && !username) {
-      UserId = post.UserId;
+    if (post.status === "PUBLISHED" && postInput.status === "DRAFT") {
+      res
+        .status(400)
+        .json({ message: "Cannot change a published post to draft." });
+      return;
     }
 
-    if (userId) {
-      const userExists = await User.findByPk(userId);
-      if (!userExists) {
-        res.status(404).json({ message: "User not found." });
-        return;
-      }
-      UserId = userId;
+    if (
+      post.status === "PUBLISHED" &&
+      postInput.status === "DELISTED" &&
+      !["ADMIN", "MOD"].includes(req.role)
+    ) {
+      res
+        .status(400)
+        .json({ message: "Only ADMIN or MOD can delist a published post." });
+      return;
     }
 
-    let message;
-    if (username) {
-      if (UserId) {
-        message = "User ID and username provided. Using User ID.";
-      } else {
-      const userExists = await User.findOne({ where: { username } });
-      if (!userExists) {
-        res.status(404).json({ message: "User not found." });
-        return;
-      }
-        UserId = userExists.id;
-      }
+    if (post.status === "DRAFT" && postInput.status === "PUBLISHED") {
+      post.UserId !== req.userId
+        ? res
+            .status(400)
+            .json({ message: "Only author can publish their post." })
+        : (post.status = postInput.status);
     }
 
-    if (!tags) {
-      tags = post.tags;
+    if (post.UserId === req.userId) {
+      post.title = postInput.title || post.title;
+      post.content = postInput.content || post.content;
     }
 
-    if (tags && tags.length > 0) {
-      for (let tag of tags) {
-        if (tag === "") {
-          res.status(400).json({ message: "Tag cannot be empty." });
-          return;
-        }
-      }
+    if (["ADMIN", "MOD"].includes(req.role)) {
+      post.status = postInput.status || post.status;
     }
 
-    await post.update({
-      title,
-      content,
-      id,
-      status,
-      PostCategoryId,
-      tags,
-      UserId,
-    });
-    let PostId = id;
-    await PostHistory.create({
-      PostId,
-      title,
-      content,
-      UserId,
-      PostCategoryId,
-      tags,
-      action: "UPDATE",
-    });
-    res.status(200).send();
+    await Promise.all([
+      post.save(),
+      PostHistory.create({
+        PostId: post.id,
+        title: post.title,
+        content: post.content,
+        UserId: post.UserId,
+        PostCategoryId: post.PostCategoryId,
+        tags: post.tags,
+        action: "UPDATE",
+      }),
+    ]);
+
+    res.status(200).json(post);
   } catch (err) {
-    console.log(err);
-    res.status(500).send();
+    console.error(err);
+    res.status(500).json({ message: "Unexpected error while updating post." });
   }
 };
 

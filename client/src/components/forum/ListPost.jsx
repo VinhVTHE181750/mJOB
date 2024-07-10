@@ -1,17 +1,30 @@
-import usePostsQuery from "../../hooks/forum/posts/usePostsQuery";
-import { Pagination } from "react-bootstrap";
+// import usePostsQuery from "../../hooks/forum/posts/usePostsQuery";
+import { Form, Pagination } from "react-bootstrap";
 import "../../assets/css/Forum.css";
 import { useNavigate } from "react-router-dom";
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import PostCard from "./PostCard";
 import { useState } from "react";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchPosts } from "../../store/reducers/postsReducer";
+import { fetchCategories } from "../../store/reducers/postCategoriesReducer";
 
 // ...
 
 const ListPost = () => {
   const navigate = useNavigate();
-  const { posts, loading, error } = usePostsQuery();
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => state.posts.posts);
+  const categories = useSelector((state) => state.postCategories.categories);
+
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(4);
@@ -26,19 +39,10 @@ const ListPost = () => {
     pageNumbers.push(i);
   }
 
-  if (loading) {
-    return (
-      <>
-        {Array.from({ length: postsPerPage }, (_, index) => (
-          <Skeleton key={index} height={160} className="mt-2" />
-        ))}
-      </>
-    );
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  const handleSize = (e) => {
+    if (!e.target.value || e.target.value < 1) return;
+    setPostsPerPage(e.target.value);
+  };
 
   return (
     <div>
@@ -47,6 +51,7 @@ const ListPost = () => {
           key={post.id}
           post={post}
           onClick={() => navigate(`/posts/${post.id}`)}
+          category={categories.find(category => category.id === post.PostCategoryId)}
         />
       ))}
       <Pagination className="justify-content-center mt-2">
@@ -61,6 +66,16 @@ const ListPost = () => {
           </Pagination.Item>
         ))}
       </Pagination>
+      <Form>
+        <Form.Group controlId="postsPerPage">
+          <Form.Label>Posts per page</Form.Label>
+          <Form.Control
+            type="number"
+            value={postsPerPage}
+            onChange={handleSize}
+          />
+        </Form.Group>
+      </Form>
     </div>
   );
 };
