@@ -16,12 +16,18 @@ app.use(errorHandler);
 let port = config.boot.port;
 const server = app
   .listen(port, () => {
-    log(`Server is running on port ${port}`, "INFO");
+    log(`Server is running on port ${port}`, "INFO", 'Server');
   })
   .on("error", handleServerError);
 
 const io = new Server(server);
 
 function handleServerError(err) {
-  // Error handling logic here
+  if (err.code === "EADDRINUSE") {
+    log(`Port ${port} is already in use`, "ERROR");
+    port++;
+    server.listen(port);
+  } else {
+    log(err.message, "ERROR");
+  }
 }

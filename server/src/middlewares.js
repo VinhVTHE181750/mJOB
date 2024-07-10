@@ -6,8 +6,11 @@ const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
 const config = require("../config.json");
 const { log } = require("./utils/Logger");
+const csurf = require("csurf");
+const csrfProtection = csurf({ cookie: true });
 
 module.exports = function applyMiddlewares(app) {
+  app.use(csrfProtection);
   app.use(cors({ origin: config.middleware.cors.origin }));
   app.use(
     rateLimit({
