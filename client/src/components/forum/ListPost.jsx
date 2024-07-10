@@ -1,27 +1,83 @@
-import usePostsQuery from "../../hooks/forum/posts/usePostsQuery";
-import { Pagination } from "react-bootstrap";
+// import usePostsQuery from "../../hooks/forum/posts/usePostsQuery";
+import { Form, Pagination } from "react-bootstrap";
 import "../../assets/css/Forum.css";
 import { useNavigate } from "react-router-dom";
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import PostCard from "./PostCard";
-import { useContext, useEffect, useState } from "react";
-import { ForumContext } from "../../context/ForumContext";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchPosts } from "../../store/reducers/postsReducer";
+import { fetchCategories } from "../../store/reducers/postCategoriesReducer";
 
 // ...
 
 const ListPost = () => {
   const navigate = useNavigate();
-  const { posts, loading, error } = useContext(ForumContext);
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => state.posts.posts);
+  const categories = useSelector((state) => state.postCategories.categories);
 
   useEffect(() => {
-    console.log(posts);
-  }, [posts]);
+    dispatch(fetchPosts());
+  }, [dispatch]);
 
-  return () => {
-    <>
-    </>
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(4);
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(posts.length / postsPerPage); i++) {
+    pageNumbers.push(i);
   }
+
+  const handleSize = (e) => {
+    if (!e.target.value || e.target.value < 1) return;
+    setPostsPerPage(e.target.value);
+  };
+
+  return (
+    <div>
+      {currentPosts.map((post) => (
+        <PostCard
+          key={post.id}
+          post={post}
+          onClick={() => navigate(`/posts/${post.id}`)}
+          category={categories.find(category => category.id === post.PostCategoryId)}
+        />
+      ))}
+      <Pagination className="justify-content-center mt-2">
+        {pageNumbers.map((number) => (
+          <Pagination.Item
+            className="px-0"
+            key={number}
+            onClick={() => paginate(number)}
+            active={number === currentPage}
+          >
+            {number}
+          </Pagination.Item>
+        ))}
+      </Pagination>
+      <Form>
+        <Form.Group controlId="postsPerPage">
+          <Form.Label>Posts per page</Form.Label>
+          <Form.Control
+            type="number"
+            value={postsPerPage}
+            onChange={handleSize}
+          />
+        </Form.Group>
+      </Form>
+    </div>
+  );
 };
 
 export default ListPost;

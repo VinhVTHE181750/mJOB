@@ -1,46 +1,15 @@
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { getMoment } from "../../functions/Converter";
-import { useEffect, useState } from "react";
-import ViewCount from "./micro/ViewCount";
-import CommentCount from "./micro/CommentCount";
-import LikeCount from "./micro/LikeCount";
-import useCategories from "../../hooks/forum/categories/useCategories";
-import Skeleton from "react-loading-skeleton";
+import Category from "./micro/Category";
+import PropTypes from "prop-types";
 
-const PostCard = ({ post, onClick }) => {
-  const { getCategory } = useCategories();
-  const [category, setCategory] = useState(null);
-
-  useEffect(() => {
-    const fetchCategory = async () => {
-      const categoryData = await getCategory(post.PostCategoryId);
-      setCategory(categoryData);
-    };
-
-    fetchCategory();
-  }, []);
-
+const PostCard = ({ post, onClick, category }) => {
   return (
     <Card className="post-card" key={post.id} onClick={onClick}>
       <Card.Body>
         <Card.Subtitle className="fs-5">
-        {category ? (
-          <div
-            className=""
-            style={{
-              backgroundColor: `#${category.bgColor}`,
-              color: `#${category.fgColor}`,
-              borderRadius: "5px",
-              padding: "5px",
-              width: "fit-content",
-            }}
-          >
-            {category.name}
-          </div>
-        ) : (
-          <div><Skeleton count={0.2}/></div>
-        )}
+          <Category category={category} />
           <span>
             {/* <ViewCount id={post.id} />
             <CommentCount id={post.id} />
@@ -68,5 +37,12 @@ const PostCard = ({ post, onClick }) => {
     </Card>
   );
 };
+
+PostCard.propTypes = {
+  post: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
+  category: PropTypes.object.isRequired,
+};
+
 
 export default PostCard;
