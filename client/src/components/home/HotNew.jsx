@@ -1,7 +1,7 @@
 import React from 'react';
 import useNewsContent from "../../hooks/useNewsContent.js";
-import { getMoment } from "../../functions/Converter.js";
-import { Card} from "react-bootstrap";
+import {getMoment} from "../../functions/Converter.js";
+import {Card} from "react-bootstrap";
 
 function HotNew() {
   const {contents, loading, error } = useNewsContent();

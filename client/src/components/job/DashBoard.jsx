@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import '../../assets/css/Dashboard.css';
 import useUserTotalCompletedJob from '../../hooks/useUserTotalCompletedJob';
 import useUserTotalCurrentAppliedJob from '../../hooks/useUserTotalCurrentAppliedJob';
 import useUserTotalCreatedJob from '../../hooks/useUserTotalCreatedJob';
 import useUserCompletedJobList from '../../hooks/useUserCompletedJobList';
 import useUserAppliedJobList from '../../hooks/useUserAppliedJobList';
-import { Table } from 'react-bootstrap';
-import TestData from '../../components/TestData';
+import {Table} from 'react-bootstrap';
 
 
 const Dashboard = () => {

@@ -1,85 +1,127 @@
-const { pool } = require("mssql");
-const db = require("../../../models/DBContext");
-
-const INSERT_POST = `
-INSERT INTO post (post_title, post_content, user_id, post_status) 
-OUTPUT INSERTED.post_id
-VALUES (@post_title, @post_content, @user_id, @post_status);
-`;
-
-const INSERT_POST_HISTORY = `
-INSERT INTO post_history (post_id, post_title, post_content)
-VALUES (@post_id, @post_title, @post_content);
-`;
+const User = require("../../../models/User");
+const PostCategory = require("../../../models/forum/post/PostCategory");
+const Post = require("../../../models/forum/post/Post");
+const PostHistory = require("../../../models/forum/post/PostHistory");
 
 const post = async (req, res) => {
-  var inserted, logged;
   try {
-    const { title, content, user_id, post_status } = req.body;
-    // if post_status is not in PUBLSIHED, DRAFT, DELISTED, return 400
-    if (
-      post_status !== "PUBLISHED" &&
-      post_status !== "DRAFT" &&
-      post_status !== "DELISTED"
-    ) {
-      res.status(400).json({ message: "Invalid post status." });
+    console.log(req.body)
+    const {
+      title,
+      content,
+      userId,
+      username,
+      status,
+      tags,
+      category,
+      categoryId,
+    } = req.body;
+
+    let msg;
+    let PostCategoryId;
+
+    if (!category && !categoryId) {
+      res
+        .status(400)
+        .json({ message: "Category or category ID must be provided." });
       return;
     }
-    // if post_title is empty, return 400
-    if (title === "") {
+    if (categoryId) {
+      const cId = await PostCategory.findByPk(categoryId);
+      if (!cId) {
+        res.status(404).json({ message: "Category not found." });
+        return;
+      }
+      PostCategoryId = categoryId;
+    }
+
+    if (category) {
+      const cName = await PostCategory.findOne({
+        where: {
+          name: category,
+        },
+      });
+      if (!cName) {
+        res.status(404).json({ message: "Category not found." });
+        return;
+      }
+      if (PostCategoryId) {
+        msg = "Category ID and name provided. Using Category ID.";
+      } else {
+        PostCategoryId = cName.id;
+      }
+    }
+    if (!title || title === "") {
       res.status(400).json({ message: "Post title cannot be empty." });
       return;
     }
 
-    // if post_content is empty, return 400
-    if (content === "") {
+    if (!content || content === "") {
       res.status(400).json({ message: "Post content cannot be empty." });
       return;
     }
 
-    // if user_id is not a number or less than 0, return 400
-    if (isNaN(user_id) || user_id <= 0) {
-      res.status(400).json({ message: "Invalid user id." });
+    let UserId;
+
+    if (!userId && !username) {
+      res
+        .status(400)
+        .json({ message: "User ID or username must be provided." });
       return;
     }
+    if (userId) {
+      const userExists = await User.findByPk(userId);
+      if (!userExists) {
+        res.status(404).json({ message: "User not found." });
+        return;
+      }
+      UserId = userId;
+    }
 
-    const pool = await db.poolPromise;
-    // First query: Insert into post
-    const result = await pool
-      .request()
-      .input("post_title", db.sql.NVarChar, title)
-      .input("post_content", db.sql.NVarChar, content)
-      .input("user_id", db.sql.Int, user_id)
-      .input("post_status", db.sql.NVarChar, post_status)
-      .query(INSERT_POST);
-    inserted = true;
+    let message;
+    if (username) {
+      const userExists = await User.findOne({ where: { username } });
+      if (!userExists) {
+        res.status(404).json({ message: "User not found." });
+        return;
+      }
+      if (UserId) {
+        message = "User ID and username provided. Using User ID.";
+      } else {
+        UserId = userExists.id;
+      }
+    }
 
-    const post_id = result.recordset[0].post_id;
+    if (tags && tags.length > 0) {
+      for (let tag of tags) {
+        if (tag === "") {
+          res.status(400).json({ message: "Tag cannot be empty." });
+          return;
+        }
+      }
+    }
 
-    await pool // Second query: Insert into post_history
-      .request()
-      .input("post_id", db.sql.Int, post_id)
-      .input("post_title", db.sql.NVarChar, title)
-      .input("post_content", db.sql.NVarChar, content)
-      .query(INSERT_POST_HISTORY);
-    logged = true;
+    const post = await Post.create({
+      title,
+      content,
+      UserId,
+      status,
+      PostCategoryId,
+      tags,
+    });
+    await PostHistory.create({
+      title: post.title,
+      content: post.content,
+      tags: post.tags,
+      action: "CREATE",
+      PostCategoryId: post.PostCategoryId,
+      UserId: post.UserId,
+      PostId: post.id,
+    });
+    res.status(201).send({ post, message, msg });
   } catch (err) {
     console.log(err);
-  }
-
-  // Second query: Insert into post_history
-  if (!inserted) {
-    // INSERT to error log: post cannot be created
-    res.status(500).json({ message: "Error occurred while creating post." });
-    return;
-  } else {
-    if (!logged) {
-      /* INSERT to error log: post cannot be logged into history*/
-      res.status(201).json({ message: "Post created but not logged." });
-    } else {
-      res.status(201).send();
-    }
-    return;
+    res.status(500).send();
   }
 };
 

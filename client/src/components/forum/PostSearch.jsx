@@ -1,4 +1,4 @@
-import { FloatingLabel, Form } from "react-bootstrap";
+import {FloatingLabel, Form} from "react-bootstrap";
 
 const PostSearch = () => {
   return (
@@ -6,7 +6,7 @@ const PostSearch = () => {
       <FloatingLabel controlId="floatingTextarea2" label="Search">
         <Form.Control
           as="textarea"
-          placeholder="Leave a comment here"
+          placeholder="Enter a query..."
         />
       </FloatingLabel>
     </Form>

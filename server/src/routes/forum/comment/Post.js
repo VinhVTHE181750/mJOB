@@ -1,7 +1,7 @@
 const db = require("../../../models/DBContext");
 
 const INSERT_COMMENT = `
-INSERT INTO comment (comment_content, post_id, user_id) 
+INSERT INTO comment (comment_content, id, user_id) 
 VALUES (@content, @postId, @userId);
 `;
 

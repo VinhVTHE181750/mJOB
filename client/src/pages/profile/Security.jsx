@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Card, Nav, Form, Button } from 'react-bootstrap';
+import {Button, Card, Col, Container, Form, Nav, Row} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const SecurityPage = () => {

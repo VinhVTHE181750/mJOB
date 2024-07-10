@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import '../../assets/css/PriceBar.css';
 
 const FilterPrice = ({ onStartPrice, onEndPrice }) => {

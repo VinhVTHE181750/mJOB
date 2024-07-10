@@ -57,33 +57,24 @@ body {
 .header1{
   font-weight: bolder;
   font-size: 50px;
-  margin-left: 35.5%;
+  text-align: center; /* Center align the header */
 }
 
-.header2{
-  width: 309px;
-  color: var(--fg-6, #0062A7);
-font-family: 'Times New Roman', Times, serif;
-font-size: 25px;
-font-style: normal;
-font-weight: 200;
-line-height: normal;
-margin-left: 40%;
-padding-block: 20px;
-}
-.header3{
-  margin-left: 45%;
-}
-.header4{
-  margin-left: 44%;
-  width: 309px;
+.header2, .header4 {
+  text-align: center; /* Center align these headers */
   color: var(--fg-6, #0062A7);
   font-family: 'Times New Roman', Times, serif;
   font-size: 25px;
-  font-style: normal;
   font-weight: 200;
-  line-height: normal;
-  padding-block: 20px;
+  margin: 20px 0;
+}
+.header3{
+  text-align: center; /* Center align these headers */
+  color: var(--fg-6, #0062A7);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 17px;
+  font-weight: 200;
+  
 }
 
 label {

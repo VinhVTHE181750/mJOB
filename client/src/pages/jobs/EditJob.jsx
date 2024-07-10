@@ -1,6 +1,6 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { FaArrowLeft } from 'react-icons/fa';
+import {useNavigate, useParams} from 'react-router-dom';
+import {FaArrowLeft} from 'react-icons/fa';
 import '../../assets/css/EditJob.css';
 import useJobUpdate from '../../hooks/useJobUpdate.js';
 
@@ -65,7 +65,7 @@ const EditJob = () => {
           </div>
           <div className="section">
             <h2 className="label">Compensation Type:</h2>
-            <select className="input" name="job_compensation_types" value={job.job_compensation_types} onChange={handleInputChange}>
+            <select className="input" name="job_compensation_types" value={job.job_compensation_type} onChange={handleInputChange}>
               {compensationTypes.map((type) => (
                 <option key={type} value={type}>{type}</option>
               ))}

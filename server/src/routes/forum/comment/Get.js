@@ -2,20 +2,20 @@ const db = require("../../../models/DBContext");
 
 const SELECT_COMMENTS_BY_POST_ID = `
 SELECT comment_id, comment_content, comment.user_id, username, comment_updated_time
-FROM comment JOIN post ON comment.post_id = post.post_id JOIN [user] ON comment.user_id = [user].user_id
-WHERE post.post_id = @id;
+FROM comment JOIN post ON comment.id = post.id JOIN [user] ON comment.user_id = [user].user_id
+WHERE post.id = @id;
 `;
 
 const SELECT_COMMENT_BY_ID = `
 SELECT comment_id, comment_content, comment.user_id, username, comment_updated_time
-FROM comment JOIN post ON comment.post_id = post.post_id JOIN [user] ON comment.user_id = [user].user_id
+FROM comment JOIN post ON comment.id = post.id JOIN [user] ON comment.user_id = [user].user_id
 WHERE comment_id = @id;
 `;
 
 const COUNT_COMMENTS_BY_POST_ID = `
 SELECT COUNT(comment_id) AS comment_count
 FROM comment
-WHERE post_id = @id;
+WHERE id = @id;
 `;
 
 const getComments = async (req, res) => {

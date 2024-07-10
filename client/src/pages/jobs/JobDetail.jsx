@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import styled, { keyframes } from 'styled-components';
-import { useParams, useNavigate } from 'react-router-dom';
-import { FaArrowLeft } from 'react-icons/fa';
+import styled, {keyframes} from 'styled-components';
+import {useNavigate, useParams} from 'react-router-dom';
+import {FaArrowLeft} from 'react-icons/fa';
 
 
 const BackgroundContainer = styled.div`
@@ -197,7 +197,7 @@ const JobDetail = () => {
         </Section>
         <Section>
           <Label>Compensation:</Label>
-          <Text>Type: {job.job_compensation_types}</Text>
+          <Text>Type: {job.job_compensation_type}</Text>
           <Text>Amount: {job.job_compensation_amounts} {job.job_compensation_currencies} per {job.job_compensation_periods}</Text>
         </Section>
         <Section>

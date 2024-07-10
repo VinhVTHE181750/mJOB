@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import {useEffect, useState} from "react";
 
 // Edit this component's name
 const use____Query = (param1, param2) => {

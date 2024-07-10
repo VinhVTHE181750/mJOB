@@ -23,6 +23,10 @@ import JobDetail from "./pages/jobs/JobDetail";
 import MyJobs from "./pages/jobs/MyJobs";
 import EditJob from "./pages/jobs/EditJob";
 import ConfirmJob from "./pages/jobs/ConfirmJob";
+import ApplyJob from "./pages/jobs/ApplyJob";
+import ActiveJob from "./pages/jobs/ActiveJob";
+import CreatedJobDetail from "./pages/jobs/CreatedJobDetail";
+import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 
 
 // Technical
@@ -45,12 +49,15 @@ import HomeFooter from "./components/HomeFooter";
 import AppNavbar from "./components/Navbar";
 
 // Misc
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import "./App.css";
 import React from "react";
 
 // import ErrorPage from "./pages/error/ErrorPage";
 import CreateTicketPage from "./pages/user/CreateTicket";
+import { AuthProvider } from "./context/AuthContext";
+import Balance from "./pages/payment/micro/Balance";
+import PaymentPortal from "./pages/payment/PaymentPortal";
 
 function App() {
   return (
@@ -83,7 +90,14 @@ function App() {
               <Route exact path="/jobs/add" element={<EnlistJob />} />
               <Route exact path="/myjobs" element={<MyJobs />} />
               <Route exact path="/jobs/edit/:id" element={<EditJob />} />
-              <Route path="/confirm-job" element={<ConfirmJob />} />
+              <Route exact path="/confirm-job" element={<ConfirmJob />} />
+              <Route exact path="/apply/:job_id" element={<ApplyJob />} />
+              <Route exact path="/active-job" element={<ActiveJob />} />
+              <Route exact path="/created-job-details/:job_id" element={<CreatedJobDetail />} />
+              <Route exact path="/applied-job-details/:job_id" element={<AppliedJobDetail />} />
+
+              {/* PAYMENT ROUTES */}
+              <Route exact path="/payment" element={<PaymentPortal />} />
 
 
           {/* USERS ROUTES */}

@@ -1,92 +1,115 @@
-const express = require("express");
-const router = express.Router();
-const db = require("../../models/DBContext");
+const CommentLike = require("../../models/forum/comment/CommentLike");
+const PostLike = require("../../models/forum/post/PostLike");
+const router = require("express").Router();
 
-const COUNT_LIKES_BY_POST_ID = `
-SELECT 
-    SUM(CASE WHEN isDislike = 0 THEN 1 ELSE 0 END) AS likes,
-    SUM(CASE WHEN isDislike = 1 THEN 1 ELSE 0 END) AS dislikes
-FROM [post_like]
-WHERE post_id = @postId;
-`;
+const countLikesByCommentId = async (commentId) => {
+  const likes = await CommentLike.count({
+    where: {
+      commentId,
+      isDislike: false,
+    },
+  });
+  const dislikes = await CommentLike.count({
+    where: {
+      commentId,
+      isDislike: true,
+    },
+  });
+  return { likes, dislikes };
+};
+const countLikesByPostId = async (postId) => {
+  const likes = await PostLike.count({
+    where: {
+      postId,
+      isDislike: false,
+    },
+  });
+  const dislikes = await PostLike.count({
+    where: {
+      postId,
+      isDislike: true,
+    },
+  });
+  return { likes, dislikes };
+};
 
-const COUNT_LIKES_BY_COMMENT_ID = `
-SELECT 
-    SUM(CASE WHEN isDislike = 0 THEN 1 ELSE 0 END) AS likes,
-    SUM(CASE WHEN isDislike = 1 THEN 1 ELSE 0 END) AS dislikes
-FROM [comment_like]
-WHERE comment_id = @commentId;
-`;
+const likeComment = async (commentId, userId, isDislike) => {
+  const like = await CommentLike.findOne({
+    where: {
+      commentId,
+      userId,
+    },
+  });
+  if (like) {
+    like.isDislike = isDislike;
+    await like.save();
+  } else {
+    await CommentLike.create({
+      commentId,
+      userId,
+      isDislike,
+    });
+  }
+};
 
-const POST_LIKED_BY_USER = `
-SELECT *
-FROM [post_like]
-WHERE post_id = @postId AND user_id = @userId;
-`;
+const likePost = async (postId, userId, isDislike) => {
+  const like = await PostLike.findOne({
+    where: {
+      postId,
+      userId,
+    },
+  });
+  if (like) {
+    like.isDislike = isDislike;
+    await like.save();
+  } else {
+    await PostLike.create({
+      postId,
+      userId,
+      isDislike,
+    });
+  }
+};
 
-const COMMENT_LIKED_BY_USER = `
-SELECT *
-FROM [comment_like]
-WHERE comment_id = @commentId AND user_id = @userId;
-`;
+const unlikeComment = async (commentId, userId) => {
+  const like = await CommentLike.findOne({
+    where: {
+      commentId,
+      userId,
+    },
+  });
+  if (like) {
+    await like.destroy();
+  }
+};
 
-// post_id int, user_id int, liked boolean
-const LIKE_POST = `
-INSERT INTO post_like (post_id, user_id, isDislike)
-VALUES (@postId, @userId, @liked);
-`;
-
-const UPDATE_POST_LIKE = `
-UPDATE post_like
-SET isDislike = @liked
-WHERE post_id = @postId AND user_id = @userId;
-`;
-
-const LIKE_COMMENT = `
-INSERT INTO comment_like (comment_id, user_id, isDislike )
-VALUES (@commentId, @userId, @liked);
-`;
-
-const UPDATE_COMMENT_LIKE = `
-UPDATE comment_like
-SET isDislike = @liked
-WHERE comment_id = @commentId AND user_id = @userId;
-`;
-
-const UNLIKE_POST = `
-DELETE FROM post_like
-WHERE post_id = @postId AND user_id = @userId;
-`;
-
-const UNLIKE_COMMENT = `
-DELETE FROM comment_like
-WHERE comment_id = @commentId AND user_id = @userId;
-`;
+const unlikePost = async (postId, userId) => {
+  const like = await PostLike.findOne({
+    where: {
+      postId,
+      userId,
+    },
+  });
+  if (like) {
+    await like.destroy();
+  }
+};
 
 const getLikes = async (req, res) => {
   try {
     const { postId, commentId } = req.query;
-    // if both undefined or both defined, return 400
     if ((!postId && !commentId) || (postId && commentId)) {
       res.status(400).send();
     }
 
-    const pool = await db.poolPromise;
     if (postId) {
-      const result = await pool
-        .request()
-        .input("postId", db.sql.Int, postId)
-        .query(COUNT_LIKES_BY_POST_ID);
-      res.status(200).json(result.recordset);
+      const { likes, dislikes } = await countLikesByPostId(postId);
+      res.status(200).json({ likes, dislikes });
     } else {
-      const result = await pool
-        .request()
-        .input("commentId", db.sql.Int, commentId)
-        .query(COUNT_LIKES_BY_COMMENT_ID);
-      res.status(200).json(result.recordset);
+      const { likes, dislikes } = await countLikesByCommentId(commentId);
+      res.status(200).json({ likes, dislikes });
     }
   } catch (err) {
-    // res.status(200).json(0);
     res.status(500).send();
   }
 };
@@ -94,32 +117,34 @@ const getLikes = async (req, res) => {
 const likedByUser = async (req, res) => {
   try {
     const { postId, userId, commentId } = req.query;
-
-    // add validation here
-
     if ((!postId && !commentId) || (postId && commentId)) {
       res.status(400).send();
     }
 
-    const pool = await db.poolPromise;
     if (postId) {
-      const result = await pool
-        .request()
-        .input("postId", db.sql.Int, postId)
-        .input("userId", db.sql.Int, userId)
-        .query(POST_LIKED_BY_USER);
-      if (result.recordset.length === 0) {
+      const like = await PostLike.findOne({
+        where: {
+          postId,
+          userId,
+        },
+      });
+      if (like) {
+        res.status(200).json(like);
+      } else {
         res.status(404).send();
-      } else res.status(200).json(result.recordset);
+      }
     } else {
-      const result = await pool
-        .request()
-        .input("commentId", db.sql.Int, commentId)
-        .input("userId", db.sql.Int, userId)
-        .query(COMMENT_LIKED_BY_USER);
-      if (result.recordset.length === 0) {
+      const like = await CommentLike.findOne({
+        where: {
+          commentId,
+          userId,
+        },
+      });
+      if (like) {
+        res.status(200).json(like);
+      } else {
         res.status(404).send();
-      } else res.status(200).json(result.recordset);
+      }
     }
   } catch (err) {
     res.status(500).send();
@@ -132,62 +157,15 @@ const like = async (req, res) => {
     if ((!postId && !commentId) || (postId && commentId)) {
       res.status(400).send();
     }
-    const pool = await db.poolPromise;
+
     if (postId) {
-      // if postId is defined, like a post
-      const isLiked = await pool
-        .request()
-        .input("postId", db.sql.Int, postId)
-        .input("userId", db.sql.Int, userId)
-        .query(POST_LIKED_BY_USER);
-      if (isLiked.recordset.length === 0) {
-        // if user has not liked the post
-        const result = await pool
-          .request()
-          .input("postId", db.sql.Int, postId)
-          .input("userId", db.sql.Int, userId)
-          .input("liked", db.sql.Bit, isDislike)
-          .query(LIKE_POST);
-        res.status(200).send();
-      } else {
-        // if user has liked the post, use the UPDATE_POST_LIKE query
-        const result = await pool
-          .request()
-          .input("postId", db.sql.Int, postId)
-          .input("userId", db.sql.Int, userId)
-          .input("liked", db.sql.Bit, isDislike)
-          .query(UPDATE_POST_LIKE);
-        res.status(200).send();
-      }
+      await likePost(postId, userId, isDislike);
     } else {
-      // if commentId is defined, like a comment
-      const isLiked = await pool
-        .request()
-        .input("commentId", db.sql.Int, commentId)
-        .input("userId", db.sql.Int, userId)
-        .query(COMMENT_LIKED_BY_USER);
-      if (isLiked.recordset.length === 0) {
-        // if user has not liked the comment
-        const result = await pool
-          .request()
-          .input("commentId", db.sql.Int, commentId)
-          .input("userId", db.sql.Int, userId)
-          .input("liked", db.sql.Bit, isDislike)
-          .query(LIKE_COMMENT);
-        res.status(200).send();
-      } else {
-        // if user has liked the comment
-        const result = await pool
-          .request()
-          .input("commentId", db.sql.Int, commentId)
-          .input("userId", db.sql.Int, userId)
-          .input("liked", db.sql.Bit, isDislike)
-          .query(UPDATE_COMMENT_LIKE);
-        res.status(200).send();
-      }
+      await likeComment(commentId, userId, isDislike);
     }
+
+    res.status(200).send();
   } catch (err) {
-    console.log(err);
     res.status(500).send();
   }
 };
@@ -198,31 +176,14 @@ const unlike = async (req, res) => {
     if ((!postId && !commentId) || (postId && commentId)) {
       res.status(400).send();
     }
-    const pool = await db.poolPromise;
-    const isLiked = await pool
-      .request()
-      .input("postId", db.sql.Int, postId)
-      .input("userId", db.sql.Int, userId)
-      .query(POST_LIKED_BY_USER);
-    if (isLiked.recordset.length === 0) {
-      res.status(404).send();
+
+    if (postId) {
+      await unlikePost(postId, userId);
     } else {
-      if (postId) {
-        const result = await pool
-          .request()
-          .input("postId", db.sql.Int, postId)
-          .input("userId", db.sql.Int, userId)
-          .query(UNLIKE_POST);
-        res.status(200).send();
-      } else {
-        const result = await pool
-          .request()
-          .input("commentId", db.sql.Int, commentId)
-          .input("userId", db.sql.Int, userId)
-          .query(UNLIKE_COMMENT);
-        res.status(200).send();
-      }
+      await unlikeComment(commentId, userId);
     }
+
+    res.status(200).send();
   } catch (err) {
     res.status(500).send();
   }
