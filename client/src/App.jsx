@@ -5,6 +5,7 @@ import HomeGuest from "./pages/home/HomeGuest";
 
 // Auth
 import Login from "./pages/auth/Login";
+import Logout from "./pages/auth/Logout";
 import Register from "./pages/auth/Register";
 import ResetPassword from "./pages/auth/ResetPassword";
 
@@ -21,11 +22,13 @@ import EnlistJob from "./pages/jobs/EnlistJob";
 import JobDetail from "./pages/jobs/JobDetail";
 import MyJobs from "./pages/jobs/MyJobs";
 import EditJob from "./pages/jobs/EditJob";
+import ConfirmJob from "./pages/jobs/ConfirmJob";
+
 
 // Technical
 import PageNotFound from "./pages/technical/PageNotFound";
 import Dashboard from "./pages/home/Dashboard";
-
+import TestPage from "./pages/technical/TestPage";
 
 // Users
   import Setting from "./pages/home/Setting";
@@ -38,7 +41,8 @@ import Dashboard from "./pages/home/Dashboard";
 
 // Components
 import HomeFooter from "./components/HomeFooter";
-import HomeNavbar from "./components/HomeNavbar";
+// import HomeNavbar from "./components/HomeNavbar";
+import AppNavbar from "./components/Navbar";
 
 // Misc
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -48,45 +52,46 @@ import React from "react";
 // import ErrorPage from "./pages/error/ErrorPage";
 import CreateTicketPage from "./pages/user/CreateTicket";
 
-
 function App() {
   return (
-    <BrowserRouter>
-      <HomeNavbar />
-      <div className="content">
-        <Routes>
-          
-          {/* AUTH ROUTES */}
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/register" element={<Register />} />
-          <Route exact path="/reset-password" element={<ResetPassword />} />
+    
+      <AuthProvider className="page">
+        <BrowserRouter>
+          <AppNavbar className="mb-auto"/>
+          <div className="min-vh-100 mt-5">
+            <Routes>
+              {/* AUTH ROUTES */}
+              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/logout" element={<Logout />} />
+              <Route exact path="/register" element={<Register />} />
+              <Route exact path="/reset-password" element={<ResetPassword />} />
 
-          {/* HOME ROUTES */}
-          <Route exact path="/" element={<HomeGuest />} />
-          <Route exact path="/home" element={<HomePage />} />
+              {/* HOME ROUTES */}
+              <Route exact path="/" element={<HomeGuest />} />
+              <Route exact path="/home" element={<HomePage />} />
 
-          {/* FORUM ROUTES */}
-          <Route exact path="/forum" element={<Forum />} />
-          <Route exact path="/posts/:id" element={<PostDetail />} />
-          <Route exact path="/forum/add" element={<AddPost />} />
-          <Route exact path="/forum/edit/:id" element={<EditPost />} />
+              {/* FORUM ROUTES */}
+              <Route exact path="/forum" element={<Forum />} />
+              <Route exact path="/posts/:id" element={<PostDetail />} />
+              <Route exact path="/forum/add" element={<AddPost />} />
+              <Route exact path="/forum/edit/:id" element={<EditPost />} />
 
-          {/* JOBS ROUTES */}
-          <Route exact path="/market" element={<Market />} />
-          <Route exact path="/jobs" element={<Jobs />} />
-          <Route exact path="/jobs/:id" element={<JobDetail />} />
-          <Route exact path="/jobs/add" element={<EnlistJob />} />
-          <Route exact path="/myjobs" element={<MyJobs />} />
-          <Route exact path="/jobs/edit/:id" element={<EditJob />} />
+              {/* JOBS ROUTES */}
+              <Route exact path="/market" element={<Market />} />
+              <Route exact path="/jobs" element={<Jobs />} />
+              <Route exact path="/jobs/:id" element={<JobDetail />} />
+              <Route exact path="/jobs/add" element={<EnlistJob />} />
+              <Route exact path="/myjobs" element={<MyJobs />} />
+              <Route exact path="/jobs/edit/:id" element={<EditJob />} />
+              <Route path="/confirm-job" element={<ConfirmJob />} />
+
 
           {/* USERS ROUTES */}
-          <Route exact path="/profile" element={<Profile />} /> 
-          <Route exact path="/security" element={<Security />} /> 
-          <Route exact path="/workinformation" element={<WorkInformation />} /> 
-          <Route exact path="/users" element={<Users />} /> 
-          <Route exact path="/settings" element={<Setting />} /> 
+           <Route exact path="/profile" element={<Profile />} /> 
+           <Route exact path="/security" element={<Security />} /> 
+          {/* <Route exact path="/users" element={<Users />} /> */}
+          {/* <Route exact path="/settings" element={<Setting />} /> */}
           <Route exact path="/ticket" element={<CreateTicketPage />} />
-          <Route exact path="/viewprofile" element={<ViewProfile />} /> 
 
           
           {/* TECHNICAL ROUTES */}

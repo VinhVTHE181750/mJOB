@@ -4,16 +4,16 @@ import { useState, useEffect } from "react";
 const API_URL = "http://localhost:8000/api";
 
 const useNewsContent = () => {
-  const [news, setNews] = useState([]);
+  const [contents, setContents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchnews = async () => {
+    const fetchcontents = async () => {
       try {
         const url = `${API_URL}/datapost`;
         const response = await axios.get(url);
-        setNews(response.data);
+        setContents(response.data);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -21,10 +21,10 @@ const useNewsContent = () => {
       }
     };
 
-    fetchnews();
+    fetchcontents();
   }, []);
 
-  return {news, loading, error };
+  return {contents, loading, error };
 };
 
 export default useNewsContent;

@@ -1,5 +1,5 @@
 import EditForm from "../../components/forum/EditForm";
-import NavigateButton from "../../components/buttons/NavigateButton";
+import NavigateButton from "../../components/ui/buttons/NavigateButton";
 
 const EditPost = () => {
   return (

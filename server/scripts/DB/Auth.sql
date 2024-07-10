@@ -2,13 +2,28 @@ USE mJOB;
 GO
 
 
+CREATE TABLE [user] (
+	user_id INT IDENTITY(1,1) PRIMARY KEY,
+	username VARCHAR(50) UNIQUE NOT NULL,
+	user_created_time DATETIME DEFAULT GETDATE()
+);
+GO
+
+INSERT INTO system_log (system_log_type, system_log_data)
+VALUES ('INFO', 'Created table: user');
+GO
+
 -- old table: SHA-256
 CREATE TABLE auth (
-	user_id INT IDENTITY(1,1) PRIMARY KEY,
-	username VARCHAR(50) UNIQUE,
+	user_id INT FOREIGN KEY REFERENCES [user](user_id),
+	email VARCHAR(320),
 	hash CHAR(64) NOT NULL,
-	salt CHAR(32) NOT NULL,
-	is_active BIT NOT NULL DEFAULT 0,
+	salt CHAR(16) NOT NULL,
+	role CHAR(16) NOT NULL DEFAULT 'USER',
+	-- USER, ADMIN
+	auth_code VARCHAR(8),
+	status VARCHAR(8) NOT NULL DEFAULT 'OFFLINE'
+	-- OFFLINE, ONLINE, LOCKED: can not login
 );
 GO
 
@@ -28,7 +43,7 @@ GO
 
 CREATE TABLE auth_log (
 	auth_log_id INT IDENTITY(1,1) PRIMARY KEY,
-	user_id INT FOREIGN KEY REFERENCES auth(user_id),
+	user_id INT FOREIGN KEY REFERENCES [user](user_id),
 	auth_action VARCHAR(16) NOT NULL, -- register, login, logout
 	auth_time DATETIME NOT NULL DEFAULT GETDATE()
 );
@@ -40,23 +55,13 @@ GO
 
 CREATE TABLE session (
 	session_id INT IDENTITY(1,1) PRIMARY KEY,
-	user_id INT FOREIGN KEY REFERENCES auth(user_id),
+	user_id INT FOREIGN KEY REFERENCES [user](user_id),
 	session_token VARCHAR(255) NOT NULL,
-	session_expiration DATETIME NOT NULL DEFAULT DATEADD(day, 1, GETDATE()),
+	session_timeout DATETIME NOT NULL DEFAULT DATEADD(hour, 1, GETDATE()), -- change to +1h
 	session_data NVARCHAR(MAX) -- NVARCHAR(MAX) data
 );
 GO
 
 INSERT INTO system_log (system_log_type, system_log_data)
 VALUES ('INFO', 'Created table: session');
-GO
-
-CREATE TABLE auth_code (
-    user_id INT FOREIGN KEY REFERENCES auth(user_id),
-    code CHAR(8) NOT NULL
-);
-GO
-
-INSERT INTO system_log (system_log_type, system_log_data)
-VALUES ('INFO', 'Created table: auth_code');
 GO

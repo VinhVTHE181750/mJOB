@@ -3,9 +3,9 @@ GO
 
 CREATE TABLE ticket (
 	ticket_id INT IDENTITY(1,1) PRIMARY KEY,
-	user_id INT FOREIGN KEY REFERENCES auth(user_id),
+	user_id INT FOREIGN KEY REFERENCES [user](user_id), -- nullable (anonymous ticket)
 	ticket_category VARCHAR(16) NOT NULL,
-	ticket_title NVARCHAR(MAX) NOT NULL,
+	ticket_title NVARCHAR(255) NOT NULL,
 	ticket_content NVARCHAR(MAX) NOT NULL,
 );
 GO

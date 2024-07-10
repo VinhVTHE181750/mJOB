@@ -1,13 +1,17 @@
 const express = require("express");
-
 const router = express.Router();
 
-const SELECT_COMMENTS_BY_POST_ID = `SELECT * FROM comment WHERE post_id = @post_id
-ORDER BY comment_id DESC;`;
-
-const INSERT_COMMENT = `INSERT INTO comment (comment_content, user_id, post_id, comment_status)
-VALUES (@comment_content, @user_id, @post_id, 'PUBLISHED');`;
-
-const DELETE_COMMENT = `DELETE FROM comment WHERE comment_id = @comment_id AND user_id = @user_id;`;
+// Import route handlers
+const { getComments, getCommentCount} = require("./comment/Get");
+const { insertComment } = require("./comment/Post");
+const { put } = require("./comment/Put");
+const { deleteById } = require("./comment/Delete");
+// Define routes
+// router.get("/:postId", getCommentsByPostId); // Route to get all posts
+router.get("/", getComments); // Route to get all posts
+router.get("/count/:id", getCommentCount); // Route to get a comment by ID
+router.post("/", insertComment); // Route to insert a new post
+router.put("/", put);
+router.delete("/", deleteById);
 
 module.exports = router;

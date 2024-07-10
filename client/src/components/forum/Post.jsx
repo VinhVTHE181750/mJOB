@@ -1,22 +1,41 @@
-import { getMoment } from "../../functions/Converter.js";
+import { getMoment } from "../../functions/Converter";
 import avatar from "../../assets/img/default_avatar.webp";
-import usePostDetail from "../../hooks/forum/posts/usePostDetail.js";
+import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Container } from "react-bootstrap";
-import { useEffect } from "react";
-import NavigateButton from "../buttons/NavigateButton.jsx";
-import usePostDelete from "../../hooks/forum/posts/usePostDelete.js";
+import { Button, Container, Row, Col } from "react-bootstrap";
+import { useContext, useEffect, useMemo, useState } from "react";
+import NavigateButton from "../ui/buttons/NavigateButton";
+import usePostDelete from "../../hooks/forum/posts/usePostDelete";
+import { AuthContext } from "../../context/AuthContext";
+import Skeleton from "react-loading-skeleton";
+import useLikesQuery from "../../hooks/forum/likes/useLikesQuery";
+import useLikesUpdate from "../../hooks/forum/likes/useLikesUpdate";
+import useIsLiked from "../../hooks/forum/likes/useIsLiked";
 
 const Post = ({ post_id }) => {
+  // post related data
+  // external userId
+  const { userId } = useContext(AuthContext);
+  const { post, loading, error } = usePostDetail(post_id);
+  const navigate = useNavigate();
+  const { deletePost } = usePostDelete();
+
+  // external like state, whether if it is like or dislike
+  const { liked, isDislike } = useIsLiked(userId, post_id, null);
+
+  // external likes counter
+  const { likes, dislikes } = useLikesQuery(post_id, null);
+
+  // external like update function
+  // const { updateLikes } = usePostLikesUpdate(post_id, userId, isDislike);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const navigate = useNavigate();
-  const { post, loading, error } = usePostDetail(post_id);
-  const user_id = 1;
-  const { deletePost } = usePostDelete();
-  const username = "andz1207";
+  const handleLike = (isDislike) => {
+    updateLikes(isDislike);
+  };
 
   const handleDeletePost = async () => {
     const confirmDelete = window.confirm(
@@ -28,43 +47,124 @@ const Post = ({ post_id }) => {
     }
   };
 
+  if (loading)
+    return (
+      <div className="post">
+        <Row className="post-title">
+          <Col sm={2}>
+            <div className="border">
+              <div>
+                <Skeleton
+                  className="mt-5"
+                  height={100}
+                  width={100}
+                  circle={true}
+                />
+              </div>
+              <div>
+                <Skeleton count={0.5} className="mt-5" />
+              </div>
+              <div>
+                <p className="text-center mx-5">
+                  <Skeleton />
+                </p>
+              </div>
+            </div>
+          </Col>
+          <Col sm={10}>
+            <Row className="mx-5">
+              <h1>
+                <Skeleton count={1.2} />
+              </h1>
+            </Row>
+          </Col>
+        </Row>
+        <Row className="ms-2 mt-4">
+          <Row>
+            <div className="border">
+              <Skeleton count={3.5} />
+            </div>
+          </Row>
+        </Row>
+      </div>
+    );
+
+  if (error) {
+    if (error.response.status === 404) {
+      return <h3>Post not found.</h3>;
+    } else {
+      return (
+        <>
+          <h3>Something went wrong while fetching the post.</h3>
+          <NavigateButton path="/report" text="Report this problem" variant="danger" /> 
+        </>
+      );
+    }
+  }
+
   return (
-    <Container
-      style={{ minHeight: "100vh", minWidth: "80vw" }}
-      className="post"
-    >
-      <div className="post-title">
-        <h1>{post.post_title} </h1>
-        {post.username == username && (
-          <>
-            <NavigateButton
-              path={`/forum/edit/${post_id}`}
-              text="Edit"
-              variant="primary"
-            />
-            <Button variant="danger" onClick={() => handleDeletePost()}>
-              Delete
-            </Button>
-          </>
-        )}
-      </div>
-      <div className="d-flex gap-2">
-        <div className="post-author">
-          <div>
-            <img className="avatar" src={avatar} alt="Default Avatar" />
-          </div>
-          <div>
+    <div className="post">
+      <Row className="post-title">
+        <Col sm={2}>
+          <div className="border">
+            <div>
+              <img className="avatar" src={avatar} alt="Default Avatar" />
+            </div>
             <Link to={`/users/${post.username}`}>{post.username}</Link>
+            <div>
+              <p className="text-center">{getMoment(post.post_updated_time)}</p>
+            </div>
           </div>
-          <div>
-            <p>{getMoment(post.post_updated_time)}</p>
+        </Col>
+        <Col sm={10}>
+          <Row className="mx-5">
+            <h1>{post.post_title} </h1>
+          </Row>
+
+          {post.user_id == userId && (
+            <>
+              <NavigateButton
+                path={`/forum/edit/${post_id}`}
+                text="Edit"
+                variant="primary"
+                className="me-2"
+              />
+              <Button variant="danger" onClick={() => handleDeletePost()}>
+                Delete
+              </Button>
+            </>
+          )}
+        </Col>
+      </Row>
+      <Row className="ms-2 mt-2">
+        <Row>
+          <div className="border mt-4">{post.post_content}</div>
+        </Row>
+        <Row>
+          {/* Add a like button */}
+          <div className="d-flex justify-content-end mt-2 gap-2">
+            <Button
+              variant={
+                liked ? (isDislike ? "danger" : "outline-danger") : "secondary"
+              }
+            >
+              {dislikes} 👎
+            </Button>
+            <Button
+              variant={
+                liked
+                  ? !isDislike
+                    ? "success"
+                    : "outline-success"
+                  : "secondary"
+              }
+            >
+              {likes} 👍
+            </Button>
           </div>
-        </div>
-        <div className="post-content flex-grow">
-          <p>{post.post_content}</p>
-        </div>
-      </div>
-    </Container>
+        </Row>
+      </Row>
+    </div>
   );
 };
 

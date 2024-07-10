@@ -18,13 +18,13 @@ const usePostsQuery = () => {
         setPosts(response.data);
         setLoading(false);
       } catch (error) {
-        navigate("/error", {
-          state: {
-            message: error.response
-              ? error.response.data.message
-              : "An error occurred",
-          },
-        });
+        // navigate("/error", {
+          // state: {
+          //   message: error.response
+          //     ? error.response.data.message
+          //     : "An error occurred",
+          // },
+        // });
         setError(error);
         setLoading(false);
       }

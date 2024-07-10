@@ -1,12 +1,24 @@
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 
-const NavigateButton = ({ path, text, variant, confirm, confirmMsg }) => {
+const NavigateLink = ({
+  path,
+  text,
+  variant,
+  confirm,
+  confirmMsg,
+  className,
+  action,
+}) => {
   const navigate = useNavigate();
   return (
-    <Button
+    <a
+      className={className}
       variant={variant}
       onClick={() => {
+        if (action) {
+          action();
+        }
         if (confirm) {
           const confirmNavigate = window.confirm(confirmMsg);
           if (!confirmNavigate) {
@@ -17,8 +29,8 @@ const NavigateButton = ({ path, text, variant, confirm, confirmMsg }) => {
       }}
     >
       {text}
-    </Button>
+    </a>
   );
 };
 
-export default NavigateButton;
+export default NavigateLink;

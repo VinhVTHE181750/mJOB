@@ -55,12 +55,30 @@
   margin-top: 10px;
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 30px;
+  /* border-radius: 30px; */
+  /* box-shadow: bottom and right, 10px, gradient */
+  box-shadow: 1px 1px 1px #ccc;
   background-color: #ffffff;
   text-align: left;
+  transition: all 0.5s;
+}
+
+.post-card:hover {
+  /* slight shift to the top left */
+  box-shadow: 5px 1px 5px #aaa;
+  transition: all 0.5s;
+
 }
 
 .post-card-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-card-title {
+  font-size: 1.5em;
+  font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -88,4 +106,5 @@
 
 .card-author {
   float: left;
+  text-decoration: none;
 }
