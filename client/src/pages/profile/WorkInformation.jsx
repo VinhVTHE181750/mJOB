@@ -17,7 +17,7 @@ const WorkInformation = () => {
     setUsername(jobTitle);
 
     const userData = {
-      userId: 5, // Assuming a static user ID for this example
+      userId: 1, // Assuming a static user ID for this example
       workJobTitle: jobTitle,
       workJobDescription: jobDescription,
       workCompany: company,
