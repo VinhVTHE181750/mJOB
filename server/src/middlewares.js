@@ -6,6 +6,7 @@ const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
 const config = require("../config.json");
 const { log } = require("./utils/Logger");
+const { JwtMiddleware } = require("./utils/JWT");
 // const csurf = require("csurf");
 // const csrfProtection = csurf({ cookie: true });
 

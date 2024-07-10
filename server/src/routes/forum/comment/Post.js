@@ -1,13 +1,11 @@
-const db = require("../../../models/DBContext");
-
-const INSERT_COMMENT = `
-INSERT INTO comment (comment_content, id, user_id) 
-VALUES (@content, @postId, @userId);
-`;
+const { sequelize } = require("../../../models/SQLize");
+const Comment = require("../../../models/forum/comment/Comment");
 
 const insertComment = async (req, res) => {
+  const userId = req.userId;
+  if(!userId) return res.status(401).json({ message: "Unauthorized" });
   try {
-    const { postId, userId, content } = req.body;
+    const { postId, content } = req.body;
 
     const pool = await db.poolPromise;
     const result = await pool

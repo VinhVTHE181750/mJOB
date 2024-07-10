@@ -2,9 +2,13 @@ const Post = require("../../../models/forum/post/Post");
 const PostCategory = require("../../../models/forum/post/PostCategory");
 const User = require("../../../models/User");
 const PostHistory = require("../../../models/forum/post/PostHistory");
+const { log } = require("../../../utils/Logger");
 
 const put = async (req, res) => {
-  if (!req.loggedIn) return res.status(401).json({ message: "Unauthorized" });
+  if (!req.userId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
 
   try {
     let postInput = req.body.post;
@@ -58,6 +62,17 @@ const put = async (req, res) => {
 
     if (["ADMIN", "MOD"].includes(req.role)) {
       post.status = postInput.status || post.status;
+    }
+
+    if (postInput.category) {
+      const category = await PostCategory.findOne({
+        where: { name: postInput.category },
+      });
+      if (!category) {
+        res.status(400).json({ message: "Invalid category." });
+        return;
+      }
+      post.PostCategoryId = postInput.PostCategoryId;
     }
 
     await Promise.all([
