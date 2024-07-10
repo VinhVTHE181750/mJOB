@@ -3,7 +3,7 @@ const router = express.Router();
 const { JwtMiddleware } = require("../../utils/JWT");
 
 // Import route handlers
-const { getComments, getCommentCount} = require("./comment/Get");
+const { getComments, getCommentCount } = require("./comment/Get");
 const { insertComment } = require("./comment/Post");
 const { put } = require("./comment/Put");
 const { deleteById } = require("./comment/Delete");
