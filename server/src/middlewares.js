@@ -6,11 +6,10 @@ const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
 const config = require("../config.json");
 const { log } = require("./utils/Logger");
-const csurf = require("csurf");
-const csrfProtection = csurf({ cookie: true });
+// const csurf = require("csurf");
+// const csrfProtection = csurf({ cookie: true });
 
 module.exports = function applyMiddlewares(app) {
-  app.use(csrfProtection);
   app.use(cors({ origin: config.middleware.cors.origin }));
   app.use(
     rateLimit({
@@ -27,6 +26,14 @@ module.exports = function applyMiddlewares(app) {
     })
   );
   app.use(cookieParser());
+  // const csrfExclude = ["/api/auth/login", "/api/auth/register"]; // Paths to exclude
+  // app.use((req, res, next) => {
+  //   if (csrfExclude.indexOf(req.path) !== -1) {
+  //     next();
+  //   } else {
+  //     csrfProtection(req, res, next);
+  //   }
+  // });
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   // Log middleware initialization here
