@@ -7,12 +7,12 @@ const Forum = () => {
   return (
     <Container>
       <Row>
-        <Col md={2} className="">
+        {/* <Col md={2} className="">
           <div>
             <p>User statuses here.</p>
           </div>
-        </Col>
-        <Col md={10}>
+        </Col> */}
+        <Col md={12}>
           <Row className="">
             <Col md={6} className="align-items-center">
               <PostSearch />
@@ -28,7 +28,6 @@ const Forum = () => {
               </NavigateButton>
             </Col>
           </Row>
-          <ListPost />
           <ListPost />
         </Col>
       </Row>

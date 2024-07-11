@@ -1,0 +1,66 @@
+import axios from "axios";
+import { API_URL } from "..";
+
+// Action Types
+const FETCH_CATEGORIES_REQUEST = 'FETCH_CATEGORIES_REQUEST';
+const FETCH_CATEGORIES_SUCCESS = 'FETCH_CATEGORIES_SUCCESS';
+const FETCH_CATEGORIES_FAILURE = 'FETCH_CATEGORIES_FAILURE';
+
+// Action Creators
+export const fetchCategoriesRequest = () => ({
+  type: FETCH_CATEGORIES_REQUEST,
+});
+
+export const fetchCategoriesSuccess = (categories) => ({
+  type: FETCH_CATEGORIES_SUCCESS,
+  payload: categories,
+});
+
+export const fetchCategoriesFailure = (error) => ({
+  type: FETCH_CATEGORIES_FAILURE,
+  payload: error,
+});
+
+// Thunk Action Creator
+export const fetchCategories = () => async (dispatch) => {
+  dispatch(fetchCategoriesRequest());
+  try {
+    const response = await axios.get(`${API_URL}/forum/categories`);
+    dispatch(fetchCategoriesSuccess(response.data));
+  } catch (error) {
+    dispatch(fetchCategoriesFailure(error.message));
+  }
+};
+
+// Reducer
+const initialState = {
+  loading: false,
+  categories: [],
+  error: '',
+};
+
+const categoriesReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case FETCH_CATEGORIES_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case FETCH_CATEGORIES_SUCCESS:
+      return {
+        loading: false,
+        categories: action.payload,
+        error: '',
+      };
+    case FETCH_CATEGORIES_FAILURE:
+      return {
+        loading: false,
+        categories: [],
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+export default categoriesReducer;

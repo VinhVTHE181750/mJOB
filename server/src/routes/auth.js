@@ -22,7 +22,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Invalid username or password" });
     }
     const token = createToken({ id: user.id, role: auth.role});
-    res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
+    res.cookie("token", token, { httpOnly: true, sameSite: "strict", secure: true});
     return res.json({ message: "Login successful", token });
   } catch (e) {
     console.error(e);
@@ -59,7 +59,7 @@ router.post("/register", async (req, res) => {
     }
 
     const token = createToken({ id: user.id, role: auth.role});
-    res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
+    res.cookie("token", token, { httpOnly: true, sameSite: "strict", secure: true});
     return res.json({ message: "Registration successful", token });
   } catch (e) {
     console.error(e);

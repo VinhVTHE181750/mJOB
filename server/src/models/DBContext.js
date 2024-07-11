@@ -1,20 +1,11 @@
 const sql = require('mssql');
-
-const dbConfig = {
-  user: 'sa',
-  password: '123',
-  server: 'localhost',
-  database: 'mJob',
-  options: {
-    encrypt: true,
-    trustServerCertificate: true,
-  },
-};
+const { log } = require('../utils/Logger');
+const dbConfig = require('../../config.json').database;
 
 const poolPromise = new sql.ConnectionPool(dbConfig)
   .connect()
   .then(pool => {
-    console.log('Connected to MSSQL');
+    log('Connected to MSSQL', 'INFO', 'DBContext');
     return pool;
   })
   .catch(err => console.error('Database connection failed:', err));

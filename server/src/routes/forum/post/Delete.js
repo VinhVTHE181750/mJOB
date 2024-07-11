@@ -1,23 +1,17 @@
 const Post = require("../../../models/forum/post/Post");
-const {log} = require("../../../utils/Logger");
+const { log } = require("../../../utils/Logger");
 
 const deleteById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
     const post = await Post.findByPk(id);
-    log(JSON.stringify(post), 'ERROR', 'FORUM')
-    log(id, 'ERROR', 'FORUM')
-
     if (!post) {
-      return res.status(404).json({message: "Post not found"});
+      return res.status(404).json({ message: "Post not found" });
     }
-
     await post.destroy();
-    res.status(200).json({message: "Post deleted"});
-
+    res.status(200).json({ message: "Post deleted" });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({message: ""});
+    res.status(500).json({ message: "Unexpected error while deleting post." });
   }
 };
 
