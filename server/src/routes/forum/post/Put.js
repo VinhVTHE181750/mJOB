@@ -1,6 +1,6 @@
 const Post = require("../../../models/forum/post/Post");
 const PostCategory = require("../../../models/forum/post/PostCategory");
-const User = require("../../../models/User");
+const User = require("../../../models/user/User");
 const PostHistory = require("../../../models/forum/post/PostHistory");
 const { log } = require("../../../utils/Logger");
 const { getIo } = require("../../../../io");

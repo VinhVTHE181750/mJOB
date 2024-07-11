@@ -1,6 +1,6 @@
 const express = require("express");
 const Balance = require("../../models/payment/Balance");
-const User = require("../../models/User");
+const User = require("../../models/user/User");
 const router = express.Router();
 
 const transfer = async (req, res) => {
