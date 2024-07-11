@@ -1,0 +1,187 @@
+{
+  "posts": [
+    {
+      "id": 3,
+      "title": "Damn",
+      "content": "New content #3",
+      "tags": "test,sample,123",
+      "status": "PUBLISHED",
+      "createdAt": "2024-07-09T08:59:51.815Z",
+      "updatedAt": "2024-07-11T01:28:54.346Z",
+      "deletedAt": null,
+      "PostCategoryId": 1,
+      "UserId": 1
+    },
+    {
+      "id": 4,
+      "title": "New delis23ted post",
+      "content": "New content 123 lorem ipsum",
+      "tags": "test,sample,123",
+      "status": "PUBLISHED",
+      "createdAt": "2024-07-09T09:40:29.755Z",
+      "updatedAt": "2024-07-09T09:40:29.755Z",
+      "deletedAt": null,
+      "PostCategoryId": 2,
+      "UserId": 1
+    },
+    {
+      "id": 5,
+      "title": "New post",
+      "content": "New content lorem ipsum",
+      "tags": "test,sample,123",
+      "status": "PUBLISHED",
+      "createdAt": "2024-07-09T09:40:29.755Z",
+      "updatedAt": "2024-07-09T09:40:29.755Z",
+      "deletedAt": null,
+      "PostCategoryId": 2,
+      "UserId": 1
+    },
+    {
+      "id": 6,
+      "title": "New post",
+      "content": "New content lorem ipsum",
+      "tags": "test,sample,123",
+      "status": "PUBLISHED",
+      "createdAt": "2024-07-09T09:40:29.755Z",
+      "updatedAt": "2024-07-09T09:40:29.755Z",
+      "deletedAt": null,
+      "PostCategoryId": 2,
+      "UserId": 1
+    },
+    {
+      "id": 7,
+      "title": "New post",
+      "content": "New content lorem ipsum",
+      "tags": "test,sample,123",
+      "status": "PUBLISHED",
+      "createdAt": "2024-07-09T09:40:29.755Z",
+      "updatedAt": "2024-07-09T09:40:29.755Z",
+      "deletedAt": null,
+      "PostCategoryId": 2,
+      "UserId": 1
+    },
+    {
+      "id": 8,
+      "title": "New post",
+      "content": "New content lorem ipsum",
+      "tags": "test,sample,123",
+      "status": "PUBLISHED",
+      "createdAt": "2024-07-09T09:40:29.755Z",
+      "updatedAt": "2024-07-09T09:40:29.755Z",
+      "deletedAt": null,
+      "PostCategoryId": 2,
+      "UserId": 1
+    },
+    {
+      "id": 9,
+      "title": "New post",
+      "content": "New content lorem ipsum",
+      "tags": "test,sample,123",
+      "status": "PUBLISHED",
+      "createdAt": "2024-07-09T09:40:29.755Z",
+      "updatedAt": "2024-07-09T09:40:29.755Z",
+      "deletedAt": null,
+      "PostCategoryId": 2,
+      "UserId": 1
+    },
+    {
+      "id": 10,
+      "title": "New post",
+      "content": "New content lorem ipsum",
+      "tags": "test,sample,123",
+      "status": "PUBLISHED",
+      "createdAt": "2024-07-09T09:40:29.755Z",
+      "updatedAt": "2024-07-09T09:40:29.755Z",
+      "deletedAt": null,
+      "PostCategoryId": 2,
+      "UserId": 1
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "General",
+      "fgColor": "ffffff",
+      "bgColor": "020202",
+      "enabled": true,
+      "createdAt": "2024-07-09T08:59:03.423Z",
+      "updatedAt": "2024-07-09T14:55:37.435Z"
+    },
+    {
+      "id": 2,
+      "name": "Discussion",
+      "fgColor": "111111",
+      "bgColor": "cccccc",
+      "enabled": false,
+      "createdAt": "2024-07-09T08:59:09.690Z",
+      "updatedAt": "2024-07-09T08:59:09.690Z"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "user1",
+      "role": "USER"
+    },
+    {
+      "id": 2,
+      "username": "user2",
+      "role": "USER"
+    },
+    {
+      "id": 3,
+      "username": "admin1",
+      "role": "ADMIN"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "content": "New comment #1",
+      "UserId": 1,
+      "PostId": 1,
+      "createdAt": "2024-07-09T08:59:51.815Z",
+      "updatedAt": "2024-07-11T01:28:54.346Z"
+    }
+  ],
+  "tags": [
+    {
+      "id": 1,
+      "name": "test"
+    },
+    {
+      "id": 2,
+      "name": "sample"
+    },
+    {
+      "id": 3,
+      "name": "123"
+    }
+  ],
+  "likes": [
+    {
+      "id": 1,
+      "UserId": 1,
+      "PostId": 1,
+      "isDislike": false
+    },
+    {
+      "id": 2,
+      "UserId": 2,
+      "PostId": 1,
+      "isDislike": false
+    },
+    {
+      "id": 3,
+      "UserId": 1,
+      "PostId": 2,
+      "isDislike": false
+    },
+    {
+      "id": 4,
+      "UserId": 2,
+      "PostId": 2,
+      "isDislike": false
+    }
+  ]
+}

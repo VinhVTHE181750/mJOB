@@ -18,7 +18,7 @@ const PostDetail = () => {
       />
       <Post id={id} />
       <Container className="mt-5 border">
-        <ListComment id={id} />
+        {/* <ListComment id={id} /> */}
       </Container>
     </div>
   );

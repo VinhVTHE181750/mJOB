@@ -5,8 +5,12 @@ import Category from "./micro/Category";
 import PropTypes from "prop-types";
 import Tag from "./micro/Tag";
 import Count from "./micro/InteractionCount";
+import { useContext } from "react";
+import { ForumContext } from "../../context/ForumContext";
 
-const PostCard = ({ post, onClick, category }) => {
+const PostCard = ({ post, onClick, category, handler }) => {
+
+  const { addTag } = useContext(ForumContext);
   const tags = post.tags.split(",");
   return (
     <Card className="post-card" key={post.id} onClick={onClick}>
@@ -23,7 +27,7 @@ const PostCard = ({ post, onClick, category }) => {
         <Card.Title className="fs-1 fw-bolder mb-2">{post.title}</Card.Title>
         <Card.Text className="fs-6">
           {tags.map((tag) => (
-            <Tag key={tag} tag={tag} />
+            <Tag key={tag} tag={tag} handler={(tag) => addTag(tag)} />
           ))}
         </Card.Text>
         <Card.Text className="post-card-content">{post.content}</Card.Text>
@@ -48,7 +52,8 @@ const PostCard = ({ post, onClick, category }) => {
 PostCard.propTypes = {
   post: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
-  category: PropTypes.object.isRequired,
+  category: PropTypes.object,
+  handler: PropTypes.func,
 };
 
 export default PostCard;

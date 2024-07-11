@@ -3,8 +3,20 @@ import PostSearch from "../../components/forum/PostSearch";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import ListPost from "../../components/forum/ListPost";
 import ChatBox from "../../components/forum/ChatBox";
+import { useState } from "react";
 
 const Forum = () => {
+  const [tags, setTags] = useState([]);
+  const addSearchTag = (tag) => {
+    if (!tags.includes(tag)) {
+      setTags([...tags, tag]);
+      console.log('added ' + tag)
+    }
+  };
+  const removeSearchTag = (tag) => {
+    setTags(tags.filter((t) => t !== tag));
+    console.log('removed ' + tag)
+  };
   return (
     <Container>
       <Row>
@@ -14,11 +26,11 @@ const Forum = () => {
           </div>
         </Col> */}
         <Col md={12}>
-          <Row className="">
-            <Col md={6} className="align-items-center">
-              <PostSearch />
+          <Row className="align-items-center">
+            <Col xs={12} md={10} className="">
+              <PostSearch tagHandler={removeSearchTag} tags={tags} />
             </Col>
-            <Col md="auto">
+            <Col md={2} className="d-flex flex-row-reverse">
               <NavigateButton
                 path="/forum/add"
                 variant="primary"
@@ -29,10 +41,10 @@ const Forum = () => {
               </NavigateButton>
             </Col>
           </Row>
-          <ListPost />
+          <ListPost tagHandler={addSearchTag} />
         </Col>
       </Row>
-      <ChatBox user={"user1"} />
+      {/* <ChatBox user={"user1"} /> */}
     </Container>
   );
 };
