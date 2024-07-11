@@ -8,23 +8,26 @@ function init(server) {
   io = new Server(server, {
     cors: {
       origin: config.origin,
+      methods: ["GET", "POST"],
     },
-  
   });
   log("Socket.io server initialized", "INFO", "Socket");
 
-  // Listen for chat messages from clients
   io.on("connection", (socket) => {
-    log("Socket.io server connected", "INFO", "Socket");
-    socket.on("forumChat", (msg) => {
-      log(msg, "WARN", "Socket");
-      // Emit the received message to all clients
-      io.emit("forumChat", msg);
-    });
-  });
+    const user = socket.handshake.query.user;
+    if (user) {
+      onlineUsers.push(user);
+      io.emit("onlineUsers", onlineUsers);
+    }
 
-  io.on("disconnect", () => {
-    log("Socket.io server disconnected", "INFO", "Socket");
+    socket.on("forumChat", (message) => {
+      io.emit("forumChat", message);
+    });
+
+    socket.on("disconnect", () => {
+      onlineUsers = onlineUsers.filter((u) => u !== user);
+      io.emit("onlineUsers", onlineUsers);
+    });
   });
 
   return io;

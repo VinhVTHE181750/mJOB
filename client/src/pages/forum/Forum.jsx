@@ -32,12 +32,7 @@ const Forum = () => {
           <ListPost />
         </Col>
       </Row>
-      <Row className="border">
-        <ChatBox />
-        <Col className="border" md={3}>
-          Online users
-        </Col>
-      </Row>
+      <ChatBox user={"user1"} />
     </Container>
   );
 };

@@ -1,67 +1,51 @@
-// Import necessary modules and components
-import { useState, useEffect } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import io from "socket.io-client";
-import { API_URL } from "../../App";
+import { useState } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { API_URL } from '../../App';
+import useWebSocket from '../../hooks/forum/useWebSocket';
 
-const ChatBox = () => {
-  const [messages, setMessages] = useState([]);
-  const [currentMessage, setCurrentMessage] = useState("");
-  const [socket, setSocket] = useState(null);
+const ChatBox = ({ user }) => {
+  const [newMessage, setNewMessage] = useState('');
+  const { messages, onlineUsers, sendMessage } = useWebSocket(API_URL, user);
 
-  useEffect(() => {
-    // Initialize the socket connection inside useEffect
-    const newSocket = io(API_URL);
-    setSocket(newSocket);
-
-    // Listen for incoming messages
-    newSocket.on("forumChat", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
-
-    // Cleanup on component unmount
-    return () => {
-      newSocket.off("forumChat");
-      newSocket.close();
-    };
-  }, []);
-
-  // Function to send message
-  const sendMessage = (e) => {
-    e.preventDefault();
-    if (currentMessage.trim() && socket) {
-      // Emit the message to the server
-      socket.emit("forumChat", currentMessage);
-      // Clear the input after sending
-      setCurrentMessage("");
+  const handleSendMessage = () => {
+    if (newMessage.trim()) {
+      const message = { user, text: newMessage };
+      sendMessage(message);
+      setNewMessage('');
     }
   };
 
-  // Component render logic remains the same
   return (
-    <Container>
-      <Row>
-        <Col>
-          <h2>Chat Box</h2>
-          <div className="messages">
-            {messages.map((message, index) => (
-              <div key={index}>{message}</div>
+    <>
+      <Row className="border">
+        <Col className="border" md={9}>
+          <Row className="border">
+            {messages.map((msg, index) => (
+              <p key={index}>{`> ${msg.user}: ${msg.text}`}</p>
             ))}
-          </div>
-          <Form onSubmit={sendMessage}>
-            <Form.Group>
-              <Form.Control
-                type="text"
-                placeholder="Type a message..."
-                value={currentMessage}
-                onChange={(e) => setCurrentMessage(e.target.value)}
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit">Send</Button>
-          </Form>
+          </Row>
+          <Row className="text-danger">
+            ⚠ Beware, this is a public chat room. Do not share personal information.
+          </Row>
+          <Row className="border border-primary">
+            <input
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              placeholder="Say something..."
+            />
+            <button onClick={handleSendMessage}>Send</button>
+          </Row>
+        </Col>
+        <Col className="border" md={3}>
+          <h5>Online users</h5>
+          {onlineUsers.map((user, index) => (
+            <p key={index}>{user}</p>
+          ))}
         </Col>
       </Row>
-    </Container>
+    </>
   );
 };
 
