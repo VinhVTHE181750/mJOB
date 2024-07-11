@@ -11,7 +11,6 @@ socket.on("connect", () => {
 
 // Example event listener
 socket.on("postsUpdated", () => {
-  console.log("Posts updated");
   store.dispatch(fetchPostsRequest());
   // Then fetch posts and dispatch success or failure based on the response
   // This is just an example. You might need to adjust it based on your actual data fetching logic.

@@ -12,7 +12,9 @@ const FETCH_POSTS_REQUEST = "FETCH_POSTS_REQUEST";
 const FETCH_POSTS_SUCCESS = "FETCH_POSTS_SUCCESS";
 const FETCH_POSTS_FAILURE = "FETCH_POSTS_FAILURE";
 
-const GET_POST_REQUEST = "GET_POST_REQUEST";
+const FETCH_POST_REQUEST = "FETCH_POST_REQUEST";
+const FETCH_POST_SUCCESS = "FETCH_POST_SUCCESS";
+const FETCH_POST_FAILURE = "FETCH_POST_FAILURE";
 
 // Additional Action Types
 const CREATE_POST_REQUEST = "CREATE_POST_REQUEST";
@@ -42,9 +44,18 @@ export const fetchPostsFailure = (error) => ({
   payload: error,
 });
 
-export const getPostRequest = (id) => ({
-  type: GET_POST_REQUEST,
-  payload: id,
+export const fetchPostRequest = () => ({
+  type: FETCH_POST_REQUEST,
+});
+
+export const fetchPostSuccess = (post) => ({
+  type: FETCH_POST_SUCCESS,
+  payload: post,
+});
+
+export const fetchPostFailure = (error) => ({
+  type: FETCH_POST_FAILURE,
+  payload: error,
 });
 
 // Create Post
@@ -100,6 +111,21 @@ export const fetchPosts = () => {
       .then((response) => response.json())
       .then((posts) => dispatch(fetchPostsSuccess(posts)))
       .catch((error) => dispatch(fetchPostsFailure(error.message)));
+  };
+};
+
+export const fetchPost = (postId) => {
+  return (dispatch) => {
+    dispatch(fetchPostRequest());
+    fetch(`${API_URL}/forum/posts/${postId}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch post");
+        }
+        return response.json();
+      })
+      .then((post) => dispatch(fetchPostSuccess(post)))
+      .catch((error) => dispatch(fetchPostFailure(error.message)));
   };
 };
 
@@ -169,12 +195,22 @@ const postsReducer = (state = initialState, action) => {
         error: action.payload,
       };
 
-    case GET_POST_REQUEST:
+    case FETCH_POST_REQUEST:
       return {
         ...state,
-        // Assuming you want to store the current post in a new state property
-        currentPost:
-          state.posts.find((post) => post.id === action.payload) || null,
+        loading: true,
+      };
+    case FETCH_POST_SUCCESS:
+      return {
+        loading: false,
+        posts: action.payload,
+        error: "",
+      };
+    case FETCH_POST_FAILURE:
+      return {
+        loading: false,
+        posts: [],
+        error: action.payload,
       };
 
     case CREATE_POST_SUCCESS:
