@@ -74,6 +74,7 @@ const post = async (req, res) => {
       content: post.content,
       tags: post.tags,
       action: "CREATE",
+      status: post.status,
       PostCategoryId: post.PostCategoryId,
       UserId: post.UserId,
       PostId: post.id,

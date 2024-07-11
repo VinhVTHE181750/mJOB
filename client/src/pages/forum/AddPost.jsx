@@ -7,7 +7,7 @@ const AddPost = () => {
     <div className="forum-body">
       <Col md={2}>
         <NavigateButton
-          path="/forum"
+          path={"/forum"}
           text="Back to Forum"
           variant="primary"
           confirm={true}
