@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import {getMoment} from "../../functions/Converter";
 import avatar from "../../assets/img/default_avatar.webp";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
@@ -165,6 +166,10 @@ const Post = ({ id }) => {
       </Row>
     </div>
   );
+};
+
+Post.propTypes = {
+  id: PropTypes.number.isRequired,
 };
 
 export default Post;

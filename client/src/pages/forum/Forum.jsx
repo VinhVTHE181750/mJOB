@@ -2,6 +2,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import PostSearch from "../../components/forum/PostSearch";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import ListPost from "../../components/forum/ListPost";
+import ChatBox from "../../components/forum/ChatBox";
 
 const Forum = () => {
   return (
@@ -32,22 +33,7 @@ const Forum = () => {
         </Col>
       </Row>
       <Row className="border">
-        <Col className="border" md={9}>
-          <Row className="border">
-            <p>{">"} User 1: abc</p>
-            <p>{">"} User 1: abc</p>
-            <p>{">"} User 1: abc</p>
-            <p>{">"} User 1: abc</p>
-            <p>{">"} User 1: abc</p>
-            <p>{">"} User 1: abc</p>
-            <p>{">"} User 1: abc</p>
-          </Row>
-          <Row className="text-danger">
-            ⚠ Beware, this is a public chat room. Do not share personal
-            information.
-          </Row>
-          <Row className="border border-primary">Say something...</Row>
-        </Col>
+        <ChatBox />
         <Col className="border" md={3}>
           Online users
         </Col>

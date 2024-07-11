@@ -3,7 +3,7 @@ const PostCategory = require("../../../models/forum/post/PostCategory");
 const User = require("../../../models/User");
 const PostHistory = require("../../../models/forum/post/PostHistory");
 const { log } = require("../../../utils/Logger");
-
+const { getIo } = require("../../../../io");
 const put = async (req, res) => {
   if (!req.userId) {
     res.status(401).json({ message: "Unauthorized" });
@@ -72,7 +72,7 @@ const put = async (req, res) => {
         res.status(400).json({ message: "Invalid category." });
         return;
       }
-      post.PostCategoryId = postInput.PostCategoryId;
+      post.PostCategoryId = category.id;
     }
 
     await Promise.all([
@@ -88,6 +88,13 @@ const put = async (req, res) => {
       }),
     ]);
 
+    const io = getIo();
+    io.emit("posts", { action: "update", post });
+    log(
+      'IO event emitted: "posts", { action: "update", post }',
+      "WARN",
+      "FORUM"
+    );
     res.status(200).json(post);
   } catch (err) {
     console.error(err);

@@ -5,6 +5,7 @@ const applyMiddlewares = require("./src/middlewares");
 const applyRoutes = require("./src/routes");
 const { notFoundHandler, errorHandler } = require("./src/errorHandling");
 const { log } = require("./src/utils/Logger");
+const { init } = require("./io");
 
 const app = express();
 applyMiddlewares(app);
@@ -16,11 +17,11 @@ app.use(errorHandler);
 let port = config.boot.port;
 const server = app
   .listen(port, () => {
-    log(`Server is running on port ${port}`, "INFO", 'Server');
+    log(`Server is running on port ${port}`, "INFO", "Server");
   })
   .on("error", handleServerError);
 
-const io = new Server(server);
+const io = init(server);
 
 function handleServerError(err) {
   if (err.code === "EADDRINUSE") {
