@@ -1,11 +1,11 @@
 const Post = require("../../../models/forum/post/Post");
-const { where } = require("sequelize");
+const { where, Op } = require("sequelize");
 const { log } = require("../../../utils/Logger");
 
 const getAllPosts = async (req, res) => {
   try {
     let posts;
-    if (req.loggedIn && (req.role === "ADMIN" || req.role === "MOD")) {
+    if (req.userId && (req.role === "ADMIN" || req.role === "MOD")) {
       posts = await Post.findAll();
     } else {
       posts = await Post.findAll({
@@ -24,37 +24,54 @@ const getAllPosts = async (req, res) => {
 };
 
 const getPostById = async (req, res) => {
-  if (req.loggedIn) userId = req.userId;
+  let userId;
+  if (req.userId) userId = req.userId;
   try {
     const { id } = req.params;
     const post = await Post.findByPk(id);
     if (!post) return res.status(404).json({ message: "Post not found." });
-    if (req.loggedIn && (req.role === "ADMIN" || req.role === "MOD")) {
+
+    if (post.status === "PUBLISHED") {
       return res.status(200).json(post);
     }
-    if (post.getDataValue("status") === "PUBLISHED") {
+    if (req.role === "ADMIN" || req.role === "MOD") {
       return res.status(200).json(post);
-    } else {
-      if (post.UserId === userId) return res.status(200).json(post);
-      return res.status(404).json({ message: "Post not found." });
     }
+
+    if (userId) {
+      if (post.UserId === userId) {
+        return res.status(200).json(post);
+      }
+    }
+    return res.status(404).json({ message: "Post not found" });
   } catch (err) {
-    res.status(500).json({ message: err });
+    log(err, "ERROR");
+    res
+      .status(500)
+      .json({ message: "Unexpected error while fetching this post" });
   }
 };
 
 const getPostOfUser = async (req, res) => {
-  if (!req.loggedIn) return res.status(401).json({ message: "Unauthorized" });
+  if (!req.userId) return res.status(401).json({ message: "Unauthorized" });
 
+  const { id } = req.params;
   const isAdminOrMod = req.role === "ADMIN" || req.role === "MOD";
   const isSameUser = Number(req.userId) === Number(req.params.id);
 
   if (!isAdminOrMod && !isSameUser) {
-    return res.status(401).json({ message: "Unauthorized" });
+    const posts = await Post.findAll({
+      where: {
+        UserId: id,
+        status: {
+          [Op.or]: ["PUBLISHED", "DELISTED"],
+        },
+      },
+    });
+    return res.status(200).json(posts);
   }
 
   try {
-    const { id } = req.params;
     const posts = await Post.findAll({
       where: {
         UserId: id,

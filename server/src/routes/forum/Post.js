@@ -10,7 +10,7 @@ const { JwtMiddleware } = require("../../utils/JWT");
 
 // Define routes
 router.get("/", getAllPosts);
-router.get("/:id", JwtMiddleware, getPostById);
+router.get("/:id", getPostById);
 router.get("/user/:id", JwtMiddleware, getPostOfUser);
 router.put("/", JwtMiddleware, put);
 router.delete("/:id", JwtMiddleware, deleteById);

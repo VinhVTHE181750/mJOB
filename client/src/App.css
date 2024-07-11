@@ -8,7 +8,7 @@
   background: #0062a7;
   margin: auto;
   /* make this navbar always at top, no matter how much the content is */
-  
+
   top: 0;
   left: 0;
   right: 0;
@@ -23,22 +23,21 @@
 .navbar-btn {
   height: 100%;
   color: white;
-  font-size: 1.2em;
-  font-weight: bold;
+  font-weight: 800;
   text-decoration: none;
-  margin: 0 10px;
+  margin: 0px 2rem;
   transition: all 0.5s;
 }
 
 .navbar-btn:hover {
   cursor: pointer;
-  font-weight: bolder;
-  text-decoration: underline;
   transition: all 0.5s;
   /* make the zoom out effect by transitioning width in 1s */
-  margin: 0 15px;
   color: lightgreen;
+}
 
+.navbar-btn:active {
+  color: red;
 }
 
 #responsive-navbar-nav {

@@ -6,11 +6,12 @@ const helmet = require("helmet");
 const server = require("./src/models/SQLize");
 const { log: logger } = require("./src/utils/Logger");
 const config = require("./config.json");
-const rateLimit = require("express-rate-limit");
-const log = async (msg, level) => {
-  await logger(msg, level, "Main");
-};
-log("Starting server...", "INFO");
+const applyMiddlewares = require("./src/middlewares");
+const applyRoutes = require("./src/routes");
+const { notFoundHandler, errorHandler } = require("./src/errorHandling");
+const { log } = require("./src/utils/Logger");
+const { init } = require("./io");
+
 const app = express();
 const JwtMiddleware = require("./src/utils/JWT");
 const LoggerMiddleware = async (req, res, next) => {
@@ -126,17 +127,18 @@ log("cmd: \x1b[1m\x1b[34m" + "node old.js", "INFO");
 let port = config.boot.port;
 app
   .listen(port, () => {
-    log(`Server is running on port ${port}`, "INFO");
+    log(`Server is running on port ${port}`, "INFO", "Server");
   })
-  .on("error", (err) => {
-    // const maxTries = config.boot.maxRetries;
-    if (err.code === "EADDRINUSE") {
-      log(`Port ${port} is already in use. Trying the next port...`, "WARN");
-      port++;
-      app.listen(port, () => {
-        log(`Server is running on port ${port}`, "INFO");
-      });
-    } else {
-      log(`Failed to start server: ${err}`, "ERROR");
-    }
-  });
+  .on("error", handleServerError);
+
+const io = init(server);
+
+function handleServerError(err) {
+  if (err.code === "EADDRINUSE") {
+    log(`Port ${port} is already in use`, "ERROR");
+    port++;
+    server.listen(port);
+  } else {
+    log(err.message, "ERROR");
+  }
+}

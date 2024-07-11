@@ -1,6 +1,7 @@
 const CommentLike = require("../../models/forum/comment/CommentLike");
 const PostLike = require("../../models/forum/post/PostLike");
 const router = require("express").Router();
+const { JwtMiddleware } = require("../../utils/JWT");
 
 const countLikesByCommentId = async (commentId) => {
   const likes = await CommentLike.count({
@@ -191,7 +192,7 @@ const unlike = async (req, res) => {
 
 router.get("/", getLikes);
 router.get("/liked", likedByUser);
-router.put("/", like);
-router.delete("/", unlike);
+router.put("/", JwtMiddleware, like);
+router.delete("/", JwtMiddleware, unlike);
 
 module.exports = router;
