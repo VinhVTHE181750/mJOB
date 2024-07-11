@@ -106,9 +106,11 @@ function App() {
 
             {/* USERS ROUTES */}
             <Route exact path="/profile" element={<Profile />} />
+            <Route exact path="/viewprofile" element={<ViewProfile />} />
+            <Route exact path="/workinformation" element={<WorkInformation />} />
             <Route exact path="/security" element={<Security />} />
-            {/* <Route exact path="/users" element={<Users />} /> */}
-            {/* <Route exact path="/settings" element={<Setting />} /> */}
+            <Route exact path="/users" element={<Users />} />
+            <Route exact path="/settings" element={<Setting />} />
             <Route exact path="/ticket" element={<CreateTicketPage />} />
 
             {/* TECHNICAL ROUTES */}

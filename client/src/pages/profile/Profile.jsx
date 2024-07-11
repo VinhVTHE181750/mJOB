@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import  { useRef, useState } from "react";
 import { Container, Row, Col, Form, Button, Card, Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -66,8 +66,8 @@ const Profile = () => {
                   Profile
                 </Nav.Link>
               </h2>
-              <Nav.Link href="/information" className="text-white">
-                Information
+              <Nav.Link href="/workinformation" className="text-white">
+                Work Information
               </Nav.Link>
               <Nav.Link href="/security" className="text-white">
                 Security
