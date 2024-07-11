@@ -5,7 +5,7 @@
     "retryDelay": 5000
   },
   "logger": {
-    "level": "INFO"
+    "level": "DEBUG"
   },
 
   "middleware": {
