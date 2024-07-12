@@ -11,7 +11,7 @@ const SecurityPage = () => {
           <Col md={3} className="bg-dark text-white p-4">
             
             <Nav className="flex-column">
-            <h2><Nav.Link href="/profile" className="text-white">Profile</Nav.Link></h2>
+            <h2><Nav.Link href="/editprofile" className="text-white">Profile</Nav.Link></h2>
               <Nav.Link href="/workinformation" className="text-white">Work Information</Nav.Link>
               <Nav.Link href="/security" className="text-white">Security</Nav.Link>
               <Row>

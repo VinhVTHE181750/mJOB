@@ -49,7 +49,7 @@ const WorkInformation = () => {
         <Col md={3} className="bg-dark text-white p-4">
           <Nav className="flex-column">
             <h2>
-              <Nav.Link href="/profile" className="text-white">
+              <Nav.Link href="/editprofile" className="text-white">
               Profile
               </Nav.Link>
             </h2>

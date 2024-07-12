@@ -37,9 +37,9 @@ import TestPage from "./pages/technical/TestPage";
 import Setting from "./pages/home/Setting";
 import Users from "./pages/home/Users";
 import Security from "./pages/profile/Security";
-import Profile from "./pages/profile/Profile";
+import EditProfile from "./pages/profile/EditProfile";
 import WorkInformation from "./pages/profile/WorkInformation";
-import ViewProfile from "./pages/profile/ViewProfile";
+import Profile from "./pages/profile/Profile";
 
 // Components
 import HomeFooter from "./components/HomeFooter";
@@ -107,8 +107,8 @@ function App() {
               <Route exact path="/payment" element={<PaymentPortal />} />
 
             {/* USERS ROUTES */}
-            {/* <Route exact path="/profile" element={<Profile />} /> */}
-            <Route exact path="/viewprofile/:userId" element={<ViewProfile />} />
+            <Route exact path="/editprofile" element={<EditProfile />} />
+            <Route exact path="/profile/:userId" element={<Profile />} />
             <Route exact path="/workinformation" element={<WorkInformation />} />
             <Route exact path="/security" element={<Security />} />
             <Route exact path="/users" element={<Users />} />
