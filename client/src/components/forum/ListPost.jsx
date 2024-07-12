@@ -1,33 +1,29 @@
+import PropTypes from "prop-types";
 // import usePostsQuery from "../../hooks/forum/posts/usePostsQuery";
 import { Form, Pagination } from "react-bootstrap";
 import "../../assets/css/Forum.css";
 import { useNavigate } from "react-router-dom";
 import "react-loading-skeleton/dist/skeleton.css";
 import PostCard from "./PostCard";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchPosts } from "../../store/reducers/postsReducer";
-import { fetchCategories } from "../../store/reducers/postCategoriesReducer";
+import { ForumContext } from "../../context/ForumContext";
 
 // ...
 
 const ListPost = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts.posts);
-  const categories = useSelector((state) => state.postCategories.categories);
-
-  useEffect(() => {
-    dispatch(fetchPosts());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(4);
+  const { posts, categoryOf } = useContext(ForumContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (postsPerPage * currentPage > posts.length) {
+      let cPage = Math.ceil(posts.length / postsPerPage);
+      if (cPage > 0) setCurrentPage(cPage);
+    }
+  }, [postsPerPage, posts.length, currentPage]);
+
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
@@ -51,7 +47,7 @@ const ListPost = () => {
           key={post.id}
           post={post}
           onClick={() => navigate(`/posts/${post.id}`)}
-          category={categories.find(category => category.id === post.PostCategoryId)}
+          category={categoryOf(post.id)}
         />
       ))}
       <Pagination className="justify-content-center mt-2">
@@ -72,10 +68,17 @@ const ListPost = () => {
           <Form.Control
             type="number"
             value={postsPerPage}
+            max={posts.length}
+            min={4}
             onChange={handleSize}
           />
         </Form.Group>
       </Form>
+      <p>
+        Showing {indexOfFirstPost + 1} - {indexOfLastPost} ({postsPerPage}) of{" "}
+        {posts.length} posts. Current page {currentPage} of{" "}
+        {Math.ceil(posts.length / postsPerPage)}.
+      </p>
     </div>
   );
 };

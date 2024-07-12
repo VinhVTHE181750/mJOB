@@ -32,7 +32,7 @@ const getCategoryById = async (req, res) => {
 };
 
 const insertCategory = async (req, res) => {
-  if (!req.loggedIn || req.role !== "ADMIN")
+  if (!req.userId || req.role !== "ADMIN")
     return res.status(401).json({ message: "Unauthorized" });
   try {
     let { name, bgColor, fgColor, enabled } = req.body;
@@ -62,7 +62,7 @@ const insertCategory = async (req, res) => {
 };
 
 const putCategory = async (req, res) => {
-  if (!req.loggedIn || req.role !== "ADMIN")
+  if (!req.userId || req.role !== "ADMIN")
     return res.status(401).json({ message: "Unauthorized" });
   try {
     let { id, name, bgColor, fgColor, enabled } = req.body;
@@ -88,7 +88,7 @@ const putCategory = async (req, res) => {
 };
 
 const deleteCategory = async (req, res) => {
-  if (!req.loggedIn || req.role !== "ADMIN")
+  if (!req.userId || req.role !== "ADMIN")
     return res.status(401).json({ message: "Unauthorized" });
   try {
     const { id } = req.params;

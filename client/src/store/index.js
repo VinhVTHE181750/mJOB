@@ -1,2 +1,2 @@
 export { default } from './store';
-export const API_URL = 'http://localhost:8000/api';
+export { API_URL } from '../App';

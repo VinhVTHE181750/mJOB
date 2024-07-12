@@ -1,10 +1,14 @@
 const Post = require("../../../models/forum/post/Post");
 const PostCategory = require("../../../models/forum/post/PostCategory");
-const User = require("../../../models/User");
+const User = require("../../../models/user/User");
 const PostHistory = require("../../../models/forum/post/PostHistory");
-
+const { log } = require("../../../utils/Logger");
+const { getIo } = require("../../../../io");
 const put = async (req, res) => {
-  if (!req.loggedIn) return res.status(401).json({ message: "Unauthorized" });
+  if (!req.userId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
 
   try {
     let postInput = req.body.post;
@@ -60,6 +64,17 @@ const put = async (req, res) => {
       post.status = postInput.status || post.status;
     }
 
+    if (postInput.category) {
+      const category = await PostCategory.findOne({
+        where: { name: postInput.category },
+      });
+      if (!category) {
+        res.status(400).json({ message: "Invalid category." });
+        return;
+      }
+      post.PostCategoryId = category.id;
+    }
+
     await Promise.all([
       post.save(),
       PostHistory.create({
@@ -73,6 +88,13 @@ const put = async (req, res) => {
       }),
     ]);
 
+    const io = getIo();
+    io.emit("posts", { action: "update", post });
+    log(
+      'IO event emitted: "posts", { action: "update", post }',
+      "WARN",
+      "FORUM"
+    );
     res.status(200).json(post);
   } catch (err) {
     console.error(err);

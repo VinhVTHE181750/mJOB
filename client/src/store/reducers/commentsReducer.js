@@ -4,103 +4,103 @@ import { API_URL } from "..";
 // Default states
 const initialState = {
   loading: false,
-  posts: [],
+  comments: [],
   error: "",
 };
 
 // Action Types
-const FETCH_POSTS_REQUEST = "FETCH_POSTS_REQUEST";
-const FETCH_POSTS_SUCCESS = "FETCH_POSTS_SUCCESS";
-const FETCH_POSTS_FAILURE = "FETCH_POSTS_FAILURE";
+const FETCH_COMMENTS_REQUEST = "FETCH_COMMENTS_REQUEST";
+const FETCH_COMMENTS_SUCCESS = "FETCH_COMMENTS_SUCCESS";
+const FETCH_COMMENTS_FAILURE = "FETCH_COMMENTS_FAILURE";
 
-const FETCH_POST_REQUEST = "FETCH_POST_REQUEST";
-const FETCH_POST_SUCCESS = "FETCH_POST_SUCCESS";
-const FETCH_POST_FAILURE = "FETCH_POST_FAILURE";
+const FETCH_COMMENT_REQUEST = "FETCH_COMMENT_REQUEST";
+const FETCH_COMMENT_SUCCESS = "FETCH_COMMENT_SUCCESS";
+const FETCH_COMMENT_FAILURE = "FETCH_COMMENT_FAILURE";
 
 // Additional Action Types
-const CREATE_POST_REQUEST = "CREATE_POST_REQUEST";
-const CREATE_POST_SUCCESS = "CREATE_POST_SUCCESS";
-const CREATE_POST_FAILURE = "CREATE_POST_FAILURE";
+const CREATE_COMMENT_REQUEST = "CREATE_COMMENT_REQUEST";
+const CREATE_COMMENT_SUCCESS = "CREATE_COMMENT_SUCCESS";
+const CREATE_COMMENT_FAILURE = "CREATE_COMMENT_FAILURE";
 
-const UPDATE_POST_REQUEST = "UPDATE_POST_REQUEST";
-const UPDATE_POST_SUCCESS = "UPDATE_POST_SUCCESS";
-const UPDATE_POST_FAILURE = "UPDATE_POST_FAILURE";
+const UPDATE_COMMENT_REQUEST = "UPDATE_COMMENT_REQUEST";
+const UPDATE_COMMENT_SUCCESS = "UPDATE_COMMENT_SUCCESS";
+const UPDATE_COMMENT_FAILURE = "UPDATE_COMMENT_FAILURE";
 
-const DELETE_POST_REQUEST = "DELETE_POST_REQUEST";
-const DELETE_POST_SUCCESS = "DELETE_POST_SUCCESS";
-const DELETE_POST_FAILURE = "DELETE_POST_FAILURE";
+const DELETE_COMMENT_REQUEST = "DELETE_COMMENT_REQUEST";
+const DELETE_COMMENT_SUCCESS = "DELETE_COMMENT_SUCCESS";
+const DELETE_COMMENT_FAILURE = "DELETE_COMMENT_FAILURE";
 
 // Action Creators
 export const fetchPostsRequest = () => ({
-  type: FETCH_POSTS_REQUEST,
+  type: FETCH_COMMENTS_REQUEST,
 });
 
-export const fetchPostsSuccess = (posts) => ({
-  type: FETCH_POSTS_SUCCESS,
-  payload: posts,
+export const fetchPostsSuccess = (comments) => ({
+  type: FETCH_COMMENTS_SUCCESS,
+  payload: comments,
 });
 
 export const fetchPostsFailure = (error) => ({
-  type: FETCH_POSTS_FAILURE,
+  type: FETCH_COMMENTS_FAILURE,
   payload: error,
 });
 
 export const fetchPostRequest = () => ({
-  type: FETCH_POST_REQUEST,
+  type: FETCH_COMMENT_REQUEST,
 });
 
-export const fetchPostSuccess = (post) => ({
-  type: FETCH_POST_SUCCESS,
-  payload: post,
+export const fetchPostSuccess = (comment) => ({
+  type: FETCH_COMMENT_SUCCESS,
+  payload: comment,
 });
 
 export const fetchPostFailure = (error) => ({
-  type: FETCH_POST_FAILURE,
+  type: FETCH_COMMENT_FAILURE,
   payload: error,
 });
 
 // Create Post
 export const createPostRequest = () => ({
-  type: CREATE_POST_REQUEST,
+  type: CREATE_COMMENT_REQUEST,
 });
 
-export const createPostSuccess = (post) => ({
-  type: CREATE_POST_SUCCESS,
-  payload: post,
+export const createPostSuccess = (comment) => ({
+  type: CREATE_COMMENT_SUCCESS,
+  payload: comment,
 });
 
 export const createPostFailure = (error) => ({
-  type: CREATE_POST_FAILURE,
+  type: CREATE_COMMENT_FAILURE,
   payload: error,
 });
 
 // Update Post
 export const updatePostRequest = () => ({
-  type: UPDATE_POST_REQUEST,
+  type: UPDATE_COMMENT_REQUEST,
 });
 
-export const updatePostSuccess = (post) => ({
-  type: UPDATE_POST_SUCCESS,
-  payload: post,
+export const updatePostSuccess = (comment) => ({
+  type: UPDATE_COMMENT_SUCCESS,
+  payload: comment,
 });
 
 export const updatePostFailure = (error) => ({
-  type: UPDATE_POST_FAILURE,
+  type: UPDATE_COMMENT_FAILURE,
   payload: error,
 });
 
 // Delete Post
 export const deletePostRequest = () => ({
-  type: DELETE_POST_REQUEST,
+  type: DELETE_COMMENT_REQUEST,
 });
 
 export const deletePostSuccess = (id) => ({
-  type: DELETE_POST_SUCCESS,
+  type: DELETE_COMMENT_SUCCESS,
   payload: id,
 });
 
 export const deletePostFailure = (error) => ({
-  type: DELETE_POST_FAILURE,
+  type: DELETE_COMMENT_FAILURE,
   payload: error,
 });
 
@@ -109,39 +109,39 @@ export const fetchPosts = () => {
   return (dispatch) => {
     dispatch(fetchPostsRequest());
     axios
-      .get(`${API_URL}/forum/posts`)
+      .get(`${API_URL}/forum/comments`)
       .then((response) => dispatch(fetchPostsSuccess(response.data)))
       .catch((error) => dispatch(fetchPostsFailure(error.message)));
   };
 };
 
-export const fetchPost = (postId) => {
+export const fetchPost = (commentId) => {
   return (dispatch) => {
     dispatch(fetchPostRequest());
     axios
-      .get(`${API_URL}/forum/posts/${postId}`)
+      .get(`${API_URL}/forum/comments/${commentId}`)
       .then((response) => dispatch(fetchPostSuccess(response.data)))
       .catch((error) => dispatch(fetchPostFailure(error.message)));
   };
 };
 
 // Create Post
-export const createPost = (post) => {
+export const createPost = (comment) => {
   return (dispatch) => {
     dispatch(createPostRequest());
     axios
-      .post(`${API_URL}/forum/posts`, post)
+      .comment(`${API_URL}/forum/comments`, comment)
       .then((response) => dispatch(createPostSuccess(response.data)))
       .catch((error) => dispatch(createPostFailure(error.message)));
   };
 };
 
 // Update Post
-export const updatePost = (post) => {
+export const updatePost = (comment) => {
   return (dispatch) => {
     dispatch(updatePostRequest());
     axios
-      .put(`${API_URL}/forum/posts`, post)
+      .put(`${API_URL}/forum/comments`, comment)
       .then((response) => dispatch(updatePostSuccess(response.data)))
       .catch((error) => dispatch(updatePostFailure(error.message)));
   };
@@ -152,81 +152,83 @@ export const deletePost = (id) => {
   return (dispatch) => {
     dispatch(deletePostRequest());
     axios
-      .delete(`${API_URL}/forum/posts/${id}`)
+      .delete(`${API_URL}/forum/comments/${id}`)
       .then((response) => dispatch(deletePostSuccess(response.data))) // Assuming you have a deletePostSuccess action
       .catch((error) => dispatch(deletePostFailure(error.message)));
   };
 };
 
-const postsReducer = (state = initialState, action) => {
+const commentsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_POSTS_REQUEST:
+    case FETCH_COMMENTS_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case FETCH_POSTS_SUCCESS:
+    case FETCH_COMMENTS_SUCCESS:
       return {
         loading: false,
-        posts: action.payload,
+        comments: action.payload,
         error: "",
       };
-    case FETCH_POSTS_FAILURE:
+    case FETCH_COMMENTS_FAILURE:
       return {
         loading: false,
-        posts: [],
+        comments: [],
         error: action.payload,
       };
 
-    case FETCH_POST_REQUEST:
+    case FETCH_COMMENT_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case FETCH_POST_SUCCESS:
+    case FETCH_COMMENT_SUCCESS:
       return {
         loading: false,
-        posts: action.payload,
+        comments: action.payload,
         error: "",
       };
-    case FETCH_POST_FAILURE:
+    case FETCH_COMMENT_FAILURE:
       return {
         loading: false,
-        posts: [],
+        comments: [],
         error: action.payload,
       };
 
-    case CREATE_POST_SUCCESS:
+    case CREATE_COMMENT_SUCCESS:
       return {
         ...state,
-        posts: [...state.posts, action.payload], // Add the new post to the posts array
+        comments: [...state.comments, action.payload], // Add the new comment to the comments array
         error: "",
       };
-    case CREATE_POST_FAILURE:
+    case CREATE_COMMENT_FAILURE:
       return {
         ...state,
         error: action.payload,
       };
-    case UPDATE_POST_SUCCESS:
+    case UPDATE_COMMENT_SUCCESS:
       return {
         ...state,
-        posts: state.posts.map((post) =>
-          post.id === action.payload.id ? action.payload : post
-        ), // Update the post in the posts array
+        comments: state.comments.map((comment) =>
+          comment.id === action.payload.id ? action.payload : comment
+        ), // Update the comment in the comments array
         error: "",
       };
-    case UPDATE_POST_FAILURE:
+    case UPDATE_COMMENT_FAILURE:
       return {
         ...state,
         error: action.payload,
       };
-    case DELETE_POST_SUCCESS:
+    case DELETE_COMMENT_SUCCESS:
       return {
         ...state,
-        posts: state.posts.filter((post) => post.id !== action.payload), // Remove the deleted post from the posts array
+        comments: state.comments.filter(
+          (comment) => comment.id !== action.payload
+        ), // Remove the deleted comment from the comments array
         error: "",
       };
-    case DELETE_POST_FAILURE:
+    case DELETE_COMMENT_FAILURE:
       return {
         ...state,
         error: action.payload,
@@ -237,4 +239,4 @@ const postsReducer = (state = initialState, action) => {
   }
 };
 
-export default postsReducer;
+export default commentsReducer;

@@ -1,39 +1,116 @@
-import { createContext, useEffect } from "react";
-
+import { createContext, useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
 const ForumContext = createContext({});
-
-const API_URL = "http://localhost:8000/api/forum";
+import { fetchPosts } from "../store/reducers/postsReducer";
+import { fetchCategories } from "../store/reducers/postCategoriesReducer";
 
 const ForumProvider = ({ children }) => {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedPostID, setSelectedPostID] = useState(null);
-  const [filteredPosts, setFilteredPosts] = useState([]);
-  const [selectedPost, setSelectedPost] = useState({});
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => state.posts.posts);
+  const categories = useSelector((state) => state.postCategories.categories);
 
-  useEffect(async () => {
-    const posts = await axios.get(`${API_URL}/posts`);
-    setPosts(posts);
-    setLoading(false);
-    console.table("posts: ", posts);
-  }, []);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+
+  const [searchTerms, setSearchTerms] = useState({
+    title: "",
+    content: "",
+    category: {},
+    tags: [],
+  });
+
+  const [sortTerms, setSortTerms] = useState({
+    updatedAt: false,
+    createdAt: false,
+    likes: false,
+    comments: false,
+    views: false,
+    desc: false,
+  });
+
+  useEffect(() => {
+    if (!searchTerms) {
+      setFilteredPosts(posts);
+      return;
+    }
+    setFilteredPosts(
+      posts.filter((post) => {
+        if (searchTerms.tags.length === 0) return true;
+        let tags = post.tags.split(",");
+        return searchTerms.tags.every((tag) => tags.includes(tag));
+      })
+    );
+  }, [posts, searchTerms]);
+
+  useEffect(() => {
+    // sort the filteredPosts based on the post.updatedAt
+    setFilteredPosts(
+      filteredPosts.sort((a, b) => {
+        return new Date(b.updatedAt) - new Date(a.updatedAt);
+      })
+    );
+  }, [filteredPosts]);
+
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  const addTag = (tag) => {
+    if (!searchTerms.tags.includes(tag)) {
+      setSearchTerms({ ...searchTerms, tags: [...searchTerms.tags, tag] });
+    }
+  };
+
+  const removeTag = (tag) => {
+    setSearchTerms({
+      ...searchTerms,
+      tags: searchTerms.tags.filter((t) => t !== tag),
+    });
+  };
+
+  const categoryOf = (postId) => {
+    return categories.find(
+      (category) =>
+        category.id === posts.find((post) => post.id === postId).PostCategoryId
+    );
+  };
+
+  const clearSearchTerms = () => {
+    setSearchTerms({
+      title: "",
+      content: "",
+      category: {},
+      tags: [],
+    });
+  };
+
+  const deletePost = (id) => {
+    // delete post
+    
+  }
 
   return (
     <ForumContext.Provider
       value={{
-        posts,
-        setPosts,
-        loading,
-        setLoading,
-        selectedPostID,
-        setSelectedPostID,
-        seletecdPost,
-        setSelectedPost,
+        searchTerms,
+        addTag,
+        removeTag,
+        posts: filteredPosts,
+        categoryOf,
+        clearSearchTerms,
       }}
     >
       {children}
     </ForumContext.Provider>
   );
+};
+
+ForumProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export { ForumContext, ForumProvider };
