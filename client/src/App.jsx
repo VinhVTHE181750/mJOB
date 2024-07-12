@@ -14,6 +14,7 @@ import Forum from "./pages/forum/Forum";
 import PostDetail from "./pages/forum/PostDetail";
 import EditPost from "./pages/forum/EditPost";
 import AddPost from "./pages/forum/AddPost";
+import ManageCategories from "./pages/forum/ManageCategories";
 
 // Jobs
 import Market from "./pages/jobs/Market";
@@ -81,6 +82,7 @@ function App() {
               <Route exact path="/posts/:id" element={<PostDetail />} />
               <Route exact path="/forum/add" element={<AddPost />} />
               <Route exact path="/forum/edit/:id" element={<EditPost />} />
+              <Route exact path="/forum/categories" element={<ManageCategories />} />
 
               {/* JOBS ROUTES */}
               <Route exact path="/market" element={<Market />} />

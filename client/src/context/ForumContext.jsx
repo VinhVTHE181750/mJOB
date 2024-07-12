@@ -35,9 +35,7 @@ const ForumProvider = ({ children }) => {
     setSearchTerms({ ...searchTerms, user: username });
   };
 
-  useEffect(() => {
-    console.table(searchTerms);
-  }, [searchTerms]);
+  useEffect(() => {}, [searchTerms]);
 
   useEffect(() => {
     if (!searchTerms || searchTerms.tags.length === 0) {
@@ -113,6 +111,7 @@ const ForumProvider = ({ children }) => {
         categoryOf,
         clearSearchTerms,
         setUser,
+        categories,
       }}
     >
       {children}
