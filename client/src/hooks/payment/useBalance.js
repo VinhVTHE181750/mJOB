@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
 const useBalance = () => {
   const [balance, setBalance] = useState(0);

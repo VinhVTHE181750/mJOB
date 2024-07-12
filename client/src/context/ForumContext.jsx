@@ -1,9 +1,10 @@
-import { createContext, useEffect, useState } from "react";
+import {createContext, useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import { useDispatch, useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchPosts} from "../store/reducers/postsReducer";
+import {fetchCategories} from "../store/reducers/postCategoriesReducer";
+
 const ForumContext = createContext({});
-import { fetchPosts } from "../store/reducers/postsReducer";
-import { fetchCategories } from "../store/reducers/postCategoriesReducer";
 
 const ForumProvider = ({ children }) => {
   const dispatch = useDispatch();

@@ -1,5 +1,4 @@
 const express = require("express");
-const { JwtMiddleware } = require("../../utils/JWT");
 const router = express.Router();
 const PostHistory = require("../../models/forum/post/PostHistory");
 

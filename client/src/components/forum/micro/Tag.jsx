@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { FaTag } from "react-icons/fa6";
+import {FaTag} from "react-icons/fa6";
 
 const Tag = ({ tag, handler }) => {
   const handleHandler = (e) => {

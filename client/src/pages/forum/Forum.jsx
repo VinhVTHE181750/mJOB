@@ -1,9 +1,9 @@
-import { Col, Container, Row } from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import PostSearch from "../../components/forum/PostSearch";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import ListPost from "../../components/forum/ListPost";
 import ChatBox from "../../components/forum/ChatBox";
-import { useState } from "react";
+import {useState} from "react";
 
 const Forum = () => {
   const [tags, setTags] = useState([]);

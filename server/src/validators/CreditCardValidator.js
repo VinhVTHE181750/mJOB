@@ -136,7 +136,7 @@ const checkCreditCard = cardnumber => {
     // See if all is OK by seeing if the length was valid
     if (!lengthValid) {
        return response(false, ccErrors[4]);
-    };   
+    }
     
     // The credit card is in the required format.
     return response(true, null, cardCompany);

@@ -1,16 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import {
-  Button,
-  Col,
-  Container,
-  FloatingLabel,
-  Form,
-  Row,
-} from "react-bootstrap";
-import { ForumContext } from "../../context/ForumContext";
+import {useContext, useEffect, useState} from "react";
+import {Button, Col, Container, FloatingLabel, Form, Row,} from "react-bootstrap";
+import {ForumContext} from "../../context/ForumContext";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import axios from "axios";
-import { API_URL } from "../../App";
+import {API_URL} from "../../App";
 
 const ManageCategories = () => {
   const { categories } = useContext(ForumContext);

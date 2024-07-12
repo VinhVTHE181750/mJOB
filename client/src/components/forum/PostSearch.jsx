@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
-import { Row, Col, Form, Button, Dropdown } from "react-bootstrap";
-import { FaSearch } from "react-icons/fa";
-import { FaFilter, FaSort } from "react-icons/fa6";
-import { useContext } from "react";
+import {Button, Col, Dropdown, Form, Row} from "react-bootstrap";
+import {FaSearch} from "react-icons/fa";
+import {FaFilter, FaSort} from "react-icons/fa6";
+import {useContext} from "react";
 import Tag from "./micro/Tag";
-import { ForumContext } from "../../context/ForumContext";
+import {ForumContext} from "../../context/ForumContext";
 
 const PostSearch = () => {
   const { searchTerms, removeTag, addTag, setUser } = useContext(ForumContext);

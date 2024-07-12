@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router";
+import {useNavigate} from "react-router";
 
 const NavigateLink = ({
   path,

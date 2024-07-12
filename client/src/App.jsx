@@ -32,15 +32,10 @@ import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 // Technical
 import PageNotFound from "./pages/technical/PageNotFound";
 import Dashboard from "./pages/home/Dashboard";
-import TestPage from "./pages/technical/TestPage";
 
 // Users
-import Setting from "./pages/home/Setting";
-import Users from "./pages/home/Users";
 import Security from "./pages/profile/Security";
 import Profile from "./pages/profile/Profile";
-import WorkInformation from "./pages/profile/WorkInformation";
-import ViewProfile from "./pages/profile/ViewProfile";
 
 // Components
 import HomeFooter from "./components/HomeFooter";
@@ -48,16 +43,15 @@ import HomeFooter from "./components/HomeFooter";
 import AppNavbar from "./components/Navbar";
 
 // Misc
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import "./App.css";
 import React from "react";
 
 // import ErrorPage from "./pages/error/ErrorPage";
 import CreateTicketPage from "./pages/user/CreateTicket";
-import { AuthProvider } from "./context/AuthContext";
-import Balance from "./pages/payment/micro/Balance";
+import {AuthProvider} from "./context/AuthContext";
 import PaymentPortal from "./pages/payment/PaymentPortal";
-import { ForumProvider } from "./context/ForumContext";
+import {ForumProvider} from "./context/ForumContext";
 
 function App() {
   return (

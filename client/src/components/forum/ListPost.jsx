@@ -1,13 +1,11 @@
-import PropTypes from "prop-types";
 // import usePostsQuery from "../../hooks/forum/posts/usePostsQuery";
-import { Form, Pagination } from "react-bootstrap";
+import {Form, Pagination} from "react-bootstrap";
 import "../../assets/css/Forum.css";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import "react-loading-skeleton/dist/skeleton.css";
 import PostCard from "./PostCard";
-import { useContext, useState } from "react";
-import { useEffect } from "react";
-import { ForumContext } from "../../context/ForumContext";
+import {useContext, useEffect, useState} from "react";
+import {ForumContext} from "../../context/ForumContext";
 
 // ...
 
