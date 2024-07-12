@@ -106,7 +106,7 @@ const deleteCategory = async (req, res) => {
 
 router.get("/", getCategories);
 router.get("/:id", getCategoryById);
-router.post("/", JwtMiddleware, insertCategory);
-router.put("/", JwtMiddleware, putCategory);
-router.delete("/:id", JwtMiddleware, deleteCategory);
+router.post("/", insertCategory);
+router.put("/", putCategory);
+router.delete("/:id", deleteCategory);
 module.exports = router;
