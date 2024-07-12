@@ -31,19 +31,7 @@ const getCommentById = async (req, res) => {
   }
 };
 
-const getCommentCount = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const count = await Comment.count({ where: { PostId: id } });
-    return res.status(200).json({ count });
-  } catch (err) {
-    log(err, "ERROR", "FORUM");
-    res.status(500).json({ message: "Error occurred", error: err });
-  }
-};
-
 module.exports = {
   getComments,
-  getCommentCount,
   getCommentById
 };
