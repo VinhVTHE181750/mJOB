@@ -16,6 +16,9 @@ router.use("/categories", categoryRoutes);
 const metricsRoutes = require("./forum/Metrics.js")
 router.use("/metrics", metricsRoutes);
 
+const historyRoutes = require("./forum/History.js");
+router.use("/history", historyRoutes);
+
 // tagRoutes
 
 // metric routes

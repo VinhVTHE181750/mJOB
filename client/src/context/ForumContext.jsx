@@ -10,6 +10,8 @@ const ForumProvider = ({ children }) => {
   const posts = useSelector((state) => state.posts.posts);
   const categories = useSelector((state) => state.postCategories.categories);
 
+  // if possible, implement username mentions
+
   const [filteredPosts, setFilteredPosts] = useState([]);
 
   const [searchTerms, setSearchTerms] = useState({
@@ -17,6 +19,7 @@ const ForumProvider = ({ children }) => {
     content: "",
     category: {},
     tags: [],
+    user: "",
   });
 
   const [sortTerms, setSortTerms] = useState({
@@ -28,8 +31,16 @@ const ForumProvider = ({ children }) => {
     desc: false,
   });
 
+  const setUser = (username) => {
+    setSearchTerms({ ...searchTerms, user: username });
+  };
+
   useEffect(() => {
-    if (!searchTerms) {
+    console.table(searchTerms);
+  }, [searchTerms]);
+
+  useEffect(() => {
+    if (!searchTerms || searchTerms.tags.length === 0) {
       setFilteredPosts(posts);
       return;
     }
@@ -90,8 +101,7 @@ const ForumProvider = ({ children }) => {
 
   const deletePost = (id) => {
     // delete post
-    
-  }
+  };
 
   return (
     <ForumContext.Provider
@@ -102,6 +112,7 @@ const ForumProvider = ({ children }) => {
         posts: filteredPosts,
         categoryOf,
         clearSearchTerms,
+        setUser,
       }}
     >
       {children}

@@ -24,6 +24,10 @@ PostHistory.init(
             type: DataTypes.ENUM("CREATE", "UPDATE", "DELETE", "DRAFT", "DELIST", "PUBLISH"),
             allowNull: false,
         },
+        status: {
+            type: DataTypes.ENUM("DRAFT", "PUBLISHED", "DELISTED"),
+            allowNull: false,
+        },
         PostCategoryId: {
             type: DataTypes.INTEGER,
             allowNull: false,
