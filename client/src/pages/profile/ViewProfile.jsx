@@ -1,41 +1,55 @@
-import { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './ViewProfile.css';
-
+import { useEffect, useState } from "react";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./ViewProfile.css";
+import { useParams } from "react-router";
+import axios from "axios";
 const ViewProfiles = () => {
-  const [profiles, setProfiles] = useState([]);
+  
+  const [profile, setProfile] = useState([]);
+  const { userId } = useParams();
 
+  
+  
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/view-profile');
-        const data = await response.json();
-        setProfiles(data);
-      } catch (error) {
-        console.error('Error fetching profiles:', error);
-      }
-    };
+    const view = axios.get(`http://localhost:8000/api/profile/${userId}`);
+    view.then((response) => {
+      setProfile(response.data);
+    });
 
-    fetchData();
-  }, []);
+  }, [userId]);
+
+   
 
   return (
     <Container fluid className="mt-5">
-      {profiles.map((profile) => (
-        <Row key={profile.user_id}>
+      
+        <Row key={profile.id}>
           <Col md={3}>
             <Card className="profile-card text-center">
               <Card.Body>
                 <div className="profile-header mb-4">
                   <img
                     id="profileImage"
-                    src={profile.user_avatar || 'https://via.placeholder.com/150'}
+                    src={
+                      profile.avatar || "https://via.placeholder.com/150"
+                    }
                     alt="Profile Image"
                     className="rounded-circle"
-                    style={{ width: '150px', height: '150px', border: '3px solid #343a40' }}
+                    style={{
+                      width: "150px",
+                      height: "150px",
+                      border: "3px solid #343a40",
+                    }}
                   />
-                  <h2 id="username" style={{ marginTop: '15px', fontWeight: '700', color: '#343a40' }}>
+                  <h2
+                    id="username"
+                    style={{
+                      marginTop: "15px",
+                      fontWeight: "700",
+                      color: "#343a40",
+                    }}
+                  >
                     {profile.username}
                   </h2>
                 </div>
@@ -49,57 +63,79 @@ const ViewProfiles = () => {
                 <Row>
                   <Col md={6}>
                     <p>
-                      <strong>Full Name:</strong> <span id="fullName">{profile.username}</span>
+                      <strong>Full Name:</strong>{" "}
+                      <span id="fullName">{profile.username}</span>
                     </p>
                     <p>
-                      <strong>Date of Birth:</strong> <span id="dob">{profile.user_dob}</span>
+                      <strong>Date of Birth:</strong>{" "}
+                      <span id="dob">{profile.dob}</span>
                     </p>
                     <p>
-                      <strong>Email:</strong> <span id="email">{profile.user_email}</span>
+                      <strong>Email:</strong>{" "}
+                      <span id="email">{profile.email}</span>
                     </p>
                     <p>
-                      <strong>Contact Number:</strong> <span id="contactnumber">{profile.contactNumber}</span>
+                      <strong>Contact Number:</strong>{" "}
+                      <span id="contactnumber">{profile.phone}</span>
                     </p>
                   </Col>
                   <Col md={6}>
                     <p>
-                      <strong>Citizen ID:</strong> <span id="citizenId">{profile.citizenId}</span>
+                      <strong>Citizen ID:</strong>{" "}
+                      <span id="citizenId">{profile.citizenId}</span>
                     </p>
                     <p>
-                      <strong>Address:</strong> <span id="address">{profile.address}</span>
+                      <strong>Address:</strong>{" "}
+                      <span id="address">{profile.address}</span>
                     </p>
                   </Col>
                 </Row>
-                <Button href='/profile' variant="primary" className="edit-btn">Edit</Button>
+                <Button href="/profile" variant="primary" className="edit-btn">
+                  Edit
+                </Button>
               </Card.Body>
             </Card>
-            <Card className="profile-card project-status">
+            {/* <Card className="profile-card project-status">
               <Card.Body>
                 <h4>More Information</h4>
                 <p>
-                  <strong>Job title:</strong> <span id="jobTitle">{profile.work_job_title}</span>
+                  <strong>Job title:</strong>{" "}
+                  <span id="jobTitle">{profile.work_job_title}</span>
                 </p>
                 <p>
-                  <strong>Job Description:</strong> <span id="jobDescription">{profile.work_job_description}</span>
+                  <strong>Job Description:</strong>{" "}
+                  <span id="jobDescription">
+                    {profile.work_job_description}
+                  </span>
                 </p>
                 <p>
-                  <strong>Company:</strong> <span id="company">{profile.work_company}</span>
+                  <strong>Company:</strong>{" "}
+                  <span id="company">{profile.work_company}</span>
                 </p>
                 <p>
-                  <strong>Start Date:</strong> <span id="startDate">{profile.work_start_date}</span>
+                  <strong>Start Date:</strong>{" "}
+                  <span id="startDate">{profile.work_start_date}</span>
                 </p>
                 <p>
-                  <strong>End Date:</strong> <span id="endDate">{profile.work_end_date}</span>
+                  <strong>End Date:</strong>{" "}
+                  <span id="endDate">{profile.work_end_date}</span>
                 </p>
                 <p>
-                  <strong>Other Information:</strong> <span id="otherInformation">{profile.work_other_info}</span>
+                  <strong>Other Information:</strong>{" "}
+                  <span id="otherInformation">{profile.work_other_info}</span>
                 </p>
-                <Button href='/workinformation' variant="primary" className="edit-btn">Edit</Button>
+                <Button
+                  href="/workinformation"
+                  variant="primary"
+                  className="edit-btn"
+                >
+                  Edit
+                </Button>
               </Card.Body>
-            </Card>
+            </Card> */}
           </Col>
         </Row>
-      ))}
+      
     </Container>
   );
 };

@@ -107,8 +107,8 @@ function App() {
               <Route exact path="/payment" element={<PaymentPortal />} />
 
             {/* USERS ROUTES */}
-            <Route exact path="/profile" element={<Profile />} />
-            <Route exact path="/viewprofile" element={<ViewProfile />} />
+            {/* <Route exact path="/profile" element={<Profile />} /> */}
+            <Route exact path="/viewprofile/:userId" element={<ViewProfile />} />
             <Route exact path="/workinformation" element={<WorkInformation />} />
             <Route exact path="/security" element={<Security />} />
             <Route exact path="/users" element={<Users />} />
