@@ -1,17 +1,17 @@
 import PropTypes from "prop-types";
-import { getMoment } from "../../functions/Converter";
+import {getMoment} from "../../functions/Converter";
 import avatar from "../../assets/img/default_avatar.webp";
 // import usePostDetail from "../../hooks/forum/posts/usePostDetail";
-import { Link, useNavigate } from "react-router-dom";
-import { Button, Col, Row } from "react-bootstrap";
-import { useContext, useEffect, useState } from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {Button, Col, Row} from "react-bootstrap";
+import {useContext, useEffect, useState} from "react";
 import NavigateButton from "../ui/buttons/NavigateButton";
 // import usePostDelete from "../../hooks/forum/posts/usePostDelete";
 // import { AuthContext } from "../../context/AuthContext";
 import Skeleton from "react-loading-skeleton";
 // import useLikesQuery from "../../hooks/forum/likes/useLikesQuery";
 // import useIsLiked from "../../hooks/forum/likes/useIsLiked";
-import { ForumContext } from "../../context/ForumContext";
+import {ForumContext} from "../../context/ForumContext";
 
 const Post = ({ id }) => {
   // post related data

@@ -1,13 +1,13 @@
 import PropTypes from "prop-types";
-import { Row, Col, Form, Button, Dropdown } from "react-bootstrap";
-import { FaSearch } from "react-icons/fa";
-import { FaFilter, FaSort } from "react-icons/fa6";
-import { useContext } from "react";
+import {Button, Col, Dropdown, Form, Row} from "react-bootstrap";
+import {FaSearch} from "react-icons/fa";
+import {FaFilter, FaSort} from "react-icons/fa6";
+import {useContext} from "react";
 import Tag from "./micro/Tag";
-import { ForumContext } from "../../context/ForumContext";
+import {ForumContext} from "../../context/ForumContext";
 
 const PostSearch = () => {
-  const { searchTerms, removeTag, addTag } = useContext(ForumContext);
+  const { searchTerms, removeTag, addTag, setUser } = useContext(ForumContext);
   const searchTags = searchTerms.tags;
 
   const handleChange = (e) => {
@@ -17,9 +17,13 @@ const PostSearch = () => {
     const regex = /^[a-zA-Z0-9]+$/;
     if (regex.test(lastChar) === false) {
       // cut the last char
-      const tag = e.target.value.slice(0, -1);
-      if (tag[0] === "#") {
-        addTag(tag);
+      const query = e.target.value.slice(0, -1);
+      if (query[0] === "#") {
+        addTag(query.substring(1));
+        e.target.value = "";
+      }
+      if (query[0] === "@") {
+        setUser(query.substring(1));
         e.target.value = "";
       }
     }

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import io from 'socket.io-client';
 
 const useWebSocket = (url, user) => {

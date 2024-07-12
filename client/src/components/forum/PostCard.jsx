@@ -1,12 +1,12 @@
-import { Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { getMoment } from "../../functions/Converter";
+import {Card} from "react-bootstrap";
+import {Link} from "react-router-dom";
+import {getMoment} from "../../functions/Converter";
 import Category from "./micro/Category";
 import PropTypes from "prop-types";
 import Tag from "./micro/Tag";
 import Count from "./micro/InteractionCount";
-import { useContext } from "react";
-import { ForumContext } from "../../context/ForumContext";
+import {useContext} from "react";
+import {ForumContext} from "../../context/ForumContext";
 
 const PostCard = ({ post, onClick, category, handler }) => {
 

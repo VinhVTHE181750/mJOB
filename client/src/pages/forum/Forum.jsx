@@ -1,9 +1,9 @@
-import { Col, Container, Row } from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import PostSearch from "../../components/forum/PostSearch";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import ListPost from "../../components/forum/ListPost";
 import ChatBox from "../../components/forum/ChatBox";
-import { useState } from "react";
+import {useState} from "react";
 
 const Forum = () => {
   const [tags, setTags] = useState([]);
@@ -20,11 +20,6 @@ const Forum = () => {
   return (
     <Container>
       <Row>
-        {/* <Col md={2} className="">
-          <div>
-            <p>User statuses here.</p>
-          </div>
-        </Col> */}
         <Col md={12}>
           <Row className="align-items-center">
             <Col xs={12} md={10} className="">
@@ -33,8 +28,7 @@ const Forum = () => {
             <Col md={2} className="d-flex flex-row-reverse">
               <NavigateButton
                 path="/forum/add"
-                variant="primary"
-                size="lg"
+                variant="success"
                 text="Add Post"
               >
                 Navigate
@@ -44,7 +38,7 @@ const Forum = () => {
           <ListPost tagHandler={addSearchTag} />
         </Col>
       </Row>
-      {/* <ChatBox user={"user1"} /> */}
+      <ChatBox user={"user1"} />
     </Container>
   );
 };

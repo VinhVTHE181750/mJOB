@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL } from "..";
+import {API_URL} from "..";
 
 // Default states
 const initialState = {

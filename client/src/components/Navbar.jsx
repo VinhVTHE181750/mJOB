@@ -1,7 +1,7 @@
-import { useCallback, useContext, useState } from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import {useCallback, useContext, useState} from "react";
+import {Container, Nav, Navbar} from "react-bootstrap";
 import NavigateLink from "./ui/buttons/NavigateLink";
-import { AuthContext } from "../context/AuthContext";
+import {AuthContext} from "../context/AuthContext";
 
 const AppNavbar = () => {
   const { userId } = useContext(AuthContext);

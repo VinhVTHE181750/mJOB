@@ -1,14 +1,17 @@
-import { createContext, useEffect, useState } from "react";
+import {createContext, useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import { useDispatch, useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchPosts} from "../store/reducers/postsReducer";
+import {fetchCategories} from "../store/reducers/postCategoriesReducer";
+
 const ForumContext = createContext({});
-import { fetchPosts } from "../store/reducers/postsReducer";
-import { fetchCategories } from "../store/reducers/postCategoriesReducer";
 
 const ForumProvider = ({ children }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
   const categories = useSelector((state) => state.postCategories.categories);
+
+  // if possible, implement username mentions
 
   const [filteredPosts, setFilteredPosts] = useState([]);
 
@@ -17,6 +20,7 @@ const ForumProvider = ({ children }) => {
     content: "",
     category: {},
     tags: [],
+    user: "",
   });
 
   const [sortTerms, setSortTerms] = useState({
@@ -28,8 +32,14 @@ const ForumProvider = ({ children }) => {
     desc: false,
   });
 
+  const setUser = (username) => {
+    setSearchTerms({ ...searchTerms, user: username });
+  };
+
+  useEffect(() => {}, [searchTerms]);
+
   useEffect(() => {
-    if (!searchTerms) {
+    if (!searchTerms || searchTerms.tags.length === 0) {
       setFilteredPosts(posts);
       return;
     }
@@ -90,8 +100,7 @@ const ForumProvider = ({ children }) => {
 
   const deletePost = (id) => {
     // delete post
-    
-  }
+  };
 
   return (
     <ForumContext.Provider
@@ -102,6 +111,8 @@ const ForumProvider = ({ children }) => {
         posts: filteredPosts,
         categoryOf,
         clearSearchTerms,
+        setUser,
+        categories,
       }}
     >
       {children}

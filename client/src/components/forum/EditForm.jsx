@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import {useEffect, useState} from "react";
+import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import usePostUpdate from "../../hooks/forum/posts/usePostUpdate";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import useCategories from "../../hooks/forum/categories/useCategories";
 

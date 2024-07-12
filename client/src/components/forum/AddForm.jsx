@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import React, {useState} from "react";
+import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import usePostInsert from "../../hooks/forum/posts/usePostInsert";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import useCategories from "../../hooks/forum/categories/useCategories";
-import { FaExclamation } from "react-icons/fa6";
+import {FaExclamation} from "react-icons/fa6";
 
 const AddForm = () => {
   const [title, setTitle] = useState("");

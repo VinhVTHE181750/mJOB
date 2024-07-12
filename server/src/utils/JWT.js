@@ -5,18 +5,13 @@ const JwtMiddleware = async (req, res, next) => {
   // token = cookie named token
   const token = req.cookies.token;
 
-  if (!token) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  try {
+  if (token) {
     const decoded = jwt.verify(token, config.jwt.secret);
     req.userId = decoded.id;
     req.role = decoded.role;
-    next();
-  } catch (e) {
-    console.error(e);
-    res.status(401).json({ error: "Unauthorized" });
   }
+
+  next();
 };
 
 const createToken = (user) => {
