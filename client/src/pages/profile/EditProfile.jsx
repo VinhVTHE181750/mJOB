@@ -42,8 +42,8 @@ const EditProfile = () => {
                   Profile
                 </Nav.Link>
               </h2>
-              <Nav.Link href="/workinformation" className="text-white">
-                Work Information
+              <Nav.Link href="/workexperience" className="text-white">
+              Work Experience
               </Nav.Link>
               <Nav.Link href="/security" className="text-white">
                 Security

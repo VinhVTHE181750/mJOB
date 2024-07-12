@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Container, Row, Col, Form, Button, Card, Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const WorkInformation = () => {
+const WorkExperience = () => {
   
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
@@ -53,8 +53,8 @@ const WorkInformation = () => {
               Profile
               </Nav.Link>
             </h2>
-            <Nav.Link href="/workinformation" className="text-white">
-              Work Information
+            <Nav.Link href="/workexperience" className="text-white">
+              Work Experience
             </Nav.Link>
             <Nav.Link href="/security" className="text-white">
               Security
@@ -168,4 +168,4 @@ const WorkInformation = () => {
   );
 };
 
-export default WorkInformation;
+export default WorkExperience;

@@ -38,7 +38,7 @@ import Setting from "./pages/home/Setting";
 import Users from "./pages/home/Users";
 import Security from "./pages/profile/Security";
 import EditProfile from "./pages/profile/EditProfile";
-import WorkInformation from "./pages/profile/WorkInformation";
+import WorkExperience from "./pages/profile/WorkExperience";
 import Profile from "./pages/profile/Profile";
 
 // Components
@@ -109,7 +109,7 @@ function App() {
             {/* USERS ROUTES */}
             <Route exact path="/editprofile" element={<EditProfile />} />
             <Route exact path="/profile/:userId" element={<Profile />} />
-            <Route exact path="/workinformation" element={<WorkInformation />} />
+            <Route exact path="/workexperience" element={<WorkExperience />} />
             <Route exact path="/security" element={<Security />} />
             <Route exact path="/users" element={<Users />} />
             <Route exact path="/settings" element={<Setting />} />
