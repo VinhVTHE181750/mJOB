@@ -1,31 +1,24 @@
-const db = require("../../../models/DBContext");
-
-const UPDATE_COMMENT = `
-UPDATE comment
-SET comment_content = @content
-WHERE comment_id = @commentId;
-`;
+const Comment = require("../../../models/forum/comment/Comment");
 
 const put = async (req, res) => {
+  if (!req.userId) return res.status(401).json({ message: "Unauthorized" });
   try {
-    const { commentId, content } = req.body;
-    const pool = await db.poolPromise;
-    const result = await pool
-      .request()
-      .input("commentId", db.sql.Int, commentId)
-      .input("content", db.sql.NVarChar, content)
-      .query(UPDATE_COMMENT);
-
-    if (result.rowsAffected[0] === 0) {
-      res.status(404).send();
-    } else {
-      res.status(200).send();
-    }
+    const { id, content } = req.body;
+    const comment = await Comment.findByPk(id);
+    if (!comment) return res.status(404).json({ message: "Comment not found" });
+    if (comment.UserId !== req.userId)
+      return res.status(401).json({ message: "Unauthorized" });
+    if (!content)
+      return res.status(400).json({ message: "Content is required" });
+    comment.content = content;
+    await comment.save();
+    return res.status(200).json(comment);
   } catch (err) {
-    res.status(500).send();
+    return res
+      .status(500)
+      .json({ message: "Unexpected error while updating comment" });
   }
 };
-
 
 module.exports = {
   put,

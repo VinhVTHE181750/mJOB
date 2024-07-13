@@ -2,8 +2,8 @@ const jwt = require("jsonwebtoken");
 const config = require("../../config.json");
 const router = require("express").Router();
 const Hasher = require("../utils/Hasher");
-const Auth = require("../models/Auth");
-const User = require("../models/User");
+const Auth = require("../models/user/Auth");
+const User = require("../models/user/User");
 const { createToken } = require("../utils/JWT");
 const cookieParser = require("cookie-parser");
 

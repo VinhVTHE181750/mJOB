@@ -1,10 +1,16 @@
-import React, {useContext} from "react";
+import {useCallback, useContext, useState} from "react";
 import {Container, Nav, Navbar} from "react-bootstrap";
 import NavigateLink from "./ui/buttons/NavigateLink";
 import {AuthContext} from "../context/AuthContext";
 
 const AppNavbar = () => {
   const { userId } = useContext(AuthContext);
+  const [active, setActive] = useState("home");
+
+  const setCurrentPath = useCallback((path) => {
+    setActive(path);
+  }, []);
+
   return (
     <Navbar className="navbar mb-auto">
       <Container className="nav-container">

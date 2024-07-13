@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import PropTypes from "prop-types";
+import {useEffect, useState} from "react";
+import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import usePostUpdate from "../../hooks/forum/posts/usePostUpdate";
-import { useNavigate, useParams } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import useCategories from "../../hooks/forum/categories/useCategories";
 
@@ -116,6 +117,10 @@ const EditForm = ({ id }) => {
       )}
     </Container>
   );
+};
+
+EditForm.propTypes = {
+  id: PropTypes.string.isRequired,
 };
 
 export default EditForm;

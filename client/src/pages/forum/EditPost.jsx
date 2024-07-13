@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import {useParams} from "react-router";
 import EditForm from "../../components/forum/EditForm";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 

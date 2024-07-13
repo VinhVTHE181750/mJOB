@@ -1,15 +1,5 @@
-import { Bar } from "react-chartjs-2";
-import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  plugins,
-} from "chart.js";
+import {Bar} from "react-chartjs-2";
+import {CategoryScale, Chart, Legend, LinearScale, LineElement, PointElement, Title, Tooltip,} from "chart.js";
 
 Chart.register(
   CategoryScale,

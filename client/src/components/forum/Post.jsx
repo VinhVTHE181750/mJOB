@@ -1,32 +1,29 @@
+import PropTypes from "prop-types";
 import {getMoment} from "../../functions/Converter";
 import avatar from "../../assets/img/default_avatar.webp";
-import usePostDetail from "../../hooks/forum/posts/usePostDetail";
+// import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import {Link, useNavigate} from "react-router-dom";
 import {Button, Col, Row} from "react-bootstrap";
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import NavigateButton from "../ui/buttons/NavigateButton";
-import usePostDelete from "../../hooks/forum/posts/usePostDelete";
-import {AuthContext} from "../../context/AuthContext";
+// import usePostDelete from "../../hooks/forum/posts/usePostDelete";
+// import { AuthContext } from "../../context/AuthContext";
 import Skeleton from "react-loading-skeleton";
-import useLikesQuery from "../../hooks/forum/likes/useLikesQuery";
-import useIsLiked from "../../hooks/forum/likes/useIsLiked";
+// import useLikesQuery from "../../hooks/forum/likes/useLikesQuery";
+// import useIsLiked from "../../hooks/forum/likes/useIsLiked";
+import {ForumContext} from "../../context/ForumContext";
 
 const Post = ({ id }) => {
   // post related data
   // external userId
-  const { userId } = useContext(AuthContext);
-  const { post, loading, error } = usePostDetail(id);
+  const { posts, deletePost } = useContext(ForumContext);
+  const [post, setPost] = useState({});
+
+  useEffect(() => {
+    const post = posts.find((post) => post.id == id);
+    setPost(post);
+  }, [id, posts]);
   const navigate = useNavigate();
-  const { deletePost } = usePostDelete();
-
-  // external like state, whether if it is like or dislike
-  const { liked, isDislike } = useIsLiked(userId, id, null);
-
-  // external likes counter
-  const { likes, dislikes } = useLikesQuery(id, null);
-
-  // external like update function
-  // const { updateLikes } = usePostLikesUpdate(id, userId, isDislike);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -41,12 +38,12 @@ const Post = ({ id }) => {
       "Are you sure you want to delete this post? "
     );
     if (confirmDelete) {
-      deletePost(id);
+      // deletePost(id);
       navigate("/forum");
     }
   };
 
-  if (loading)
+  if (!post)
     return (
       <div className="post">
         <Row className="post-title">
@@ -88,17 +85,17 @@ const Post = ({ id }) => {
       </div>
     );
 
-  if (error) {
-    if (error.response.status === 404) {
-      return <h3>Post not found.</h3>;
-    } else {
-      return (
-        <>
-          <h3>Something went wrong while fetching the post.</h3>
-          <NavigateButton path="/report" text="Report this problem" variant="danger" /> 
-        </>
-      );
-    }
+  if (!post) {
+    return (
+      <>
+        <h3>Something went wrong while fetching the post.</h3>
+        <NavigateButton
+          path="/report"
+          text="Report this problem"
+          variant="danger"
+        />
+      </>
+    );
   }
 
   return (
@@ -144,27 +141,35 @@ const Post = ({ id }) => {
           <div className="d-flex justify-content-end mt-2 gap-2">
             <Button
               variant={
-                liked ? (isDislike ? "danger" : "outline-danger") : "secondary"
+                // liked ? (isDislike ? "danger" : "outline-danger") : "secondary"
+                "secondary"
               }
             >
-              {dislikes} 👎
+              {/* {dislikes} 👎 */}
+              123
             </Button>
             <Button
               variant={
-                liked
-                  ? !isDislike
-                    ? "success"
-                    : "outline-success"
-                  : "secondary"
+                // liked
+                //   ? !isDislike
+                //     ? "success"
+                //     : "outline-success"
+                //   : "secondary"
+                "secondary"
               }
             >
-              {likes} 👍
+              {/* {likes} 👍 */}
+              123
             </Button>
           </div>
         </Row>
       </Row>
     </div>
   );
+};
+
+Post.propTypes = {
+  id: PropTypes.string.isRequired,
 };
 
 export default Post;

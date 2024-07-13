@@ -1,59 +1,35 @@
-import { Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { getMoment } from "../../functions/Converter";
-import { useEffect, useState } from "react";
-import ViewCount from "./micro/ViewCount";
-import CommentCount from "./micro/CommentCount";
-import LikeCount from "./micro/LikeCount";
-import useCategories from "../../hooks/forum/categories/useCategories";
-import Skeleton from "react-loading-skeleton";
+import {Card} from "react-bootstrap";
+import {Link} from "react-router-dom";
+import {getMoment} from "../../functions/Converter";
+import Category from "./micro/Category";
+import PropTypes from "prop-types";
+import Tag from "./micro/Tag";
+import Count from "./micro/InteractionCount";
+import {useContext} from "react";
+import {ForumContext} from "../../context/ForumContext";
 
-const PostCard = ({ post, onClick }) => {
-  const [likes] = useState(0);
-  const [dislikes] = useState(0);
-  const [comments] = useState(0);
+const PostCard = ({ post, onClick, category, handler }) => {
 
-  const { getCategory } = useCategories();
-  const [category, setCategory] = useState(null);
-
-  useEffect(() => {
-    const fetchCategory = async () => {
-      const categoryData = await getCategory(post.PostCategoryId);
-      setCategory(categoryData);
-    };
-
-    fetchCategory();
-  }, []);
-
+  const { addTag } = useContext(ForumContext);
+  const tags = post.tags.split(",");
   return (
     <Card className="post-card" key={post.id} onClick={onClick}>
       <Card.Body>
         <Card.Subtitle className="fs-5">
-        {category ? (
-          <div
-            className=""
-            style={{
-              backgroundColor: `#${category.bgColor}`,
-              color: `#${category.fgColor}`,
-              borderRadius: "5px",
-              padding: "5px",
-              width: "fit-content",
-            }}
-          >
-            {category.name}
-          </div>
-        ) : (
-          <div><Skeleton count={0.2}/></div>
-        )}
+          {category && <Category category={category} />}
           <span>
-            <ViewCount id={post.id} />
-            <CommentCount id={post.id} />
-            <LikeCount postId={post.id} />
+            <Count count={100} icon="👀" />
+            <Count count={11} icon="💬" />
+            <Count count={25} icon="👎👍" />
           </span>
         </Card.Subtitle>
 
-        <Card.Title className="fs-3">{post.title}</Card.Title>
-        <Card.Text className="fs-6">#tag #tag2 #tag3</Card.Text>
+        <Card.Title className="fs-1 fw-bolder mb-2">{post.title}</Card.Title>
+        <Card.Text className="fs-6">
+          {tags.map((tag) => (
+            <Tag key={tag} tag={tag} handler={(tag) => addTag(tag)} />
+          ))}
+        </Card.Text>
         <Card.Text className="post-card-content">{post.content}</Card.Text>
 
         <Link
@@ -71,6 +47,13 @@ const PostCard = ({ post, onClick }) => {
       </Card.Body>
     </Card>
   );
+};
+
+PostCard.propTypes = {
+  post: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
+  category: PropTypes.object,
+  handler: PropTypes.func,
 };
 
 export default PostCard;

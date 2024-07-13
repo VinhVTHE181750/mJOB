@@ -14,6 +14,7 @@ import Forum from "./pages/forum/Forum";
 import PostDetail from "./pages/forum/PostDetail";
 import EditPost from "./pages/forum/EditPost";
 import AddPost from "./pages/forum/AddPost";
+import ManageCategories from "./pages/forum/ManageCategories";
 
 // Jobs
 import Market from "./pages/jobs/Market";
@@ -28,15 +29,11 @@ import ActiveJob from "./pages/jobs/ActiveJob";
 import CreatedJobDetail from "./pages/jobs/CreatedJobDetail";
 import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 
-
 // Technical
 import PageNotFound from "./pages/technical/PageNotFound";
 import Dashboard from "./pages/home/Dashboard";
-import TestPage from "./pages/technical/TestPage";
 
 // Users
-// import Setting from "./pages/home/Setting";
-// import Users from "./pages/home/Users";
 import Security from "./pages/profile/Security";
 import Profile from "./pages/profile/Profile";
 
@@ -52,16 +49,16 @@ import React from "react";
 
 // import ErrorPage from "./pages/error/ErrorPage";
 import CreateTicketPage from "./pages/user/CreateTicket";
-import { AuthProvider } from "./context/AuthContext";
-import Balance from "./pages/payment/micro/Balance";
+import {AuthProvider} from "./context/AuthContext";
 import PaymentPortal from "./pages/payment/PaymentPortal";
+import {ForumProvider} from "./context/ForumContext";
 
 function App() {
   return (
-    
-      <AuthProvider className="page">
+    <AuthProvider className="page">
+      <ForumProvider>
         <BrowserRouter>
-          <AppNavbar className="mb-auto"/>
+          <AppNavbar className="mb-auto" />
           <div className="min-vh-100 mt-5">
             <Routes>
               {/* AUTH ROUTES */}
@@ -79,6 +76,7 @@ function App() {
               <Route exact path="/posts/:id" element={<PostDetail />} />
               <Route exact path="/forum/add" element={<AddPost />} />
               <Route exact path="/forum/edit/:id" element={<EditPost />} />
+              <Route exact path="/forum/categories" element={<ManageCategories />} />
 
               {/* JOBS ROUTES */}
               <Route exact path="/market" element={<Market />} />
@@ -90,12 +88,19 @@ function App() {
               <Route exact path="/confirm-job" element={<ConfirmJob />} />
               <Route exact path="/apply/:job_id" element={<ApplyJob />} />
               <Route exact path="/active-job" element={<ActiveJob />} />
-              <Route exact path="/created-job-details/:job_id" element={<CreatedJobDetail />} />
-              <Route exact path="/applied-job-details/:job_id" element={<AppliedJobDetail />} />
+              <Route
+                exact
+                path="/created-job-details/:job_id"
+                element={<CreatedJobDetail />}
+              />
+              <Route
+                exact
+                path="/applied-job-details/:job_id"
+                element={<AppliedJobDetail />}
+              />
 
               {/* PAYMENT ROUTES */}
               <Route exact path="/payment" element={<PaymentPortal />} />
-
 
               {/* USERS ROUTES */}
               <Route exact path="/profile" element={<Profile />} />
@@ -107,13 +112,14 @@ function App() {
               {/* TECHNICAL ROUTES */}
               <Route exact path="*" element={<PageNotFound />} />
               <Route exact path="/dashboard" element={<Dashboard />} />
-              <Route exact path="/test" element={<TestPage />} />
             </Routes>
           </div>
           <HomeFooter />
         </BrowserRouter>
-      </AuthProvider>
-    
+      </ForumProvider>
+    </AuthProvider>
   );
 }
+
 export default App;
+export const API_URL = "http://localhost:8000/api";

@@ -1,14 +1,14 @@
 const Auth = require("./Auth");
-const Comment = require("./forum/comment/Comment");
-const CommentLike = require("./forum/comment/CommentLike");
-const Post = require("./forum/post/Post");
-const PostLike = require("./forum/post/PostLike");
-const PublicChatMessage = require("./forum/chat/PublicChatMessage");
-const { sequelize } = require("./SQLize");
+const Comment = require("../forum/comment/Comment");
+const CommentLike = require("../forum/comment/CommentLike");
+const Post = require("../forum/post/Post");
+const PostLike = require("../forum/post/PostLike");
+const PublicChatMessage = require("../forum/chat/PublicChatMessage");
+const { sequelize } = require("../SQLize");
 const { Model, DataTypes } = require("sequelize");
-const PublicRoomUser = require("./forum/chat/PublicRoomUser");
-const PublicChatRoom = require("./forum/chat/PublicChatRoom");
-const Balance = require("./payment/Balance");
+const PublicRoomUser = require("../forum/chat/PublicRoomUser");
+const PublicChatRoom = require("../forum/chat/PublicChatRoom");
+const Balance = require("../payment/Balance");
 
 class User extends Model {}
 
@@ -53,7 +53,7 @@ User.init(
     isStudent: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-    },    
+    },
 
     // moderation info
     isMuted: {

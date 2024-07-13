@@ -9,7 +9,7 @@ const { post } = require("./post/Post");
 const { JwtMiddleware } = require("../../utils/JWT");
 
 // Define routes
-router.get("/", JwtMiddleware, getAllPosts);
+router.get("/", getAllPosts);
 router.get("/:id", getPostById);
 router.get("/user/:id", getPostOfUser);
 router.put("/", put);
