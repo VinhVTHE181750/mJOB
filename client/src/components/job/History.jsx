@@ -131,6 +131,7 @@ function History() {
             {/* {renderLegend()} */}
           </Col>
         </Row>
+
             {/* <div className='history-statistic-box'>
                 <div className='history-statistic-box-left'>
                     <div className='history-statistic-box-left-title'>
@@ -152,6 +153,21 @@ function History() {
             {/* <div className='history-statistic-chart'>
                 <Doughnut data={data} />
             </div> */} 
+
+        <div>
+            Status: 
+            <Dropdown>
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                All
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => setStatus('ongoing')}>Ongoing</Dropdown.Item>
+                <Dropdown.Item onClick={() => setStatus('done')}>Done</Dropdown.Item>
+                <Dropdown.Item onClick={() => setStatus('cancelled')}>Cancelled</Dropdown.Item>
+                <Dropdown.Item onClick={() => setStatus('pending')}>Pending</Dropdown.Item>
+              </Dropdown.Menu>
+              </Dropdown>
+        </div>    
         </div>
         <div className='history-table'>
         <Table border hover className="table-box" style={{marginTop: '20px' }}>
