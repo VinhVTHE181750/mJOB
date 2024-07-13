@@ -1,5 +1,5 @@
-import { Button } from "react-bootstrap";
-import { useNavigate } from "react-router";
+import {Button} from "react-bootstrap";
+import {useNavigate} from "react-router";
 
 const NavigateButton = ({
   path,

@@ -1,10 +1,9 @@
-import { Button } from "react-bootstrap";
-import { useNavigate } from "react-router";
+import PropTypes from "prop-types";
+import {useNavigate} from "react-router";
 
 const NavigateLink = ({
   path,
   text,
-  variant,
   confirm,
   confirmMsg,
   className,
@@ -14,7 +13,6 @@ const NavigateLink = ({
   return (
     <a
       className={className}
-      variant={variant}
       onClick={() => {
         if (action) {
           action();
@@ -31,6 +29,15 @@ const NavigateLink = ({
       {text}
     </a>
   );
+};
+
+NavigateLink.propTypes = {
+  path: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  confirm: PropTypes.bool,
+  confirmMsg: PropTypes.string,
+  className: PropTypes.string,
+  action: PropTypes.func,
 };
 
 export default NavigateLink;

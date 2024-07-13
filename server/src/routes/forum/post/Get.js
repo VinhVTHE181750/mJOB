@@ -1,48 +1,92 @@
-const db = require("../../../models/DBContext");
-
-const SELECT_RECENT_POSTS = `
-SELECT post_id, post_title, post_content, post.user_id, username, post_updated_time
-FROM post JOIN [user] ON post.user_id = [user].user_id
-ORDER BY post_updated_time DESC;
-`;
-
-const SELECT_POST_BY_ID = `
-SELECT post_id, post_title, post_content, username, post.user_id, post_updated_time
-FROM post JOIN [user] ON post.user_id = [user].user_id
-WHERE post_id = @id;
-`;
+const Post = require("../../../models/forum/post/Post");
+const { where, Op } = require("sequelize");
+const { log } = require("../../../utils/Logger");
 
 const getAllPosts = async (req, res) => {
   try {
-    const pool = await db.poolPromise;
-    const result = await pool.request().query(SELECT_RECENT_POSTS);
-    res.json(result.recordset);
+    let posts;
+    if (req.userId && (req.role === "ADMIN" || req.role === "MOD")) {
+      posts = await Post.findAll();
+    } else {
+      posts = await Post.findAll({
+        where: {
+          status: "PUBLISHED",
+        },
+      });
+    }
+    posts && posts.length > 0
+      ? res.status(200).json(posts)
+      : res.status(404).json({ message: "No posts found." });
   } catch (err) {
-    res.status(500).json({ message: "Error occurred", error: err });
+    console.log(err);
+    res.status(500).json({ message: err });
   }
 };
 
 const getPostById = async (req, res) => {
+  let userId;
+  if (req.userId) userId = req.userId;
   try {
     const { id } = req.params;
+    const post = await Post.findByPk(id);
+    if (!post) return res.status(404).json({ message: "Post not found." });
 
-    const pool = await db.poolPromise;
-    const result = await pool
-      .request()
-      .input("id", db.sql.Int, id)
-      .query(SELECT_POST_BY_ID);
-
-    if (result.recordset.length === 0) {
-      res.status(404).json({ message: "Post not found" });
-    } else {
-      res.json(result.recordset[0]);
+    if (post.status === "PUBLISHED") {
+      return res.status(200).json(post);
     }
+    if (req.role === "ADMIN" || req.role === "MOD") {
+      return res.status(200).json(post);
+    }
+
+    if (userId) {
+      if (post.UserId === userId) {
+        return res.status(200).json(post);
+      }
+    }
+    return res.status(404).json({ message: "Post not found" });
   } catch (err) {
-    res.status(500).json({ message: "Error occurred", error: err });
+    log(err, "ERROR");
+    res
+      .status(500)
+      .json({ message: "Unexpected error while fetching this post" });
+  }
+};
+
+const getPostOfUser = async (req, res) => {
+  if (!req.userId) return res.status(401).json({ message: "Unauthorized" });
+
+  const { id } = req.params;
+  const isAdminOrMod = req.role === "ADMIN" || req.role === "MOD";
+  const isSameUser = Number(req.userId) === Number(req.params.id);
+
+  if (!isAdminOrMod && !isSameUser) {
+    const posts = await Post.findAll({
+      where: {
+        UserId: id,
+        status: {
+          [Op.or]: ["PUBLISHED", "DELISTED"],
+        },
+      },
+    });
+    return res.status(200).json(posts);
+  }
+
+  try {
+    const posts = await Post.findAll({
+      where: {
+        UserId: id,
+      },
+    });
+    posts && posts.length > 0
+      ? res.status(200).json(posts)
+      : res.status(404).json({ message: "No posts found." });
+  } catch (err) {
+    res.status(500).json({ message: err });
   }
 };
 
 module.exports = {
   getAllPosts,
   getPostById,
+  getPostOfUser,
 };

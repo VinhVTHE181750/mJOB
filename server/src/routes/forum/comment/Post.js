@@ -1,25 +1,45 @@
-const db = require("../../../models/DBContext");
-
-const INSERT_COMMENT = `
-INSERT INTO comment (comment_content, post_id, user_id) 
-VALUES (@content, @postId, @userId);
-`;
+const { sequelize } = require("../../../models/SQLize");
+const Comment = require("../../../models/forum/comment/Comment");
+const Post = require("../../../models/forum/post/Post");
 
 const insertComment = async (req, res) => {
+  const userId = req.userId;
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
   try {
-    const { postId, userId, content } = req.body;
+    const { postId, content } = req.body;
 
-    const pool = await db.poolPromise;
-    const result = await pool
-      .request()
-      .input("postId", db.sql.Int, postId)
-      .input("userId", db.sql.Int, userId)
-      .input("content", db.sql.NVarChar, content)
-      .query(INSERT_COMMENT);
-      
-    res.status(200).json(result.recordset);
+    const post = await Post.findByPk(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (!content)
+      return res.status(400).json({ message: "Content is required" });
+
+    if (post.status !== "PUBLISHED") {
+      if (post.UserId === userId) {
+        return res
+          .status(400)
+          .json({ message: "You can only comment on published posts" });
+      }
+      if (req.role === "ADMIN" || req.role === "MOD") {
+        return res
+          .status(400)
+          .json({ message: "You can only comment on published posts" });
+      }
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const result = await Comment.create({
+      PostId: postId,
+      UserId: userId,
+      content,
+    });
+    return res.status(201).json(result);
   } catch (err) {
-    res.status(500).json({ message: "Error occurred", error: err });
+    return res
+      .status(500)
+      .json({ message: "Unexpected error while inserting comment" });
   }
 };
 

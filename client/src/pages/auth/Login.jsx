@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
-import { AuthContext } from "../../context/AuthContext";
+import React, {useContext, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {Button, Col, Container, Form, Row} from "react-bootstrap";
+import {AuthContext} from "../../context/AuthContext";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 
 const Login = () => {
@@ -55,7 +55,7 @@ const Login = () => {
                   />
                 </Form.Group>
 
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" className="mt-2">
                   Login
                 </Button>
               </Form>

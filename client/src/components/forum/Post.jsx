@@ -1,97 +1,175 @@
-import { getMoment } from "../../functions/Converter";
+import PropTypes from "prop-types";
+import {getMoment} from "../../functions/Converter";
 import avatar from "../../assets/img/default_avatar.webp";
-import usePostDetail from "../../hooks/forum/posts/usePostDetail";
-import { Link, useNavigate } from "react-router-dom";
-import { Button, Container } from "react-bootstrap";
-import { useContext, useEffect } from "react";
+// import usePostDetail from "../../hooks/forum/posts/usePostDetail";
+import {Link, useNavigate} from "react-router-dom";
+import {Button, Col, Row} from "react-bootstrap";
+import {useContext, useEffect, useState} from "react";
 import NavigateButton from "../ui/buttons/NavigateButton";
-import usePostDelete from "../../hooks/forum/posts/usePostDelete";
-import { AuthContext } from "../../context/AuthContext";
+// import usePostDelete from "../../hooks/forum/posts/usePostDelete";
+// import { AuthContext } from "../../context/AuthContext";
 import Skeleton from "react-loading-skeleton";
+// import useLikesQuery from "../../hooks/forum/likes/useLikesQuery";
+// import useIsLiked from "../../hooks/forum/likes/useIsLiked";
+import {ForumContext} from "../../context/ForumContext";
 
-const Post = ({ post_id }) => {
+const Post = ({ id }) => {
+  // post related data
+  // external userId
+  const { posts, deletePost } = useContext(ForumContext);
+  const [post, setPost] = useState({});
+
+  useEffect(() => {
+    const post = posts.find((post) => post.id == id);
+    setPost(post);
+  }, [id, posts]);
+  const navigate = useNavigate();
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const navigate = useNavigate();
-  const { post, loading, error } = usePostDetail(post_id);
-  const { deletePost } = usePostDelete();
-  const { userId } = useContext(AuthContext);
+  // const handleLike = (isDislike) => {
+  //   updateLikes(isDislike);
+  // };
 
   const handleDeletePost = async () => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this post? " + post_id
+      "Are you sure you want to delete this post? "
     );
     if (confirmDelete) {
-      deletePost(post_id);
+      // deletePost(id);
       navigate("/forum");
     }
   };
 
-  if (loading)
+  if (!post)
     return (
-      <Container className="post">
-        <div className="post-title">
-          <h1>
-            <Skeleton count={0.5} />{" "}
-          </h1>
-        </div>
-        <div className="d-flex gap-2">
-          <div className="post-author">
-            <div>
-              {/* <img className="avatar" src={avatar} alt="Default Avatar" /> */}
-              <Skeleton circle={true} height={50} width={50} />
+      <div className="post">
+        <Row className="post-title">
+          <Col sm={2}>
+            <div className="border">
+              <div>
+                <Skeleton
+                  className="mt-5"
+                  height={100}
+                  width={100}
+                  circle={true}
+                />
+              </div>
+              <div>
+                <Skeleton count={0.5} className="mt-5" />
+              </div>
+              <div>
+                <p className="text-center mx-5">
+                  <Skeleton />
+                </p>
+              </div>
             </div>
-            <div>
-              <Skeleton />
+          </Col>
+          <Col sm={10}>
+            <Row className="mx-5">
+              <h1>
+                <Skeleton count={1.2} />
+              </h1>
+            </Row>
+          </Col>
+        </Row>
+        <Row className="ms-2 mt-4">
+          <Row>
+            <div className="border">
+              <Skeleton count={3.5} />
             </div>
-            <div>
-              <Skeleton />
-            </div>
-          </div>
-          <div className="post-content flex-grow">
-            <Skeleton height={30} count={2.4} highlightColor="blue" />
-          </div>
-        </div>
-      </Container>
+          </Row>
+        </Row>
+      </div>
     );
+
+  if (!post) {
+    return (
+      <>
+        <h3>Something went wrong while fetching the post.</h3>
+        <NavigateButton
+          path="/report"
+          text="Report this problem"
+          variant="danger"
+        />
+      </>
+    );
+  }
 
   return (
     <div className="post">
-      <div className="post-title">
-        <h1>{post.post_title} </h1>
-        {post.user_id == userId && (
-          <>
-            <NavigateButton
-              path={`/forum/edit/${post_id}`}
-              text="Edit"
-              variant="primary"
-            />
-            <Button variant="danger" onClick={() => handleDeletePost()}>
-              Delete
+      <Row className="post-title">
+        <Col sm={2}>
+          <div className="border">
+            <div>
+              <img className="avatar" src={avatar} alt="Default Avatar" />
+            </div>
+            <Link to={`/users/${post.username}`}>#AUTHOR</Link>
+            <div>
+              <p className="text-center">{getMoment(post.updatedAt)}</p>
+            </div>
+          </div>
+        </Col>
+        <Col sm={10}>
+          <Row className="mx-5">
+            <h1>{post.title} </h1>
+          </Row>
+
+          {post.UserId == 1 && (
+            <>
+              <NavigateButton
+                path={`/forum/edit/${id}`}
+                text="Edit"
+                variant="primary"
+                className="me-2"
+              />
+              <Button variant="danger" onClick={() => handleDeletePost()}>
+                Delete
+              </Button>
+            </>
+          )}
+        </Col>
+      </Row>
+      <Row className="ms-2 mt-2">
+        <Row>
+          <div className="border mt-4">{post.content}</div>
+        </Row>
+        <Row>
+          {/* Add a like button */}
+          <div className="d-flex justify-content-end mt-2 gap-2">
+            <Button
+              variant={
+                // liked ? (isDislike ? "danger" : "outline-danger") : "secondary"
+                "secondary"
+              }
+            >
+              {/* {dislikes} 👎 */}
+              123
             </Button>
-          </>
-        )}
-      </div>
-      <div className="d-flex gap-2">
-        <div className="post-author">
-          <div>
-            <img className="avatar" src={avatar} alt="Default Avatar" />
+            <Button
+              variant={
+                // liked
+                //   ? !isDislike
+                //     ? "success"
+                //     : "outline-success"
+                //   : "secondary"
+                "secondary"
+              }
+            >
+              {/* {likes} 👍 */}
+              123
+            </Button>
           </div>
-          <div>
-            <Link to={`/users/${post.username}`}>{post.username}</Link>
-          </div>
-          <div>
-            <p>{getMoment(post.post_updated_time)}</p>
-          </div>
-        </div>
-        <div className="post-content flex-grow">
-          <p>{post.post_content}</p>
-        </div>
-      </div>
+        </Row>
+      </Row>
     </div>
   );
+};
+
+Post.propTypes = {
+  id: PropTypes.string.isRequired,
 };
 
 export default Post;

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button, Dropdown, Card } from 'react-bootstrap';
+import React, {useState} from 'react';
+import {Col, Container, Form, Row} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SearchBar from '../../components/job/SearchBar.jsx';
 import FilterPrice from '../../components/job/FilterPrice.jsx';
 import JobPagination from '../../components/job/JobPagination.jsx';
-import  useJobList  from "../../hooks/useJobList";
-import  useJobListbyview  from "../../hooks/useJobListbyView.js";
-import  useJobListbytime  from "../../hooks/useJobListbyTime.js";
+import useJobList from "../../hooks/useJobList";
+import useJobListbyview from "../../hooks/useJobListbyView.js";
+import useJobListbytime from "../../hooks/useJobListbyTime.js";
 import '../../assets/css/JobList.css'
 
 function JobList() {

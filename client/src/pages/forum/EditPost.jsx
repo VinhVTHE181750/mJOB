@@ -1,7 +1,9 @@
+import {useParams} from "react-router";
 import EditForm from "../../components/forum/EditForm";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 
 const EditPost = () => {
+  const id = useParams().id;
   return (
     <div className="forum-body">
       <NavigateButton
@@ -11,7 +13,7 @@ const EditPost = () => {
         confirm={true}
         confirmMsg={"Discard changes and leave this page?"}
       />
-      <EditForm />
+      <EditForm id={id}/>
     </div>
   );
 };

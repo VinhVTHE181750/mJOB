@@ -1,6 +1,6 @@
 // src/Footer.js
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import {Col, Container, Row} from 'react-bootstrap';
 import '../assets/css/Footer.css';
 
 const Footer = () => {

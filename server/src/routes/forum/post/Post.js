@@ -1,47 +1,91 @@
-const db = require("../../../models/DBContext");
-
-const INSERT_POST = `
-INSERT INTO post (post_title, post_content, user_id, post_status) 
-VALUES (@post_title, @post_content, @user_id, @post_status);
-`;
-
-const INSERT_POST_HISTORY = `
-INSERT INTO post_history (post_id, post_title, post_content)
-VALUES (@post_id, @post_title, @post_content);
-`;
+const User = require("../../../models/user/User");
+const PostCategory = require("../../../models/forum/post/PostCategory");
+const Post = require("../../../models/forum/post/Post");
+const PostHistory = require("../../../models/forum/post/PostHistory");
 
 const post = async (req, res) => {
-  var inserted, logged;
+  const userId = req.userId;
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
   try {
-    const { title, content, user_id, post_status } = req.body;
-    const pool = await db.poolPromise;
-    // First query: Insert into post
-    const result = await pool
-      .request()
-      .input("post_title", db.sql.NVarChar, title)
-      .input("post_content", db.sql.NVarChar, content)
-      .input("user_id", db.sql.Int, user_id)
-      .input("post_status", db.sql.NVarChar, post_status)
-      .query(INSERT_POST);
-    inserted = true;
-  } catch (err) {
-    inserted = false;
-  }
+    let postInput = req.body.post;
+    let msg;
+    let PostCategoryId;
 
-  // Second query: Insert into post_history
-  if (!inserted) {
-    // INSERT to error log: post cannot be created
-    res.status(500).send();
-    return;
-  } else {
-    if (!logged) {
-      /* INSERT to error log: post cannot be logged into history*/
+    if (!postInput.category && !postInput.categoryId) {
+      res
+        .status(400)
+        .json({ message: "Category or category ID must be provided." });
+      return;
     }
-    res.status(201).send();
-    return;
+    if (postInput.categoryId) {
+      const cId = await PostCategory.findByPk(postInput.categoryId);
+      if (!cId) {
+        res.status(404).json({ message: "Category not found." });
+        return;
+      }
+      PostCategoryId = postInput.categoryId;
+    }
+
+    if (postInput.category) {
+      const cName = await PostCategory.findOne({
+        where: {
+          name: postInput.category,
+        },
+      });
+      if (!cName) {
+        res.status(404).json({ message: "Category not found." });
+        return;
+      }
+      if (PostCategoryId) {
+        msg = "Category ID and name provided. Using Category ID.";
+      } else {
+        PostCategoryId = cName.id;
+      }
+    }
+    if (!postInput.title || postInput.title === "") {
+      res.status(400).json({ message: "Post title cannot be empty." });
+      return;
+    }
+
+    if (!postInput.content || postInput.content === "") {
+      res.status(400).json({ message: "Post content cannot be empty." });
+      return;
+    }
+
+    if (postInput.tags && postInput.tags.length > 0) {
+      for (let tag of postInput.tags) {
+        if (tag === "") {
+          res.status(400).json({ message: "Tag cannot be empty." });
+          return;
+        }
+      }
+    }
+
+    const post = await Post.create({
+      title: postInput.title,
+      content: postInput.content,
+      UserId: userId,
+      status: postInput.status,
+      PostCategoryId,
+      tags: postInput.tags,
+    });
+    await PostHistory.create({
+      title: post.title,
+      content: post.content,
+      tags: post.tags,
+      action: "CREATE",
+      status: post.status,
+      PostCategoryId: post.PostCategoryId,
+      UserId: post.UserId,
+      PostId: post.id,
+    });
+    res.status(201).send({ post });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Unexpected error while creating post" });
   }
 };
 
 module.exports = {
-  post
+  post,
 };

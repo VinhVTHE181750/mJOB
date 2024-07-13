@@ -1,8 +1,7 @@
 import React from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import useMarketContent from "../../hooks/useMarketContent.js";
-import { getMoment } from "../../functions/Converter.js";
-import { Card } from "react-bootstrap";
+import {Card} from "react-bootstrap";
 import '../../assets/css/Carosel.css';
 
 function HomeCarousel() {

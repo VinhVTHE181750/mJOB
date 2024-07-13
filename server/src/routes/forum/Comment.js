@@ -1,12 +1,19 @@
 const express = require("express");
 const router = express.Router();
+const { JwtMiddleware } = require("../../utils/JWT");
 
 // Import route handlers
-const { getCommentsByPostId } = require("./comment/Get");
+const { getComments } = require("./comment/Get");
 const { insertComment } = require("./comment/Post");
-
+const { put } = require("./comment/Put");
+const { deleteById } = require("./comment/Delete");
+const { getCommentById } = require("./comment/Get");
 // Define routes
-router.get("/:id", getCommentsByPostId); // Route to get all posts
-router.post("/", insertComment); // Route to insert a new post
+
+router.get("/", getComments); 
+router.get("/:id", getCommentById); 
+router.post("/", insertComment); 
+router.put("/", put);
+router.delete("/:id", deleteById);
 
 module.exports = router;

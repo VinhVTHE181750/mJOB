@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Card, Nav, Form, Button } from 'react-bootstrap';
+import {Button, Card, Col, Container, Form, Nav, Row} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const SecurityPage = () => {
@@ -12,10 +12,10 @@ const SecurityPage = () => {
             
             <Nav className="flex-column">
             <h2><Nav.Link href="/profile" className="text-white">Profile</Nav.Link></h2>
-              <Nav.Link href="/information" className="text-white">Information</Nav.Link>
+              <Nav.Link href="/workinformation" className="text-white">Work Information</Nav.Link>
               <Nav.Link href="/security" className="text-white">Security</Nav.Link>
               <Row>
-                <Col><Button variant="danger" href="/logout">Logout</Button></Col>
+                <Col><Button variant="danger" href="/logout">Log Out</Button></Col>
               </Row>
             </Nav>
           </Col>

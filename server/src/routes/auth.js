@@ -1,84 +1,69 @@
-const CryptoJS = require("crypto-js");
-const express = require("express");
-const db = require("../models/DBContext");
-const router = express.Router();
+const jwt = require("jsonwebtoken");
+const config = require("../../config.json");
+const router = require("express").Router();
+const Hasher = require("../utils/Hasher");
+const Auth = require("../models/user/Auth");
+const User = require("../models/user/User");
+const { createToken } = require("../utils/JWT");
+const cookieParser = require("cookie-parser");
 
-const SQL_CHECK_USERNAME = `
-  SELECT * FROM auth JOIN [user] ON auth.user_id = [user].user_id
-  WHERE username = @username;
-`;
-
-const SQL_INSERT_USER = `
-  INSERT INTO auth (user_id, hash)
-  VALUES (@user_id, @hash);
-`;
-
-const SQL_SELECT_USER = `
-  SELECT auth.user_id, username FROM auth JOIN [user] ON auth.user_id = [user].user_id
-  WHERE username = @username AND hash = @hash;
-`;
-
-// Login route with 2 params: username and password in the request body
-router.get("/login", async (req, res) => {
-  // Get params from the request body
-// get username and password from req authorization instead
-  const auth = req.headers.authorization;
-  const base64Credentials = auth.split(" ")[1];
-  const credentials = Buffer.from(base64Credentials, "base64").toString("ascii");
-  const [username, password] = credentials.split(":");
-  const hash = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
-
+// Updated /login route
+router.post("/login", async (req, res) => {
   try {
-    const pool = await db.poolPromise;
-    const checkUserResult = await pool
-      .request()
-      .input("username", db.sql.NVarChar, username)
-      .query(SQL_CHECK_USERNAME);
-
-    if (checkUserResult.recordset.length > 0) {
-      const userResult = await pool
-        .request()
-        .input("username", db.sql.NVarChar, username)
-        .input("hash", db.sql.NVarChar, hash)
-        .query(SQL_SELECT_USER);
-
-        console.log(userResult.recordset);
-      if (userResult.recordset.length > 0) {
-        res.status(200).json(userResult.recordset[0]);
-      } else {
-        res.status(400).json({ message: "Password does not match" });
-      }
-    } else {
-      res.status(400).json({ message: "Username does not exist" });
+    const { username, password } = req.body;
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(400).json({ error: "Invalid username or password" });
     }
-  } catch (err) {
-    res.status(500).json({ message: "Register failed." });
+    const auth = await Auth.findOne({ where: { UserId: user.id } });
+    const hash = await Hasher.getHash(password, auth.salt);
+    const isValidPassword = hash === auth.hash;
+    if (!isValidPassword) {
+      return res.status(400).json({ error: "Invalid username or password" });
+    }
+    const token = createToken({ id: user.id, role: auth.role});
+    res.cookie("token", token, { httpOnly: true, sameSite: "strict", secure: true});
+    return res.json({ message: "Login successful", token });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// Register route with 2 params: username and password in the request body
+// Updated /register route
 router.post("/register", async (req, res) => {
-  // Get params from the request body
-  const { username, password } = req.body;
-  const hash = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
   try {
-    const pool = await db.poolPromise;
-    const checkUserResult = await pool
-      .request()
-      .input("username", db.sql.NVarChar, username)
-      .query(SQL_CHECK_USERNAME);
-
-    if (checkUserResult.recordset.length > 0) {
-      res.status(409).json({ message: "Username already exists" });
-    } else {
-      await pool.request()
-        .input("username", db.sql.NVarChar, username)
-        .input("hash", db.sql.NVarChar, hash)
-        .query(SQL_INSERT_USER);
-      res.status(201).json({ message: "User created successfully" });
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ error: "Invalid username or password" });
     }
-  } catch (err) {
-    res.status(500).json({ message: "Login failed." });
+
+    // if already existed
+    const userExisted = await User.findOne({ where: { username } });
+    if (userExisted) {
+      return res.status(400).json({ error: "Username already taken" });
+    }
+
+    const salt = await Hasher.generateSalt();
+    const hash = await Hasher.getHash(password, salt);
+
+    // validate user: existed? invalid username? weak password?
+    const user = await User.create({ username });
+    if (!user) {
+      return res.status(400).json({ error: "Failed to create user" });
+    }
+
+    const auth = await Auth.create({ UserId: user.id, hash, salt });
+    if (!auth) {
+      return res.status(400).json({ error: "Authentication failed" });
+    }
+
+    const token = createToken({ id: user.id, role: auth.role});
+    res.cookie("token", token, { httpOnly: true, sameSite: "strict", secure: true});
+    return res.json({ message: "Registration successful", token });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 

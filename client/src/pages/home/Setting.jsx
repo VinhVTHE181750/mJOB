@@ -1,13 +1,18 @@
-import React from 'react';
-import { Container, Navbar, Nav, Form, Button, Card, Row, Col } from 'react-bootstrap';
+import React, {useState} from 'react';
+import {Button, Card, Col, Container, Form, Nav, Row} from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const Setting = () => {
-    const handleUpdateProfile = () => {
-        alert('Update Profile function not implemented.');
+    const [darkMode, setDarkMode] = useState(false);
+
+    const handleThemeChange = () => {
+        setDarkMode(!darkMode);
+        document.body.classList.toggle('dark-mode', !darkMode);
     };
 
-    const handleUpdateNotifications = () => {
-        alert('Update Notifications function not implemented.');
+    const handleUpdateProfile = () => {
+        alert('Update Profile function not implemented.');
     };
 
     return (
@@ -52,27 +57,57 @@ const Setting = () => {
                                 </Form>
                             </Card.Body>
                         </Card>
+                        
                         <Card className="mb-4 shadow-sm">
                             <Card.Body>
-                                <Card.Title>Notification Settings</Card.Title>
+                                <Card.Title>Additional Settings</Card.Title>
                                 <Form>
-                                    <Form.Group controlId="emailNotifications">
-                                        <Form.Label>Email Notifications</Form.Label>
-                                        <Form.Control as="select">
-                                            <option value="Enabled">Enabled</option>
-                                            <option value="Disabled">Disabled</option>
+                                    <div className="form-group">
+                                        <h3>Notification Preferences</h3>
+                                        <Form.Check 
+                                            type="checkbox"
+                                            id="email-notifications"
+                                            label="Email Notifications"
+                                            defaultChecked
+                                        />
+                                        <Form.Check 
+                                            type="checkbox"
+                                            id="sms-notifications"
+                                            label="SMS Notifications"
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <h3>Privacy Settings</h3>
+                                        <Form.Label htmlFor="profile-visibility">Profile Visibility</Form.Label>
+                                        <Form.Control as="select" id="profile-visibility" name="profile-visibility">
+                                            <option value="public">Public</option>
+                                            <option value="private">Private</option>
                                         </Form.Control>
-                                    </Form.Group>
-                                    <Form.Group controlId="smsNotifications">
-                                        <Form.Label>SMS Notifications</Form.Label>
-                                        <Form.Control as="select">
-                                            <option value="Enabled">Enabled</option>
-                                            <option value="Disabled">Disabled</option>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <h3>Language Settings</h3>
+                                        <Form.Label htmlFor="language">Change Language</Form.Label>
+                                        <Form.Control as="select" id="language" name="language">
+                                            <option value="en">English</option>
+                                            <option value="es">Vietnamese</option>
                                         </Form.Control>
-                                    </Form.Group>
-                                    <Button variant="success" onClick={handleUpdateNotifications}>
-                                        Update Notifications
-                                    </Button>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <h3>Theme Settings</h3>
+                                        <Form.Check 
+                                            type="checkbox"
+                                            id="theme"
+                                            label="Dark Mode"
+                                            onChange={handleThemeChange}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <Button type="submit" className="btn btn-success">Save Changes</Button>
+                                    </div>
                                 </Form>
                             </Card.Body>
                         </Card>

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import styled, { keyframes } from 'styled-components';
-import { useParams, useNavigate } from 'react-router-dom';
-import { FaArrowLeft } from 'react-icons/fa';
+import styled, {keyframes} from 'styled-components';
+import {useNavigate, useParams} from 'react-router-dom';
+import {FaArrowLeft} from 'react-icons/fa';
 
 
 const BackgroundContainer = styled.div`
@@ -12,7 +12,7 @@ const BackgroundContainer = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 65px;
+  padding: 10px;
 `;
 
 const JobDetailContainer = styled.div`
@@ -27,6 +27,7 @@ const JobDetailContainer = styled.div`
   @media (max-width: 600px) {
     padding: 15px;
   }
+    margin-bottom: 30px;
 `;
 
 const BackButton = styled.button`
@@ -196,7 +197,7 @@ const JobDetail = () => {
         </Section>
         <Section>
           <Label>Compensation:</Label>
-          <Text>Type: {job.job_compensation_types}</Text>
+          <Text>Type: {job.job_compensation_type}</Text>
           <Text>Amount: {job.job_compensation_amounts} {job.job_compensation_currencies} per {job.job_compensation_periods}</Text>
         </Section>
         <Section>
@@ -211,7 +212,7 @@ const JobDetail = () => {
           <Label>Contact Info:</Label>
           <Text>{job.job_contact_info}</Text>
         </Section>
-        <ApplyButton>Apply</ApplyButton>
+        <ApplyButton onClick={() => navigate('/confirm-job', { state: { job } })}>Apply</ApplyButton>
       </JobDetailContainer>
     </BackgroundContainer>
   );
