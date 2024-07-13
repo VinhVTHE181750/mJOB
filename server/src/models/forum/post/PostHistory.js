@@ -1,7 +1,7 @@
 const {DataTypes, Model} = require("sequelize");
 const {sequelize} = require("../../SQLize");
 const PostCategory = require("./PostCategory");
-const Tag = require("./Tag");
+const PostTag = require("./PostTag");
 
 class PostHistory extends Model {
 }
