@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -23,6 +24,7 @@
     "mssql": "^11.0.0",
     "nodemon": "^3.1.0",
     "sequelize": "^6.37.3",
+    "socket.io": "^4.7.5",
     "tedious": "^18.2.1"
   },
   "description": ""
