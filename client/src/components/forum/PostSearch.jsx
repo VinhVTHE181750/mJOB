@@ -36,21 +36,34 @@ const PostSearch = () => {
       const query = e.target.value.slice(0, -1);
       const type = query[0];
       const value = query.slice(1);
-      if (regex.test(value) === false) {
-        return;
-      }
       switch (type) {
         case "#":
+          if (regex.test(value) === false) {
+            return;
+          }
           addTag(value);
           e.target.value = "";
           break;
         case "@":
+          if (regex.test(value) === false) {
+            return;
+          }
           setUser(value);
           e.target.value = "";
           break;
         case "$":
-          setContent(value);
-          e.target.value = "";
+          if (lastChar !== "$") {
+            break;
+          } else {
+            setContent(value);
+            e.target.value = "";
+          }
+          break;
+        case "/":
+          if (value === "clear") {
+            clearSearchTerms();
+            e.target.value = "";
+          }
           break;
         default:
           break;
@@ -68,9 +81,7 @@ const PostSearch = () => {
     clearSearchTerms();
   };
 
-  useEffect(() => {
-    
-  }, [searchTerms]);
+  useEffect(() => {}, [searchTerms]);
 
   return (
     <>
@@ -80,12 +91,15 @@ const PostSearch = () => {
         </Col> */}
         <Col xs={10} sm={8} md={6} className="">
           <Form onSubmit={handleSubmit}>
-            <Form.Control className="d-sm-inline"
+            <Form.Control
+              className="d-sm-inline"
               type="text"
               placeholder="Enter title query or a #tag, @user, $content..."
               onChange={handleChange}
             />
-            <Button type="submit" className="d-none d-sm-inline">Submit</Button>
+            <Button type="submit" className="d-none d-sm-inline">
+              Submit
+            </Button>
           </Form>
         </Col>
       </Row>
