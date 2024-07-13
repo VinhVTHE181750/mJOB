@@ -69,6 +69,9 @@ app.use("/api/myjobs", dashboardRoute);
 const jobListRoute = require("./src/routes/JobList");
 app.use("/api/joblist", jobListRoute);
 
+// const homeUserRoute = require("./src/routes/HomeUser");
+// app.use("/api/homeuser", homeUserRoute);
+
 // Start the server, if port is already in use, try the next port
 var port = config.boot.port;
 app.listen(port, () => {
