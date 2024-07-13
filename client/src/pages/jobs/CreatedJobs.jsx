@@ -84,7 +84,7 @@ const CreatedJobs = () => {
       case 'USD':
         return `$${amount}`;
       case 'VND':
-        return `${Math.floor(amount)} VND`; // Display in increments of 200,000 VND
+        return `${Math.floor(amount)} VND`; 
       case 'EUR':
         return `€${amount}`;
       case 'POUND':
