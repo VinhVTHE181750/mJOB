@@ -28,6 +28,7 @@ import ApplyJob from "./pages/jobs/ApplyJob";
 import ActiveJob from "./pages/jobs/ActiveJob";
 import CreatedJobDetail from "./pages/jobs/CreatedJobDetail";
 import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
+import JobHistory from "./pages/jobs/JobHistory";
 
 // Technical
 import PageNotFound from "./pages/technical/PageNotFound";
@@ -84,6 +85,7 @@ function App() {
               <Route exact path="/jobs/:id" element={<JobDetail />} />
               <Route exact path="/jobs/add" element={<EnlistJob />} />
               <Route exact path="/myjobs" element={<MyJobs />} />
+              <Route exact path="/myjobs/history" element={<JobHistory />} />
               <Route exact path="/jobs/edit/:id" element={<EditJob />} />
               <Route exact path="/confirm-job" element={<ConfirmJob />} />
               <Route exact path="/apply/:job_id" element={<ApplyJob />} />
