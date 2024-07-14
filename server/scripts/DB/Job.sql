@@ -15,9 +15,9 @@ CREATE TABLE job (
     job_end_date DATE,
     job_number_of_recruits INT DEFAULT 0,
 	job_requirements NVARCHAR(MAX),
-	job_compensation_type VARCHAR(16),
+	job_compensation_type NVARCHAR(50),
     job_compensation_amounts DECIMAL(10, 2) ,
-	job_compensation_currencies NVARCHAR(MAX) DEFAULT 'VND',
+	job_compensation_currencies NVARCHAR(MAX),
     job_compensation_periods NVARCHAR(MAX),
     job_custom_iterations NVARCHAR(MAX)
 );
@@ -41,7 +41,7 @@ GO
 CREATE TABLE job_compensation (
 	job_id INT FOREIGN KEY REFERENCES job(job_id) PRIMARY KEY,
 	job_compensation_platform BIT NOT NULL DEFAULT 0,
-	job_compensation_type VARCHAR(12),
+	job_compensation_type NVARCHAR(50),
 	job_compensation_amount DECIMAL(10, 2),
 	job_compensation_currency VARCHAR(100),
 	job_compensation_period VARCHAR(8),
