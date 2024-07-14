@@ -1,11 +1,11 @@
-import { Col, Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import ListPost from "../../components/forum/ListPost";
 import PostSearch from "../../components/forum/PostSearch";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
-import ListPost from "../../components/forum/ListPost";
-import ChatBox from "../../components/forum/ChatBox";
+// import ChatBox from "../../components/forum/ChatBox";
 import { useState } from "react";
+import { FaPlusCircle } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
-import { FaPlus, FaPlusCircle } from "react-icons/fa";
 
 const Forum = () => {
   const role = "ADMIN";
@@ -39,7 +39,7 @@ const Forum = () => {
       </div>
 
       <ListPost tagHandler={addSearchTag} />
-      <ChatBox user={"user1"} />
+      {/* <ChatBox user={"user1"} /> */}
     </Container>
   );
 };

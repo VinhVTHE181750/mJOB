@@ -1,12 +1,16 @@
 const Post = require("../../../models/forum/post/Post");
-const { where, Op } = require("sequelize");
+const { where, Op, Sequelize } = require("sequelize");
 const { log } = require("../../../utils/Logger");
+const PostMetric = require("../../../models/forum/metric/PostMetric");
+const PostLike = require("../../../models/forum/post/PostLike");
+const Comment = require("../../../models/forum/comment/Comment");
+const User = require("../../../models/user/User");
 
 const getAllPosts = async (req, res) => {
   try {
     let posts;
     if (req.userId && (req.role === "ADMIN" || req.role === "MOD")) {
-      posts = await Post.findAll();
+      posts = await Post.findAll({});
     } else {
       posts = await Post.findAll({
         where: {
@@ -14,9 +18,46 @@ const getAllPosts = async (req, res) => {
         },
       });
     }
-    posts && posts.length > 0
-      ? res.status(200).json(posts)
-      : res.status(404).json({ message: "No posts found." });
+    if (posts && posts.length > 0) {
+      const updatedPosts = await Promise.all(
+        posts.map(async (post) => {
+          const likes = await PostLike.count({
+            where: { PostId: post.id, isDislike: false },
+          });
+
+          const views = await PostMetric.sum("views", {
+            where: { PostId: post.id },
+          });
+
+          const dislikes = await PostLike.count({
+            where: { PostId: post.id, isDislike: true },
+          });
+
+          const comments = await Comment.count({ where: { PostId: post.id } });
+
+          const user = await User.findOne({ where: { id: post.UserId } });
+          const author = user.username;
+          const authorAvatar = user.avatar || "";
+
+          return {
+            ...post.toJSON(),
+            likes: likes || 0,
+            views: views || 0,
+            dislikes: dislikes || 0,
+            comments: comments || 0,
+            author,
+            authorAvatar,
+          };
+        })
+      );
+
+      return res.status(200).json(updatedPosts);
+
+      // wait until all posts are updated with likes, views, dislikes and comments
+      // await Promise.all(posts);
+      // return res.status(200).json(posts);
+    }
+    return res.status(404).json({ message: "No posts found." });
   } catch (err) {
     log(err, "ERROR", "FORUM");
     res.status(500).json({ message: err });
@@ -33,17 +74,78 @@ const getPostById = async (req, res) => {
     }
     const post = await Post.findByPk(id);
     if (!post) return res.status(404).json({ message: "Post not found." });
+    let likes = await PostLike.count({
+      where: { PostId: id, isDislike: false },
+    });
+
+    let liked = false;
+    let isDislike = null;
+
+    if (userId) {
+      const interact = await PostLike.findOne({
+        where: { PostId: id, UserId: userId },
+      });
+      if(interact) {
+        liked = true;
+        isDislike = interact.isDislike;
+      }
+    }
+
+    let views = await PostMetric.sum("views", { where: { PostId: id } });
+
+    let dislikes = await PostLike.count({
+      where: { PostId: id, isDislike: true },
+    });
+
+    let comments = await Comment.count({ where: { PostId: id } });
+
+    const user = await User.findOne({ where: { id: post.UserId } });
+    const author = user.username;
+
+    const response = {
+      id: post.id,
+      title: post.title,
+      content: post.content,
+      tags: post.tags,
+      views,
+      likes,
+      liked,
+      isDislike,
+      comments,
+      dislikes,
+      PostCategoryId: post.PostCategoryId,
+      UserId: post.UserId,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+    };
 
     if (post.status === "PUBLISHED") {
-      return res.status(200).json(post);
+      const todayMetric = await PostMetric.findOne({
+        where: {
+          PostId: id,
+          day: new Date(),
+        },
+      });
+
+      if (!todayMetric) {
+        await PostMetric.create({
+          PostId: id,
+          day: new Date(),
+          views: 1,
+        });
+      } else {
+        await todayMetric.increment("views");
+      }
+      return res.status(200).json(response);
     }
     if (req.role === "ADMIN" || req.role === "MOD") {
-      return res.status(200).json(post);
+      // does not count view from ADMIN, MOD or author if not published
+      return res.status(200).json(response);
     }
 
     if (userId) {
       if (post.UserId === userId) {
-        return res.status(200).json(post);
+        return res.status(200).json(response);
       }
     }
     return res.status(404).json({ message: "Post not found" });

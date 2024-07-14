@@ -1,8 +1,9 @@
-import {createContext, useEffect, useState} from "react";
+import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import {useDispatch, useSelector} from "react-redux";
-import {fetchPosts} from "../store/reducers/postsReducer";
-import {fetchCategories} from "../store/reducers/postCategoriesReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPosts } from "../store/reducers/forum/postsReducer";
+import { fetchCategories } from "../store/reducers/forum/postCategoriesReducer";
+
 
 const ForumContext = createContext({});
 
@@ -58,22 +59,30 @@ const ForumProvider = ({ children }) => {
     setSearchTerms({ ...searchTerms, category: {} });
   };
 
-
   useEffect(() => {}, [searchTerms]);
 
   useEffect(() => {
     // Filter posts based on search terms
     let filtered = posts.filter((post) => {
-      const matchTitle = searchTerms.title ? post.title.includes(searchTerms.title) : true;
-      const matchContent = searchTerms.content ? post.content.includes(searchTerms.content) : true;
+      const matchTitle = searchTerms.title
+        ? post.title.includes(searchTerms.title)
+        : true;
+      const matchContent = searchTerms.content
+        ? post.content.includes(searchTerms.content)
+        : true;
       // const matchCategory = searchTerms.category.id ? post.categoryId === searchTerms.category.id : true;
       const matchCategory = true;
       // const matchUser = searchTerms.user ? post.user === searchTerms.user : true;
       const matchUser = true;
-      const matchTags = searchTerms.tags.length > 0 ? searchTerms.tags.every(tag => post.tags.includes(tag)) : true;
-      return matchTitle && matchContent && matchCategory && matchUser && matchTags;
+      const matchTags =
+        searchTerms.tags.length > 0
+          ? searchTerms.tags.every((tag) => post.tags.includes(tag))
+          : true;
+      return (
+        matchTitle && matchContent && matchCategory && matchUser && matchTags
+      );
     });
-  
+
     // Sort posts based on sortOption
     switch (sortOption) {
       case "newest":
@@ -84,19 +93,21 @@ const ForumProvider = ({ children }) => {
         break;
       case "featured":
         // Assuming there's a way to determine if a post is featured. This is just a placeholder.
-        filtered.sort((a, b) => (a.isFeatured === b.isFeatured) ? 0 : a.isFeatured ? -1 : 1);
+        filtered.sort((a, b) =>
+          a.isFeatured === b.isFeatured ? 0 : a.isFeatured ? -1 : 1
+        );
         break;
       default:
         break;
     }
-  
+
     // Update filteredPosts state
     setFilteredPosts(filtered);
   }, [posts, searchTerms, sortOption]);
 
   useEffect(() => {
     setFilteredPosts(posts);
-  }, [])
+  }, []);
 
   useEffect(() => {
     dispatch(fetchPosts());
@@ -136,10 +147,6 @@ const ForumProvider = ({ children }) => {
     });
   };
 
-  const deletePost = (id) => {
-    // delete post
-  };
-
   return (
     <ForumContext.Provider
       value={{
@@ -158,6 +165,8 @@ const ForumProvider = ({ children }) => {
         unsetContent,
         setCategory,
         unsetCategory,
+        sortOption,
+        setSortOption,
       }}
     >
       {children}

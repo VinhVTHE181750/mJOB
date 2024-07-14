@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import {
   BsChatSquare,
   BsEyeFill,
   BsHandThumbsDownFill,
-  BsHandThumbsUpFill
+  BsHandThumbsUpFill,
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { ForumContext } from "../../context/ForumContext";
@@ -13,20 +13,33 @@ import { getMoment } from "../../functions/Converter";
 import Category from "./micro/Category";
 import Count from "./micro/InteractionCount";
 import Tag from "./micro/Tag";
+import avatar from "../../assets/img/default_avatar.webp";
 
 const PostCard = ({ post, onClick, category }) => {
   const { addTag, setCategory } = useContext(ForumContext);
   const tags = post.tags.split(",");
+  // const [likes, setLikes] = useState(0);
+  // const [dislikes, setDislikes] = useState(0);
+  const [likesDelta, setLikesDelta] = useState(0);
+
+  useEffect(() => {
+    setLikesDelta(post.likes - post.dislikes);
+    // console.log(likes, dislikes);
+  }, [post]);
+
   return (
     <Card className="post-card" key={post.id} onClick={onClick}>
       <Card.Body>
         <Card.Subtitle className="fs-5">
-          {category && <Category category={category} handler={setCategory}/>}
+          {category && <Category category={category} handler={setCategory} />}
           <span>
-            <Count count={100} icon={<BsEyeFill />} />
-            <Count count={11} icon={<BsChatSquare color="black" />} />
+            <Count count={post.views} icon={<BsEyeFill />} />
             <Count
-              count={25}
+              count={post.comments}
+              icon={<BsChatSquare color="black" />}
+            />
+            <Count
+              count={likesDelta}
               icon={
                 <>
                   <BsHandThumbsUpFill color="green" />{" "}
@@ -52,7 +65,20 @@ const PostCard = ({ post, onClick, category }) => {
           title={`Author: ${post.author}`}
           onClick={(e) => e.stopPropagation()}
         >
-          #AUTHOR
+          {post.authorAvatar ? (
+            <img className="align-middle me-2"
+              src={`data:image/jpeg;base64,${post.authorAvatar}`}
+              alt={`${post.author}'s avatar`}
+              style={{ width: "1.5em", height: "1.5em", borderRadius: "50%" }}
+            />
+          ) : (
+            <img className="align-middle me-2"
+              src={avatar}
+              alt="Default avatar"
+              style={{ width: "1.5em", height: "1.5em", borderRadius: "50%" }}
+            />
+          )}
+          {post.author}
         </Link>
         <Card.Text style={{ textAlign: "right", fontSize: "small" }}>
           {getMoment(post.updatedAt)}

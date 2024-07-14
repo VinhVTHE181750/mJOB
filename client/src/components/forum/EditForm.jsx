@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import usePostUpdate from "../../hooks/forum/posts/usePostUpdate";
 import {useNavigate} from "react-router-dom";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import useCategories from "../../hooks/forum/categories/useCategories";
+import { ForumContext } from "../../context/ForumContext";
 
 const EditForm = ({ id }) => {
   const [title, setTitle] = useState("");
@@ -12,7 +13,7 @@ const EditForm = ({ id }) => {
   const [error, setError] = useState(null);
   const userId = 1; // get from context instead
   const [status, setStatus] = useState("");
-  const { categories } = useCategories();
+  const { categories } = useContext(ForumContext);
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState("");
   const navigate = useNavigate();

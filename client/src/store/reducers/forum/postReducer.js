@@ -1,18 +1,14 @@
 import axios from "axios";
-import {API_URL} from "..";
+import { API_URL } from "../..";
 
 // Default states
 const initialState = {
   loading: false,
-  posts: [],
+  post: {},
   error: "",
 };
 
 // Action Types
-const FETCH_POSTS_REQUEST = "FETCH_POSTS_REQUEST";
-const FETCH_POSTS_SUCCESS = "FETCH_POSTS_SUCCESS";
-const FETCH_POSTS_FAILURE = "FETCH_POSTS_FAILURE";
-
 const FETCH_POST_REQUEST = "FETCH_POST_REQUEST";
 const FETCH_POST_SUCCESS = "FETCH_POST_SUCCESS";
 const FETCH_POST_FAILURE = "FETCH_POST_FAILURE";
@@ -31,20 +27,6 @@ const DELETE_POST_SUCCESS = "DELETE_POST_SUCCESS";
 const DELETE_POST_FAILURE = "DELETE_POST_FAILURE";
 
 // Action Creators
-export const fetchPostsRequest = () => ({
-  type: FETCH_POSTS_REQUEST,
-});
-
-export const fetchPostsSuccess = (posts) => ({
-  type: FETCH_POSTS_SUCCESS,
-  payload: posts,
-});
-
-export const fetchPostsFailure = (error) => ({
-  type: FETCH_POSTS_FAILURE,
-  payload: error,
-});
-
 export const fetchPostRequest = () => ({
   type: FETCH_POST_REQUEST,
 });
@@ -105,16 +87,6 @@ export const deletePostFailure = (error) => ({
 });
 
 // Thunk Action Creator
-export const fetchPosts = () => {
-  return (dispatch) => {
-    dispatch(fetchPostsRequest());
-    axios
-      .get(`${API_URL}/forum/posts`)
-      .then((response) => dispatch(fetchPostsSuccess(response.data)))
-      .catch((error) => dispatch(fetchPostsFailure(error.message)));
-  };
-};
-
 export const fetchPost = (postId) => {
   return (dispatch) => {
     dispatch(fetchPostRequest());
@@ -158,26 +130,8 @@ export const deletePost = (id) => {
   };
 };
 
-const postsReducer = (state = initialState, action) => {
+const postReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_POSTS_REQUEST:
-      return {
-        ...state,
-        loading: true,
-      };
-    case FETCH_POSTS_SUCCESS:
-      return {
-        loading: false,
-        posts: action.payload,
-        error: "",
-      };
-    case FETCH_POSTS_FAILURE:
-      return {
-        loading: false,
-        posts: [],
-        error: action.payload,
-      };
-
     case FETCH_POST_REQUEST:
       return {
         ...state,
@@ -186,49 +140,73 @@ const postsReducer = (state = initialState, action) => {
     case FETCH_POST_SUCCESS:
       return {
         loading: false,
-        posts: action.payload,
+        post: action.payload,
         error: "",
       };
     case FETCH_POST_FAILURE:
       return {
         loading: false,
-        posts: [],
+        post: {},
         error: action.payload,
+      };
+
+    case CREATE_POST_REQUEST:
+      return {
+        ...state,
+        loading: true,
       };
 
     case CREATE_POST_SUCCESS:
       return {
-        ...state,
-        posts: [...state.posts, action.payload], // Add the new post to the posts array
+        loading: false,
+        post: action.payload,
         error: "",
       };
+
     case CREATE_POST_FAILURE:
       return {
-        ...state,
+        loading: false,
+        post: {},
         error: action.payload,
       };
+
+    case UPDATE_POST_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
     case UPDATE_POST_SUCCESS:
       return {
-        ...state,
-        posts: state.posts.map((post) =>
-          post.id === action.payload.id ? action.payload : post
-        ), // Update the post in the posts array
+        loading: false,
+        post: action.payload,
         error: "",
       };
+
     case UPDATE_POST_FAILURE:
       return {
-        ...state,
+        loading: false,
+        post: {},
         error: action.payload,
       };
+
+    case DELETE_POST_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
     case DELETE_POST_SUCCESS:
       return {
-        ...state,
-        posts: state.posts.filter((post) => post.id !== action.payload), // Remove the deleted post from the posts array
+        loading: false,
+        post: {},
         error: "",
       };
+
     case DELETE_POST_FAILURE:
       return {
-        ...state,
+        loading: false,
+        post: {},
         error: action.payload,
       };
 
@@ -237,4 +215,4 @@ const postsReducer = (state = initialState, action) => {
   }
 };
 
-export default postsReducer;
+export default postReducer;

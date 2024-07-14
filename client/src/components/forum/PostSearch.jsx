@@ -100,7 +100,7 @@ const PostSearch = () => {
         </Form>
       </Row>
       <Row className="mx-auto mt-1 me-auto">
-        {category && <Tag key="category" tag={category.name} close={true} />}
+        {/* {category && <Tag key="category" tag={category.name} close={true} />} */}
         {user && <Tag key="user" tag={user} close={true} handler={unsetUser} />}
         {searchTags.map((tag) => (
           <Tag
