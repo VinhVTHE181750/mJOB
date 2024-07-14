@@ -14,11 +14,8 @@ const PostSearch = () => {
     setUser,
     unsetUser,
     setTitle,
-    unsetTitle,
     setContent,
-    unsetContent,
     setCategory,
-    unsetCategory,
     clearSearchTerms,
   } = useContext(ForumContext);
   const searchTags = searchTerms.tags;
@@ -89,24 +86,29 @@ const PostSearch = () => {
         {/* <Col xs="auto">
         {category ? <Category category={category} /> : <Category />}
         </Col> */}
-        <Col xs={10} sm={8} md={6} className="">
-          <Form onSubmit={handleSubmit}>
-            <Form.Control
-              className="d-sm-inline"
-              type="text"
-              placeholder="Enter title query or a #tag, @user, $content..."
-              onChange={handleChange}
-            />
-            <Button type="submit" className="d-none d-sm-inline">
-              Submit
-            </Button>
-          </Form>
-        </Col>
+
+        <Form onSubmit={handleSubmit}>
+          <Form.Control
+            className="d-inline form-control-lg"
+            type="text"
+            placeholder="Enter title query or a #tag, @user, $content$, ..."
+            onChange={handleChange}
+          />
+          <Button type="submit" className="d-none d-sm-inline mt-1">
+            Submit
+          </Button>
+        </Form>
       </Row>
       <Row className="mx-auto mt-1 me-auto">
-        {user && <Tag key="user" tag={`@${user} ❌`} handler={unsetUser} />}
+        {category && <Tag key="category" tag={category.name} close={true} />}
+        {user && <Tag key="user" tag={user} close={true} handler={unsetUser} />}
         {searchTags.map((tag) => (
-          <Tag key={tag} tag={`${tag} ❌`} handler={() => removeTag(tag)} />
+          <Tag
+            key={tag}
+            tag={tag}
+            close={true}
+            handler={() => removeTag(tag)}
+          />
         ))}
       </Row>
     </>

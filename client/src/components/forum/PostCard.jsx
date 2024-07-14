@@ -1,26 +1,39 @@
-import {Card} from "react-bootstrap";
-import {Link} from "react-router-dom";
-import {getMoment} from "../../functions/Converter";
-import Category from "./micro/Category";
 import PropTypes from "prop-types";
-import Tag from "./micro/Tag";
+import { useContext } from "react";
+import { Card } from "react-bootstrap";
+import {
+  BsChatSquare,
+  BsEyeFill,
+  BsHandThumbsDownFill,
+  BsHandThumbsUpFill
+} from "react-icons/bs";
+import { Link } from "react-router-dom";
+import { ForumContext } from "../../context/ForumContext";
+import { getMoment } from "../../functions/Converter";
+import Category from "./micro/Category";
 import Count from "./micro/InteractionCount";
-import {useContext} from "react";
-import {ForumContext} from "../../context/ForumContext";
+import Tag from "./micro/Tag";
 
-const PostCard = ({ post, onClick, category, handler }) => {
-
-  const { addTag } = useContext(ForumContext);
+const PostCard = ({ post, onClick, category }) => {
+  const { addTag, setCategory } = useContext(ForumContext);
   const tags = post.tags.split(",");
   return (
     <Card className="post-card" key={post.id} onClick={onClick}>
       <Card.Body>
         <Card.Subtitle className="fs-5">
-          {category && <Category category={category} />}
+          {category && <Category category={category} handler={setCategory}/>}
           <span>
-            <Count count={100} icon="👀" />
-            <Count count={11} icon="💬" />
-            <Count count={25} icon="👎👍" />
+            <Count count={100} icon={<BsEyeFill />} />
+            <Count count={11} icon={<BsChatSquare color="black" />} />
+            <Count
+              count={25}
+              icon={
+                <>
+                  <BsHandThumbsUpFill color="green" />{" "}
+                  <BsHandThumbsDownFill color="red" />
+                </>
+              }
+            />
           </span>
         </Card.Subtitle>
 
