@@ -100,7 +100,11 @@ Balance.belongsTo(User);
 // missing LinkedProfile
 
 
+<<<<<<< Updated upstream
 User.hasMany(WorkExperience);
+=======
+User.hasOne(WorkExperience);
+>>>>>>> Stashed changes
 WorkExperience.belongsTo(User);
 
 // missing Education

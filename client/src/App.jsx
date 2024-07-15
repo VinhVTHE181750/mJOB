@@ -107,9 +107,15 @@ function App() {
               <Route exact path="/payment" element={<PaymentPortal />} />
 
             {/* USERS ROUTES */}
+<<<<<<< Updated upstream
             <Route exact path="/editprofile" element={<EditProfile />} />
             <Route exact path="/profile/:userId" element={<Profile />} />
             <Route exact path="/workexperience" element={<WorkExperience />} />
+=======
+            <Route exact path="/editprofile/:userId" element={<EditProfile />} />
+            <Route exact path="/profile/:userId" element={<Profile />} />
+            <Route exact path="/workexperience/:userId" element={<WorkExperience />} />
+>>>>>>> Stashed changes
             <Route exact path="/security" element={<Security />} />
             <Route exact path="/users" element={<Users />} />
             <Route exact path="/settings" element={<Setting />} />

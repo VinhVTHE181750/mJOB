@@ -1,15 +1,26 @@
+<<<<<<< Updated upstream
 import { useState } from "react";
 import { Container, Row, Col, Form, Button, Card, Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const WorkExperience = () => {
   
+=======
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Form, Button, Card, Nav } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
+import { useParams } from "react-router";
+
+const WorkExperience = () => {
+>>>>>>> Stashed changes
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [company, setCompany] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [otherInformation, setOtherInformation] = useState("");
+<<<<<<< Updated upstream
   const [username, setUsername] = useState("User Name");
 
   const handleFormSubmit = async (e) => {
@@ -40,6 +51,51 @@ const WorkExperience = () => {
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('Error submitting form');
+=======
+  const { userId } = useParams();
+
+  useEffect(() => {
+    const fetchWorkExperience = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/workexp/user/${userId}`);
+        console.log("Response:", response);
+        const workExperience = response.data;
+
+        // Update state with fetched data
+        setJobTitle(workExperience.title || "");
+        setJobDescription(workExperience.description || "");
+        setCompany(workExperience.company || "");
+        setStartDate(workExperience.startDate || "");
+        setEndDate(workExperience.endDate || "");
+        setOtherInformation(workExperience.otherInformation || ""); // Ensure otherInformation is set or empty string
+      } catch (error) {
+        console.error("Error fetching work experience data:", error);
+      }
+    };
+
+    fetchWorkExperience();
+  }, [userId]);
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    const userData = {
+      userId: userId,
+      jobTitle: jobTitle,
+      jobDescription: jobDescription,
+      company: company,
+      startDate: startDate,
+      endDate: endDate,
+      otherInformation: otherInformation,
+    };
+
+    try {
+      const response = await axios.put(`http://localhost:8000/api/workexp/${userId}`, userData);
+      alert("Work experience updated successfully");
+    } catch (err) {
+      console.error("Error updating work experience:", err);
+      alert("Error updating work experience");
+>>>>>>> Stashed changes
     }
   };
 
@@ -49,11 +105,19 @@ const WorkExperience = () => {
         <Col md={3} className="bg-dark text-white p-4">
           <Nav className="flex-column">
             <h2>
+<<<<<<< Updated upstream
               <Nav.Link href="/editprofile" className="text-white">
               Profile
               </Nav.Link>
             </h2>
             <Nav.Link href="/workexperience" className="text-white">
+=======
+              <Nav.Link href={`/editprofile/${userId}`} className="text-white">
+                Profile
+              </Nav.Link>
+            </h2>
+            <Nav.Link href={`/workexperience/${userId}`} className="text-white">
+>>>>>>> Stashed changes
               Work Experience
             </Nav.Link>
             <Nav.Link href="/security" className="text-white">
@@ -146,7 +210,11 @@ const WorkExperience = () => {
                   </Form.Label>
                   <Col sm={10}>
                     <Form.Control
+<<<<<<< Updated upstream
                       as='textarea'
+=======
+                      as="textarea"
+>>>>>>> Stashed changes
                       placeholder="Other Information"
                       value={otherInformation}
                       onChange={(e) => setOtherInformation(e.target.value)}

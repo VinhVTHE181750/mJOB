@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ViewProfile.css";
+<<<<<<< Updated upstream
 import { useParams } from "react-router";
 import axios from "axios";
 const Profile = () => {
@@ -135,6 +136,110 @@ const Profile = () => {
           </Col>
         </Row>
       
+=======
+import { useParams, useNavigate } from "react-router";
+import axios from "axios";
+
+const Profile = () => {
+  const [profile, setProfile] = useState({});
+  const { userId } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/profile/${userId}`);
+        setProfile(response.data);
+      } catch (error) {
+        console.error("There was an error fetching the profile data!", error);
+      }
+    };
+
+    fetchProfile();
+  }, [userId]);
+
+  const handleEditClick = () => {
+    navigate(`/editprofile/${userId}`);
+  };
+
+  return (
+    <Container fluid className="mt-5">
+      <Row key={profile.id}>
+        <Col md={3}>
+          <Card className="profile-card text-center">
+            <Card.Body>
+              <div className="profile-header mb-4">
+                <img
+                  id="profileImage"
+                  src={profile.avatar || "https://via.placeholder.com/150"}
+                  alt="Profile Image"
+                  className="rounded-circle"
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    border: "3px solid #343a40",
+                  }}
+                />
+                <h2
+                  id="username"
+                  style={{
+                    marginTop: "15px",
+                    fontWeight: "700",
+                    color: "#343a40",
+                  }}
+                >
+                  {profile.username}
+                </h2>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={9}>
+          <Card className="profile-card mb-4">
+            <Card.Body>
+              <h4>Profile Details</h4>
+              <Row>
+                <Col md={6}>
+                  <p>
+                    <strong>Full Name:</strong>{" "}
+                    <span id="fullName">{profile.username}</span>
+                  </p>
+                  <p>
+                    <strong>Date of Birth:</strong>{" "}
+                    <span id="dob">{profile.dob}</span>
+                  </p>
+                  <p>
+                    <strong>Email:</strong>{" "}
+                    <span id="email">{profile.email}</span>
+                  </p>
+                  <p>
+                    <strong>Contact Number:</strong>{" "}
+                    <span id="contactnumber">{profile.phone}</span>
+                  </p>
+                </Col>
+                <Col md={6}>
+                  <p>
+                    <strong>Citizen ID:</strong>{" "}
+                    <span id="citizenId">{profile.citizenId}</span>
+                  </p>
+                  <p>
+                    <strong>Address:</strong>{" "}
+                    <span id="address">{profile.address}</span>
+                  </p>
+                </Col>
+              </Row>
+              <Button
+                onClick={handleEditClick}
+                variant="primary"
+                className="edit-btn"
+              >
+                Edit
+              </Button>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+>>>>>>> Stashed changes
     </Container>
   );
 };
