@@ -53,7 +53,7 @@ const PayButton = styled.button`
   }
 `;
 
-const CreatedJobs = () => {
+const CreatedJobs = ({ searchQuery }) => {
   const [createdJobs, setCreatedJobs] = useState([]);
 
   useEffect(() => {
@@ -79,6 +79,10 @@ const CreatedJobs = () => {
     navigate(`/created-job-details/${job_id}`);
   };
 
+  const filteredJobs = createdJobs.filter(job =>
+    job.job_title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
   const renderCurrency = (currency, amount) => {
     switch (currency) {
       case 'USD':
@@ -107,7 +111,7 @@ const CreatedJobs = () => {
           </tr>
         </thead>
         <tbody>
-          {createdJobs.map((job, index) => (
+        {filteredJobs.map((job, index) => (
             <tr key={job.job_id}>
               <Td>{index + 1}</Td>
               <Td>{job.job_title}</Td>

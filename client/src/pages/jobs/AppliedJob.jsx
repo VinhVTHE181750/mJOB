@@ -40,7 +40,7 @@ const ViewButton = styled.button`
   }
 `;
 
-const AppliedJobs = () => {
+const AppliedJobs = ({ searchQuery }) => {
   const [appliedJobs, setAppliedJobs] = useState([]);
 
   useEffect(() => {
@@ -77,6 +77,10 @@ const AppliedJobs = () => {
     }
   };
 
+  const filteredJobs = appliedJobs.filter(job =>
+    job.job_title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <Container>
       <Table>
@@ -91,7 +95,7 @@ const AppliedJobs = () => {
           </tr>
         </thead>
         <tbody>
-          {appliedJobs.map((job, index) => (
+        {filteredJobs.map((job, index) => (
             <tr key={job.job_id}>
               <Td>{index + 1}</Td>
               <Td>{job.job_title}</Td>

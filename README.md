@@ -1,4 +1,5 @@
 [![CodeQL](https://github.com/VinhVTHE181750/mJOB/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/VinhVTHE181750/mJOB/actions/workflows/github-code-scanning/codeql)
+[![Client Deploy](https://github.com/VinhVTHE181750/mJOB/actions/workflows/Deploy.yml/badge.svg)](https://github.com/VinhVTHE181750/mJOB/actions/workflows/Deploy.yml)
 
 ## Description
 mJOB is an online job market platform designed to help students find job opportunities.
