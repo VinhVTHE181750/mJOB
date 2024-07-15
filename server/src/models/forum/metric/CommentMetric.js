@@ -22,6 +22,10 @@ CommentMetric.init(
         },
         likes: DataTypes.INTEGER,
         dislikes: DataTypes.INTEGER,
+        updates: DataTypes.INTEGER,
+        deletes: DataTypes.INTEGER,
+        creates: DataTypes.INTEGER,
+        reports: DataTypes.INTEGER,
     }, {
         sequelize,
         timestamps: false,

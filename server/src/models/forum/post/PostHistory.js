@@ -21,7 +21,7 @@ PostHistory.init(
             allowNull: true,
         },
         action: {
-            type: DataTypes.ENUM("CREATE", "UPDATE", "DELETE", "DRAFT", "DELIST", "PUBLISH"),
+            type: DataTypes.ENUM("UPDATE", "DELETE", "DRAFT", "DELIST", "PUBLISH"),
             allowNull: false,
         },
         status: {

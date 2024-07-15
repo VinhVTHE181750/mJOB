@@ -24,6 +24,10 @@ PostMetric.init(
     dislikes: DataTypes.INTEGER,
     comments: DataTypes.INTEGER,
     views: DataTypes.INTEGER,
+    creates: DataTypes.INTEGER,
+    updates: DataTypes.INTEGER,
+    deletes: DataTypes.INTEGER,
+    reports: DataTypes.INTEGER,
   },
   {
     sequelize,
