@@ -26,6 +26,6 @@ module.exports = function applyRoutes(app) {
 
   app.use("/api/marketing", marketingRoute);
   app.use("/api/datapost", dataPostRoute);
-  app.use("/api/jobs/top3", hotJobRoute);
+  app.use("/api/homeguest", hotJobRoute);
   // Setup other routes here
 };
