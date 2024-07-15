@@ -1,7 +1,5 @@
-import axios from "axios";
-import {useEffect, useState} from "react";
-
-const API_URL = "http://localhost:8000/api";
+import { useEffect, useState } from "react";
+import http from "../../../functions/httpService";
 
 const usePostDetail = (id) => {
   const [post, setPost] = useState([]);
@@ -11,8 +9,8 @@ const usePostDetail = (id) => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const url = `${API_URL}/forum/posts/${id}`;
-        const response = await axios.get(url);
+        const url = `/forum/posts/${id}`;
+        const response = await http.get(url);
         setLoading(false);
         setPost(response.data);
       } catch (error) {

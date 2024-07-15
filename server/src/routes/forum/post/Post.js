@@ -2,34 +2,38 @@ const User = require("../../../models/user/User");
 const PostCategory = require("../../../models/forum/post/PostCategory");
 const Post = require("../../../models/forum/post/Post");
 const PostHistory = require("../../../models/forum/post/PostHistory");
+const { log } = require("../../../utils/Logger");
 
 const post = async (req, res) => {
+  log(req.userId, "WARN", "FORUM");
+  log(req.role, "WARN", "FORUM");
   const userId = req.userId;
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   try {
-    let postInput = req.body.post;
+    console.log(req.body)
+    let { title, content, userId, status, category, tags } = req.body;
     let msg;
     let PostCategoryId;
 
-    if (!postInput.category && !postInput.categoryId) {
+    if (!category) {
       res
         .status(400)
-        .json({ message: "Category or category ID must be provided." });
+        .json({ message: "Category must be provided." });
       return;
     }
-    if (postInput.categoryId) {
-      const cId = await PostCategory.findByPk(postInput.categoryId);
-      if (!cId) {
-        res.status(404).json({ message: "Category not found." });
-        return;
-      }
-      PostCategoryId = postInput.categoryId;
-    }
+    // if (categoryId) {
+    //   const cId = await PostCategory.findByPk(categoryId);
+    //   if (!cId) {
+    //     res.status(404).json({ message: "Category not found." });
+    //     return;
+    //   }
+    //   PostCategoryId = categoryId;
+    // }
 
-    if (postInput.category) {
+    if (category) {
       const cName = await PostCategory.findOne({
         where: {
-          name: postInput.category,
+          name: category,
         },
       });
       if (!cName) {
@@ -42,18 +46,18 @@ const post = async (req, res) => {
         PostCategoryId = cName.id;
       }
     }
-    if (!postInput.title || postInput.title === "") {
+    if (!title || title === "") {
       res.status(400).json({ message: "Post title cannot be empty." });
       return;
     }
 
-    if (!postInput.content || postInput.content === "") {
+    if (!content || content === "") {
       res.status(400).json({ message: "Post content cannot be empty." });
       return;
     }
 
-    if (postInput.tags && postInput.tags.length > 0) {
-      for (let tag of postInput.tags) {
+    if (tags && tags.length > 0) {
+      for (let tag of tags) {
         if (tag === "") {
           res.status(400).json({ message: "Tag cannot be empty." });
           return;
@@ -62,12 +66,12 @@ const post = async (req, res) => {
     }
 
     const post = await Post.create({
-      title: postInput.title,
-      content: postInput.content,
+      title: title,
+      content: content,
       UserId: userId,
-      status: postInput.status,
+      status: status,
       PostCategoryId,
-      tags: postInput.tags,
+      tags: tags,
     });
     await PostHistory.create({
       title: post.title,

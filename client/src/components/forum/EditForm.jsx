@@ -28,7 +28,7 @@ const EditForm = ({ id }) => {
       setCategory(categories.find((c) => c.id === post.PostCategoryId)?.name || "");
       setStatus(post.status || "");
     }
-  }, [post]);
+  }, [categories, post]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
