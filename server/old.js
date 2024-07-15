@@ -75,6 +75,15 @@ app.use("/api/payment", paymentRoute);
 // const homeUserRoute = require("./src/routes/HomeUser");
 // app.use("/api/homeuser", homeUserRoute);
 
+const profileRoute = require('./src/routes/profile/post');
+app.post('/submit', profileRoute.profile);
+
+const workInfoRoute = require('./src/routes/profile/wPost');
+app.post('/work', workInfoRoute.submitProfile);
+
+const viewProfileRoute = require('./src/routes/profile/wPost');
+app.get('/view-profile', viewProfileRoute.getProfiles);
+
 // Start the server, if port is already in use, try the next port
 var port = config.boot.port;
 app.listen(port, () => {

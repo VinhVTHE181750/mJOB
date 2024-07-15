@@ -76,7 +76,7 @@ const ForumProvider = ({ children }) => {
       const matchUser = true;
       const matchTags =
         searchTerms.tags.length > 0
-          ? searchTerms.tags.every((tag) => post.tags.includes(tag))
+          ? searchTerms.tags.every((tag) => (post.tags) ? post.tags.includes(tag) : false)
           : true;
       return (
         matchTitle && matchContent && matchCategory && matchUser && matchTags

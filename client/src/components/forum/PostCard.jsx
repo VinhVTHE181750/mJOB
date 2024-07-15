@@ -17,7 +17,17 @@ import avatar from "../../assets/img/default_avatar.webp";
 
 const PostCard = ({ post, onClick, category }) => {
   const { addTag, setCategory } = useContext(ForumContext);
-  const tags = post.tags.split(",");
+  const [tags, setTags] = useState([]);
+
+  useEffect(() => {
+    // if tags contains , split it
+    if (post.tags) {
+      setTags(post.tags.split(","));
+    } else {
+      setTags([]);
+    }
+  }, [post]);
+
   // const [likes, setLikes] = useState(0);
   // const [dislikes, setDislikes] = useState(0);
   const [likesDelta, setLikesDelta] = useState(0);
@@ -66,13 +76,15 @@ const PostCard = ({ post, onClick, category }) => {
           onClick={(e) => e.stopPropagation()}
         >
           {post.authorAvatar ? (
-            <img className="align-middle me-2"
+            <img
+              className="align-middle me-2"
               src={`data:image/jpeg;base64,${post.authorAvatar}`}
               alt={`${post.author}'s avatar`}
               style={{ width: "1.5em", height: "1.5em", borderRadius: "50%" }}
             />
           ) : (
-            <img className="align-middle me-2"
+            <img
+              className="align-middle me-2"
               src={avatar}
               alt="Default avatar"
               style={{ width: "1.5em", height: "1.5em", borderRadius: "50%" }}

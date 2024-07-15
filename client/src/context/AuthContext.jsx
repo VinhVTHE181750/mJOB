@@ -14,10 +14,10 @@ const AuthProvider = ({ children }) => {
     return cookie.token ? true : false;
   });
 
-  useEffect(() => {
-    console.log(loggedIn)
-    console.table(cookie);
-  }, [loggedIn]);
+  // useEffect(() => {
+  //   // console.log(loggedIn)
+  //   console.table(cookie);
+  // }, [loggedIn]);
 
   const authenticate = async (username, password) => {
     if (loggedIn) return;
