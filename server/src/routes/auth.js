@@ -30,6 +30,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/logout", async (req, res) => {
+  try {
+    res.clearCookie("token")
+    return res.json({"message:": "Logout successfully!"})
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Updated /register route
 router.post("/register", async (req, res) => {
   try {
