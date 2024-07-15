@@ -1,15 +1,10 @@
-import {useCallback, useContext, useState} from "react";
-import {Container, Nav, Navbar} from "react-bootstrap";
+import { useContext } from "react";
+import { Container, Nav, Navbar } from "react-bootstrap";
+import { AuthContext } from "../context/AuthContext";
 import NavigateLink from "./ui/buttons/NavigateLink";
-import {AuthContext} from "../context/AuthContext";
 
 const AppNavbar = () => {
-  const { userId } = useContext(AuthContext);
-  const [active, setActive] = useState("home");
-
-  const setCurrentPath = useCallback((path) => {
-    setActive(path);
-  }, []);
+  const { loggedIn } = useContext(AuthContext);
 
   return (
     <Navbar className="navbar mb-auto">
@@ -35,7 +30,7 @@ const AppNavbar = () => {
             />
           </Nav>
           <Nav className="navbar-section">
-            {userId ? (
+            {loggedIn ? (
               <NavigateLink
                 className="navbar-btn danger-text"
                 path="/logout"

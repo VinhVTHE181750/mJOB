@@ -1,25 +1,17 @@
-import {useState} from "react";
-import axios from "axios";
+import { useState } from "react";
+import http from '../functions/httpService'; // Import the instance
 
 export const useLoginQuery = () => {
-  const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const login = async (username, password) => {
-    console.log("useLoginQuery.login(", username, password, ")");
     setLoading(true);
     setError(null);
-    setData(null);
 
     try {
-      const response = await axios.get("http://localhost:8000/api/auth/login", {
-        headers: {
-          Authorization: `Basic ${btoa(`${username}:${password}`)}`,
-        },
-      });
-      setData(response.data);
-      return response.data;
+      const response = await http.post("/auth/login", { username, password });
+      return response.status === 200;
     } catch (err) {
       setError(err);
     } finally {
@@ -27,5 +19,5 @@ export const useLoginQuery = () => {
     }
   };
 
-  return { login, data, error, loading };
+  return { login, error, loading };
 };
