@@ -7,7 +7,7 @@ import useJobUpdate from '../../hooks/useJobUpdate.js';
 
 const compensationTypes = ["One-Time", "Periodcally", "Other"];
 const currencies = ["USD", "EUR", "POUND", "VND"];
-const compensationPeriods = ["Year", "Month", "Week", "Day", "Hour"];
+const compensationPeriods = ["year", "month", "week", "day", "hour"];
 
 const EditJob = () => {
   const { id } = useParams();

@@ -1,5 +1,9 @@
 const { Model, DataTypes } = require("sequelize");
 const { sequelize } = require("../SQLize");
+const Requirement = require("./Requirement");
+const Compensation = require("./Compensation");
+const JobHistory = require("./JobHistory");
+const Application = require("./Application");
 
 class Job extends Model {}
 
@@ -25,8 +29,14 @@ Job.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    // Max applicants count
+    // Max applicants count: amount of applications
     maxApplicants: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
+    },
+    // Number of recruits: amount of people needed
+    recruitments: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 1,
@@ -76,6 +86,10 @@ Job.init(
       ),
       allowNull: true,
     },
+    salaryCurrency: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     // Job status:
 
     // ACTIVE: job is active and can be applied to
@@ -90,15 +104,36 @@ Job.init(
 
     // COMPLETED: job is completed and cannot be applied to. This may happen when the job
     status: {
-      type: DataTypes.ENUM("ACTIVE", "INACTIVE", "DELISTED", "COMPLETED"),
+      type: DataTypes.ENUM(
+        "ACTIVE",
+        "INACTIVE",
+        "DELISTED",
+        "ONGOING",
+        "COMPLETED"
+      ),
       allowNull: false,
       defaultValue: "INACTIVE",
-    }
+    },
   },
   {
     sequelize,
     paranoid: true,
   }
 );
+
+// Job may have many requirements
+Job.hasMany(Requirement);
+Requirement.belongsTo(Job);
+
+// Job has many compensations to every applicant
+Job.hasMany(Compensation);
+Compensation.belongsTo(Job);
+
+// Job has many applicants
+Job.hasMany(Application);
+Application.belongsTo(Job);
+
+Job.hasMany(JobHistory);
+JobHistory.belongsTo(Job);
 
 module.exports = Job;
