@@ -56,10 +56,10 @@ import UserInformationProvider from "./context/UserContext";
 
 function App() {
   return (
+    <BrowserRouter>
+          <UserInformationProvider>
     <AuthProvider className="page">
       <ForumProvider>
-        <BrowserRouter>
-          <UserInformationProvider>
             <AppNavbar className="mb-auto" />
             <div className="min-vh-100 mt-5">
               <Routes>
@@ -117,10 +117,10 @@ function App() {
               </Routes>
             </div>
             <HomeFooter />
-          </UserInformationProvider>
-        </BrowserRouter>
       </ForumProvider>
     </AuthProvider>
+          </UserInformationProvider>
+        </BrowserRouter>
   );
 }
 
