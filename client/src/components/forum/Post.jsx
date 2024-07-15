@@ -9,6 +9,7 @@ import NavigateButton from "../ui/buttons/NavigateButton";
 // import { deletePost, fetchPost } from "../../store/reducers/forum/postReducer";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import Skeleton from "react-loading-skeleton";
+import useLikesUpdate from "../../hooks/forum/likes/useLikesUpdate";
 
 const Post = ({ id }) => {
   // post related data
@@ -18,6 +19,7 @@ const Post = ({ id }) => {
 
   // const post = useSelector((state) => state.post.post);
   const { post, loading, error } = usePostDetail(id);
+  const { updateLikes } = useLikesUpdate();
 
   // useEffect(() => {
   //   dispatch(fetchPost(id));
@@ -28,8 +30,7 @@ const Post = ({ id }) => {
   }, []);
 
   const handleLike = (isLike) => {
-    const msg = isLike ? "You liked this post." : "You disliked this post.";
-    console.log(msg);
+    updateLikes("post", id, isLike);
   };
 
   const handleDeletePost = async () => {
