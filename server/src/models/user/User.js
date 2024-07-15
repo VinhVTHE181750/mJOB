@@ -97,11 +97,15 @@ PublicChatRoom.belongsToMany(User, { through: PublicRoomUser });
 User.hasOne(Balance);
 Balance.belongsTo(User);
 
-// missing LinkedProfile
+User.hasMany(PaymentHistory);
+PaymentHistory.belongsTo(User);
 
+// missing LinkedProfile
 
 User.hasMany(WorkExperience);
 WorkExperience.belongsTo(User);
+
+// missing WorkExperience
 
 // missing Education
 
