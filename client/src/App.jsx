@@ -34,12 +34,12 @@ import Dashboard from "./pages/home/Dashboard";
 import PageNotFound from "./pages/technical/PageNotFound";
 
 // Users
-import Security from "./pages/profile/Security";
+// import Security from "./pages/profile/Security";
 import EditProfile from "./pages/profile/EditProfile";
 import WorkExperience from "./pages/profile/WorkExperience";
 import Profile from "./pages/profile/Profile";
 import Users from "./pages/home/Users"
-import Setting from "./pages/home/Setting"
+import Settings from "./pages/technical/Settings"
 // import Security from "./pages/profile/Security";
 
 // Components
@@ -128,9 +128,9 @@ function App() {
                   path="/workexperience/:userId"
                   element={<WorkExperience />}
                 />
-                <Route exact path="/security" element={<Security />} />
+                {/* <Route exact path="/security" element={<Security />} /> */}
                 <Route exact path="/users" element={<Users />} />
-                <Route exact path="/settings" element={<Setting />} />
+                <Route exact path="/settings" element={<Settings />} />
                 <Route exact path="/ticket" element={<CreateTicketPage />} />
 
                 {/* TECHNICAL ROUTES */}
