@@ -91,7 +91,7 @@ const PostSearch = () => {
           <Form.Control
             className="d-inline form-control-lg"
             type="text"
-            placeholder="Enter title query or a #tag, @user, $content$, ..."
+            placeholder="Enter title query or a #tag, @user, $post content$, ... /clear to remove all queries."
             onChange={handleChange}
           />
           <Button type="submit" className="d-none d-sm-inline mt-1">

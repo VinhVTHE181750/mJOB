@@ -8,25 +8,23 @@ const useWhoAmI = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchMe = async () => {
-      try {
-        const res = await http.get("/whoami");
-        if (res.data) {
-          setRole(res.data.role);
-          setUserId(res.data.userId);
-          setUsername(res.data.username);
-          setLoading(false);
-        }
-      } catch (err) {
-        setError(err);
+  const fetchMe = async () => {
+    try {
+      const res = await http.get("/whoami");
+      if (res.data) {
+        setRole(res.data.role);
+        setUserId(res.data.userId);
+        setUsername(res.data.username);
         setLoading(false);
       }
-    };
-    fetchMe;
-  }, []);
+      return res.data;
+    } catch (err) {
+      setError(err);
+      setLoading(false);
+    }
+  };
 
-  return { userId, username, role, loading, error };
+  return { fetchMe, userId, username, role, loading, error };
 };
 
 export default useWhoAmI;
