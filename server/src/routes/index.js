@@ -6,6 +6,8 @@ const countTotalUser = require("./dashboard/countTotalUser");
 const userRoute = require("./User");
 const profileRoute = require("./Profile");
 const workExperienceRoute = require("./WorkExperience");
+const User = require("../models/user/User");
+const whoami = require("./WhoAmI")
 
 module.exports = function applyRoutes(app) {
   app.use("/api/auth", authRoute);
@@ -16,6 +18,7 @@ module.exports = function applyRoutes(app) {
   app.use("/api/users", userRoute);
   app.use("/api/profile", profileRoute)
   app.use("/api/workexp", workExperienceRoute);
+  app.use("/api/whoami", whoami)
   
   // Setup other routes here
 };
