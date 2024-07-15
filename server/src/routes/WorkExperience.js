@@ -12,7 +12,7 @@ router.get("/user/:userId", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const workExperiences = await WorkExperience.findAll({
+    const workExperiences = await WorkExperience.findOne({
       where: { UserId: userId },
       include: [User], // Include User model if you want to fetch user details along with work experiences
     });
@@ -27,7 +27,7 @@ router.get("/user/:userId", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const userId = req.params.id;
   // const workId = req.params.workId;
-  const { title, company, location, from, to, description } = req.body;
+  const { title, company, location, startDate, endDate, description } = req.body;
 
   try {
     // Find the user to verify ownership (optional step)
@@ -52,8 +52,8 @@ router.put("/:id", async (req, res) => {
     workExperience.title = title;
     workExperience.company = company;
     workExperience.location = location;
-    workExperience.startDate = from; // Assuming `from` maps to `startDate`
-    workExperience.endDate = to; // Assuming `to` maps to `endDate`
+    workExperience.startDate = startDate; // Assuming `from` maps to `startDate`
+    workExperience.endDate = endDate; // Assuming `to` maps to `endDate`
     workExperience.description = description;
 
     // Save the updated work experience record
