@@ -50,7 +50,7 @@ const Settings = () => {
                   </Form.Control>
                 </Form.Group>
                 <Button  type="submit">
-                  Save Preferences
+                  Save 
                 </Button>
               </Form>
             </Card.Body>
@@ -69,7 +69,7 @@ const Settings = () => {
                   </Form.Control>
                 </Form.Group>
                 <Button  type="submit">
-                  Save Theme
+                  Save 
                 </Button>
               </Form>
             </Card.Body>
