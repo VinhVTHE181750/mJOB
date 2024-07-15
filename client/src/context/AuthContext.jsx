@@ -1,101 +1,51 @@
-import React, {createContext, useEffect, useState} from "react";
-import {useLoginQuery} from "../hooks/useLoginQuery";
+import PropTypes from "prop-types";
+import { createContext, useEffect, useState } from "react";
+import { useLoginQuery } from "../hooks/useLoginQuery";
+import { useCookies } from "react-cookie";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const { login } = useLoginQuery();
-  const [userId, setUserId] = useState(() => {
-    const savedId = localStorage.getItem("userId");
-    // const savedToken = localStorage.getItem("token");
-    return savedId ? JSON.parse(savedId) : null;
-    // return savedToken ? savedToken : null;
+  const [cookie, setCookie, removeCookie] = useCookies(['token'])
+
+  const [loggedIn, setLoggedIn] = useState(() => {
+    return cookie.token ? true : false;
   });
 
   useEffect(() => {
-    if (userId) {
-      localStorage.setItem("userId", JSON.stringify(userId));
-      // localStorage.setItem("token", token);
-    } else {
-      localStorage.removeItem("userId");
-      // localStorage.removeItem("token");
-    }
-  }, [userId]);
+    console.log(loggedIn)
+    console.table(cookie);
+  }, [loggedIn]);
 
   const authenticate = async (username, password) => {
-    console.log("authenticate(", username, ",", password, ")");
-    const response = await login(username, password);
-    if (response) {
-      console.log("data.user_id: ", response.user_id);
-      setError(null);
-      setUserId(response.user_id);
-      localStorage.setItem("userId", JSON.stringify(response.user_id));
-      // setToken(data.token);
+    if (loggedIn) return;
+    const success = await login(username, password);
+    if (success) {
+      // Set the cookie and update loggedIn state here
+      // setCookie('token', 'your_token_here'); // Example, replace 'your_token_here' with actual token
+      setLoggedIn(true);
     } else {
-      // should set state [error] here
-      return false;
+      setError("Login failed");
     }
   };
 
   const logout = () => {
-    console.log("logout");
-    setUserId(null);
-    localStorage.removeItem("userId");
+    // Remove 'token' cookie
+    if (!loggedIn) return;
+    removeCookie("token");
   };
 
   return (
-    <AuthContext.Provider value={{ userId, setUserId, logout, authenticate }}>
+    <AuthContext.Provider value={{ logout, authenticate, loggedIn, error }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
 export { AuthContext, AuthProvider };
-
-// import { createContext, useEffect, useState } from "react";
-// import { useLoginQuery } from "../hooks/useLoginQuery";
-
-// const AuthContext = createContext({});
-
-// const AuthProvider = ({ children }) => {
-//   //   const { login, data, error} = useLoginQuery();
-//   const [userId, setUserId] = useState(() => {
-//     const savedId = localStorage.getItem("userId");
-//     return savedId ? JSON.parse(savedId) : null;
-//   });
-
-//   const { login: qLogin } = useLoginQuery();
-
-//   useEffect(() => {
-//     if (userId) {
-//       localStorage.setItem("userId", JSON.stringify(userId));
-//     } else {
-//       localStorage.removeItem("userId");
-//     }
-//   }, [userId]);
-
-//   const logout = () => {
-//     setUserId(null);
-//     localStorage.removeItem("userId");
-//   };
-
-//   const login = (id) => {
-//     setUserId(id);
-//   };
-
-//   const authenticate = async (username, password) => {
-//     const response = await qLogin(username, password);
-//     if (response) {
-//       login(response.userId);
-//     }
-//   };
-
-//   return (
-//     <AuthContext.Provider value={{ userId, setUserId, logout, authenticate }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-
-// export { AuthContext, AuthProvider };
