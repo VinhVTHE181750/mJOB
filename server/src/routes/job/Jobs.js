@@ -283,14 +283,22 @@ router.get("/job-requirements/:jobId", async (req, res) => {
 
 router.get("/download/:fname", async (req, res) => {
   const fname = req.params.fname;
+
+  // Validate the filename
+  if (!/^[\w,\s-]+\.[A-Za-z]{3}$/.test(fname)) {
+    return res.status(400).json({ message: "Invalid file name" });
+  }
+
   const filePath = path.join(__dirname, "uploads", fname);
+
   if (!fs.existsSync(filePath)) {
     return res.status(404).json({ message: "File not found" });
   }
+
   try {
     return res.download(filePath);
   } catch (err) {
-    log(err, "ERROR", "JOB");
+    console.error(err);
     return res
       .status(500)
       .json({ message: "Unknown error while downloading file" });
