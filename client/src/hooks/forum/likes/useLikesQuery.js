@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import http from "../../../functions/httpService";
 
 const API_URL = "http://localhost:8000/api";
 
@@ -13,12 +14,12 @@ const useLikesQuery = (type, id) => {
   useEffect(() => {
     const fetchLikes = async () => {
       try {
-        let url1 = `${API_URL}/forum/likes?type=${type}&id=${id}&like=true`;
-        let url2 = `${API_URL}/forum/likes?type=${type}&id=${id}&like=false`;
+        let url1 = `/forum/likes?type=${type}&id=${id}&like=true`;
+        let url2 = `/likes?type=${type}&id=${id}&like=false`;
 
         // Create promises for both requests
-        const promise1 = axios.get(url1);
-        const promise2 = axios.get(url2);
+        const promise1 = http.get(url1);
+        const promise2 = http.get(url2);
 
         // Use Promise.all to wait for both promises to resolve
         const [response1, response2] = await Promise.all([promise1, promise2]);

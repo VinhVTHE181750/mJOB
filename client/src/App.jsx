@@ -1,7 +1,7 @@
 //// Page imports
 // Home
-import HomePage from "./pages/home/HomePage";
 import HomeGuest from "./pages/home/HomeGuest";
+import HomePage from "./pages/home/HomePage";
 
 // Auth
 import Login from "./pages/auth/Login";
@@ -10,34 +10,35 @@ import Register from "./pages/auth/Register";
 import ResetPassword from "./pages/auth/ResetPassword";
 
 // Forum
-import Forum from "./pages/forum/Forum";
-import PostDetail from "./pages/forum/PostDetail";
-import EditPost from "./pages/forum/EditPost";
 import AddPost from "./pages/forum/AddPost";
+import EditPost from "./pages/forum/EditPost";
+import Forum from "./pages/forum/Forum";
 import ManageCategories from "./pages/forum/ManageCategories";
+import PostDetail from "./pages/forum/PostDetail";
 
 // Jobs
-import Market from "./pages/jobs/Market";
 import Jobs from "./pages/home/Jobs";
+import ActiveJob from "./pages/jobs/ActiveJob";
+import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
+import ApplyJob from "./pages/jobs/ApplyJob";
+import ConfirmJob from "./pages/jobs/ConfirmJob";
+import CreatedJobDetail from "./pages/jobs/CreatedJobDetail";
+import EditJob from "./pages/jobs/EditJob";
 import EnlistJob from "./pages/jobs/EnlistJob";
 import JobDetail from "./pages/jobs/JobDetail";
+import Market from "./pages/jobs/Market";
 import MyJobs from "./pages/jobs/MyJobs";
-import EditJob from "./pages/jobs/EditJob";
-import ConfirmJob from "./pages/jobs/ConfirmJob";
-import ApplyJob from "./pages/jobs/ApplyJob";
-import ActiveJob from "./pages/jobs/ActiveJob";
-import CreatedJobDetail from "./pages/jobs/CreatedJobDetail";
-import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 
 // Technical
-import PageNotFound from "./pages/technical/PageNotFound";
 import Dashboard from "./pages/home/Dashboard";
+import PageNotFound from "./pages/technical/PageNotFound";
 
 // Users
 import Security from "./pages/profile/Security";
 import EditProfile from "./pages/profile/EditProfile";
 import WorkExperience from "./pages/profile/WorkExperience";
 import Profile from "./pages/profile/Profile";
+import Security from "./pages/profile/Security";
 
 // Components
 import HomeFooter from "./components/HomeFooter";
@@ -45,16 +46,15 @@ import HomeFooter from "./components/HomeFooter";
 import AppNavbar from "./components/Navbar";
 
 // Misc
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import React from "react";
 
 // import ErrorPage from "./pages/error/ErrorPage";
-import CreateTicketPage from "./pages/user/CreateTicket";
-import {AuthProvider} from "./context/AuthContext";
-import PaymentPortal from "./pages/payment/PaymentPortal";
-import {ForumProvider} from "./context/ForumContext";
+import { AuthProvider } from "./context/AuthContext";
+import { ForumProvider } from "./context/ForumContext";
 import UserInformationProvider from "./context/UserContext";
+import PaymentPortal from "./pages/payment/PaymentPortal";
+import CreateTicketPage from "./pages/user/CreateTicket";
 
 function App() {
   return (

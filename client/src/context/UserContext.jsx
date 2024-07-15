@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import { createContext, useContext, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router";
@@ -20,11 +19,10 @@ const UserInformationProvider = ({ children }) => {
       const request = await http.post("/auth/logout");
       if (request.status === 200) {
         setIsLogin(false);
-        Cookies.remove("token");
         navigate("/");
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -41,7 +39,6 @@ const UserInformationProvider = ({ children }) => {
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const auth = useContext(UserInformationContext);
   return auth;

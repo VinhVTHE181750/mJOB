@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const config = require("../config.json");
 const { log } = require("./utils/Logger");
 const { JwtMiddleware } = require("./utils/JWT");
+const interceptor = require("./utils/Interceptor");
 // const csurf = require("csurf");
 // const csrfProtection = csurf({ cookie: true });
 
@@ -38,5 +39,6 @@ module.exports = function applyMiddlewares(app) {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(JwtMiddleware);
+  app.use(interceptor)
   // Log middleware initialization here
 };

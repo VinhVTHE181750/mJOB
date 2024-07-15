@@ -5,10 +5,7 @@ import Cookies from "js-cookie";
 
 const AppNavbar = () => {
   // const { isLogin } = useContext(AuthContext);
-  const {isLogin} = useAuth()
-  console.log(isLogin)
-  
-  console.log(2,  Cookies.get())
+  const { isLogin } = useAuth();
 
   return (
     <Navbar className="navbar mb-auto">

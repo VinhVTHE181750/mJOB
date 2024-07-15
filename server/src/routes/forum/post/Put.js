@@ -12,11 +12,11 @@ const put = async (req, res) => {
   }
 
   try {
-    const postInput = req.body.post;
-    if (isNaN(postInput.id)) {
+    const { id, title, content, userId, status, category, tags } = req.body;
+    if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid post id" });
     }
-    const post = await Post.findByPk(postInput.id);
+    const post = await Post.findByPk(id);
 
     if (!post) {
       res.status(404).json({ message: "Post not found." });
@@ -34,22 +34,22 @@ const put = async (req, res) => {
 
     // Author editing their post
     if (isAuthor) {
-      post.title = postInput.title || post.title;
-      post.content = postInput.content || post.content;
-      post.tags = postInput.tags || post.tags;
+      post.title = title || post.title;
+      post.content = content || post.content;
+      post.tags = tags || post.tags;
 
-      if (postInput.category) {
-        const category = await PostCategory.findOne({
-          where: { name: postInput.category },
+      if (category) {
+        const postCategory = await PostCategory.findOne({
+          where: { name: category },
         });
-        if (!category) {
+        if (!postCategory) {
           res.status(400).json({ message: "Invalid category." });
           return;
         }
-        post.PostCategoryId = category.id;
+        post.PostCategoryId = postCategory.id;
       }
 
-      if (post.status === "DRAFT" && postInput.status === "PUBLISHED") {
+      if (post.status === "DRAFT" && status === "PUBLISHED") {
         post.status = "PUBLISHED";
       }
 
@@ -70,20 +70,18 @@ const put = async (req, res) => {
     if (isAdminOrMod) {
       // if attempt to update anything except status, return 400
       if (
-        postInput.title ||
-        postInput.content ||
-        postInput.tags ||
-        postInput.category
+        title ||
+        content ||
+        tags ||
+        category
       ) {
-        res
-          .status(400)
-          .json({
-            message: "Cannot only update status of another user's post.",
-          });
+        res.status(400).json({
+          message: "Cannot only update status of another user's post.",
+        });
         return;
       }
-      if (postInput.status && postInput.status !== "DRAFT") {
-        post.status = postInput.status;
+      if (status && status !== "DRAFT") {
+        post.status = status;
       } else {
         res
           .status(400)
