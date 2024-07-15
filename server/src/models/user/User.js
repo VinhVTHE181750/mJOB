@@ -38,7 +38,7 @@ User.init(
       type: DataTypes.STRING,
     },
     dob: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
     },
     address: {
       type: DataTypes.STRING,
