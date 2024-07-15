@@ -46,7 +46,15 @@ const Settings = () => {
                   <Form.Control as="select">
                     <option value="english">English</option>
                     <option value="vietnamese">Vietnamese</option>
-                    
+                  </Form.Control>
+                </Form.Group>
+                <Form.Group controlId="notification" className="mb-3">
+                  <Form.Label>Notification Preferences:</Form.Label>
+                  <Form.Control as="select">
+                    <option value="all">All Notifications</option>
+                    <option value="email">Email Only</option>
+                    <option value="sms">SMS Only</option>
+                    <option value="none">None</option>
                   </Form.Control>
                 </Form.Group>
                 <Button  type="submit">
