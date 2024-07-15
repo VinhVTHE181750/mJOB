@@ -1,31 +1,32 @@
-import React, {useContext, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {Button, Col, Container, Form, Row} from "react-bootstrap";
-import {AuthContext} from "../../context/AuthContext";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { AuthContext } from "../../context/AuthContext";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { userId, authenticate, error } = useContext(AuthContext);
+  const { loggedIn, authenticate, error } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
-    console.log("handleLogin()");
     e.preventDefault();
-    const response = await authenticate(username, password);
-    if (response) {
-      navigate("/home");
-    } else {
-      // should get [error] from context here and show it somewhere in the page
-    }
+    await authenticate(username, password);
+    // Reset form fields
     setPassword("");
     setUsername("");
   };
 
+  useEffect(() => {
+    if (loggedIn) {
+      navigate("/home");
+    }
+  }, [loggedIn, navigate]);
+
   return (
     <>
-      {!userId ? (
+      {!loggedIn ? (
         <Container>
           <Row className="justify-content-md-center">
             <Col md={4}>

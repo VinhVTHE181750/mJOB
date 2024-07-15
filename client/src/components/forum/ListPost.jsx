@@ -1,11 +1,12 @@
 // import usePostsQuery from "../../hooks/forum/posts/usePostsQuery";
-import {Form, Pagination} from "react-bootstrap";
+import { Form, Pagination } from "react-bootstrap";
 import "../../assets/css/Forum.css";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "react-loading-skeleton/dist/skeleton.css";
 import PostCard from "./PostCard";
-import {useContext, useEffect, useState} from "react";
-import {ForumContext} from "../../context/ForumContext";
+import { useContext, useEffect, useState } from "react";
+import { ForumContext } from "../../context/ForumContext";
+import Skeleton from "react-loading-skeleton";
 
 // ...
 
@@ -33,10 +34,12 @@ const ListPost = () => {
     pageNumbers.push(i);
   }
 
-  const handleSize = (e) => {
-    if (!e.target.value || e.target.value < 1) return;
-    setPostsPerPage(e.target.value);
-  };
+  // const handleSize = (e) => {
+  //   if (!e.target.value || e.target.value < 1) return;
+  //   setPostsPerPage(e.target.value);
+  // };
+
+  if (!posts) return <Skeleton count={4} height={200} />;
 
   return (
     <div>
@@ -60,7 +63,7 @@ const ListPost = () => {
           </Pagination.Item>
         ))}
       </Pagination>
-      <Form>
+      {/* <Form>
         <Form.Group controlId="postsPerPage">
           <Form.Label>Posts per page</Form.Label>
           <Form.Control
@@ -71,11 +74,12 @@ const ListPost = () => {
             onChange={handleSize}
           />
         </Form.Group>
-      </Form>
+      </Form> */}
       <p>
         Showing {indexOfFirstPost + 1} - {indexOfLastPost} ({postsPerPage}) of{" "}
-        {posts.length} posts. Current page {currentPage} of{" "}
-        {Math.ceil(posts.length / postsPerPage)}.
+        {posts.length} posts.
+        {/* Current page {currentPage} of{" "}
+        {Math.ceil(posts.length / postsPerPage)}. */}
       </p>
     </div>
   );

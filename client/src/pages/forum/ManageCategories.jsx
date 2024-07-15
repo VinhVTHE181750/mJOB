@@ -1,9 +1,24 @@
-import {useContext, useEffect, useState} from "react";
-import {Button, Col, Container, FloatingLabel, Form, Row,} from "react-bootstrap";
-import {ForumContext} from "../../context/ForumContext";
+import { useContext, useEffect, useState } from "react";
+import {
+  Button,
+  Col,
+  Container,
+  FloatingLabel,
+  Form,
+  Row,
+} from "react-bootstrap";
+import { ForumContext } from "../../context/ForumContext";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import axios from "axios";
-import {API_URL} from "../../App";
+import { API_URL } from "../../App";
+import {
+  BsBack,
+  BsFloppy,
+  BsFloppy2,
+  BsFront,
+  BsSave,
+  BsTrash3,
+} from "react-icons/bs";
 
 const ManageCategories = () => {
   const { categories } = useContext(ForumContext);
@@ -79,15 +94,26 @@ const ManageCategories = () => {
               />
             </div>
           </Col>
-          <Col xs="auto me-4 ms-auto">
-            <Row>Foreground</Row>
+          <Col xs="2 me-4 ms-auto">
+            <Row>
+              <div className="d-flex gap-2">
+                <BsFront
+                  color="blue"
+                  style={{
+                    minHeight: "10px",
+                    minWidth: "10px",
+                  }}
+                />
+                Foreground
+              </div>
+            </Row>
             <Row>
               <input
                 type="color"
                 value={`#${category.fgColor}`}
                 style={{
-                  width: "100px",
                   height: "40px",
+                  minWidth: "100px",
                   border: "none",
                   marginLeft: "0px",
                   paddingLeft: "0px",
@@ -104,15 +130,28 @@ const ManageCategories = () => {
               />
             </Row>
           </Col>
-          <Col xs="auto me-4 ms-auto">
-            <Row>Background</Row>
+          <Col xs="2 me-4 ms-auto">
+            <Row>
+              <div className="d-flex gap-2">
+                <BsBack
+                  color="blue"
+                  className=""
+                  style={{
+                    minHeight: "10px",
+                    minWidth: "10px",
+                  }}
+                />
+                Background
+              </div>
+            </Row>
             <Row>
               <input
                 type="color"
                 value={`#${category.bgColor}`}
                 style={{
-                  width: "100px",
+                  // width: "100px",
                   height: "40px",
+                  minWidth: "100px",
                   border: "none",
                   marginLeft: "0px",
                   paddingLeft: "0px",
@@ -130,16 +169,22 @@ const ManageCategories = () => {
             </Row>
           </Col>
           <Col xs="auto" className="ms-auto">
-            <Button
-              variant="success"
-              className="me-2"
-              onClick={updateCategory(category)}
-            >
-              Save
-            </Button>
-            <Button variant="danger" onClick={deleteCategory(category)}>
-              Delete
-            </Button>
+            <div className="d-flex align-items-center gap-1">
+              <Button
+                variant="success"
+                className="me-2 align-items-center gap-1"
+                onClick={updateCategory(category)}
+              >
+                <BsFloppy2 /> Save
+              </Button>
+              <Button
+                variant="danger"
+                className=" align-items-center gap-1"
+                onClick={deleteCategory(category)}
+              >
+                <BsTrash3 /> Delete
+              </Button>
+            </div>
           </Col>
         </Row>
       ))}
