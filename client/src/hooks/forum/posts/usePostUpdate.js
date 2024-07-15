@@ -1,5 +1,6 @@
-import {useState} from "react";
+import { useState } from "react";
 import axios from "axios";
+import http from "../../../functions/httpService";
 
 const API_URL = "http://localhost:8000/api";
 
@@ -20,7 +21,7 @@ const usePostUpdate = (id) => {
     setError(null);
 
     try {
-      const response = await axios.put(`${API_URL}/forum/posts`, {
+      const response = await http.put(`/forum/posts`, {
         id: id,
         title: title,
         content: content,

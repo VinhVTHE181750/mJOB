@@ -1,29 +1,25 @@
-import axios from "axios";
-import {useEffect, useState} from "react";
+import { useState } from "react";
+import http from "../../../functions/httpService";
 
-const API_URL = "http://localhost:8000/api";
-
-const useLikesUpdate = (postId, commentId, userId, isDislike) => {
+const useLikesUpdate = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const updateLikes = async () => {
+  const updateLikes = async (type, id, like) => {
     try {
-      const url = `${API_URL}/forum/likes/like`;
-      const response = await axios.put(url, {
-        postId, commentId, userId, isDislike
+      const url = `/forum/likes`;
+      await http.post(url, {
+        type,
+        id,
+        like,
       });
-      setLikes(response.data);
+
       setLoading(false);
     } catch (error) {
       setError(error);
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    updateLikes();
-  }, [postId, userId, isDislike]);
 
   return { loading, error, updateLikes };
 };
