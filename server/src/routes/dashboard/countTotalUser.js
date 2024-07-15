@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Set SQL query to count users
 // const SELECT_COUNT_USER = "SELECT COUNT(*) AS userCount FROM auth";
-const User = require("../../models/User");
+const User = require("../../models/user/User");
 
 // GET user count
 router.get("/", async (req, res) => {

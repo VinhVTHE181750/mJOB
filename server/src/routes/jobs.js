@@ -91,6 +91,7 @@ router.post('/', async (req, res) => {
 router.put('/update', async (req, res) => {
   const {
     job_id,
+    user_id,
     job_title, 
     job_work_location, 
     job_tags, 
@@ -108,7 +109,7 @@ router.put('/update', async (req, res) => {
     job_compensation_periods ,
     job_custom_iterations 
   } = req.body;
-  const user_id = 3;
+ 
   try {
     const userExists = await checkUserIdExists(user_id);
     if (!userExists) {
