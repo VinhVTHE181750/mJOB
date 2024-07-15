@@ -10,29 +10,34 @@ const app = express();
 app.use(express.json());
 
 // CORS rule
-app.use(
-  cors({
-    origin: config.middleware.cors.origin,
-  })
-);
+app.use(cors({
+  origin: config.middleware.cors.origin
+}));
 
 // Rate limiter
+app.use(rateLimit({
+  windowMs: config.middleware.rateLimiter.windowMs,
+  max: config.middleware.rateLimiter.max
+}));
+
+// Compression
+app.use(compression());
+
+// Helmet
 app.use(
-  rateLimit({
-    windowMs: config.middleware.rateLimiter.windowMs,
-    max: config.middleware.rateLimiter.max,
-  })
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
+    },
+  }),
 );
-
-
 
 // Import and define routes
 const exampleRoutes = require("./src/routes/Example");
 app.use("/api/example", exampleRoutes);
 
-// route forum đã đổi sang dùng sequelize
-// const forumRoute = require("./src/routes/Forum");
-// app.use("/api/forum", forumRoute);
+const forumRoute = require("./src/routes/Forum");
+app.use("/api/forum", forumRoute);
 
 const authRoute = require("./src/routes/auth");
 app.use("/api/auth", authRoute);
@@ -49,11 +54,11 @@ app.use("/api/jobs/top3", hotJobRoute);
 const ticketRoute = require("./src/routes/ticket");
 app.use("/api/ticket", ticketRoute);
 
-const countTotalUserRoute = require("./src/routes/dashboard/countTotalUser");
-app.use("/api/dashboard/count/user/total", countTotalUserRoute);
+// const countTotalUserRoute = require("./src/routes/dashboard/countTotalUser");
+// app.use("/api/dashboard/count/user/total", countTotalUserRoute);
 
-const countActiveUserRoute = require("./src/routes/dashboard/countActiveUser");
-app.use("/api/dashboard/count/user/active", countActiveUserRoute);
+// const countActiveUserRoute = require("./src/routes/dashboard/countActiveUser");
+// app.use("/api/dashboard/count/user/active", countActiveUserRoute);
 
 const jobsRoute = require("./src/routes/jobs");
 app.use("/api/jobs", jobsRoute);
@@ -64,8 +69,11 @@ app.use("/api/myjobs", dashboardRoute);
 const jobListRoute = require("./src/routes/JobList");
 app.use("/api/joblist", jobListRoute);
 
-const testRoute = require("./src/routes/test");
-app.use("/api/test", testRoute);
+const paymentRoute = require("./src/routes/Payment");
+app.use("/api/payment", paymentRoute);
+
+// const homeUserRoute = require("./src/routes/HomeUser");
+// app.use("/api/homeuser", homeUserRoute);
 
 const profileRoute = require('./src/routes/profile/post');
 app.post('/submit', profileRoute.profile);
@@ -77,37 +85,18 @@ const viewProfileRoute = require('./src/routes/profile/wPost');
 app.get('/view-profile', viewProfileRoute.getProfiles);
 
 // Start the server, if port is already in use, try the next port
-async function startServer() {
-  var port = config.boot.port;
-  var delay = config.boot.retryDelay;
-
-  while (true) {
-    try {
-      await new Promise((resolve, reject) => {
-        const server = app.listen(port, () => {
-          console.log(`(server.js) Server is running on port ${port}`);
-          resolve(server);
-        });
-
-        server.on("error", (err) => {
-          if (err.code === "EADDRINUSE") {
-            console.log(
-              `(server.js) Port ${port} is already in use. Trying the next port...`
-            );
-            port++;
-          } else {
-            console.log(`Unexpected error: ${err}. Retrying in ${delay}s...`);
-          }
-          reject(err);
-        });
-      });
-      break; // If server starts successfully, break the loop
-    } catch (err) {
-      // Wait for delay milliseconds before next iteration in case of an error
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
+var port = config.boot.port;
+app.listen(port, () => {
+  console.log(`(server.js) Server is running on port ${port}`);
+}).on('error', (err) => {
+  const maxTries = config.boot.maxBootRetries;
+  if (err.code === 'EADDRINUSE') {
+    console.log(`(server.js) Port ${port} is already in use. Trying the next port...`);
+    port++;
+    app.listen(port, () => {
+      console.log(`(server.js) Server is running on port ${port}`);
+    });
+  } else {
+    console.error(`(server.js) Failed to start server: ${err}`);
   }
-}
-
-// Call your function
-startServer().then(r => console.log("Server started successfully"));
+});

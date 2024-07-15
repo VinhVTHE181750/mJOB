@@ -5,7 +5,7 @@ const router = express.Router();
 
 const SELECT_TOP3_JOBS=`select TOP 3 * from job j join job_view jv on j.job_id=jv.job_id order by jv.job_view desc;`
 
-router.get("/", async (req, res) => {
+router.get("/top3jobs", async (req, res) => {
   try {
     const pool = await db.poolPromise;
     const result = await pool.request().query(SELECT_TOP3_JOBS);

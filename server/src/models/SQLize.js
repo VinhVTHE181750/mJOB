@@ -34,9 +34,14 @@ const sequelize = new Sequelize(
   }
 );
 log("Connecting to database...", "INFO", "sequelize");
+if (sequelize) log("Connected to database", "INFO", "sequelize");
+else log("Failed to connect to database", "ERROR", "sequelize");
 
-sequelize.sync();
 log("Syncing tables...", "INFO", "sequelize");
+sequelize
+  .sync()
+  .then(() => log("Tables synced", "INFO", "sequelize"))
+  .catch((error) => log(error, "ERROR", "sequelize"));
 
 module.exports = {
   sequelize,
