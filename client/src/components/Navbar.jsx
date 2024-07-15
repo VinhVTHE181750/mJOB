@@ -1,10 +1,14 @@
-import { useContext } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/UserContext";
 import NavigateLink from "./ui/buttons/NavigateLink";
+import Cookies from "js-cookie";
 
 const AppNavbar = () => {
-  const { loggedIn } = useContext(AuthContext);
+  // const { isLogin } = useContext(AuthContext);
+  const {isLogin} = useAuth()
+  console.log(isLogin)
+  
+  console.log(2,  Cookies.get())
 
   return (
     <Navbar className="navbar mb-auto">
@@ -30,7 +34,7 @@ const AppNavbar = () => {
             />
           </Nav>
           <Nav className="navbar-section">
-            {loggedIn ? (
+            {isLogin ? (
               <NavigateLink
                 className="navbar-btn danger-text"
                 path="/logout"
