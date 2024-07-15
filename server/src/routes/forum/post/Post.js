@@ -10,15 +10,13 @@ const post = async (req, res) => {
   const userId = req.userId;
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   try {
-    console.log(req.body)
+    console.log(req.body);
     let { title, content, userId, status, category, tags } = req.body;
     let msg;
     let PostCategoryId;
 
     if (!category) {
-      res
-        .status(400)
-        .json({ message: "Category must be provided." });
+      res.status(400).json({ message: "Category must be provided." });
       return;
     }
     // if (categoryId) {
@@ -56,6 +54,10 @@ const post = async (req, res) => {
       return;
     }
 
+    if (tags === "") {
+      tags = undefined;
+    }
+
     if (tags && tags.length > 0) {
       for (let tag of tags) {
         if (tag === "") {
@@ -86,7 +88,9 @@ const post = async (req, res) => {
     return res.status(201).send({ post });
   } catch (err) {
     log(err, "ERROR", "FORUM");
-    return res.status(500).json({ message: "Unexpected error while creating post" });
+    return res
+      .status(500)
+      .json({ message: "Unexpected error while creating post" });
   }
 };
 
