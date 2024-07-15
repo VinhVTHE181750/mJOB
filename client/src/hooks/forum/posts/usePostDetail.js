@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:8000/api";
+import { useEffect, useState } from "react";
+import http from "../../../functions/httpService";
 
 const usePostDetail = (id) => {
   const [post, setPost] = useState([]);
@@ -9,10 +10,12 @@ const usePostDetail = (id) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // setTimeout(() => {
+    setLoading(false);
     const fetchPost = async () => {
       try {
-        const url = `${API_URL}/forum/posts/${id}`;
-        const response = await axios.get(url);
+        const url = `/forum/posts/${id}`;
+        const response = await http.get(url);
         setLoading(false);
         setPost(response.data);
       } catch (error) {
@@ -21,6 +24,7 @@ const usePostDetail = (id) => {
       }
     };
     fetchPost();
+    // }, 5000);
   }, [id]);
   return { post, loading, error };
 };

@@ -7,7 +7,7 @@ import useJobUpdate from '../../hooks/useJobUpdate.js';
 
 const compensationTypes = ["One-Time", "Periodcally", "Other"];
 const currencies = ["USD", "EUR", "POUND", "VND"];
-const compensationPeriods = ["Year", "Month", "Week", "Day", "Hour"];
+const compensationPeriods = ["year", "month", "week", "day", "hour"];
 
 const EditJob = () => {
   const { id } = useParams();
@@ -65,7 +65,7 @@ const EditJob = () => {
           </div>
           <div className="section">
             <h2 className="label">Compensation Type:</h2>
-            <select className="input" name="job_compensation_types" value={job.job_compensation_type} onChange={handleInputChange}>
+            <select className="input" name="job_compensation_type" value={job.job_compensation_type} onChange={handleInputChange}>
               {compensationTypes.map((type) => (
                 <option key={type} value={type}>{type}</option>
               ))}
@@ -103,6 +103,7 @@ const EditJob = () => {
             <h2 className="label">Contact Info:</h2>
             <textarea className="textarea" name="job_contact_info" value={job.job_contact_info} onChange={handleInputChange} />
           </div>
+          {success && <p className="success-message">{success}</p>}
           <button className="save-button" type="submit" onClick={handleSubmit}>Save</button>
         </form>
       </div>

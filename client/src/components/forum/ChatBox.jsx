@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
-import { API_URL } from '../../App';
+import {useState} from 'react';
+import {Col, Row} from 'react-bootstrap';
+import {API_URL} from '../../App';
 import useWebSocket from '../../hooks/forum/useWebSocket';
 
 const ChatBox = ({ user }) => {

@@ -1,5 +1,6 @@
 import axios from "axios";
-import { API_URL } from "..";
+import {API_URL} from "../..";
+
 
 // Action Types
 const FETCH_CATEGORIES_REQUEST = 'FETCH_CATEGORIES_REQUEST';

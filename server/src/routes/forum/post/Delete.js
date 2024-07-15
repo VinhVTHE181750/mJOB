@@ -3,8 +3,15 @@ const PostHistory = require("../../../models/forum/post/PostHistory");
 const { log } = require("../../../utils/Logger");
 
 const deleteById = async (req, res) => {
+  if (!req.userId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
   try {
     const id = req.params.id;
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "Invalid post id" });
+    }
     const userId = req.userId;
     const role = req.role;
     const post = await Post.findByPk(id);
@@ -23,12 +30,20 @@ const deleteById = async (req, res) => {
         PostId: post.id,
         action: "DELETE",
         UserId: req.userId,
+        content: post.content,
+        title: post.title,
+        status: post.status,
+        tags: post.tags,
+        PostCategoryId: post.PostCategoryId,
       }),
       await post.destroy(),
     ]);
-    res.status(200).json({ message: "Post deleted" });
+    return res.status(200).json({ message: "Post deleted" });
   } catch (err) {
-    res.status(500).json({ message: "Unexpected error while deleting post." });
+    log(err, "ERROR", "FORUM");
+    return res
+      .status(500)
+      .json({ message: "Unexpected error while deleting post." });
   }
 };
 

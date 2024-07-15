@@ -13,6 +13,9 @@ const put = async (req, res) => {
 
   try {
     const postInput = req.body.post;
+    if (isNaN(postInput.id)) {
+      return res.status(400).json({ message: "Invalid post id" });
+    }
     const post = await Post.findByPk(postInput.id);
 
     if (!post) {
@@ -72,7 +75,11 @@ const put = async (req, res) => {
         postInput.tags ||
         postInput.category
       ) {
-        res.status(400).json({ message: "Cannot only update status of another user's post." });
+        res
+          .status(400)
+          .json({
+            message: "Cannot only update status of another user's post.",
+          });
         return;
       }
       if (postInput.status && postInput.status !== "DRAFT") {
@@ -101,14 +108,9 @@ const put = async (req, res) => {
 
     const io = getIo();
     io.emit("posts", { action: "UPDATE", post });
-    log(
-      'IO event emitted: "posts", { action: "update", post }',
-      "WARN",
-      "FORUM"
-    );
     return res.status(200).json(post);
   } catch (err) {
-    console.error(err);
+    log(err, "ERROR", "FORUM");
     return res
       .status(500)
       .json({ message: "Unexpected error while updating post." });

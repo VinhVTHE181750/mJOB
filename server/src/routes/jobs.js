@@ -91,6 +91,7 @@ router.post('/', async (req, res) => {
 router.put('/update', async (req, res) => {
   const {
     job_id,
+    user_id,
     job_title, 
     job_work_location, 
     job_tags, 
@@ -108,7 +109,7 @@ router.put('/update', async (req, res) => {
     job_compensation_periods ,
     job_custom_iterations 
   } = req.body;
-  const user_id = 1;
+ 
   try {
     const userExists = await checkUserIdExists(user_id);
     if (!userExists) {
@@ -154,6 +155,21 @@ router.put('/update', async (req, res) => {
         job_compensation_periods = @job_compensation_periods,
         job_custom_iterations = @job_custom_iterations
         WHERE user_id = @user_id AND job_id = @job_id;  
+      `);
+
+      const resultCompensation = await pool.request()
+      .input('job_id', sql.Int, job_id)
+      .input('job_compensation_type', sql.NVarChar, job_compensation_type)
+      .input('job_compensation_amount', sql.Decimal(10, 2), job_compensation_amounts)
+      .input('job_compensation_currency', sql.NVarChar, job_compensation_currencies)
+      .input('job_compensation_period', sql.NVarChar, job_compensation_periods)
+      .query(`
+        UPDATE job_compensation
+        SET job_compensation_type = @job_compensation_type,
+            job_compensation_amount = @job_compensation_amount,
+            job_compensation_currency = @job_compensation_currency,
+            job_compensation_period = @job_compensation_period
+        WHERE job_id = @job_id;
       `);
 
     res.status(200).send({ message: 'Job successfully updated' });
@@ -269,11 +285,14 @@ router.get('/applied-jobs', async (req, res) => {
     const result = await pool.request()
       .input('user_id', sql.Int, user_id)
       .query(`
-        SELECT ja.job_id, j.job_title, jh.job_status
-        FROM job_application ja
-        JOIN job j ON ja.job_id = j.job_id
-        JOIN job_history jh ON ja.job_id = jh.job_id AND ja.user_id = jh.user_id
-        WHERE ja.user_id = @user_id
+        SELECT j.job_id, j.job_title, jh.job_status,
+               jc.job_compensation_type, jc.job_compensation_amount, jc.job_compensation_currency,
+               jc.job_custom_iteration, jc.job_hours_per_day
+        FROM job j
+        JOIN job_history jh ON j.job_id = jh.job_id
+        JOIN job_compensation jc ON j.job_id = jc.job_id
+        LEFT JOIN job_application ja ON j.job_id = ja.job_id AND ja.user_id = @user_id
+        WHERE jh.user_id <> @user_id -- Fetch jobs where user ID is not the current user
       `);
 
     res.status(200).send(result.recordset);
@@ -282,6 +301,7 @@ router.get('/applied-jobs', async (req, res) => {
     res.status(500).send({ error: 'An error occurred while fetching applied jobs' });
   }
 });
+
 router.get('/created-jobs', async (req, res) => {
   const user_id = 1; // Replace with dynamic user ID from session or context
 

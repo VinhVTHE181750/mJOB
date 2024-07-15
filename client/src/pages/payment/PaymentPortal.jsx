@@ -1,11 +1,12 @@
-import { Suspense, lazy, useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import {lazy, Suspense, useContext} from "react";
+import {AuthContext} from "../../context/AuthContext";
 import Balance from "./micro/Balance";
-import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
+import {Button, Col, Container, ListGroup, Row} from "react-bootstrap";
 import EmbedCard from "./micro/EmbedCard";
-import { useBalance } from "../../hooks/payment/useBalance";
+import {useBalance} from "../../hooks/payment/useBalance";
 import Skeleton from "react-loading-skeleton";
-import { GoArrowDown, GoArrowUp, GoArrowSwitch } from "react-icons/go";
+import {GoArrowDown, GoArrowSwitch, GoArrowUp} from "react-icons/go";
+
 const BalanceChart = lazy(() => import("./micro/BalanceChart"));
 
 const PaymentPortal = () => {

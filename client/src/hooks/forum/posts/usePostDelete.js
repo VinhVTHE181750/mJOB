@@ -1,7 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
-
-const API_URL = "http://localhost:8000/api";
+import http from "../../../functions/httpService";
 
 const usePostDelete = () => {
   const [loading, setLoading] = useState(false);
@@ -12,9 +10,7 @@ const usePostDelete = () => {
     setError(null);
 
     try {
-      const response = await axios.delete(
-        `${API_URL}/forum/posts/${id}`
-      );
+      const response = await http.delete(`/forum/posts/${id}`);
       setLoading(false);
       return response.data;
     } catch (err) {

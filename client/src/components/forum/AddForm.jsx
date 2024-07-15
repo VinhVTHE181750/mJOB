@@ -4,6 +4,7 @@ import usePostInsert from "../../hooks/forum/posts/usePostInsert";
 import { useNavigate } from "react-router-dom";
 import useCategories from "../../hooks/forum/categories/useCategories";
 import { FaExclamation } from "react-icons/fa6";
+import { BsExclamation } from "react-icons/bs";
 
 const AddForm = () => {
   const [title, setTitle] = useState("");
@@ -33,6 +34,7 @@ const AddForm = () => {
     if (result) {
       navigate("/forum");
     } else {
+      setError("Title and content must not be empty");
     }
   };
 
@@ -87,7 +89,10 @@ const AddForm = () => {
           <p>
             {postError && (
               <span className="text-danger">
-                <FaExclamation /> {postError}
+                <BsExclamation className="vertical-align-top" style={{
+                  width: "2em",
+                  height: "2em",
+                }} /> {postError}
               </span>
             )}
           </p>

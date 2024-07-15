@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import '../../assets/css/EnlistJob.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Button, Row, Form, Col,} from 'react-bootstrap';
+import {Button, Col, Container, Form, Row,} from 'react-bootstrap';
 import useJobInsert from "../../hooks/useJobInsert.js";
 
 const EnlistJob = () => {

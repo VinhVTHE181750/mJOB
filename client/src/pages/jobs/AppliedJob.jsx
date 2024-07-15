@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -40,9 +40,8 @@ const ViewButton = styled.button`
   }
 `;
 
-const AppliedJobs = () => {
+const AppliedJobs = ({ searchQuery }) => {
   const [appliedJobs, setAppliedJobs] = useState([]);
-  const [searchQuery] = useState('');
 
   useEffect(() => {
     const fetchAppliedJobs = async () => {
@@ -59,13 +58,28 @@ const AppliedJobs = () => {
 
   const navigate = useNavigate();
 
-  const filteredJobs = appliedJobs.filter((job) =>
-    job.job_title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   const handleViewClick = (job_id) => {
     navigate(`/applied-job-details/${job_id}`);
   };
+
+  const renderCurrency = (currency, amount) => {
+    switch (currency) {
+      case 'USD':
+        return `$${amount}`;
+      case 'VND':
+        return `${Math.floor(amount)} VND`; 
+      case 'EUR':
+        return `€${amount}`;
+      case 'POUND':
+        return `£${amount}`;
+      default:
+        return `${amount} ${currency}`;
+    }
+  };
+
+  const filteredJobs = appliedJobs.filter(job =>
+    job.job_title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <Container>
@@ -81,13 +95,13 @@ const AppliedJobs = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredJobs.map((job, index) => (
+        {filteredJobs.map((job, index) => (
             <tr key={job.job_id}>
               <Td>{index + 1}</Td>
               <Td>{job.job_title}</Td>
               <Td>{job.job_status}</Td>
-              <Td>{job.next_payment}</Td>
-              <Td>{job.next_payment_date}</Td>
+              <Td>{renderCurrency(job.job_compensation_currency, job.job_compensation_amount)}</Td>
+              <Td></Td>
               <Td><ViewButton onClick={() => handleViewClick(job.job_id)}>View</ViewButton></Td>
             </tr>
           ))}

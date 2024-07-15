@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -53,7 +53,7 @@ const PayButton = styled.button`
   }
 `;
 
-const CreatedJobs = () => {
+const CreatedJobs = ({ searchQuery }) => {
   const [createdJobs, setCreatedJobs] = useState([]);
 
   useEffect(() => {
@@ -79,12 +79,16 @@ const CreatedJobs = () => {
     navigate(`/created-job-details/${job_id}`);
   };
 
+  const filteredJobs = createdJobs.filter(job =>
+    job.job_title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
   const renderCurrency = (currency, amount) => {
     switch (currency) {
       case 'USD':
         return `$${amount}`;
       case 'VND':
-        return `${Math.floor(amount)} VND`; // Display in increments of 200,000 VND
+        return `${Math.floor(amount)} VND`; 
       case 'EUR':
         return `€${amount}`;
       case 'POUND':
@@ -107,7 +111,7 @@ const CreatedJobs = () => {
           </tr>
         </thead>
         <tbody>
-          {createdJobs.map((job, index) => (
+        {filteredJobs.map((job, index) => (
             <tr key={job.job_id}>
               <Td>{index + 1}</Td>
               <Td>{job.job_title}</Td>

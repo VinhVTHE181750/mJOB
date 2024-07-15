@@ -1,14 +1,28 @@
 import PropTypes from "prop-types";
-import { Row, Col, Form, Button, Dropdown } from "react-bootstrap";
+import { Button, Col, Dropdown, Form, Row } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 import { FaFilter, FaSort } from "react-icons/fa6";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Tag from "./micro/Tag";
 import { ForumContext } from "../../context/ForumContext";
 
 const PostSearch = () => {
-  const { searchTerms, removeTag, addTag, setUser } = useContext(ForumContext);
+  const {
+    searchTerms,
+    removeTag,
+    addTag,
+    setUser,
+    unsetUser,
+    setTitle,
+    setContent,
+    setCategory,
+    clearSearchTerms,
+  } = useContext(ForumContext);
   const searchTags = searchTerms.tags;
+  const category = searchTerms.category;
+  const user = searchTerms.username;
+  const title = searchTerms.title;
+  const content = searchTerms.content;
 
   const handleChange = (e) => {
     // if last characte r entered was space, parse the entered word as a tag if it start with #
@@ -16,75 +30,88 @@ const PostSearch = () => {
     // if last char   is not alphanumeric
     const regex = /^[a-zA-Z0-9]+$/;
     if (regex.test(lastChar) === false) {
-      // cut the last char
       const query = e.target.value.slice(0, -1);
-      if (query[0] === "#") {
-        addTag(query.substring(1));
-        e.target.value = "";
-      }
-      if (query[0] === "@") {
-        setUser(query.substring(1));
-        e.target.value = "";
+      const type = query[0];
+      const value = query.slice(1);
+      switch (type) {
+        case "#":
+          if (regex.test(value) === false) {
+            return;
+          }
+          addTag(value);
+          e.target.value = "";
+          break;
+        case "@":
+          if (regex.test(value) === false) {
+            return;
+          }
+          setUser(value);
+          e.target.value = "";
+          break;
+        case "$":
+          if (lastChar !== "$") {
+            break;
+          } else {
+            setContent(value);
+            e.target.value = "";
+          }
+          break;
+        case "/":
+          if (value === "clear") {
+            clearSearchTerms();
+            e.target.value = "";
+          }
+          break;
+        default:
+          break;
       }
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setTitle(e.target.value);
+  };
+
+  const handleClear = (e) => {
+    e.preventDefault();
+    clearSearchTerms();
+  };
+
+  useEffect(() => {}, [searchTerms]);
+
   return (
-    <Form>
+    <>
       <Row className="align-items-center">
-        {/* <Col xs="auto"> */}
-        {/* {category ? <Category category={category} /> : <Category />} */}
-        {/* </Col> */}
-        <Col xs={'auto'} className="me-0 pe-0">
-        
+        {/* <Col xs="auto">
+        {category ? <Category category={category} /> : <Category />}
+        </Col> */}
+
+        <Form onSubmit={handleSubmit}>
           <Form.Control
+            className="d-inline form-control-lg"
             type="text"
-            placeholder="Enter a query..."
+            placeholder="Enter title query or a #tag, @user, $content$, ..."
             onChange={handleChange}
           />
-        </Col>
-        <Col xs={'auto'} className="px-0 mx-0">
-        
-          <Dropdown>
-            <Dropdown.Toggle variant="outline-secondary">
-              <FaSort /> Sort
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item>Featured</Dropdown.Item>
-              <Dropdown.Item>Title (ascending)</Dropdown.Item>
-              <Dropdown.Item>Title (descending)</Dropdown.Item>
-              <Dropdown.Item>Date (ascending)</Dropdown.Item>
-              <Dropdown.Item>Date (descending)</Dropdown.Item>
-              <Dropdown.Item>Most likes</Dropdown.Item>
-              <Dropdown.Item>Most comments</Dropdown.Item>
-              <Dropdown.Item>Most views</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-        <Col xs={1} className="px-0 mx-0">
-          <Dropdown>
-            <Dropdown.Toggle variant="outline-secondary">
-              <FaFilter /> Filter
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item>Today</Dropdown.Item>
-              <Dropdown.Item>This week</Dropdown.Item>
-              {/* Add more filter options here */}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-        <Col xs={2} className="px-0 mx-0">
-          <Button variant="primary">
-            <FaSearch /> Search
+          <Button type="submit" className="d-none d-sm-inline mt-1">
+            Submit
           </Button>
-        </Col>
+        </Form>
       </Row>
       <Row className="mx-auto mt-1 me-auto">
+        {/* {category && <Tag key="category" tag={category.name} close={true} />} */}
+        {user && <Tag key="user" tag={user} close={true} handler={unsetUser} />}
         {searchTags.map((tag) => (
-          <Tag key={tag} tag={`${tag} ❌`} handler={() => removeTag(tag)} />
+          <Tag
+            key={tag}
+            tag={tag}
+            close={true}
+            handler={() => removeTag(tag)}
+          />
         ))}
       </Row>
-    </Form>
+    </>
   );
 };
 

@@ -11,7 +11,7 @@ const { JwtMiddleware } = require("./utils/JWT");
 // const csrfProtection = csurf({ cookie: true });
 
 module.exports = function applyMiddlewares(app) {
-  app.use(cors({ origin: config.middleware.cors.origin }));
+  app.use(cors({ origin: config.middleware.cors.origin, credentials: true }));
   app.use(
     rateLimit({
       windowMs: config.middleware.rateLimiter.windowMs,
@@ -37,5 +37,6 @@ module.exports = function applyMiddlewares(app) {
   // });
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use(JwtMiddleware);
   // Log middleware initialization here
 };

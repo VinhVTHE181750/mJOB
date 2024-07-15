@@ -7,6 +7,23 @@ class Compensation extends Model {}
 Compensation.init(
   {
     // from, to
+    from: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+    },
+    to: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+    },
+
     amount: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -32,10 +49,11 @@ Compensation.init(
     // If current = PENDING, set to OVERDUE and update nextPayment date
     // If current = OVERDUE, notify the employer to make a payment
     status: {
-        type: DataTypes.ENUM('PENDING', 'PAID', 'OVERDUE'),
-        allowNull: false
-    }
+      type: DataTypes.ENUM("PENDING", "PAID", "OVERDUE"),
+      allowNull: false,
+    },
   },
+
   {
     sequelize,
   }
