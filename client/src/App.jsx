@@ -52,69 +52,72 @@ import CreateTicketPage from "./pages/user/CreateTicket";
 import {AuthProvider} from "./context/AuthContext";
 import PaymentPortal from "./pages/payment/PaymentPortal";
 import {ForumProvider} from "./context/ForumContext";
+import UserInformationProvider from "./hooks/useAuthentication";
 
 function App() {
   return (
     <AuthProvider className="page">
       <ForumProvider>
         <BrowserRouter>
-          <AppNavbar className="mb-auto" />
-          <div className="min-vh-100 mt-5">
-            <Routes>
-              {/* AUTH ROUTES */}
-              <Route exact path="/login" element={<Login />} />
-              <Route exact path="/logout" element={<Logout />} />
-              <Route exact path="/register" element={<Register />} />
-              <Route exact path="/reset-password" element={<ResetPassword />} />
+          <UserInformationProvider>
+            <AppNavbar className="mb-auto" />
+            <div className="min-vh-100 mt-5">
+              <Routes>
+                {/* AUTH ROUTES */}
+                <Route exact path="/login" element={<Login />} />
+                <Route exact path="/logout" element={<Logout />} />
+                <Route exact path="/register" element={<Register />} />
+                <Route exact path="/reset-password" element={<ResetPassword />} />
 
-              {/* HOME ROUTES */}
-              <Route exact path="/" element={<HomeGuest />} />
-              <Route exact path="/home" element={<HomePage />} />
+                {/* HOME ROUTES */}
+                <Route exact path="/" element={<HomeGuest />} />
+                <Route exact path="/home" element={<HomePage />} />
 
-              {/* FORUM ROUTES */}
-              <Route exact path="/forum" element={<Forum />} />
-              <Route exact path="/posts/:id" element={<PostDetail />} />
-              <Route exact path="/forum/add" element={<AddPost />} />
-              <Route exact path="/forum/edit/:id" element={<EditPost />} />
-              <Route exact path="/forum/categories" element={<ManageCategories />} />
+                {/* FORUM ROUTES */}
+                <Route exact path="/forum" element={<Forum />} />
+                <Route exact path="/posts/:id" element={<PostDetail />} />
+                <Route exact path="/forum/add" element={<AddPost />} />
+                <Route exact path="/forum/edit/:id" element={<EditPost />} />
+                <Route exact path="/forum/categories" element={<ManageCategories />} />
 
-              {/* JOBS ROUTES */}
-              <Route exact path="/market" element={<Market />} />
-              <Route exact path="/jobs" element={<Jobs />} />
-              <Route exact path="/jobs/:id" element={<JobDetail />} />
-              <Route exact path="/jobs/add" element={<EnlistJob />} />
-              <Route exact path="/myjobs" element={<MyJobs />} />
-              <Route exact path="/jobs/edit/:id" element={<EditJob />} />
-              <Route exact path="/confirm-job" element={<ConfirmJob />} />
-              <Route exact path="/apply/:job_id" element={<ApplyJob />} />
-              <Route exact path="/active-job" element={<ActiveJob />} />
-              <Route
-                exact
-                path="/created-job-details/:job_id"
-                element={<CreatedJobDetail />}
-              />
-              <Route
-                exact
-                path="/applied-job-details/:job_id"
-                element={<AppliedJobDetail />}
-              />
+                {/* JOBS ROUTES */}
+                <Route exact path="/market" element={<Market />} />
+                <Route exact path="/jobs" element={<Jobs />} />
+                <Route exact path="/jobs/:id" element={<JobDetail />} />
+                <Route exact path="/jobs/add" element={<EnlistJob />} />
+                <Route exact path="/myjobs" element={<MyJobs />} />
+                <Route exact path="/jobs/edit/:id" element={<EditJob />} />
+                <Route exact path="/confirm-job" element={<ConfirmJob />} />
+                <Route exact path="/apply/:job_id" element={<ApplyJob />} />
+                <Route exact path="/active-job" element={<ActiveJob />} />
+                <Route
+                  exact
+                  path="/created-job-details/:job_id"
+                  element={<CreatedJobDetail />}
+                />
+                <Route
+                  exact
+                  path="/applied-job-details/:job_id"
+                  element={<AppliedJobDetail />}
+                />
 
-              {/* PAYMENT ROUTES */}
-              <Route exact path="/payment" element={<PaymentPortal />} />
+                {/* PAYMENT ROUTES */}
+                <Route exact path="/payment" element={<PaymentPortal />} />
 
-              {/* USERS ROUTES */}
-              <Route exact path="/profile" element={<Profile />} />
-              <Route exact path="/security" element={<Security />} />
-              {/* <Route exact path="/users" element={<Users />} /> */}
-              {/* <Route exact path="/settings" element={<Setting />} /> */}
-              <Route exact path="/ticket" element={<CreateTicketPage />} />
+                {/* USERS ROUTES */}
+                <Route exact path="/profile" element={<Profile />} />
+                <Route exact path="/security" element={<Security />} />
+                {/* <Route exact path="/users" element={<Users />} /> */}
+                {/* <Route exact path="/settings" element={<Setting />} /> */}
+                <Route exact path="/ticket" element={<CreateTicketPage />} />
 
-              {/* TECHNICAL ROUTES */}
-              <Route exact path="*" element={<PageNotFound />} />
-              <Route exact path="/dashboard" element={<Dashboard />} />
-            </Routes>
-          </div>
-          <HomeFooter />
+                {/* TECHNICAL ROUTES */}
+                <Route exact path="*" element={<PageNotFound />} />
+                <Route exact path="/dashboard" element={<Dashboard />} />
+              </Routes>
+            </div>
+            <HomeFooter />
+          </UserInformationProvider>
         </BrowserRouter>
       </ForumProvider>
     </AuthProvider>
