@@ -14,7 +14,7 @@ const useUpdateUserBalance = () => {
     setSuccess(false);
 
     try {
-      const response = await axios.put(`${API_URL}/update-balance`, {
+      const response = await axios.put(`${API_URL}/payment/update-balance`, {
         userId,
         balance,
       });

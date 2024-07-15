@@ -43,6 +43,11 @@ import HomeFooter from "./components/HomeFooter";
 // import HomeNavbar from "./components/HomeNavbar";
 import AppNavbar from "./components/Navbar";
 
+
+//Payment
+import TransferMoney from "./pages/payment/TranferBalance";
+
+
 // Misc
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import "./App.css";
@@ -103,6 +108,7 @@ function App() {
 
               {/* PAYMENT ROUTES */}
               <Route exact path="/payment" element={<PaymentPortal />} />
+              <Route exact path="/transfer" element={<TransferMoney />} />
 
               {/* USERS ROUTES */}
               <Route exact path="/profile" element={<Profile />} />
