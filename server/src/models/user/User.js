@@ -9,6 +9,7 @@ const { Model, DataTypes } = require("sequelize");
 const PublicRoomUser = require("../forum/chat/PublicRoomUser");
 const PublicChatRoom = require("../forum/chat/PublicChatRoom");
 const Balance = require("../payment/Balance");
+const WorkExperience = require("./WorkExperience");
 
 class User extends Model {}
 
@@ -95,9 +96,12 @@ PublicChatRoom.belongsToMany(User, { through: PublicRoomUser });
 User.hasOne(Balance);
 Balance.belongsTo(User);
 
+
 // missing LinkedProfile
 
-// missing WorkExperience
+
+User.hasMany(WorkExperience);
+WorkExperience.belongsTo(User);
 
 // missing Education
 

@@ -67,6 +67,15 @@ app.use("/api/joblist", jobListRoute);
 const testRoute = require("./src/routes/test");
 app.use("/api/test", testRoute);
 
+const profileRoute = require('./src/routes/profile/post');
+app.post('/submit', profileRoute.profile);
+
+const workInfoRoute = require('./src/routes/profile/wPost');
+app.post('/work', workInfoRoute.submitProfile);
+
+const viewProfileRoute = require('./src/routes/profile/wPost');
+app.get('/view-profile', viewProfileRoute.getProfiles);
+
 // Start the server, if port is already in use, try the next port
 async function startServer() {
   var port = config.boot.port;
