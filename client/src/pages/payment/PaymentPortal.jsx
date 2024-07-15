@@ -1,15 +1,22 @@
-import {lazy, Suspense, useContext} from "react";
-import {AuthContext} from "../../context/AuthContext";
+import { lazy, Suspense, useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 import Balance from "./micro/Balance";
-import {Button, Col, Container, ListGroup, Row} from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import EmbedCard from "./micro/EmbedCard";
-import {useBalance} from "../../hooks/payment/useBalance";
+import { useBalance } from "../../hooks/payment/useBalance";
 import Skeleton from "react-loading-skeleton";
-import {GoArrowDown, GoArrowSwitch, GoArrowUp} from "react-icons/go";
+import {
+  GoArrowDown,
+  GoArrowSwitch,
+  GoArrowUp,
+  GoLinkExternal,
+} from "react-icons/go";
+import { useNavigate } from "react-router-dom";
 
 const BalanceChart = lazy(() => import("./micro/BalanceChart"));
 
 const PaymentPortal = () => {
+  const navigate = useNavigate();
   const { userId } = useContext(AuthContext);
   const sampleTransactions = [
     {
@@ -69,13 +76,13 @@ const PaymentPortal = () => {
               <div style={{ fontSize: 40 }}>
                 <Balance amount={amount} currency="VND" locale="vi-VN" />
                 <Col className="d-flex gap-2 gap-sm-2">
-                  <Button variant="primary">
+                  <Button variant="primary" onClick={() => navigate("/payment/deposit")}>
                     <GoArrowUp /> Deposit
                   </Button>
-                  <Button variant="success">
+                  <Button variant="success" onClick={() => navigate("/payment/withdraw")}>
                     <GoArrowDown /> Withdraw
                   </Button>
-                  <Button variant="warning">
+                  <Button variant="warning" onClick={() => navigate("/payment/transfer")}>
                     <GoArrowSwitch /> Transfer
                   </Button>
                 </Col>
@@ -124,9 +131,14 @@ const PaymentPortal = () => {
           <h5>To display balance chart, use a bigger screen.</h5>
         </Col>
         <Col className="border" sm={12} lg={5}>
-          <h2>
-            Recent Transactions
-            <Button variant="success ms-2">View All</Button>
+          <h2 className="mt-2">
+            <span className="me-2">Recent Transactions</span>
+            <Button
+              variant="outline-info"
+              onClick={() => navigate("/payment-history")}
+            >
+              <GoLinkExternal />
+            </Button>
           </h2>
           <div>{transactions}</div>
         </Col>
