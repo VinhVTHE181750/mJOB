@@ -52,7 +52,7 @@ import CreateTicketPage from "./pages/user/CreateTicket";
 import {AuthProvider} from "./context/AuthContext";
 import PaymentPortal from "./pages/payment/PaymentPortal";
 import {ForumProvider} from "./context/ForumContext";
-import UserInformationProvider from "./hooks/useAuthentication";
+import UserInformationProvider from "./context/UserContext";
 
 function App() {
   return (

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import http from '../functions/httpService'; // Import the instance
-import { useAuth } from "./useAuthentication";
+import { useAuth } from "../context/UserContext";
 
 export const useLoginQuery = () => {
   const [error, setError] = useState(null);
