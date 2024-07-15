@@ -1,15 +1,14 @@
-import {useCallback, useContext, useState} from "react";
-import {Container, Nav, Navbar} from "react-bootstrap";
+import { Container, Nav, Navbar } from "react-bootstrap";
+import { useAuth } from "../context/UserContext";
 import NavigateLink from "./ui/buttons/NavigateLink";
-import {AuthContext} from "../context/AuthContext";
+import Cookies from "js-cookie";
 
 const AppNavbar = () => {
-  const { userId } = useContext(AuthContext);
-  const [active, setActive] = useState("home");
-
-  const setCurrentPath = useCallback((path) => {
-    setActive(path);
-  }, []);
+  // const { isLogin } = useContext(AuthContext);
+  const {isLogin} = useAuth()
+  console.log(isLogin)
+  
+  console.log(2,  Cookies.get())
 
   return (
     <Navbar className="navbar mb-auto">
@@ -35,7 +34,7 @@ const AppNavbar = () => {
             />
           </Nav>
           <Nav className="navbar-section">
-            {userId ? (
+            {isLogin ? (
               <NavigateLink
                 className="navbar-btn danger-text"
                 path="/logout"

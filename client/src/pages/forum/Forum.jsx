@@ -1,44 +1,45 @@
-import {Col, Container, Row} from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import ListPost from "../../components/forum/ListPost";
 import PostSearch from "../../components/forum/PostSearch";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
-import ListPost from "../../components/forum/ListPost";
-import ChatBox from "../../components/forum/ChatBox";
-import {useState} from "react";
+// import ChatBox from "../../components/forum/ChatBox";
+import { useState } from "react";
+import { FaPlusCircle } from "react-icons/fa";
+import { FaGear } from "react-icons/fa6";
 
 const Forum = () => {
+  const role = "ADMIN";
   const [tags, setTags] = useState([]);
   const addSearchTag = (tag) => {
     if (!tags.includes(tag)) {
       setTags([...tags, tag]);
-      console.log('added ' + tag)
+      console.log("added " + tag);
     }
   };
   const removeSearchTag = (tag) => {
     setTags(tags.filter((t) => t !== tag));
-    console.log('removed ' + tag)
+    console.log("removed " + tag);
   };
   return (
-    <Container>
-      <Row>
-        <Col md={12}>
-          <Row className="align-items-center">
-            <Col xs={12} md={10} className="">
-              <PostSearch tagHandler={removeSearchTag} tags={tags} />
-            </Col>
-            <Col md={2} className="d-flex flex-row-reverse">
-              <NavigateButton
-                path="/forum/add"
-                variant="success"
-                text="Add Post"
-              >
-                Navigate
-              </NavigateButton>
-            </Col>
-          </Row>
-          <ListPost tagHandler={addSearchTag} />
-        </Col>
-      </Row>
-      <ChatBox user={"user1"} />
+    <Container className="d-none d-sm-block">
+      <PostSearch tagHandler={removeSearchTag} tags={tags} />
+      <div className="d-flex flex-row-reverse gap-2">
+        <NavigateButton path="/forum/add" variant="success">
+          <div className="d-flex align-items-center justify-content-center gap-1">
+            <FaPlusCircle /> Add Post
+          </div>
+        </NavigateButton>
+        {role === "ADMIN" && (
+          <NavigateButton path="/forum/categories" variant="primary">
+            <div className="d-flex align-items-center justify-content-center gap-1">
+              <FaGear /> Manage Categories
+            </div>
+          </NavigateButton>
+        )}
+      </div>
+
+      <ListPost tagHandler={addSearchTag} />
+      {/* <ChatBox user={"user1"} /> */}
     </Container>
   );
 };
