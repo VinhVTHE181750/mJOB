@@ -25,7 +25,7 @@ const ManageCategories = () => {
   const [cts, setCts] = useState([]);
 
   const updateCategory = (category) => async () => {
-    console.log(category);
+    // console.log(category);
     await axios.put(`${API_URL}/forum/categories`, {
       id: category.id,
       name: category.name,
