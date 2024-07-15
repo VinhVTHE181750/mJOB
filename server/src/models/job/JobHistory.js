@@ -12,8 +12,7 @@ JobHistory.init(
     // status: false = ongoing OR true = completed
     status: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
-        
+        allowNull: false,        
     }
     // endDate
   },

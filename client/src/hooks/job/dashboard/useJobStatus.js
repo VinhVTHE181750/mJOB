@@ -14,7 +14,7 @@ const useJobStatus = (userId) => {
         const url = `${API_URL}/jobhistory/status/${userId}`;
         const response = await axios.get(url);
         setStatuses(response.data);
-      } catch (error) {
+useJobStatus      } catch (error) {
         setError(error);
       } finally {
         setLoading(false);
