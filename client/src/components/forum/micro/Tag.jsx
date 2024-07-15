@@ -1,10 +1,27 @@
 import PropTypes from "prop-types";
-import {FaTag} from "react-icons/fa6";
+import { BsGrid1X2, BsPersonFill, BsTagsFill, BsXCircle } from "react-icons/bs";
 
-const Tag = ({ tag, handler }) => {
+const Tag = ({ tag, handler, close, type }) => {
   const handleHandler = (e) => {
     e.stopPropagation();
     handler(tag);
+  };
+
+  const icon = () => {
+    switch (type) {
+      case "tag": {
+        return <BsTagsFill color="green" />;
+      }
+      case "user": {
+        return <BsPersonFill color="green" />;
+      }
+      case "category": {
+        return <BsGrid1X2 color="green" />;
+      }
+      default: {
+        return null;
+      }
+    }
   };
   return (
     <span
@@ -14,10 +31,11 @@ const Tag = ({ tag, handler }) => {
         color: `blue`,
         width: "fit-content",
         cursor: "pointer",
+        userSelect: "none",
       }}
       onClick={handleHandler}
     >
-      <FaTag /> {tag}
+      <BsTagsFill color="green" /> {tag} {close && <BsXCircle color="red" />}
     </span>
   );
 };
@@ -25,6 +43,8 @@ const Tag = ({ tag, handler }) => {
 Tag.propTypes = {
   tag: PropTypes.string.isRequired,
   handler: PropTypes.func,
+  close: PropTypes.bool,
+  type: PropTypes.string,
 };
 
 export default Tag;

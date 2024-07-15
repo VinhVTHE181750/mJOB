@@ -1,5 +1,6 @@
 import axios from "axios";
-import {API_URL} from "..";
+import {API_URL} from "../..";
+
 
 // Default states
 const initialState = {
@@ -31,130 +32,130 @@ const DELETE_COMMENT_SUCCESS = "DELETE_COMMENT_SUCCESS";
 const DELETE_COMMENT_FAILURE = "DELETE_COMMENT_FAILURE";
 
 // Action Creators
-export const fetchPostsRequest = () => ({
+export const fetchCommentsRequest = () => ({
   type: FETCH_COMMENTS_REQUEST,
 });
 
-export const fetchPostsSuccess = (comments) => ({
+export const fetchCommentsSuccess = (comments) => ({
   type: FETCH_COMMENTS_SUCCESS,
   payload: comments,
 });
 
-export const fetchPostsFailure = (error) => ({
+export const fetchCommentsFailure = (error) => ({
   type: FETCH_COMMENTS_FAILURE,
   payload: error,
 });
 
-export const fetchPostRequest = () => ({
+export const fetchCommentRequest = () => ({
   type: FETCH_COMMENT_REQUEST,
 });
 
-export const fetchPostSuccess = (comment) => ({
+export const fetchCommentSuccess = (comment) => ({
   type: FETCH_COMMENT_SUCCESS,
   payload: comment,
 });
 
-export const fetchPostFailure = (error) => ({
+export const fetchCommentFailure = (error) => ({
   type: FETCH_COMMENT_FAILURE,
   payload: error,
 });
 
-// Create Post
-export const createPostRequest = () => ({
+// Create Comment
+export const createCommentRequest = () => ({
   type: CREATE_COMMENT_REQUEST,
 });
 
-export const createPostSuccess = (comment) => ({
+export const createCommentSuccess = (comment) => ({
   type: CREATE_COMMENT_SUCCESS,
   payload: comment,
 });
 
-export const createPostFailure = (error) => ({
+export const createCommentFailure = (error) => ({
   type: CREATE_COMMENT_FAILURE,
   payload: error,
 });
 
-// Update Post
-export const updatePostRequest = () => ({
+// Update Comment
+export const updateCommentRequest = () => ({
   type: UPDATE_COMMENT_REQUEST,
 });
 
-export const updatePostSuccess = (comment) => ({
+export const updateCommentSuccess = (comment) => ({
   type: UPDATE_COMMENT_SUCCESS,
   payload: comment,
 });
 
-export const updatePostFailure = (error) => ({
+export const updateCommentFailure = (error) => ({
   type: UPDATE_COMMENT_FAILURE,
   payload: error,
 });
 
-// Delete Post
-export const deletePostRequest = () => ({
+// Delete Comment
+export const deleteCommentRequest = () => ({
   type: DELETE_COMMENT_REQUEST,
 });
 
-export const deletePostSuccess = (id) => ({
+export const deleteCommentSuccess = (id) => ({
   type: DELETE_COMMENT_SUCCESS,
   payload: id,
 });
 
-export const deletePostFailure = (error) => ({
+export const deleteCommentFailure = (error) => ({
   type: DELETE_COMMENT_FAILURE,
   payload: error,
 });
 
 // Thunk Action Creator
-export const fetchPosts = () => {
+export const fetchComments = () => {
   return (dispatch) => {
-    dispatch(fetchPostsRequest());
+    dispatch(fetchCommentsRequest());
     axios
       .get(`${API_URL}/forum/comments`)
-      .then((response) => dispatch(fetchPostsSuccess(response.data)))
-      .catch((error) => dispatch(fetchPostsFailure(error.message)));
+      .then((response) => dispatch(fetchCommentsSuccess(response.data)))
+      .catch((error) => dispatch(fetchCommentsFailure(error.message)));
   };
 };
 
-export const fetchPost = (commentId) => {
+export const fetchComment = (commentId) => {
   return (dispatch) => {
-    dispatch(fetchPostRequest());
+    dispatch(fetchCommentRequest());
     axios
       .get(`${API_URL}/forum/comments/${commentId}`)
-      .then((response) => dispatch(fetchPostSuccess(response.data)))
-      .catch((error) => dispatch(fetchPostFailure(error.message)));
+      .then((response) => dispatch(fetchCommentSuccess(response.data)))
+      .catch((error) => dispatch(fetchCommentFailure(error.message)));
   };
 };
 
-// Create Post
-export const createPost = (comment) => {
+// Create Comment
+export const createComment = (comment) => {
   return (dispatch) => {
-    dispatch(createPostRequest());
+    dispatch(createCommentRequest());
     axios
-      .comment(`${API_URL}/forum/comments`, comment)
-      .then((response) => dispatch(createPostSuccess(response.data)))
-      .catch((error) => dispatch(createPostFailure(error.message)));
+      .post(`${API_URL}/forum/comments`, comment)
+      .then((response) => dispatch(createCommentSuccess(response.data)))
+      .catch((error) => dispatch(createCommentFailure(error.message)));
   };
 };
 
-// Update Post
-export const updatePost = (comment) => {
+// Update Comment
+export const updateComment = (comment) => {
   return (dispatch) => {
-    dispatch(updatePostRequest());
+    dispatch(updateCommentRequest());
     axios
       .put(`${API_URL}/forum/comments`, comment)
-      .then((response) => dispatch(updatePostSuccess(response.data)))
-      .catch((error) => dispatch(updatePostFailure(error.message)));
+      .then((response) => dispatch(updateCommentSuccess(response.data)))
+      .catch((error) => dispatch(updateCommentFailure(error.message)));
   };
 };
 
-// Delete Post
-export const deletePost = (id) => {
+// Delete Comment
+export const deleteComment = (id) => {
   return (dispatch) => {
-    dispatch(deletePostRequest());
+    dispatch(deleteCommentRequest());
     axios
       .delete(`${API_URL}/forum/comments/${id}`)
-      .then((response) => dispatch(deletePostSuccess(response.data))) // Assuming you have a deletePostSuccess action
-      .catch((error) => dispatch(deletePostFailure(error.message)));
+      .then((response) => dispatch(deleteCommentSuccess(response.data))) // Assuming you have a deleteCommentSuccess action
+      .catch((error) => dispatch(deleteCommentFailure(error.message)));
   };
 };
 
@@ -199,7 +200,7 @@ const commentsReducer = (state = initialState, action) => {
     case CREATE_COMMENT_SUCCESS:
       return {
         ...state,
-        comments: [...state.comments, action.payload], // Add the new comment to the comments array
+        comments: [...state.posts, action.payload], // Add the new comment to the comments array
         error: "",
       };
     case CREATE_COMMENT_FAILURE:
@@ -210,7 +211,7 @@ const commentsReducer = (state = initialState, action) => {
     case UPDATE_COMMENT_SUCCESS:
       return {
         ...state,
-        comments: state.comments.map((comment) =>
+        comments: state.posts.map((comment) =>
           comment.id === action.payload.id ? action.payload : comment
         ), // Update the comment in the comments array
         error: "",
@@ -223,7 +224,7 @@ const commentsReducer = (state = initialState, action) => {
     case DELETE_COMMENT_SUCCESS:
       return {
         ...state,
-        comments: state.comments.filter(
+        comments: state.posts.filter(
           (comment) => comment.id !== action.payload
         ), // Remove the deleted comment from the comments array
         error: "",

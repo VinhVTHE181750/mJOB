@@ -1,11 +1,12 @@
 import PropTypes from "prop-types";
 import Skeleton from "react-loading-skeleton";
 
-const Category = ({ category, width }) => {
-  // const setSearchCategory = (e) => {
-  //   e.stopPropagation();
-  //   console.log(category.name);
-  // };
+const Category = ({ category, width, handler }) => {
+  
+  const handleHandler = (e) => {
+    e.stopPropagation();
+    handler(category);
+  };
 
   if (!category)
     return (
@@ -24,7 +25,7 @@ const Category = ({ category, width }) => {
         padding: "10px",
         width: width || "fit-content",
       }}
-      // onClick={(e) => setSearchCategory(e)}
+      onClick={handleHandler}
     >
       {category.name}
     </div>
@@ -34,6 +35,7 @@ const Category = ({ category, width }) => {
 Category.propTypes = {
   category: PropTypes.object,
   width: PropTypes.number,
+  handler: PropTypes.func,
 };
 
 export default Category;

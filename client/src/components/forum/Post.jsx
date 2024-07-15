@@ -1,91 +1,48 @@
 import PropTypes from "prop-types";
-import {getMoment} from "../../functions/Converter";
 import avatar from "../../assets/img/default_avatar.webp";
-// import usePostDetail from "../../hooks/forum/posts/usePostDetail";
-import {Link, useNavigate} from "react-router-dom";
-import {Button, Col, Row} from "react-bootstrap";
-import {useContext, useEffect, useState} from "react";
+import { getMoment } from "../../functions/Converter";
+import { useEffect } from "react";
+import { Button, Col, Row } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import NavigateButton from "../ui/buttons/NavigateButton";
-// import usePostDelete from "../../hooks/forum/posts/usePostDelete";
-// import { AuthContext } from "../../context/AuthContext";
+// import { useDispatch, useSelector } from "react-redux";
+// import { deletePost, fetchPost } from "../../store/reducers/forum/postReducer";
+import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import Skeleton from "react-loading-skeleton";
-// import useLikesQuery from "../../hooks/forum/likes/useLikesQuery";
-// import useIsLiked from "../../hooks/forum/likes/useIsLiked";
-import {ForumContext} from "../../context/ForumContext";
 
 const Post = ({ id }) => {
   // post related data
   // external userId
-  const { posts, deletePost } = useContext(ForumContext);
-  const [post, setPost] = useState({});
-
-  useEffect(() => {
-    const post = posts.find((post) => post.id == id);
-    setPost(post);
-  }, [id, posts]);
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // const post = useSelector((state) => state.post.post);
+  const { post, loading, error } = usePostDetail(id);
+
+  // useEffect(() => {
+  //   dispatch(fetchPost(id));
+  // }, [dispatch, id]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // const handleLike = (isDislike) => {
-  //   updateLikes(isDislike);
-  // };
+  const handleLike = (isLike) => {
+    const msg = isLike ? "You liked this post." : "You disliked this post.";
+    console.log(msg);
+  };
 
   const handleDeletePost = async () => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this post? "
     );
     if (confirmDelete) {
-      // deletePost(id);
+      // dispatch(deletePost(id));
       navigate("/forum");
     }
   };
 
-  if (!post)
-    return (
-      <div className="post">
-        <Row className="post-title">
-          <Col sm={2}>
-            <div className="border">
-              <div>
-                <Skeleton
-                  className="mt-5"
-                  height={100}
-                  width={100}
-                  circle={true}
-                />
-              </div>
-              <div>
-                <Skeleton count={0.5} className="mt-5" />
-              </div>
-              <div>
-                <p className="text-center mx-5">
-                  <Skeleton />
-                </p>
-              </div>
-            </div>
-          </Col>
-          <Col sm={10}>
-            <Row className="mx-5">
-              <h1>
-                <Skeleton count={1.2} />
-              </h1>
-            </Row>
-          </Col>
-        </Row>
-        <Row className="ms-2 mt-4">
-          <Row>
-            <div className="border">
-              <Skeleton count={3.5} />
-            </div>
-          </Row>
-        </Row>
-      </div>
-    );
-
-  if (!post) {
+  if (error) {
     return (
       <>
         <h3>Something went wrong while fetching the post.</h3>
@@ -98,6 +55,48 @@ const Post = ({ id }) => {
     );
   }
 
+  if (loading) {
+    return (
+      <>
+        <div className="post">
+          <Row className="post-title">
+            <Col sm={2}>
+              <div className="border">
+                <div>
+                  <img className="avatar" src={avatar} alt="Default Avatar" />
+                </div>
+                <Skeleton width={100} height={20} />
+                <div>
+                  <p className="text-center">
+                    <Skeleton width={100} height={20} />
+                  </p>
+                </div>
+              </div>
+            </Col>
+            <Col sm={10}>
+              <Row className="mx-5">
+                <Skeleton width={300} height={20} />
+              </Row>
+              <Skeleton width={100} height={20} />
+            </Col>
+          </Row>
+          <Row className="ms-2 mt-2">
+            <Row>
+              <Skeleton height={200} />
+            </Row>
+            <Row>
+              {/* Add a like button */}
+              <div className="d-flex justify-content-end mt-2 gap-2">
+                <Skeleton width={100} height={20} />
+                <Skeleton width={100} height={20} />
+              </div>
+            </Row>
+          </Row>
+        </div>
+      </>
+    );
+  }
+
   return (
     <div className="post">
       <Row className="post-title">
@@ -106,7 +105,7 @@ const Post = ({ id }) => {
             <div>
               <img className="avatar" src={avatar} alt="Default Avatar" />
             </div>
-            <Link to={`/users/${post.username}`}>#AUTHOR</Link>
+            <Link to={`/users/${post.author}`}>{post.author}</Link>
             <div>
               <p className="text-center">{getMoment(post.updatedAt)}</p>
             </div>
@@ -141,25 +140,29 @@ const Post = ({ id }) => {
           <div className="d-flex justify-content-end mt-2 gap-2">
             <Button
               variant={
-                // liked ? (isDislike ? "danger" : "outline-danger") : "secondary"
-                "secondary"
+                post.liked
+                  ? post.isDislike
+                    ? "danger"
+                    : "outline-danger"
+                  : "secondary"
+                // "secondary"
               }
+              onClick={() => handleLike(false)}
             >
-              {/* {dislikes} 👎 */}
-              123
+              {post.dislikes} 👎
             </Button>
             <Button
               variant={
-                // liked
-                //   ? !isDislike
-                //     ? "success"
-                //     : "outline-success"
-                //   : "secondary"
-                "secondary"
+                post.liked
+                  ? !post.isDislike
+                    ? "success"
+                    : "outline-success"
+                  : "secondary"
+                // "secondary"
               }
+              onClick={() => handleLike(true)}
             >
-              {/* {likes} 👍 */}
-              123
+              {post.likes} 👍
             </Button>
           </div>
         </Row>

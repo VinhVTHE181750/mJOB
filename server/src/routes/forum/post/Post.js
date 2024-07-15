@@ -83,10 +83,10 @@ const post = async (req, res) => {
       UserId: post.UserId,
       PostId: post.id,
     });
-    res.status(201).send({ post });
+    return res.status(201).send({ post });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Unexpected error while creating post" });
+    log(err, "ERROR", "FORUM");
+    return res.status(500).json({ message: "Unexpected error while creating post" });
   }
 };
 
