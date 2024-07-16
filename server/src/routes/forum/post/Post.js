@@ -5,8 +5,6 @@ const PostHistory = require("../../../models/forum/post/PostHistory");
 const { log } = require("../../../utils/Logger");
 
 const post = async (req, res) => {
-  log(req.userId, "WARN", "FORUM");
-  log(req.role, "WARN", "FORUM");
   const userId = req.userId;
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   try {
@@ -14,6 +12,12 @@ const post = async (req, res) => {
     let { title, content, userId, status, category, tags } = req.body;
     let msg;
     let PostCategoryId;
+
+    // if status is not PUBLISHED or DRAFT, return 400
+    if (status !== "PUBLISHED" && status !== "DRAFT") {
+      return res.status(400).json({ message: "Post can only be created as PUBLISHED or DRAFT." });
+    }
+    let action = status === "PUBLISHED" ? "PUBLISH" : "DRAFT";
 
     if (!category) {
       res.status(400).json({ message: "Category must be provided." });
@@ -79,7 +83,7 @@ const post = async (req, res) => {
       title: post.title,
       content: post.content,
       tags: post.tags,
-      action: "CREATE",
+      action: action,
       status: post.status,
       PostCategoryId: post.PostCategoryId,
       UserId: post.UserId,
@@ -88,9 +92,7 @@ const post = async (req, res) => {
     return res.status(201).send({ post });
   } catch (err) {
     log(err, "ERROR", "FORUM");
-    return res
-      .status(500)
-      .json({ message: "Unexpected error while creating post" });
+    return res.status(500).json({ message: "Unexpected error while creating post" });
   }
 };
 

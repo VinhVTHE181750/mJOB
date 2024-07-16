@@ -6,9 +6,10 @@ import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import { useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
+import useWhoAmI from "../../hooks/user/useWhoAmI";
 
 const Forum = () => {
-  const role = "ADMIN";
+  const { role } = useWhoAmI();
   const [tags, setTags] = useState([]);
   const addSearchTag = (tag) => {
     if (!tags.includes(tag)) {
@@ -22,15 +23,30 @@ const Forum = () => {
   };
   return (
     <Container className="d-none d-sm-block">
-      <PostSearch tagHandler={removeSearchTag} tags={tags} />
+      <h1>Forum</h1>
+      <PostSearch
+        tagHandler={removeSearchTag}
+        tags={tags}
+      />
       <div className="d-flex flex-row-reverse gap-2">
-        <NavigateButton path="/forum/add" variant="success">
-          <div className="d-flex align-items-center justify-content-center gap-1">
-            <FaPlusCircle /> Add Post
-          </div>
-        </NavigateButton>
+        {role === "GUEST" ? (
+          {}
+        ) : (
+          <NavigateButton
+            path="/forum/add"
+            variant="success"
+          >
+            <div className="d-flex align-items-center justify-content-center gap-1">
+              <FaPlusCircle /> Add Post
+            </div>
+          </NavigateButton>
+        )}
+
         {role === "ADMIN" && (
-          <NavigateButton path="/forum/categories" variant="primary">
+          <NavigateButton
+            path="/forum/categories"
+            variant="primary"
+          >
             <div className="d-flex align-items-center justify-content-center gap-1">
               <FaGear /> Manage Categories
             </div>

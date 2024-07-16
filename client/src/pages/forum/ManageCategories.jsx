@@ -1,32 +1,22 @@
-import { useContext, useEffect, useState } from "react";
-import {
-  Button,
-  Col,
-  Container,
-  FloatingLabel,
-  Form,
-  Row,
-} from "react-bootstrap";
-import { ForumContext } from "../../context/ForumContext";
-import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { Button, Col, Container, FloatingLabel, Form, Row } from "react-bootstrap";
+import { BsBack, BsFloppy2, BsFront, BsTrash3 } from "react-icons/bs";
 import { API_URL } from "../../App";
-import {
-  BsBack,
-  BsFloppy,
-  BsFloppy2,
-  BsFront,
-  BsSave,
-  BsTrash3,
-} from "react-icons/bs";
+import NavigateButton from "../../components/ui/buttons/NavigateButton";
+import { ForumContext } from "../../context/ForumContext";
+import useWhoAmI from "../../hooks/user/useWhoAmI";
+import http from "../../functions/httpService";
 
 const ManageCategories = () => {
   const { categories } = useContext(ForumContext);
   const [cts, setCts] = useState([]);
+  const { role } = useWhoAmI();
+  const [visible, setVisible] = useState(false);
 
   const updateCategory = (category) => async () => {
     // console.log(category);
-    await axios.put(`${API_URL}/forum/categories`, {
+    await http.put(`/forum/categories`, {
       id: category.id,
       name: category.name,
       enabled: category.enabled,
@@ -34,6 +24,21 @@ const ManageCategories = () => {
       fgColor: category.fgColor,
     });
   };
+
+  const createCategory = async () => {
+    await http.post(`/forum/categories`, {
+      name: "New Category",
+      enabled: true,
+      bgColor: "ffffff",
+      fgColor: "000000",
+    });
+  };
+
+  useEffect(() => {
+    if (role === "ADMIN") {
+      setVisible(true);
+    }
+  }, [role]);
 
   const deleteCategory = (category) => async () => {
     console.log(category);
@@ -44,13 +49,31 @@ const ManageCategories = () => {
     setCts(categories);
   }, [categories]);
 
-  return (
+  return visible ? (
     <Container>
-      <NavigateButton path="/forum" text="Back" />
+      <NavigateButton
+        path="/forum"
+        text="Back"
+      />
       <h1 className="text-center fs-1 fw-bold">Manage Categories</h1>
-      <FloatingLabel className="mb-2" controlId="floatingInput" label="Search">
-        <Form.Control type="text" placeholder="Search" />
+      <FloatingLabel
+        className="mb-2"
+        controlId="floatingInput"
+        label="Search"
+      >
+        <Form.Control
+          type="text"
+          placeholder="Search"
+        />
       </FloatingLabel>
+      <Button
+        className="d-block mx-auto"
+        variant="success"
+        onClick={createCategory}
+      >
+        Create Category
+      </Button>
+      {cts.length === 0 && <h3 className="text-center fs-3 fw-bold ">No categories found</h3>}
       {cts.map((category) => (
         <Row
           key={category.id}
@@ -67,11 +90,7 @@ const ManageCategories = () => {
                 color: `#${category.fgColor}`,
               }}
               onChange={(e) => {
-                setCts(
-                  cts.map((ct) =>
-                    ct.id === category.id ? { ...ct, name: e.target.value } : ct
-                  )
-                );
+                setCts(cts.map((ct) => (ct.id === category.id ? { ...ct, name: e.target.value } : ct)));
               }}
             />
           </Col>
@@ -83,13 +102,7 @@ const ManageCategories = () => {
                 id={`enabled-switch-${category.id}`}
                 checked={category.enabled}
                 onChange={(e) => {
-                  setCts(
-                    cts.map((ct) =>
-                      ct.id === category.id
-                        ? { ...ct, enabled: e.target.checked }
-                        : ct
-                    )
-                  );
+                  setCts(cts.map((ct) => (ct.id === category.id ? { ...ct, enabled: e.target.checked } : ct)));
                 }}
               />
             </div>
@@ -119,13 +132,7 @@ const ManageCategories = () => {
                   paddingLeft: "0px",
                 }}
                 onChange={(e) => {
-                  setCts(
-                    cts.map((ct) =>
-                      ct.id === category.id
-                        ? { ...ct, fgColor: e.target.value.substring(1) }
-                        : ct
-                    )
-                  );
+                  setCts(cts.map((ct) => (ct.id === category.id ? { ...ct, fgColor: e.target.value.substring(1) } : ct)));
                 }}
               />
             </Row>
@@ -157,18 +164,15 @@ const ManageCategories = () => {
                   paddingLeft: "0px",
                 }}
                 onChange={(e) => {
-                  setCts(
-                    cts.map((ct) =>
-                      ct.id === category.id
-                        ? { ...ct, bgColor: e.target.value.substring(1) }
-                        : ct
-                    )
-                  );
+                  setCts(cts.map((ct) => (ct.id === category.id ? { ...ct, bgColor: e.target.value.substring(1) } : ct)));
                 }}
               />
             </Row>
           </Col>
-          <Col xs="auto" className="ms-auto">
+          <Col
+            xs="auto"
+            className="ms-auto"
+          >
             <div className="d-flex align-items-center gap-1">
               <Button
                 variant="success"
@@ -189,6 +193,8 @@ const ManageCategories = () => {
         </Row>
       ))}
     </Container>
+  ) : (
+    <h1 className="text-center fs-1 fw-bold">You are not authorized to view this page</h1>
   );
 };
 

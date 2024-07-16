@@ -69,10 +69,7 @@ const AdminDashboard = () => {
               </Nav.Link>
               <Nav.Link href="/users" className="text-white">
                 Users
-              </Nav.Link>
-              <Nav.Link href="/settings" className="text-white">
-                Settings
-              </Nav.Link>
+              </Nav.Link>         
               <Row>
                 <Col>
                   <Button variant="danger" href="/logout">

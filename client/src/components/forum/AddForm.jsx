@@ -15,7 +15,8 @@ const AddForm = () => {
   const { categories } = useCategories();
   const [category, setCategory] = useState("");
   const [tagsInput, setTagsInput] = useState("");
-  const [tags, setTags] = useState([]);
+  const [tagsList, setTagsList] = useState([]);
+  const [tags, setTags] = useState("");
   const { insertPost, error: postError } = usePostInsert();
   const navigate = useNavigate();
 
@@ -41,7 +42,7 @@ const AddForm = () => {
     if (lastChar === " ") {
       const newTag = inputValue.trim();
       if (newTag.startsWith("#") && newTag.length > 1) {
-        setTags([...tags, newTag.slice(1)]); // Add new tag without '#'
+        setTagsList([...tagsList, newTag.slice(1)]); // Add new tag without '#'
         setTagsInput(""); // Reset input field
       }
     } else {
@@ -49,19 +50,20 @@ const AddForm = () => {
     }
   };
 
-  const handleTagSubmit = (e) => {
-    e.preventDefault();
-    console.log("submit");
-    const inputValue = e.target.value;
-    const newTag = inputValue.trim();
-    if (newTag.startsWith("#") && newTag.length > 1) {
-      setTags([...tags, newTag.slice(1)]); // Add new tag without '#'
-      setTagsInput(""); // Reset input field
-    } else {
-      setTags([...tags, newTag]); // Add new tag
-      setTagsInput(""); // Reset input field
-    }
-  }
+  // const handleTagSubmit = (e) => {
+  //   e.preventDefault();
+  //   // console.log("submit");
+  //   const inputValue = e.target.value;
+  //   let newTag = inputValue.trim();
+  //   if(newTag.startsWith('#')) newTag = newTag.slice(1);
+  //   setTagsList([...tagsList, newTag]); // Add new tag
+  //   setTagsInput(""); // Reset input field
+  // };
+
+  useEffect(() => {
+    // combine all tags in tagsList, separated by a comma
+    setTags(tagsList.join(","));
+  }, [tagsList]);
 
   const removeTag = (tagToRemove) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
@@ -103,17 +105,21 @@ const AddForm = () => {
           </Col>
         </Row>
         <Row className="mb-3">
-          <Form.Group controlId="tagsInput">
-            {/* <Form.Label>Tags</Form.Label> */}
-            <Form.Control
-              type="text"
-              value={tagsInput}
-              placeholder="Tags"
-              onChange={handleTagsInputChange}
-              onSubmit={handleTagSubmit}
-            />
-            <div>
-              {tags.map((tag, index) => (
+          <Col sm={6} md={3}>
+            <Form.Group controlId="tagsInput">
+              {/* <Form.Label>Tags</Form.Label> */}
+              <Form.Control
+                type="text"
+                value={tagsInput}
+                placeholder="Tags"
+                onChange={handleTagsInputChange}
+                // onSubmit={handleTagSubmit}
+              />
+            </Form.Group>
+          </Col>
+          <Col sm={6} md={9}>
+            <div className="d-flex flex-wrap gap-2">
+              {tagsList.map((tag, index) => (
                 <Tag
                   key={index}
                   tag={"#" + tag}
@@ -122,7 +128,7 @@ const AddForm = () => {
                 />
               ))}
             </div>
-          </Form.Group>
+          </Col>
         </Row>
         <Row className="mb-3">
           <Form.Group controlId="content">
