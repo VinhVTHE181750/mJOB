@@ -85,7 +85,7 @@ const getPostById = async (req, res) => {
       const interact = await PostLike.findOne({
         where: { PostId: id, UserId: userId },
       });
-      if(interact) {
+      if (interact) {
         liked = true;
         isDislike = interact.isDislike;
       }
@@ -107,12 +107,12 @@ const getPostById = async (req, res) => {
       title: post.title,
       content: post.content,
       tags: post.tags,
-      views,
-      likes,
-      liked,
-      isDislike,
-      comments,
-      dislikes,
+      views: views || 0,
+      likes: likes || 0,
+      liked: liked || false,
+      isDislike: isDislike || false,
+      comments: comments || 0,
+      dislikes: dislikes || 0,
       PostCategoryId: post.PostCategoryId,
       UserId: post.UserId,
       createdAt: post.createdAt,
@@ -120,22 +120,20 @@ const getPostById = async (req, res) => {
     };
 
     if (post.status === "PUBLISHED") {
-      const todayMetric = await PostMetric.findOne({
+      const [todayMetric, tmCreated] = await PostMetric.findOrCreate({
         where: {
           PostId: id,
-          day: new Date(),
+          day: new Date().toISOString().split("T")[0],
+        },
+        defaults: {
+          views: 1,
         },
       });
 
-      if (!todayMetric) {
-        await PostMetric.create({
-          PostId: id,
-          day: new Date(),
-          views: 1,
-        });
-      } else {
+      if (!tmCreated) {
         await todayMetric.increment("views");
       }
+
       return res.status(200).json(response);
     }
     if (req.role === "ADMIN" || req.role === "MOD") {
@@ -151,9 +149,8 @@ const getPostById = async (req, res) => {
     return res.status(404).json({ message: "Post not found" });
   } catch (err) {
     log(err, "ERROR", "FORUM");
-    res
-      .status(500)
-      .json({ message: "Unexpected error while fetching this post" });
+    console.log(err);
+    res.status(500).json({ message: "Unexpected error while fetching this post" });
   }
 };
 
@@ -182,9 +179,7 @@ const getPostOfUser = async (req, res) => {
         },
       });
     }
-    return posts && posts.length > 0
-      ? res.status(200).json(posts)
-      : res.status(404).json({ message: "No posts found." });
+    return posts && posts.length > 0 ? res.status(200).json(posts) : res.status(404).json({ message: "No posts found." });
   } catch (err) {
     log(err, "ERROR", "FORUM");
     return res.status(500).json({ message: err });
