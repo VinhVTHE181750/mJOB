@@ -21,14 +21,6 @@ CategoryMetric.init(
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-    creates: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
-    updates: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
     searches: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
