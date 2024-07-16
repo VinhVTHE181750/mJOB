@@ -1,29 +1,29 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../../App";
 import axios from "axios";
-const useBalance = () => {
-  const [balance, setBalance] = useState(0);
+const useCheckUserTranferTo = (userId) => {
+  const [info, setInfo] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchBalance = async () => {
+    const fetchInfo = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${API_URL}/payment/balance`);
+        const response = await axios.get(`${API_URL}/payment/tranferuser/${userId}`);
         const data = response.data;
         setLoading(false);
-        setBalance(data.balance);
+        setInfo(data);
       } catch (error) {
         setError(error);
         setLoading(false);
       }
     };
 
-    fetchBalance();
+    fetchInfo();
   }, []);
 
-  return { balance, loading, error };
+  return { info, loading, error };
 };
 
-export { useBalance };
+export default useCheckUserTranferTo;

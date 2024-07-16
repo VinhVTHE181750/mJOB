@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 
 const Login = () => {
+  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
