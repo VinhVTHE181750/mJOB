@@ -2,11 +2,16 @@ import { useEffect, useState } from "react";
 import http from "../../functions/httpService";
 
 const useWhoAmI = () => {
-  const [role, setRole] = useState("USER");
+  const [role, setRole] = useState("");
   const [userId, setUserId] = useState(0);
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+
+  useEffect(() => {
+    fetchMe();
+  }, []);
 
   const fetchMe = async () => {
     try {
