@@ -63,14 +63,14 @@ const WorkExperience = () => {
   return (
     <Container fluid className="mt-3">
       <Row>
-        <Col md={3} className="bg-dark text-white p-4">
+        <Col md={2} >
           <Nav className="flex-column">
             <h2>
-              <Nav.Link href={`/editprofile/${userId}`} className="text-white">
+              <Nav.Link href={`/editprofile/${userId}`} className="text-black">
                 Profile
               </Nav.Link>
             </h2>
-            <Nav.Link href={`/workexperience/${userId}`} className="text-white">
+            <Nav.Link href={`/workexperience/${userId}`} className="text-black">
               Work Experience
             </Nav.Link>
             
@@ -83,7 +83,7 @@ const WorkExperience = () => {
             </Row>
           </Nav>
         </Col>
-        <Col md={9} className="p-4">
+        <Col md={10} className="p-4">
           <Card className="mb-4">
             <Card.Body>
               <Form onSubmit={handleFormSubmit}>

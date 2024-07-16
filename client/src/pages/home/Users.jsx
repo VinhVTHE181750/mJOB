@@ -15,23 +15,23 @@ const Users = () => {
     return (
         <div>
             <header className="text-center">
-                <h1>Admin Dashboard - User Management</h1>
+                <h1>User Management</h1>
             </header>
             <Container fluid className="mt-3">
                 <Row>
-                    <Col md={3} className="bg-dark text-white p-4">
+                    <Col md={2} >
                         <h2>Navigation</h2>
                         <Nav className="flex-column">
-                            <Nav.Link href="/dashboard" className="text-white">Dashboard</Nav.Link>
-                            <Nav.Link href="/jobs" className="text-white">Jobs</Nav.Link>
-                            <Nav.Link href="/users" className="text-white">Users</Nav.Link>
+                            <Nav.Link href="/dashboard" className="text-black">Dashboard</Nav.Link>
+                            <Nav.Link href="/jobs" className="text-black">Jobs</Nav.Link>
+                            <Nav.Link href="/users" className="text-black">Users</Nav.Link>
                             
                             <Row>
                                 <Col><Button variant="danger" href="/logout">Log Out</Button></Col>
                             </Row>
                         </Nav>
                     </Col>
-                    <Col md={9} className="p-4">
+                    <Col md={10} className="p-4">
                         
                         <UserCard
                             name="Pham Duc Minh"
@@ -73,7 +73,7 @@ const UserCard = ({ name, email, role, registered, onEdit, onDelete }) => (
             </Card.Text>
             <Card.Text>Additional information...</Card.Text>
             <div className="d-flex justify-content-end">
-                <Button variant="success" className="mr-2" onClick={onEdit}>
+                <Button variant="primary" className="mr-2" onClick={onEdit}>
                     Detail
                 </Button>
                 <Button variant="danger" onClick={onDelete}>

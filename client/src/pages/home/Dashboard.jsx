@@ -14,6 +14,7 @@ ChartJS.register(
 );
 
 const AdminDashboard = () => {
+  
   const { count: countUsers } = useCountUser();
   const activeUsers = 0;
   const guests = 0;
@@ -58,18 +59,21 @@ const AdminDashboard = () => {
 
       <Container fluid className="mt-3">
         <Row>
-          <Col md={3} className="bg-dark text-white p-4">
-            <h2>Navigation</h2>
-            <Nav className="flex-column">
-              <Nav.Link href="/dashboard" className="text-white">
+          <Col md={2}  >
+            <h2 >Navigation</h2>
+            <Nav className="flex-column ">        
+              <Nav.Link href="/dashboard" className="text-black" >
                 Dashboard
               </Nav.Link>
-              <Nav.Link href="/jobs" className="text-white">
+             
+              <Nav.Link href="/jobs" className="text-black"  >
                 Jobs
               </Nav.Link>
-              <Nav.Link href="/users" className="text-white">
+              
+              <Nav.Link href="/users" className="text-black"  >
                 Users
-              </Nav.Link>         
+              </Nav.Link>    
+              
               <Row>
                 <Col>
                   <Button variant="danger" href="/logout">
@@ -79,7 +83,7 @@ const AdminDashboard = () => {
               </Row>
             </Nav>
           </Col>
-          <Col md={9} className="p-4">
+          <Col md={10} className="p-4">
             <Row className="mb-4">
               <Col md={4}>
                 <Card className="text-white bg-success text-center p-4">
