@@ -113,6 +113,7 @@ const getPostById = async (req, res) => {
       isDislike: isDislike || false,
       comments: comments || 0,
       dislikes: dislikes || 0,
+      author: author || "Unknown",
       PostCategoryId: post.PostCategoryId,
       UserId: post.UserId,
       createdAt: post.createdAt,

@@ -39,6 +39,6 @@ module.exports = function applyMiddlewares(app) {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(JwtMiddleware);
-  app.use(interceptor)
+  // app.use(interceptor)
   // Log middleware initialization here
 };

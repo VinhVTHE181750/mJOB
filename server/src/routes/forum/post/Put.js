@@ -55,9 +55,7 @@ const put = async (req, res) => {
       }
 
       if (post.status !== "PUBLISHED") {
-        res
-          .status(400)
-          .json({ message: "Can not change status of a published post." });
+        res.status(400).json({ message: "Can not change status of a published post." });
         return;
       }
     }
@@ -68,25 +66,18 @@ const put = async (req, res) => {
     // DRAFT -> DELETED
 
     // Admin or Mod changing the status from PUBLISHED to DELISTED
-    if (isAdminOrMod) {
+    if (isAdminOrMod && !isAuthor) {
       // if attempt to update anything except status, return 400
-      if (
-        title ||
-        content ||
-        tags ||
-        category
-      ) {
+      if (title || content || tags || category) {
         res.status(400).json({
-          message: "Cannot only update status of another user's post.",
+          message: "You are trying to edit other user's post content, which is now allowed. Admins and moderators can only change the status of a post.",
         });
         return;
       }
       if (status && status !== "DRAFT") {
         post.status = status;
       } else {
-        res
-          .status(400)
-          .json({ message: "Cannot change the status of a post to draft" });
+        res.status(400).json({ message: "Cannot change the status of a post to draft" });
         return;
       }
     }
@@ -109,17 +100,15 @@ const put = async (req, res) => {
           day: new Date().toISOString().split("T")[0],
         },
       }).then(([metric]) => metric.increment(["updates"])),
-      
     ]);
 
     // const io = getIo();
     // io.emit("posts", { action: "UPDATE", post });
+    io.getIo().emit("forum/posts");
     return res.status(200).json(post);
   } catch (err) {
     log(err, "ERROR", "FORUM");
-    return res
-      .status(500)
-      .json({ message: "Unexpected error while updating post." });
+    return res.status(500).json({ message: "Unexpected error while updating post." });
   }
 };
 

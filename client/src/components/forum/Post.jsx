@@ -10,6 +10,7 @@ import NavigateButton from "../ui/buttons/NavigateButton";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import Skeleton from "react-loading-skeleton";
 import useLikesUpdate from "../../hooks/forum/likes/useLikesUpdate";
+import useWhoAmI from "../../hooks/user/useWhoAmI";
 
 const Post = ({ id }) => {
   // post related data
@@ -20,6 +21,7 @@ const Post = ({ id }) => {
   // const post = useSelector((state) => state.post.post);
   const { post, loading, error } = usePostDetail(id);
   const { updateLikes } = useLikesUpdate();
+  const { username } = useWhoAmI();
 
   // useEffect(() => {
   //   dispatch(fetchPost(id));
@@ -34,9 +36,7 @@ const Post = ({ id }) => {
   };
 
   const handleDeletePost = async () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this post? "
-    );
+    const confirmDelete = window.confirm("Are you sure you want to delete this post? ");
     if (confirmDelete) {
       // dispatch(deletePost(id));
       navigate("/forum");
@@ -64,21 +64,37 @@ const Post = ({ id }) => {
             <Col sm={2}>
               <div className="border">
                 <div>
-                  <img className="avatar" src={avatar} alt="Default Avatar" />
+                  <img
+                    className="avatar"
+                    src={avatar}
+                    alt="Default Avatar"
+                  />
                 </div>
-                <Skeleton width={100} height={20} />
+                <Skeleton
+                  width={100}
+                  height={20}
+                />
                 <div>
                   <p className="text-center">
-                    <Skeleton width={100} height={20} />
+                    <Skeleton
+                      width={100}
+                      height={20}
+                    />
                   </p>
                 </div>
               </div>
             </Col>
             <Col sm={10}>
               <Row className="mx-5">
-                <Skeleton width={300} height={20} />
+                <Skeleton
+                  width={300}
+                  height={20}
+                />
               </Row>
-              <Skeleton width={100} height={20} />
+              <Skeleton
+                width={100}
+                height={20}
+              />
             </Col>
           </Row>
           <Row className="ms-2 mt-2">
@@ -88,8 +104,14 @@ const Post = ({ id }) => {
             <Row>
               {/* Add a like button */}
               <div className="d-flex justify-content-end mt-2 gap-2">
-                <Skeleton width={100} height={20} />
-                <Skeleton width={100} height={20} />
+                <Skeleton
+                  width={100}
+                  height={20}
+                />
+                <Skeleton
+                  width={100}
+                  height={20}
+                />
               </div>
             </Row>
           </Row>
@@ -104,7 +126,11 @@ const Post = ({ id }) => {
         <Col sm={2}>
           <div className="border">
             <div>
-              <img className="avatar" src={avatar} alt="Default Avatar" />
+              <img
+                className="avatar"
+                src={avatar}
+                alt="Default Avatar"
+              />
             </div>
             <Link to={`/users/${post.author}`}>{post.author}</Link>
             <div>
@@ -116,8 +142,7 @@ const Post = ({ id }) => {
           <Row className="mx-5">
             <h1>{post.title} </h1>
           </Row>
-
-          {post.UserId == 1 && (
+          {username === post.author && (
             <>
               <NavigateButton
                 path={`/forum/edit/${id}`}
@@ -125,7 +150,10 @@ const Post = ({ id }) => {
                 variant="primary"
                 className="me-2"
               />
-              <Button variant="danger" onClick={() => handleDeletePost()}>
+              <Button
+                variant="danger"
+                onClick={() => handleDeletePost()}
+              >
                 Delete
               </Button>
             </>
@@ -141,11 +169,7 @@ const Post = ({ id }) => {
           <div className="d-flex justify-content-end mt-2 gap-2">
             <Button
               variant={
-                post.liked
-                  ? post.isDislike
-                    ? "danger"
-                    : "outline-danger"
-                  : "secondary"
+                post.liked ? (post.isDislike ? "danger" : "outline-danger") : "secondary"
                 // "secondary"
               }
               onClick={() => handleLike(false)}
@@ -154,11 +178,7 @@ const Post = ({ id }) => {
             </Button>
             <Button
               variant={
-                post.liked
-                  ? !post.isDislike
-                    ? "success"
-                    : "outline-success"
-                  : "secondary"
+                post.liked ? (!post.isDislike ? "success" : "outline-success") : "secondary"
                 // "secondary"
               }
               onClick={() => handleLike(true)}

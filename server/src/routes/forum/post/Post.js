@@ -3,6 +3,7 @@ const PostCategory = require("../../../models/forum/post/PostCategory");
 const Post = require("../../../models/forum/post/Post");
 const PostHistory = require("../../../models/forum/post/PostHistory");
 const { log } = require("../../../utils/Logger");
+const io = require("../../../../io");
 
 const post = async (req, res) => {
   const userId = req.userId;
@@ -89,6 +90,7 @@ const post = async (req, res) => {
       UserId: post.UserId,
       PostId: post.id,
     });
+    io.getIo().emit("forum/posts");
     return res.status(201).send({ post });
   } catch (err) {
     log(err, "ERROR", "FORUM");
