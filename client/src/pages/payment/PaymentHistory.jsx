@@ -1,12 +1,35 @@
 import { Container, Table } from "react-bootstrap";
-import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import { BsCircleFill } from "react-icons/bs";
+import NavigateButton from "../../components/ui/buttons/NavigateButton";
 
 const PaymentHistory = () => {
-  const from1 = "me";
-  const from2 = "ABCDEF";
-  const to1 = "MNPQ";
-  const to2 = "you";
+  // data: id, amount, status, action, from, to,
+  const data = [
+    {
+      id: 1,
+      amount: 100,
+      status: "SUCCESS",
+      action: "Send",
+      from: "Me",
+      to: "User 1",
+    },
+    {
+      id: 2,
+      amount: 200,
+      status: "failed",
+      action: "received",
+      from: "User 1",
+      to: "Me",
+    },
+    {
+      id: 3,
+      amount: 300,
+      status: "pending",
+      action: "send",
+      from: "Me",
+      to: "User 1",
+    },
+  ];
   const success = (
     <>
       <BsCircleFill color="green" /> Success
@@ -38,43 +61,27 @@ const PaymentHistory = () => {
           <tr>
             <th>Transaction ID</th>
             <th>Date</th>
-            <th>Transaction</th>
             <th>Amount</th>
-            <th>Status</th>
             <th>Action</th>
+            <th>Status</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Content</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>2021-01-01</td>
-            <td>
-              {from1} transferred to {to1}
-            </td>
-            <td>100</td>
-            <td>{failed}</td>
-            <td>
-              <NavigateButton
-                path="/payment/detail"
-                text="Detail"
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>2021-01-02</td>
-            <td>
-              {from2} transferred to {to2}
-            </td>
-            <td>200</td>
-            <td>{success}</td>
-            <td>
-              <NavigateButton
-                path="/payment/detail"
-                text="Detail"
-              />
-            </td>
-          </tr>
+          {data.map((d) => (
+            <tr key={d.id}>
+              <td>{d.id}</td>
+              <td>{new Date().toLocaleDateString()}</td>
+              <td>{d.amount}</td>
+              <td>{d.action}</td>
+              <td>{d.status === "success" ? success : d.status === "failed" ? failed : pending}</td>
+              <td>{d.from}</td>
+              <td>{d.to}</td>
+              <td>Lorem ipsum donos aset tis domia</td>
+            </tr>
+          ))}
         </tbody>
       </Table>
     </Container>
