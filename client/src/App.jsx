@@ -64,6 +64,7 @@ import { ForumProvider } from "./context/ForumContext";
 import UserInformationProvider from "./context/UserContext";
 import PaymentPortal from "./pages/payment/PaymentPortal";
 import CreateTicketPage from "./pages/user/CreateTicket";
+import JobHistory from "./pages/jobs/JobHistory";
 
 function App() {
   return (
