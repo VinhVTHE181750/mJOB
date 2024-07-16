@@ -6,16 +6,17 @@ import { API_URL } from "../../App";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import { ForumContext } from "../../context/ForumContext";
 import useWhoAmI from "../../hooks/user/useWhoAmI";
+import http from "../../functions/httpService";
 
 const ManageCategories = () => {
   const { categories } = useContext(ForumContext);
   const [cts, setCts] = useState([]);
-  const { userId, username, role, loading, error, fetchMe } = useWhoAmI();
+  const { role } = useWhoAmI();
   const [visible, setVisible] = useState(false);
 
   const updateCategory = (category) => async () => {
     // console.log(category);
-    await axios.put(`${API_URL}/forum/categories`, {
+    await http.put(`/forum/categories`, {
       id: category.id,
       name: category.name,
       enabled: category.enabled,
@@ -24,12 +25,20 @@ const ManageCategories = () => {
     });
   };
 
+  const createCategory = async () => {
+    await http.post(`/forum/categories`, {
+      name: "New Category",
+      enabled: true,
+      bgColor: "ffffff",
+      fgColor: "000000",
+    });
+  };
+
   useEffect(() => {
     if (role === "ADMIN") {
       setVisible(true);
     }
-    const data = fetchMe();
-  }, [loading]);
+  }, [role]);
 
   const deleteCategory = (category) => async () => {
     console.log(category);
@@ -57,7 +66,14 @@ const ManageCategories = () => {
           placeholder="Search"
         />
       </FloatingLabel>
-      {cts.length === 0 && <h2 className="text-center fs-3 fw-bold ">No Categories Found</h2>}
+      <Button
+        className="d-block mx-auto"
+        variant="success"
+        onClick={createCategory}
+      >
+        Create Category
+      </Button>
+      {cts.length === 0 && <h3 className="text-center fs-3 fw-bold ">No categories found</h3>}
       {cts.map((category) => (
         <Row
           key={category.id}
