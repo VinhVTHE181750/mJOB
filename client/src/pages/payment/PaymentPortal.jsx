@@ -5,12 +5,7 @@ import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import EmbedCard from "./micro/EmbedCard";
 import { useBalance } from "../../hooks/payment/useBalance";
 import Skeleton from "react-loading-skeleton";
-import {
-  GoArrowDown,
-  GoArrowSwitch,
-  GoArrowUp,
-  GoLinkExternal,
-} from "react-icons/go";
+import { GoArrowDown, GoArrowSwitch, GoArrowUp, GoLinkExternal } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 
 const BalanceChart = lazy(() => import("./micro/BalanceChart"));
@@ -46,13 +41,13 @@ const PaymentPortal = () => {
   ];
 
   const transactions = sampleTransactions.map((transaction, index) => (
-    <ListGroup.Item key={index} className="border">
+    <ListGroup.Item
+      key={index}
+      className="border"
+    >
       <h3>#{index + 1}</h3>
-      {transaction.type} {transaction.amount}{" "}
-      {transaction.type === "Deposited" || transaction.type === "Sent"
-        ? "to"
-        : "from"}{" "}
-      {transaction.from} {transaction.date}
+      {transaction.type} {transaction.amount} {transaction.type === "Deposited" || transaction.type === "Sent" ? "to" : "from"} {transaction.from}{" "}
+      {transaction.date}
     </ListGroup.Item>
   ));
 
@@ -69,20 +64,31 @@ const PaymentPortal = () => {
       <Row className="border mt-5">
         <Col className="px-0 mx-0">
           <EmbedCard
-            title={
-              <h1 style={{ fontSize: 60, fontWeight: "bold" }}>Balance</h1>
-            }
+            title={<h1 style={{ fontSize: 60, fontWeight: "bold" }}>Balance</h1>}
             content={
               <div style={{ fontSize: 40 }}>
-                <Balance amount={amount} currency="VND" locale="vi-VN" />
+                <Balance
+                  amount={amount}
+                  currency="VND"
+                  locale="vi-VN"
+                />
                 <Col className="d-flex gap-2 gap-sm-2">
-                  <Button variant="primary" onClick={() => navigate("/payment/deposit")}>
+                  <Button
+                    variant="primary"
+                    onClick={() => navigate("/payment/deposit")}
+                  >
                     <GoArrowUp /> Deposit
                   </Button>
-                  <Button variant="success" onClick={() => navigate("/payment/withdraw")}>
+                  <Button
+                    variant="success"
+                    onClick={() => navigate("/payment/withdraw")}
+                  >
                     <GoArrowDown /> Withdraw
                   </Button>
-                  <Button variant="warning" onClick={() => navigate("/payment/transfer")}>
+                  <Button
+                    variant="warning"
+                    onClick={() => navigate("/payment/transfer")}
+                  >
                     <GoArrowSwitch /> Transfer
                   </Button>
                 </Col>
@@ -96,23 +102,44 @@ const PaymentPortal = () => {
         <Row className="px-0 mx-0"></Row>
       </Row>
       <Row className="border mt-2">
-        <Col className="px-0 mx-0" sm={4}>
+        <Col
+          className="px-0 mx-0"
+          sm={4}
+        >
           <EmbedCard
             title={<h3>Earnings</h3>}
-            content={<Balance amount={amount} currency="VND" locale="vi-VN" />}
+            content={
+              <Balance
+                amount={amount}
+                currency="VND"
+                locale="vi-VN"
+              />
+            }
             borderColor={"lightgreen"}
             borderWidth={4}
           />
         </Col>
-        <Col className="px-0 mx-0" sm={4}>
+        <Col
+          className="px-0 mx-0"
+          sm={4}
+        >
           <EmbedCard
             title={<h3>Spent</h3>}
-            content={<Balance amount={amount} currency="VND" locale="vi-VN" />}
+            content={
+              <Balance
+                amount={amount}
+                currency="VND"
+                locale="vi-VN"
+              />
+            }
             borderColor={"orange"}
             borderWidth={4}
           />
         </Col>
-        <Col className="px-0 mx-0" sm={4}>
+        <Col
+          className="px-0 mx-0"
+          sm={4}
+        >
           <EmbedCard
             title={<h3>Transactions</h3>}
             content="27"
@@ -121,7 +148,11 @@ const PaymentPortal = () => {
         </Col>
       </Row>
       <Row className="border mt-2 mb-2">
-        <Col className="border d-none d-sm-block" sm={12} lg={7}>
+        <Col
+          className="border d-none d-sm-block"
+          sm={12}
+          lg={7}
+        >
           <h3 className="mt-2">Overview</h3>
           <Suspense fallback={<Skeleton style={{ height: "100%" }} />}>
             <BalanceChart />
@@ -130,7 +161,11 @@ const PaymentPortal = () => {
         <Col className="border d-sm-none">
           <h5>To display balance chart, use a bigger screen.</h5>
         </Col>
-        <Col className="border" sm={12} lg={5}>
+        <Col
+          className="border"
+          sm={12}
+          lg={5}
+        >
           <h2 className="mt-2">
             <span className="me-2">Recent Transactions</span>
             <Button

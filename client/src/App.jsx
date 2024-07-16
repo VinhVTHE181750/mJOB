@@ -63,6 +63,7 @@ import CreateTicketPage from "./pages/user/CreateTicket";
 import JobHistory from "./pages/jobs/JobHistory";
 import ToLogin from "./pages/error/ToLogin";
 import PaymentHistory from "./pages/payment/PaymentHistory";
+import Deposit from "./pages/payment/Deposit";
 
 function App() {
   return (
@@ -202,6 +203,13 @@ function App() {
                   path="/payment"
                   element={<PaymentPortal />}
                 />
+
+                <Route
+                  exact
+                  path="/deposit"
+                  element={<Deposit />}
+                />
+
                 <Route
                   exact
                   path="/payment-history"
