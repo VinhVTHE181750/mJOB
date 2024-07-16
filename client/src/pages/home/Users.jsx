@@ -1,15 +1,37 @@
-import React from 'react';
-import {Button, Card, Col, Container, Nav, Navbar, Row} from 'react-bootstrap';
+
+import { Button, Card, Col, Container, Nav, Row } from 'react-bootstrap';
+import axios from 'axios';
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router";
 
 const Users = () => {
-    
+    const [users, setUsers] = useState([]);
 
-    const handleEditUser = () => {
-        alert('Edit User function not implemented.');
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/users-role');
+            setUsers(response.data);
+        } catch (err) {
+            alert('Error fetching users');
+        }
+    };
+    const navigate = useNavigate();
+    const handleEditUser = (id) => {
+        navigate(`/profile/${id}`);
     };
 
-    const handleDeleteUser = () => {
-        alert('Delete User function not implemented.');
+    const handleDeleteUser = async (id) => {
+        try {
+            await axios.delete(`http://localhost:8080/api/delete/${id}`);
+            alert('User deleted successfully!');
+            fetchUsers(); // Refresh the user list
+        } catch (err) {
+            alert('Error deleting user');
+        }
     };
 
     return (
@@ -32,31 +54,18 @@ const Users = () => {
                         </Nav>
                     </Col>
                     <Col md={10} className="p-4">
-                        
-                        <UserCard
-                            name="Pham Duc Minh"
-                            email="minh@gmail.com"
-                            role="Admin"
-                            registered="2 days ago"
-                            onEdit={handleEditUser}
-                            onDelete={handleDeleteUser}
-                        />
-                        <UserCard
-                            name="Truong Tuan Vinh"
-                            email="vinh@gmail.com"
-                            role="User"
-                            registered="3 days ago"
-                            onEdit={handleEditUser}
-                            onDelete={handleDeleteUser}
-                        />
-                        <UserCard
-                            name="Do Minh Duc"
-                            email="duc@gmail.com"
-                            role="User"
-                            registered="4 days ago"
-                            onEdit={handleEditUser}
-                            onDelete={handleDeleteUser}
-                        />
+                        {users.map(user => (
+                            <UserCard
+                                key={user.id}
+                                id={user.id}
+                                name={`${user.firstName} ${user.lastName}`}
+                                email={user.email}
+                                role={user.Auth ? user.Auth.role : 'N/A'}
+                                registered={user.createdAt}
+                                onEdit={handleEditUser}
+                                onDelete={handleDeleteUser}
+                            />
+                        ))}
                     </Col>
                 </Row>
             </Container>
@@ -64,7 +73,7 @@ const Users = () => {
     );
 };
 
-const UserCard = ({ name, email, role, registered, onEdit, onDelete }) => (
+const UserCard = ({ id, name, email, role, registered, onEdit, onDelete }) => (
     <Card className="mb-4 shadow-sm">
         <Card.Body>
             <Card.Title>{name}</Card.Title>
@@ -73,10 +82,10 @@ const UserCard = ({ name, email, role, registered, onEdit, onDelete }) => (
             </Card.Text>
             <Card.Text>Additional information...</Card.Text>
             <div className="d-flex justify-content-end">
-                <Button variant="primary" className="mr-2" onClick={onEdit}>
+                <Button variant="primary" className="mr-2" onClick={() => onEdit(id)}>
                     Detail
                 </Button>
-                <Button variant="danger" onClick={onDelete}>
+                <Button variant="danger" onClick={() => onDelete(id)}>
                     Delete
                 </Button>
             </div>
