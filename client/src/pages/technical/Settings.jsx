@@ -31,7 +31,7 @@ const Settings = () => {
                   <Form.Control type="password" placeholder="Confirm new password" />
                 </Form.Group>
                 <Button  type="submit">
-                  Change Password
+                  Save
                 </Button>
               </Form>
             </Card.Body>
