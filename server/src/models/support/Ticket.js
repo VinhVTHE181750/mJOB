@@ -5,6 +5,11 @@ class Ticket extends Model {}
 
 Ticket.init(
   {
+    /**
+     * Do not use **by** directly unless neccessary.
+     * Use **getAuthor()** instead.
+     * 
+     */
     by: {
       type: DataTypes.STRING,
       allowNull: true,
