@@ -73,9 +73,7 @@ const WorkExperience = () => {
             <Nav.Link href={`/workexperience/${userId}`} className="text-white">
               Work Experience
             </Nav.Link>
-            <Nav.Link href="/security" className="text-white">
-              Security
-            </Nav.Link>
+            
             <Row>
               <Col>
                 <Button variant="danger" href="/logout">

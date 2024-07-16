@@ -6,7 +6,7 @@ const Logout = () => {
   // const { logout } = useContext(AuthContext);
   const {handleLogout} = useAuth()
   return (
-    <Container>
+    <Container className="text-center">
       <h2>Do you want to log out?</h2>
       <NavigateButton path={-1} text="No" />
       <NavigateButton path="/login" variant="danger" action={() => handleLogout()} text="Yes" />
