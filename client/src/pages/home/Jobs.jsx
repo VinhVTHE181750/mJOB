@@ -25,7 +25,7 @@ const Jobs = () => {
                             <Nav.Link href="/dashboard" className="text-white">Dashboard</Nav.Link>
                             <Nav.Link href="/jobs" className="text-white">Jobs</Nav.Link>
                             <Nav.Link href="/users" className="text-white">Users</Nav.Link>
-                            <Nav.Link href="/settings" className="text-white">Settings</Nav.Link>
+                            
                             <Row>
                                 <Col><Button variant="danger" href="/logout">Logout</Button></Col>
                             </Row>
