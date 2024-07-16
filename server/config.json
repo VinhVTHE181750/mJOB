@@ -5,7 +5,7 @@
     "retryDelay": 5000
   },
   "logger": {
-    "level": "DEBUG"
+    "level": "INFO"
   },
 
   "middleware": {
@@ -21,7 +21,7 @@
   "database": {
     "dialect": "mssql",
     "user": "sa",
-    "password": "123",
+    "password": "1400",
     "server": "localhost",
     "database": "mJob",
     "schema": "dbo",

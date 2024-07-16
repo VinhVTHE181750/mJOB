@@ -1,9 +1,10 @@
 const Post = require("../../../models/forum/post/Post");
 const PostCategory = require("../../../models/forum/post/PostCategory");
-const User = require("../../../models/user/User");
+// const User = require("../../../models/user/User");
 const PostHistory = require("../../../models/forum/post/PostHistory");
 const { log } = require("../../../utils/Logger");
-const { getIo } = require("../../../../io");
+// const { getIo } = require("../../../../io");
+const PostMetric = require("../../../models/forum/metric/PostMetric");
 
 const put = async (req, res) => {
   if (!req.userId) {
@@ -102,10 +103,17 @@ const put = async (req, res) => {
         status: post.status,
         action: "UPDATE",
       }),
+      PostMetric.findOrCreate({
+        where: {
+          PostId: post.id,
+          day: new Date().toISOString().split("T")[0],
+        },
+      }).then(([metric]) => metric.increment(["updates"])),
+      
     ]);
 
-    const io = getIo();
-    io.emit("posts", { action: "UPDATE", post });
+    // const io = getIo();
+    // io.emit("posts", { action: "UPDATE", post });
     return res.status(200).json(post);
   } catch (err) {
     log(err, "ERROR", "FORUM");

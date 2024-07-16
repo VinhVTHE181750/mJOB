@@ -11,6 +11,10 @@ const PublicChatRoom = require("../forum/chat/PublicChatRoom");
 const Balance = require("../payment/Balance");
 const PaymentHistory = require("../payment/PaymentHistory");
 const WorkExperience = require("./WorkExperience");
+const ForumMetric = require("./ForumMetric");
+const Job = require("../job/Job");
+const RequirementStorage = require("../job/RequirementStorage");
+const Application = require("../job/Application");
 
 class User extends Model {}
 
@@ -79,6 +83,17 @@ User.init(
 User.hasOne(Auth);
 Auth.belongsTo(User);
 
+//// Jobs
+User.hasMany(Job);
+Job.belongsTo(User);
+
+User.hasMany(RequirementStorage);
+RequirementStorage.belongsTo(User);
+
+User.hasMany(Application);
+Application.belongsTo(User);
+
+//// Forum
 User.hasMany(Post);
 Post.belongsTo(User);
 
@@ -94,18 +109,19 @@ CommentLike.belongsTo(User);
 User.belongsToMany(PublicChatRoom, { through: PublicRoomUser });
 PublicChatRoom.belongsToMany(User, { through: PublicRoomUser });
 
+//// Payment
 User.hasOne(Balance);
 Balance.belongsTo(User);
 
 User.hasMany(PaymentHistory);
 PaymentHistory.belongsTo(User);
 
+
+//// Profile
 // missing LinkedProfile
 
 User.hasMany(WorkExperience);
 WorkExperience.belongsTo(User);
-
-// missing WorkExperience
 
 // missing Education
 
@@ -117,8 +133,11 @@ WorkExperience.belongsTo(User);
 
 // missing ProfileHistory
 
-// missing ProfileMetric
+//// Metrics: Jobs, Forum, Payment, Profile
+User.hasOne(ForumMetric);
+ForumMetric.belongsTo(User);
 
+//// Communications
 // missing Follow
 // UserId1, UserId2, with createdAt
 // if one-way -> follow
