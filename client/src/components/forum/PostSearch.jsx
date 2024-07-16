@@ -94,9 +94,9 @@ const PostSearch = () => {
             placeholder="Enter title query or a #tag, @user, $post content$, ... /clear to remove all queries."
             onChange={handleChange}
           />
-          <Button type="submit" className="d-none d-sm-inline mt-1">
+          {/* <Button type="submit" className="d-none d-sm-inline mt-1">
             Submit
-          </Button>
+          </Button> */}
         </Form>
       </Row>
       <Row className="mx-auto mt-1 me-auto">
