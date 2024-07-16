@@ -14,7 +14,7 @@ const Jobs = () => {
 
     return (
         <div>
-            <header className="bg-dark text-white text-center py-3">
+            <header className="text-center">
                 <h1>Admin Dashboard - Job Management</h1>
             </header>
             <Container fluid className="mt-3">
@@ -32,9 +32,7 @@ const Jobs = () => {
                         </Nav>
                     </Col>
                     <Col md={9} className="p-4">
-                        <Navbar bg="dark" variant="dark" expand="lg" className="mb-3">
-                            
-                        </Navbar>
+                        
                         <JobCard
                             title="Software Engineer"
                             company="Tech Corp"

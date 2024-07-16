@@ -14,7 +14,7 @@ const Users = () => {
 
     return (
         <div>
-            <header className="bg-dark text-white text-center py-3">
+            <header className="text-center">
                 <h1>Admin Dashboard - User Management</h1>
             </header>
             <Container fluid className="mt-3">
@@ -32,9 +32,7 @@ const Users = () => {
                         </Nav>
                     </Col>
                     <Col md={9} className="p-4">
-                        <Navbar bg="dark" variant="dark" expand="lg" className="mb-3">
-                            
-                        </Navbar>
+                        
                         <UserCard
                             name="Pham Duc Minh"
                             email="minh@gmail.com"
@@ -75,7 +73,7 @@ const UserCard = ({ name, email, role, registered, onEdit, onDelete }) => (
             </Card.Text>
             <Card.Text>Additional information...</Card.Text>
             <div className="d-flex justify-content-end">
-                <Button variant="primary" className="mr-2" onClick={onEdit}>
+                <Button variant="success" className="mr-2" onClick={onEdit}>
                     Detail
                 </Button>
                 <Button variant="danger" onClick={onDelete}>

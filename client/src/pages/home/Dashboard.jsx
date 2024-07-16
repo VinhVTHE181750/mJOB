@@ -52,7 +52,7 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <header className="bg-dark text-white text-center py-3">
+      <header className="text-center">
         <h1>Admin Dashboard - Job Market</h1>
       </header>
 
