@@ -38,7 +38,6 @@ import Security from "./pages/profile/Security";
 import EditProfile from "./pages/profile/EditProfile";
 import WorkExperience from "./pages/profile/WorkExperience";
 import Profile from "./pages/profile/Profile";
-import Security from "./pages/profile/Security";
 
 // Components
 import HomeFooter from "./components/HomeFooter";
@@ -59,9 +58,9 @@ import CreateTicketPage from "./pages/user/CreateTicket";
 function App() {
   return (
     <BrowserRouter>
-          <UserInformationProvider>
-    <AuthProvider className="page">
-      <ForumProvider>
+      <UserInformationProvider>
+        <AuthProvider className="page">
+          <ForumProvider>
             <AppNavbar className="mb-auto" />
             <div className="min-vh-100 mt-5">
               <Routes>
@@ -106,14 +105,14 @@ function App() {
                 {/* PAYMENT ROUTES */}
                 <Route exact path="/payment" element={<PaymentPortal />} />
 
-            {/* USERS ROUTES */}
-            <Route exact path="/editprofile/:userId" element={<EditProfile />} />
-            <Route exact path="/profile/:userId" element={<Profile />} />
-            <Route exact path="/workexperience/:userId" element={<WorkExperience />} />
-            <Route exact path="/security" element={<Security />} />
-            <Route exact path="/users" element={<Users />} />
-            <Route exact path="/settings" element={<Setting />} />
-            <Route exact path="/ticket" element={<CreateTicketPage />} />
+                {/* USERS ROUTES */}
+                <Route exact path="/editprofile/:userId" element={<EditProfile />} />
+                <Route exact path="/profile/:userId" element={<Profile />} />
+                <Route exact path="/workexperience/:userId" element={<WorkExperience />} />
+                <Route exact path="/security" element={<Security />} />
+                {/* <Route exact path="/users" element={<Users />} /> */}
+                {/* <Route exact path="/settings" element={<Setting />} /> */}
+                <Route exact path="/ticket" element={<CreateTicketPage />} />
 
                 {/* TECHNICAL ROUTES */}
                 <Route exact path="*" element={<PageNotFound />} />
@@ -121,10 +120,10 @@ function App() {
               </Routes>
             </div>
             <HomeFooter />
-      </ForumProvider>
-    </AuthProvider>
-          </UserInformationProvider>
-        </BrowserRouter>
+          </ForumProvider>
+        </AuthProvider>
+      </UserInformationProvider>
+    </BrowserRouter>
   );
 }
 

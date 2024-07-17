@@ -32,6 +32,7 @@ const NavigateButton = ({
       }}
     >
       {children}
+      {icon}
       {text}
     </Button>
   );
