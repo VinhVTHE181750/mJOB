@@ -68,11 +68,11 @@ const Profile = () => {
   }, [userId]);
 
   const handleEditClick = () => {
-    navigate(`/editprofile/${userId}`);
+    navigate(`/editprofile`);
   };
 
   const handleWorkEdit = () => {
-    navigate(`/workexperience/${userId}`);
+    navigate(`/workexperience`);
   };
 
   return (
