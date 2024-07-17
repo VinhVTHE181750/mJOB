@@ -1,7 +1,15 @@
-import {Button, Card, Col, Container, Nav, Row} from "react-bootstrap";
+import { Button, Card, Col, Container, Nav, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Bar} from "react-chartjs-2";
-import {BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip,} from "chart.js";
+import { Bar } from "react-chartjs-2";
+import {
+  BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
+  Title,
+  Tooltip,
+} from "chart.js";
 import useCountUser from "../../hooks/useCountUser.js";
 
 ChartJS.register(
@@ -14,7 +22,6 @@ ChartJS.register(
 );
 
 const AdminDashboard = () => {
-  
   const { count: countUsers } = useCountUser();
   const activeUsers = 0;
   const guests = 0;
@@ -59,28 +66,23 @@ const AdminDashboard = () => {
 
       <Container fluid className="mt-3">
         <Row>
-          <Col md={2}  >
-            <h2 >Navigation</h2>
-            <Nav className="flex-column ">        
-              <Nav.Link href="/dashboard" className="text-black" >
+          <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
+            <h2 className="text-center">Navigation</h2>
+            <Nav className="flex-column">
+              <Nav.Link href="/dashboard" className="text-dark ">
                 Dashboard
               </Nav.Link>
-             
-              <Nav.Link href="/jobs" className="text-black"  >
+              <Nav.Link href="/jobs" className="text-dark ">
                 Jobs
               </Nav.Link>
-              
-              <Nav.Link href="/users" className="text-black"  >
+              <Nav.Link href="/users" className="text-dark">
                 Users
-              </Nav.Link>    
-              
-              <Row>
-                <Col>
-                  <Button variant="danger" href="/logout">
-                    Logout
-                  </Button>
-                </Col>
-              </Row>
+              </Nav.Link>
+              <div >
+                <Button variant="danger" href="/logout" className="mt-2">
+                  Logout
+                </Button>
+              </div>
             </Nav>
           </Col>
           <Col md={10} className="p-4">
