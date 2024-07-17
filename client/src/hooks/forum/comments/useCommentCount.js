@@ -1,7 +1,7 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
 
-const API_URL = "http://localhost:8000/api";
+
 
 const useCommentCount = (id) => {
   const [comment, setComment] = useState([]);
@@ -11,8 +11,8 @@ const useCommentCount = (id) => {
   useEffect(() => {
     const fetchComment = async () => {
       try {
-        const url = `${API_URL}/forum/comments/count/${id}`;
-        const response = await axios.get(url);
+        const url = `/forum/comments/count/${id}`;
+        const response = await http.get(url);
         setComment(response.data);
         setLoading(false);
       } catch (error) {

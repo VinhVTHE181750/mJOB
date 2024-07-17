@@ -1,7 +1,7 @@
-import axios from "axios";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
+import http from "../functions/httpService";
 
-const API_URL = "http://localhost:8000/api";
+
 
 const useNewsContent = () => {
   const [contents, setContents] = useState([]);
@@ -11,8 +11,8 @@ const useNewsContent = () => {
   useEffect(() => {
     const fetchcontents = async () => {
       try {
-        const url = `${API_URL}/datapost`;
-        const response = await axios.get(url);
+        const url = `/datapost`;
+        const response = await http.get(url);
         setContents(response.data);
         setLoading(false);
       } catch (error) {

@@ -1,8 +1,8 @@
 
-import { Button, Card, Col, Container, Nav, Row } from 'react-bootstrap';
-import axios from 'axios';
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router";
+import { Button, Card, Col, Container, Nav, Row } from 'react-bootstrap';
+import { useNavigate } from "react-router";
+import http from "../../functions/httpService";
 
 const Users = () => {
     const [users, setUsers] = useState([]);
@@ -13,7 +13,7 @@ const Users = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/users-role');
+            const response = await http.get('/users-role');
             setUsers(response.data);
         } catch (err) {
             alert('Error fetching users');
@@ -26,7 +26,7 @@ const Users = () => {
 
     const handleDeleteUser = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/api/delete/${id}`);
+            await http.delete(`/delete/${id}`);
             alert('User deleted successfully!');
             fetchUsers(); // Refresh the user list
         } catch (err) {
