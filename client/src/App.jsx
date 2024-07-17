@@ -230,17 +230,17 @@ function App() {
                 {/* USERS ROUTES */}
                 <Route
                   exact
-                  path="/editprofile/:userId"
+                  path="/editprofile"
                   element={<EditProfile />}
                 />
                 <Route
                   exact
-                  path="/profile/:userId"
+                  path="/profile"
                   element={<Profile />}
                 />
                 <Route
                   exact
-                  path="/workexperience/:userId"
+                  path="/workexperience"
                   element={<WorkExperience />}
                 />
 
