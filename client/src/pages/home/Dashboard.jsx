@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, Card, Col, Container, Nav, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Bar } from "react-chartjs-2";
@@ -10,16 +11,10 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import { FaUser, FaUsers, FaBriefcase, FaSignOutAlt, FaChartBar } from "react-icons/fa";
 import useCountUser from "../../hooks/useCountUser.js";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const AdminDashboard = () => {
   const { count: countUsers } = useCountUser();
@@ -69,18 +64,18 @@ const AdminDashboard = () => {
           <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
             <h2 className="text-center">Navigation</h2>
             <Nav className="flex-column">
-              <Nav.Link href="/dashboard" className="text-dark ">
-                Dashboard
+              <Nav.Link href="/dashboard" className="text-dark">
+                <FaChartBar className="me-2" /> Dashboard
               </Nav.Link>
-              <Nav.Link href="/jobs" className="text-dark ">
-                Jobs
+              <Nav.Link href="/jobs" className="text-dark">
+                <FaBriefcase className="me-2" /> Jobs
               </Nav.Link>
               <Nav.Link href="/users" className="text-dark">
-                Users
+                <FaUsers className="me-2" /> Users
               </Nav.Link>
-              <div >
+              <div>
                 <Button variant="danger" href="/logout" className="mt-2">
-                  Logout
+                  <FaSignOutAlt className="me-2" /> Logout
                 </Button>
               </div>
             </Nav>
@@ -88,28 +83,38 @@ const AdminDashboard = () => {
           <Col md={10} className="p-4">
             <Row className="mb-4">
               <Col md={4}>
-                <Card className="text-white bg-success text-center p-4">
-                  <Card.Body>
-                    <Card.Title>{countUsers}</Card.Title>
-                    <Card.Text>Total Users</Card.Text>
-                  </Card.Body>
-                </Card>
+                <Nav.Link href="/users" className="p-0">
+                  <Card className="text-white bg-success text-center p-4">
+                    <Card.Body>
+                      <Card.Title>
+                        <FaUser className="me-2" /> {countUsers}
+                      </Card.Title>
+                      <Card.Text>Total Users</Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Nav.Link>
               </Col>
               <Col md={4}>
                 <Card className="text-white bg-success text-center p-4">
                   <Card.Body>
-                    <Card.Title>0</Card.Title>
+                    <Card.Title>
+                      <FaUser className="me-2" /> 0
+                    </Card.Title>
                     <Card.Text>Active Users</Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
               <Col md={4}>
-                <Card className="text-white bg-success text-center p-4">
-                  <Card.Body>
-                    <Card.Title>0</Card.Title>
-                    <Card.Text>Guests</Card.Text>
-                  </Card.Body>
-                </Card>
+                <Nav.Link href="/jobs" className="p-0">
+                  <Card className="text-white bg-success text-center p-4">
+                    <Card.Body>
+                      <Card.Title>
+                        <FaBriefcase className="me-2" /> 0
+                      </Card.Title>
+                      <Card.Text>Total Jobs</Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Nav.Link>
               </Col>
             </Row>
             <Card className="mb-4">

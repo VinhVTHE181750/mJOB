@@ -8,6 +8,7 @@ import {
   Navbar,
   Row,
 } from "react-bootstrap";
+import {  FaUsers, FaBriefcase, FaSignOutAlt, FaChartBar } from "react-icons/fa";
 
 const Jobs = () => {
   const handleEditJob = () => {
@@ -29,17 +30,17 @@ const Jobs = () => {
             <h2 className="text-center">Navigation</h2>
             <Nav className="flex-column">
               <Nav.Link href="/dashboard" className="text-dark ">
-                Dashboard
+              <FaChartBar className="me-2" /> Dashboard
               </Nav.Link>
               <Nav.Link href="/jobs" className="text-dark ">
-                Jobs
+              <FaBriefcase className="me-2" /> Jobs
               </Nav.Link>
               <Nav.Link href="/users" className="text-dark">
-                Users
+              <FaUsers className="me-2" /> Users
               </Nav.Link>
               <div >
                 <Button variant="danger" href="/logout" className="mt-2">
-                  Logout
+                <FaSignOutAlt className="me-2" /> Logout
                 </Button>
               </div>
             </Nav>
