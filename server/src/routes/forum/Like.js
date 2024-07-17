@@ -1,3 +1,4 @@
+const io = require("../../../io");
 const CommentLike = require("../../models/forum/comment/CommentLike");
 const Comment = require("../../models/forum/comment/Comment");
 const Post = require("../../models/forum/post/Post");
@@ -162,6 +163,8 @@ router.post("/", async (req, res) => {
         });
         // like the comment
         await CommentLike.create({ UserId: userId, CommentId: id });
+
+        io.getIo().emit(`forum/liked/${type}/${id}`)
         return res.status(200).json({ message: "Comment liked" });
       } else {
         // dislike the comment
@@ -171,6 +174,7 @@ router.post("/", async (req, res) => {
           CommentId: id,
           isDislike: true,
         });
+        io.getIo().emit(`forum/liked/${type}/${id}`)
         return res.status(200).json({ message: "Comment disliked" });
       }
     }
@@ -189,11 +193,14 @@ router.post("/", async (req, res) => {
         await PostLike.destroy({ where: { UserId: userId, PostId: id } });
         // like the post
         await PostLike.create({ UserId: userId, PostId: id, isDislike: false });
+        io.getIo().emit(`forum/liked/${type}/${id}`)
         return res.status(200).json({ message: "Post liked" });
       } else {
         await PostLike.destroy({ where: { UserId: userId, PostId: id } });
         // dislike the post
         await PostLike.create({ UserId: userId, PostId: id, isDislike: true });
+        io.getIo().emit(`forum/liked/${type}/${id}`)
+        log(`forum/liked/${type}/${id}`)
         return res.status(200).json({ message: "Post disliked" });
       }
     }
@@ -204,7 +211,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/did", async (req, res) => {
+router.get("/liked", async (req, res) => {
   // type, id from query
   // userId from req
   const { userId } = req;
@@ -245,9 +252,9 @@ router.get("/did", async (req, res) => {
         where: { UserId: userId, CommentId: id },
       });
       if (like) {
-        return res.status(200).json({ did: true });
+        return res.status(200).json({ liked: true, isDislike: like.isDislike });
       } else {
-        return res.status(200).json({ did: false });
+        return res.status(200).json({ liked: false });
       }
     }
 
@@ -264,9 +271,9 @@ router.get("/did", async (req, res) => {
         where: { UserId: userId, PostId: id },
       });
       if (like) {
-        return res.status(200).json({ did: true });
+        return res.status(200).json({ liked: true, isDislike: like.isDislike });
       } else {
-        return res.status(200).json({ did: false });
+        return res.status(200).json({ liked: false });
       }
     }
 

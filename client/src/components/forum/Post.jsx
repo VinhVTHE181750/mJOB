@@ -14,6 +14,7 @@ import useWhoAmI from "../../hooks/user/useWhoAmI";
 import socket from "../../socket";
 import { BsExclamation } from "react-icons/bs";
 import usePostDelete from "../../hooks/forum/posts/usePostDelete";
+import LikeButton from "./micro/LikeButton";
 
 const Post = ({ id }) => {
   // post related data
@@ -42,7 +43,7 @@ const Post = ({ id }) => {
   useEffect(() => {
     const eventName = `forum/post/${id}`;
     const handlePostUpdate = () => {
-      setRefreshFlag(prevFlag => !prevFlag); // Toggle refreshFlag to trigger re-fetch
+      setRefreshFlag((prevFlag) => !prevFlag); // Toggle refreshFlag to trigger re-fetch
     };
 
     socket.on(eventName, handlePostUpdate);
@@ -51,7 +52,6 @@ const Post = ({ id }) => {
       socket.off(eventName, handlePostUpdate);
     };
   }, [id]);
-
 
   const handleLike = (isLike) => {
     updateLikes("post", id, isLike);
@@ -191,24 +191,18 @@ const Post = ({ id }) => {
         <Row>
           {/* Add a like button */}
           <div className="d-flex justify-content-end mt-2 gap-2">
-            <Button
-              variant={
-                post.liked ? (post.isDislike ? "danger" : "outline-danger") : "secondary"
-                // "secondary"
-              }
-              onClick={() => handleLike(false)}
-            >
-              {post.dislikes} 👎
-            </Button>
-            <Button
-              variant={
-                post.liked ? (!post.isDislike ? "success" : "outline-success") : "secondary"
-                // "secondary"
-              }
-              onClick={() => handleLike(true)}
-            >
-              {post.likes} 👍
-            </Button>
+            <LikeButton
+              id={Number(id)}
+              type="post"
+              action="like"
+              count={post.likes}
+            />
+            <LikeButton
+              id={Number(id)}
+              type="post"
+              action="dislike"
+              count={post.dislikes}
+            />
           </div>
         </Row>
       </Row>
