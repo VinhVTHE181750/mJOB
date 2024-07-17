@@ -14,27 +14,25 @@ const Jobs = () => {
 
     return (
         <div>
-            <header className="bg-dark text-white text-center py-3">
-                <h1>Admin Dashboard - Job Management</h1>
+            <header className="text-center">
+                <h1>Job Management</h1>
             </header>
             <Container fluid className="mt-3">
                 <Row>
-                    <Col md={3} className="bg-dark text-white p-4">
+                    <Col md={2} >
                         <h2>Navigation</h2>
                         <Nav className="flex-column">
-                            <Nav.Link href="/dashboard" className="text-white">Dashboard</Nav.Link>
-                            <Nav.Link href="/jobs" className="text-white">Jobs</Nav.Link>
-                            <Nav.Link href="/users" className="text-white">Users</Nav.Link>
+                            <Nav.Link href="/dashboard" className="text-black">Dashboard</Nav.Link>
+                            <Nav.Link href="/jobs" className="text-black">Jobs</Nav.Link>
+                            <Nav.Link href="/users" className="text-black">Users</Nav.Link>
                             
                             <Row>
                                 <Col><Button variant="danger" href="/logout">Logout</Button></Col>
                             </Row>
                         </Nav>
                     </Col>
-                    <Col md={9} className="p-4">
-                        <Navbar bg="dark" variant="dark" expand="lg" className="mb-3">
-                            
-                        </Navbar>
+                    <Col md={10} className="p-4">
+                        
                         <JobCard
                             title="Software Engineer"
                             company="Tech Corp"
