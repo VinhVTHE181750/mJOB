@@ -12,7 +12,7 @@ const useCommentsQuery = (id) => {
     const fetchComments = async () => {
       try {
         // call /forum/comments and add commentId to body
-        const url = `${API_URL}/forum/comments?postId=${id}`;
+        const url = `${API_URL}/forum/comments/${id}`;
         const response = await axios.get(url);
         setComments(response.data);
         setLoading(false);

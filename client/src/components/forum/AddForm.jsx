@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import usePostInsert from "../../hooks/forum/posts/usePostInsert";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { BsExclamation } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import useCategories from "../../hooks/forum/categories/useCategories";
-import { FaExclamation } from "react-icons/fa6";
-import { BsExclamation } from "react-icons/bs";
+import usePostInsert from "../../hooks/forum/posts/usePostInsert";
 import Tag from "./micro/Tag";
 
 const AddForm = () => {
@@ -22,14 +21,7 @@ const AddForm = () => {
 
   const handleSubmit = async (event, status) => {
     event.preventDefault();
-    const result = await insertPost(
-      title,
-      content,
-      userId,
-      status,
-      category,
-      tags
-    );
+    const result = await insertPost(title, content, userId, status, category, tags);
 
     if (result) {
       navigate("/forum");
@@ -70,7 +62,7 @@ const AddForm = () => {
   };
 
   return (
-    <Container style={{ minHeight: "100vh" }}>
+    <>
       <Row>
         <h1 className="text-center">Create a Post</h1>
       </Row>
@@ -85,7 +77,10 @@ const AddForm = () => {
               >
                 <option value="">Select Category</option>
                 {categories.map((category) => (
-                  <option key={category.id} value={category.name}>
+                  <option
+                    key={category.id}
+                    value={category.name}
+                  >
                     {category.name}
                   </option>
                 ))}
@@ -105,7 +100,10 @@ const AddForm = () => {
           </Col>
         </Row>
         <Row className="mb-3">
-          <Col sm={6} md={3}>
+          <Col
+            sm={6}
+            md={3}
+          >
             <Form.Group controlId="tagsInput">
               {/* <Form.Label>Tags</Form.Label> */}
               <Form.Control
@@ -117,7 +115,10 @@ const AddForm = () => {
               />
             </Form.Group>
           </Col>
-          <Col sm={6} md={9}>
+          <Col
+            sm={6}
+            md={9}
+          >
             <div className="d-flex flex-wrap gap-2">
               {tagsList.map((tag, index) => (
                 <Tag
@@ -158,19 +159,24 @@ const AddForm = () => {
             )}
           </p>
         </Row>
-        <Row className="d-flex gap-2">
-          <Button
-            variant="primary"
-            onClick={(e) => handleSubmit(e, "PUBLISHED")}
-          >
-            Submit
-          </Button>
-          <Button variant="secondary" onClick={(e) => handleSubmit(e, "DRAFT")}>
-            Save as Draft
-          </Button>
+        <Row className="row-submit">
+          <div className="d-flex justify-content-center gap-2">
+            <Button
+              variant="secondary"
+              onClick={(e) => handleSubmit(e, "DRAFT")}
+            >
+              Save as draft{" "}
+            </Button>
+            <Button
+              variant="primary"
+              onClick={(e) => handleSubmit(e, "PUBLISHED")}
+            >
+              Submit
+            </Button>
+          </div>
         </Row>
       </Form>
-    </Container>
+    </>
   );
 };
 
