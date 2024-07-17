@@ -78,9 +78,9 @@ const UserCard = ({ id, name, email, role, registered, onEdit, onDelete }) => (
         <Card.Body>
             <Card.Title>{name}</Card.Title>
             <Card.Text className="text-muted">
-                Email: {email} | Role: {role} | Registered: {registered}
+                Email: {email} | Role: {role} 
             </Card.Text>
-            <Card.Text>Additional information...</Card.Text>
+            <Card.Text className="text-muted">Registered: {registered}</Card.Text>
             <div className="d-flex justify-content-end">
                 <Button variant="primary" className="mr-2" onClick={() => onEdit(id)}>
                     Detail
