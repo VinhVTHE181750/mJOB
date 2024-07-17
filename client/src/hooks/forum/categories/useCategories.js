@@ -1,19 +1,18 @@
-import axios from "axios";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
+import http from "../../../functions/httpService";
 
-const API_URL = "http://localhost:8000/api";
+
 
 const useCategories = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [category, setCategory] = useState({});
-
+  
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const url = `${API_URL}/forum/categories`;
-        const response = await axios.get(url);
+        const url = `/forum/categories`;
+        const response = await http.get(url);
         setLoading(false);
         setCategories(response.data);
       } catch (error) {
@@ -26,8 +25,8 @@ const useCategories = () => {
 
   const getCategory = async (id) => {
     try {
-      const url = `${API_URL}/forum/categories/${id}`;
-      const response = await axios.get(url);
+      const url = `/forum/categories/${id}`;
+      const response = await http.get(url);
       return response.data;
     } catch (error) {
       setError(error);

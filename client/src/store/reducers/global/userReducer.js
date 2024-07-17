@@ -1,6 +1,4 @@
-import axios from "axios";
-import {API_URL} from "../..";
-
+import http from "../../../functions/httpService";
 
 // Default states
 const initialState = {
@@ -109,8 +107,8 @@ export const fetchUserFailure = (error) => ({
 export const fetchUsers = () => {
   return (dispatch) => {
     dispatch(fetchUsersRequest());
-    axios
-      .get(`${API_URL}/forum/users`)
+    http
+      .get(`/forum/users`)
       .then((response) => dispatch(fetchUsersSuccess(response.data)))
       .catch((error) => dispatch(fetchUsersFailure(error.message)));
   };
@@ -119,8 +117,8 @@ export const fetchUsers = () => {
 export const fetchUser = (userId) => {
   return (dispatch) => {
     dispatch(fetchUserRequest());
-    axios
-      .get(`${API_URL}/forum/users/${userId}`)
+    http
+      .get(`/forum/users/${userId}`)
       .then((response) => dispatch(fetchUserSuccess(response.data)))
       .catch((error) => dispatch(fetchUserFailure(error.message)));
   };
@@ -130,8 +128,8 @@ export const fetchUser = (userId) => {
 // export const createUser = (user) => {
 //   return (dispatch) => {
 //     dispatch(createUserRequest());
-//     axios
-//       .post(`${API_URL}/forum/users`, user)
+//     http
+//       .post(`/forum/users`, user)
 //       .then((response) => dispatch(createUserSuccess(response.data)))
 //       .catch((error) => dispatch(createUserFailure(error.message)));
 //   };
@@ -141,8 +139,8 @@ export const fetchUser = (userId) => {
 // export const updateUser = (user) => {
 //   return (dispatch) => {
 //     dispatch(updateUserRequest());
-//     axios
-//       .put(`${API_URL}/forum/users`, user)
+//     http
+//       .put(`/forum/users`, user)
 //       .then((response) => dispatch(updateUserSuccess(response.data)))
 //       .catch((error) => dispatch(updateUserFailure(error.message)));
 //   };
@@ -152,8 +150,8 @@ export const fetchUser = (userId) => {
 // export const deleteUser = (id) => {
 //   return (dispatch) => {
 //     dispatch(deleteUserRequest());
-//     axios
-//       .delete(`${API_URL}/forum/users/${id}`)
+//     http
+//       .delete(`/forum/users/${id}`)
 //       .then((response) => dispatch(deleteUserSuccess(response.data))) // Assuming you have a deleteUserSuccess action
 //       .catch((error) => dispatch(deleteUserFailure(error.message)));
 //   };

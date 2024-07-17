@@ -1,8 +1,8 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
-import {useParams} from 'react-router-dom';
 import backgroundImg from '../../assets/img/apply.jpg';
+import http from '../../functions/httpService';
 
 const PageContainer = styled.div`
   background-image: url(${backgroundImg});
@@ -114,7 +114,7 @@ const ApplyJob = () => {
   useEffect(() => {
     const fetchRequirements = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/jobs/job-requirements/${job_id}`);
+        const response = await http.get(`/job-requirements/${job_id}`);
         setRequirements(response.data);
       } catch (error) {
         console.error('Error fetching job requirements:', error);
@@ -127,7 +127,7 @@ const ApplyJob = () => {
   const handleApply = async () => {
     try {
       const job_requirement_data = JSON.stringify(requirements);
-      await axios.post('http://localhost:8000/api/jobs/apply-job', {
+      await http.post('/apply-job', {
         job_id,
         user_id,
         job_requirement_data,
@@ -148,7 +148,7 @@ const ApplyJob = () => {
           <RequirementList>
             {requirements.map((req) => {
               const fileDetails = JSON.parse(req.job_requirement);
-              const downloadUrl = `http://localhost:8000/api/jobs/download/${fileDetails.file_name}`;
+              const downloadUrl = `/download/${fileDetails.file_name}`;
               return (
                 <RequirementItem key={req.requirement_id}>
                   <FileName>{fileDetails.file_name}</FileName>

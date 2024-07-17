@@ -21,7 +21,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchWorkExperience = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/workexp/user/${userId}`);
+        const response = await http.get(`http://localhost:8000/api/workexp/user/${userId}`);
         // console.log("Response:", response);
         const workExperience = response.data;
 
@@ -44,7 +44,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/profile/${userId}`);
+        const response = await http.get(`http://localhost:8000/api/profile/${userId}`);
         setProfile(response.data);
       } catch (error) {
         console.error("There was an error fetching the profile data!", error);
