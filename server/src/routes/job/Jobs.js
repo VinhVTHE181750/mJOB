@@ -14,6 +14,7 @@ const Application = require("../../models/job/Application");
 router.use(fileUpload());
 
 router.post("/", async (req, res) => {
+  // log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;
     if (!req.userId) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -31,20 +32,20 @@ router.post("/", async (req, res) => {
   }
 
   const {
-    job_title,
-    job_work_location,
-    job_tags,
-    job_max_applications,
-    job_approval_method,
-    job_description,
-    job_contact_info,
-    job_start_date,
-    job_end_date,
-    job_number_of_recruits,
-    job_requirements, 
+    job_title, // str
+    job_work_location, // str
+    job_tags, // str,str,str
+    job_max_applications, // int
+    job_approval_method, // boolean
+    job_description, // str
+    job_contact_info, // str
+    job_start_date, // date
+    job_end_date, // date
+    job_number_of_recruits, // str
+    job_requirements, // str;str;str
     // Nhớ xử lí requirements dưới dạng mảng
-    job_compensation_type,
-    job_compensation_amounts,
+    job_compensation_type, // ONCE, HOURLY, DAILY, WEEKLY, MONTHLY, PERCENTAGE
+    job_compensation_amounts, // int
     job_compensation_currencies,
     job_compensation_periods, // -> bỏ, dùng luôn compensation_type
     // đã có ONCE, HOURLY, DAILY, WEEKLY, MONTHLY, PERCENTAGE
@@ -52,6 +53,15 @@ router.post("/", async (req, res) => {
     status, // Thêm dòng này vào client, hoặc để nó mặc định là ACTIVE
     // Xem chi tiết tại file models/job/Job.js dòng 86 - 99
   } = req.body;
+
+  if(job_title === undefined || job_title === null || job_title === "") {
+    return res.status(400).json({ message: "Job title is required" });
+  }
+
+  if(job_work_location === undefined || job_work_location === null || job_work_location === "") {
+    return res.status(400).json({ message: "Job work location is required" });
+  }
+
   const newJob = new Job({
     title: job_title,
     description: job_description,

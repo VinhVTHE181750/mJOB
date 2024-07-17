@@ -87,7 +87,7 @@ Job.init(
       allowNull: true,
     },
     salaryCurrency: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM("USD", "VND", "JPY", "EUR", "GBP"),
       allowNull: true,
     },
     // Job status:
