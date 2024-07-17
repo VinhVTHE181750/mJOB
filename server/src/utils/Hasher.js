@@ -14,7 +14,7 @@ const crypto = require("crypto");
  * @example
  * const { getHash } = require("./Hasher");
  * const hash = await getHash("password", "salt");
- * console.log(hash);
+ * // console.log(hash);
  */
 function getHash(string, salt, digest, iterations, keylen) {
   return new Promise((resolve, reject) => {

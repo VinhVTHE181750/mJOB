@@ -1,7 +1,10 @@
-name: Client Deploy
+name: Build ReactJS Client
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 

@@ -30,7 +30,7 @@ function MyComponent() {
               Homepage
             </Button>
           </Col>
-          <Col md={5} className="mt-3 mt-md-0">
+          <Col md={5} >
             <Button variant="success" className="w-100 py-4 text-4xl">
               Go to Help page
             </Button>

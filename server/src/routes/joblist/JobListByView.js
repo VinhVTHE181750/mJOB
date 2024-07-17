@@ -38,7 +38,7 @@ router.get("/api/joblist/byView", async (req, res) => {
       const result = await pool.request().query(SELECT_JOBLIST_CONTENT_BY_VIEW);
       res.json(result.recordset);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({ message: "Error occurred", error: err });
     }
   });

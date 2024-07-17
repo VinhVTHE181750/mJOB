@@ -5,7 +5,6 @@ import { AuthContext } from "../../context/AuthContext";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 
 const Login = () => {
-  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -21,7 +20,7 @@ const Login = () => {
 
   useEffect(() => {
     if (loggedIn) {
-      navigate("/home");
+      navigate("/to-login");
     }
   }, [loggedIn, navigate]);
 
@@ -57,7 +56,11 @@ const Login = () => {
                   />
                 </Form.Group>
 
-                <Button variant="primary" type="submit" className="mt-2">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="mt-2"
+                >
                   Login
                 </Button>
               </Form>
@@ -67,8 +70,15 @@ const Login = () => {
       ) : (
         <Container>
           <h2>You are already logged in</h2>
-          <NavigateButton path="/home" text="Go to Homepage" />
-          <NavigateButton path="/logout" text="Logout" variant="danger" />
+          <NavigateButton
+            path="/home"
+            text="Go to Homepage"
+          />
+          <NavigateButton
+            path="/logout"
+            text="Logout"
+            variant="danger"
+          />
         </Container>
       )}
     </>

@@ -52,7 +52,7 @@ const AddForm = () => {
 
   // const handleTagSubmit = (e) => {
   //   e.preventDefault();
-  //   // console.log("submit");
+  //   // // console.log("submit");
   //   const inputValue = e.target.value;
   //   let newTag = inputValue.trim();
   //   if(newTag.startsWith('#')) newTag = newTag.slice(1);
@@ -111,7 +111,7 @@ const AddForm = () => {
               <Form.Control
                 type="text"
                 value={tagsInput}
-                placeholder="Tags"
+                placeholder="#tag... (press space to add)"
                 onChange={handleTagsInputChange}
                 // onSubmit={handleTagSubmit}
               />

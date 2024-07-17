@@ -7,17 +7,7 @@ import Tag from "./micro/Tag";
 import { ForumContext } from "../../context/ForumContext";
 
 const PostSearch = () => {
-  const {
-    searchTerms,
-    removeTag,
-    addTag,
-    setUser,
-    unsetUser,
-    setTitle,
-    setContent,
-    setCategory,
-    clearSearchTerms,
-  } = useContext(ForumContext);
+  const { searchTerms, removeTag, addTag, setUser, unsetUser, setTitle, setContent, setCategory, clearSearchTerms } = useContext(ForumContext);
   const searchTags = searchTerms.tags;
   const category = searchTerms.category;
   const user = searchTerms.username;
@@ -101,7 +91,8 @@ const PostSearch = () => {
       </Row>
       <Row className="mx-auto mt-1 me-auto">
         {/* {category && <Tag key="category" tag={category.name} close={true} />} */}
-        {user && <Tag key="user" tag={user} close={true} handler={unsetUser} />}
+        {user && <span>by: {user}</span>}
+        {category.name && <span>in: {category.name}</span>}
         {searchTags.map((tag) => (
           <Tag
             key={tag}
