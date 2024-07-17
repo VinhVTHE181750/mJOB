@@ -5,11 +5,12 @@ import { BsArrowLeft } from "react-icons/bs";
 import "../../assets/css/EnlistJob.css";
 import NavigateButton from "../../components/ui/buttons/NavigateButton.jsx";
 import useJobInsert from "../../hooks/useJobInsert.js";
+import { useNavigate } from "react-router";
 
 const EnlistJob = () => {
   const [additionalRequirements, setAdditionalRequirements] = useState([]);
   const { insertJob, loading, error, success } = useJobInsert();
-
+  const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     job_title: "",
     job_work_location: "",
@@ -61,13 +62,23 @@ const EnlistJob = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
     const jobRequirements = additionalRequirements.join(";"); // Join requirements with a newline as delimiter
     const jobData = {
       ...formValues,
       job_requirements: jobRequirements,
     };
-    insertJob(jobData);
+    try {
+      await insertJob(jobData);
+      // Navigate only if insertion is successful
+      if (success) {
+        navigate("/myjobs");
+      }
+    } catch (error) {
+      console.error("Error inserting job:", error);
+      // Handle error state here, e.g., showing an error message to the user
+    }
   };
 
   /* 
@@ -165,8 +176,8 @@ const EnlistJob = () => {
                 value={formValues.job_approval_method}
                 onChange={handleChange}
               >
-                <option>Auto</option>
-                <option>Manual</option>
+                <option value={true}>Auto</option>
+                <option value={false}>Manual</option>
               </Form.Control>
             </Form.Group>
           </Col>
@@ -215,7 +226,7 @@ const EnlistJob = () => {
         <Col>
           <Row>
             <Form.Group controlId="CV">
-              <Form.Label className="header3">Document: CV</Form.Label>
+              <Form.Label className="header3">Click to add a requirement</Form.Label>
             </Form.Group>
             <Col>
               <Button
@@ -262,9 +273,14 @@ const EnlistJob = () => {
                 value={formValues.job_compensation_type}
                 onChange={handleChange}
               >
-                <option>One-time</option>
-                <option>Periodically</option>
-                <option>Other</option>
+                <option value="AGREEMENT">Agreement</option>
+                <option value="NONE">None</option>
+                <option value="ONCE">None</option>
+                <option value="HOURLY">Hourly</option>
+                <option value="DAILY">Daily</option>
+                <option value="WEEKLY">Weekly</option>
+                <option value="MONTHLY">Monthly</option>
+                <option value="PERCENTAGE">Percentage</option>
               </Form.Control>
             </Form.Group>
           </Col>
@@ -334,7 +350,7 @@ const EnlistJob = () => {
             onClick={handleSubmit}
             disabled={loading}
           >
-            {loading ? "Enlisting..." : "Enlist"}
+            {loading ? "Creating..." : "Create"}
           </Button>
           <Button
             variant="info"

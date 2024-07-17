@@ -13,7 +13,7 @@ const useJobInsert = () => {
     try {
       // Replace the URL with your actual API endpoint
       const response = await http.post("/jobs", jobData);
-      if (response.status === 200) {
+      if (response.status === 201) {
         setSuccess(true);
       } else {
         setError("An error occurred while inserting the job.");
