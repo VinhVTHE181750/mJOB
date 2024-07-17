@@ -24,10 +24,6 @@ PublicChatMetric.init(
             type: DataTypes.INTEGER,
             defaultValue: 0,
         },
-        users: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-        },
     },
     {
         sequelize
