@@ -10,7 +10,7 @@ const useUserTotalCurrentAppliedJob = (userId) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  console.log('User:' + userId);
+  // console.log('User:' + userId);
   
   useEffect(() => {
     const fetchCompletedJobsCount = async () => {

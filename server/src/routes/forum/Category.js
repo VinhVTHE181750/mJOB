@@ -3,6 +3,7 @@ const PostCategory = require("../../models/forum/post/PostCategory");
 const { isHexColor } = require("../../validators/NumberValidator");
 const { JwtMiddleware } = require("../../utils/JWT");
 const router = express.Router();
+const io = require("../../../io");
 
 const getCategories = async (req, res) => {
   try {
@@ -55,9 +56,10 @@ const insertCategory = async (req, res) => {
       bgColor,
       enabled,
     });
-    res.status(200).json(category);
+    io.getIo().emit("forum/categories");
+    return res.status(200).json(category);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 };
 
@@ -81,9 +83,10 @@ const putCategory = async (req, res) => {
       fgColor = category.fgColor;
     }
     await category.update({ name, bgColor, fgColor, enabled });
-    res.status(200).json(category);
+    io.getIo().emit("forum/categories");
+    return res.status(200).json(category);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 };
 
@@ -98,9 +101,10 @@ const deleteCategory = async (req, res) => {
       return;
     }
     await category.destroy();
-    res.status(200).json({ message: "Category deleted." });
+    io.getIo().emit("forum/categories");
+    return res.status(200).json({ message: "Category deleted." });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 };
 

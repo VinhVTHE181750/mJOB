@@ -34,7 +34,7 @@ const PostCard = ({ post, onClick, category }) => {
 
   useEffect(() => {
     setLikesDelta(post.likes - post.dislikes);
-    // console.log(likes, dislikes);
+    // // console.log(likes, dislikes);
   }, [post]);
 
   return (

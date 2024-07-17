@@ -6,15 +6,18 @@ const useLikesUpdate = () => {
   const [error, setError] = useState(null);
 
   const updateLikes = async (type, id, like) => {
+    setLoading(true); // Explicitly set loading to true at the start of the operation
     try {
       const url = `/forum/likes`;
       await http.post(url, {
-        type,
-        id,
-        like,
+        type, // post || comment
+        id, // post id or comment id
+        like, // true for like, false for dislike
+      }).then((res) => {
+        // console.log(res.data);
+        setLoading(false);
       });
 
-      setLoading(false);
     } catch (error) {
       setError(error);
       setLoading(false);

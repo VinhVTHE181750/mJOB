@@ -25,7 +25,7 @@ const useInsertPaymentHistory = () => {
         userId: 1
       };
 
-      console.log("Formatted Payment data: ", paymentData);
+      // console.log("Formatted Payment data: ", paymentData);
 
       const response = await axios.post(`${API_URL}/payment/insert-payment-history`, paymentData);
       setSuccess(true);

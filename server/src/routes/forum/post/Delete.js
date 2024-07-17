@@ -1,6 +1,7 @@
 const Post = require("../../../models/forum/post/Post");
 const PostHistory = require("../../../models/forum/post/PostHistory");
 const { log } = require("../../../utils/Logger");
+const io = require("../../../../io");
 
 const deleteById = async (req, res) => {
   if (!req.userId) {
@@ -38,6 +39,8 @@ const deleteById = async (req, res) => {
       }),
       await post.destroy(),
     ]);
+    io.getIo().emit("forum/posts");
+    io.getIo().emit(`forum/post/${post.id}`);
     return res.status(200).json({ message: "Post deleted" });
   } catch (err) {
     log(err, "ERROR", "FORUM");

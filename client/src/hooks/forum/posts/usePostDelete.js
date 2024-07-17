@@ -14,7 +14,7 @@ const usePostDelete = () => {
       setLoading(false);
       return response.data;
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       setLoading(false);
     }
   };

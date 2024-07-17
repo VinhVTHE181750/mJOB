@@ -9,7 +9,7 @@ const SearchBar = ({ onSearch }) => {
     setQuery(event.target.value);
     onSearch(event.target.value);
   };
-  // console.log(query);
+  // // console.log(query);
 
   return (    
       <input 

@@ -15,7 +15,7 @@ const useTop3Jobs = () => {
       try {
         const url = `${API_URL}/top3jobs`;
         const response = await axios.get(url);
-        console.log("Top 3: ", response.data);
+        // console.log("Top 3: ", response.data);
         setContents(response.data);
         setLoading(false);
       } catch (error) {

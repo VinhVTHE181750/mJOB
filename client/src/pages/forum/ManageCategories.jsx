@@ -15,7 +15,7 @@ const ManageCategories = () => {
   const [visible, setVisible] = useState(false);
 
   const updateCategory = (category) => async () => {
-    // console.log(category);
+    // // console.log(category);
     await http.put(`/forum/categories`, {
       id: category.id,
       name: category.name,
@@ -39,11 +39,11 @@ const ManageCategories = () => {
     if (role === "ADMIN") {
       setVisible(true);
     }
-    console.log(role);
+    // console.log(role);
   }, [role, loading]);
 
   const deleteCategory = (category) => async () => {
-    console.log(category);
+    // console.log(category);
     await axios.delete(`${API_URL}/forum/categories/${category.id}`);
   };
 

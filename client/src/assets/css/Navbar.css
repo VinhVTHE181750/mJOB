@@ -10,37 +10,4 @@
 .nav-link.active {
     font-weight: bold;
     color: #4f75ff; /* You can set this to the color you prefer for the active link */
-    border-bottom: 4px solid black;
-    border-radius: 0px;
 }
-/* .left{
-    float: none;
-    left: 30%;
-}
-.right {
-    float: right;
-  } */
-
-.container-navbar {
-    margin: 0 !important;
-  }
-
-  .link-1 {
-    /* transition: 0.3s ease;
-    background: #3fa46a;
-    color: #ffffff;
-    font-size: 20px;
-    text-decoration: none;
-    border-top: 4px solid #3fa46a;
-    border-bottom: 4px solid #3fa46a;
-    padding: 20px 0;
-    margin: 0 20px; */
-  }
-  .link-1:hover {
-    border-top: 4px solid #ffffff;
-    border-bottom: 4px solid #ffffff;
-    padding: 6px 0; 
-  }
-
-  
-

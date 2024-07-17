@@ -1,12 +1,12 @@
 const { Server } = require("socket.io");
 const { log } = require("./src/utils/Logger");
-const config = require("./config.json").middleware.cors;
+const config = require("./config.json");
 let io;
 
 function getCorsConfig() {
   return {
     cors: {
-      origin: config.origin,
+      origin: config.middleware.cors.origin,
       methods: ["GET", "POST"],
     },
   };
@@ -28,19 +28,19 @@ function init(server) {
 
   const onlineUsers = new Set();
   io.on("connection", (socket) => {
-    // const user = socket.handshake.query.user;
-    // if (user) {
-    //   addUser(onlineUsers, user);
-    // }
+    const user = socket.handshake.query.user;
+    if (user) {
+      addUser(onlineUsers, user);
+    }
 
     socket.on("forumChat", (message) => {
       io.emit("forumChat", message);
     });
 
     socket.on("disconnect", () => {
-      // if (user) {
-      //   removeUser(onlineUsers, user);
-      // }
+      if (user) {
+        removeUser(onlineUsers, user);
+      }
     });
   });
 

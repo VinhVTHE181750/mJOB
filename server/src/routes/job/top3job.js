@@ -11,7 +11,7 @@ router.get("/top3jobs", async (req, res) => {
     const result = await pool.request().query(SELECT_TOP3_JOBS);
     res.json(result.recordset);
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.status(500).json({ message: "Error occurred", error: err });
   }
 });

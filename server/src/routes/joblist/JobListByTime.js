@@ -37,7 +37,7 @@ ORDER BY jl.job_log_time DESC;`;
       const result = await pool.request().query(SELECT_JOBLIST_CONTENT_BY_TIME);
       res.json(result.recordset);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({ message: "Error occurred", error: err });
     }
   });

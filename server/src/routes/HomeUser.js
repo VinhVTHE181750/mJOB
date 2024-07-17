@@ -34,7 +34,7 @@ router.get("/currentjob/:userId", async (req, res) => {
         res.json(result.recordset);
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({ message: "Error occurred", error: err });
     }  
   });
@@ -55,7 +55,7 @@ router.get("/currentjob/:userId", async (req, res) => {
         res.json(result.recordset);
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({ message: "Error occurred", error: err });
     }  
   });
@@ -76,7 +76,7 @@ router.get("/currentjob/:userId", async (req, res) => {
         res.json(result.recordset);
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({ message: "Error occurred", error: err });
     }  
   });

@@ -8,7 +8,7 @@ const path = require('path');
 
 // SQL Server connection pool
 const poolPromise = new sql.ConnectionPool(dbConfig.database).connect().then(pool => {
-  console.log('Connected to SQL Server');
+  // // console.log('Connected to SQL Server');
   return pool;
 }).catch(err => {
   console.error('Database Connection Failed!', err);
