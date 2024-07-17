@@ -12,7 +12,7 @@ return (
         <div className='post-applied'>Related Post</div>
       </div>
       <div className='row align-items-float-end'>
-      <Card className='col-md-4 post-card' style={{ width: '18rem' }}>
+      <Card className='col-md-4 post-card-statistic' style={{ width: '18rem' }}>
         <Card.Img variant="top" src="holder.js/100px180" />
         <Card.Body>
           <Card.Title>Card Title</Card.Title>
@@ -23,7 +23,7 @@ return (
           <Button variant="primary">Go somewhere</Button>
         </Card.Body>
       </Card>
-      <Card className='col-md-4 post-card' style={{ width: '18rem' }}>
+      <Card className='col-md-4 post-card-statistic' style={{ width: '18rem' }}>
         <Card.Img variant="top" src="holder.js/100px180" />
         <Card.Body>
           <Card.Title>Card Title</Card.Title>
@@ -34,7 +34,7 @@ return (
           <Button variant="primary">Go somewhere</Button>
         </Card.Body>
       </Card>
-      <Card className='col-md-4 post-card' style={{ width: '18rem' }}>
+      <Card className='col-md-4 post-card-statistic' style={{ width: '18rem' }}>
         <Card.Img variant="top" src="holder.js/100px180" />
         <Card.Body>
           <Card.Title>Card Title</Card.Title>

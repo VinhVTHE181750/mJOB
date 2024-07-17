@@ -13,11 +13,11 @@ const HomeNavbar = ({ user }) => {
             <Navbar.Collapse id="basic-navbar-nav" style={{ justifyContent: 'space-between',marginLeft: 'auto' }}>
                 <Nav className="mr-auto container container-navbar link-1 left" style={{ justifyContent: 'space-evenly' }}>
                 {/* <div style={{ display: 'flex', justifyContent: 'space-evenly', color: 'black'}}> */}
-                        <Nav.Link href="/home" className={location.pathname === '/' || location.pathname === '/home' ? 'active' : ''}>Home</Nav.Link>
-                        <Nav.Link href="/jobs" className={location.pathname === '/jobs' ? 'active' : ''}>Jobs</Nav.Link>
-                        <Nav.Link href="/forum" className={location.pathname === '/forum' ? 'active' : ''}>Forum</Nav.Link>
-                        <Nav.Link href="/technical" className={location.pathname === '/technical' ? 'active' : ''}>Technical</Nav.Link>
-                        <Nav.Link href="/profile" className={location.pathname === '/profile' ? 'active' : ''}>Profile</Nav.Link>
+                        <Nav.Link href="/home" className={location.pathname === '/' || location.pathname === '/home' ? 'active nav-fixed' : 'nav-fixed'}>Home</Nav.Link>
+                        <Nav.Link href="/jobs" className={location.pathname === '/jobs' ? 'active nav-fixed' : 'nav-fixed'}>Jobs</Nav.Link>
+                        <Nav.Link href="/forum" className={location.pathname === '/forum' ? 'active nav-fixed' : 'nav-fixed'}>Forum</Nav.Link>
+                        <Nav.Link href="/technical" className={location.pathname === '/technical' ? 'active nav-fixed' : 'nav-fixed'}>Technical</Nav.Link>
+                        <Nav.Link href="/profile" className={location.pathname === '/profile' ? 'active nav-fixed' : 'nav-fixed'}>Profile</Nav.Link>
                 {/* </div> */}
                 </Nav>
                 {true ? (

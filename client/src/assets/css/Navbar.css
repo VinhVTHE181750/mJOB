@@ -43,4 +43,6 @@
   }
 
   
-
+.nav-fixed{
+    max-height: 70px;
+}
