@@ -38,9 +38,8 @@ import PageNotFound from "./pages/technical/PageNotFound";
 import EditProfile from "./pages/profile/EditProfile";
 import WorkExperience from "./pages/profile/WorkExperience";
 import Profile from "./pages/profile/Profile";
-import Users from "./pages/home/Users"
-import Settings from "./pages/technical/Settings"
-
+import Users from "./pages/home/Users";
+import Settings from "./pages/technical/Settings";
 
 // Components
 import HomeFooter from "./components/HomeFooter";
@@ -64,6 +63,7 @@ import JobHistory from "./pages/jobs/JobHistory";
 import ToLogin from "./pages/error/ToLogin";
 import PaymentHistory from "./pages/payment/PaymentHistory";
 import Deposit from "./pages/payment/Deposit";
+import ContinuePayment from "./pages/payment/ContinuePayment";
 
 function App() {
   return (
@@ -212,6 +212,12 @@ function App() {
 
                 <Route
                   exact
+                  path="/continue-payment"
+                  element={<ContinuePayment />}
+                />
+
+                <Route
+                  exact
                   path="/payment-history"
                   element={<PaymentHistory />}
                 />
@@ -237,10 +243,22 @@ function App() {
                   path="/workexperience/:userId"
                   element={<WorkExperience />}
                 />
-                
-                <Route exact path="/users" element={<Users />} />
-                <Route exact path="/settings" element={<Settings />} />
-                <Route exact path="/ticket" element={<CreateTicketPage />} />
+
+                <Route
+                  exact
+                  path="/users"
+                  element={<Users />}
+                />
+                <Route
+                  exact
+                  path="/settings"
+                  element={<Settings />}
+                />
+                <Route
+                  exact
+                  path="/ticket"
+                  element={<CreateTicketPage />}
+                />
 
                 {/* TECHNICAL ROUTES */}
                 <Route

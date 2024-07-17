@@ -30,7 +30,7 @@ const Forum = () => {
       />
       <div className="d-flex flex-row-reverse gap-2">
         {role === "GUEST" ? (
-          {}
+          null
         ) : (
           <NavigateButton
             path="/forum/add"
