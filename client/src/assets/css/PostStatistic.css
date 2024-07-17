@@ -24,3 +24,8 @@
 .post-card-statistic{
     margin: 10px 10px 10px 10px;
 }
+
+.selected-type{
+    font-weight: bold;
+    border-bottom: 4px solid #000000;
+}

@@ -21,3 +21,10 @@
     font-size: 22px;
     border-bottom: 4px solid #007bff;
 }
+.selected-type{
+    font-weight: bold;
+    border-bottom: 4px solid #000000;
+}
+.job-card-statistic{
+    margin: 10px 10px 10px 10px;
+}

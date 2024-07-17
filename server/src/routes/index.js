@@ -6,20 +6,16 @@ const jobsRoute = require("./jobs");
 const dashboardRoute = require("./Dashboard");
 const jobListRoute = require("./JobList");
 const marketingRoute = require("./marketing");
-
-
 const dataPostRoute = require("./datapost");
-
-
 const hotJobRoute = require("./job/top3job");
-
-
 const countTotalUser = require("./dashboard/countTotalUser");
 const userRoute = require("./User");
 const profileRoute = require("./Profile");
 const workExperienceRoute = require("./WorkExperience");
 const User = require("../models/user/User");
-const whoami = require("./WhoAmI")
+const whoami = require("./WhoAmI");
+const homeuserRoute = require("./HomeUser");
+
 
 module.exports = function applyRoutes(app) {
   app.use("/api/auth", authRoute);
@@ -36,7 +32,8 @@ module.exports = function applyRoutes(app) {
   app.use("/api/users", userRoute);
   app.use("/api/profile", profileRoute)
   app.use("/api/workexp", workExperienceRoute);
-  app.use("/api/whoami", whoami)
+  app.use("/api/whoami", whoami);
+  app.use("/api/homeuser", homeuserRoute);
   
   // Setup other routes here
 };

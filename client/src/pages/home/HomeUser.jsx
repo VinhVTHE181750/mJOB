@@ -9,7 +9,6 @@ function HomeUser() {
     
     return (
         <>
-            <HomeNavbar />
             <JobsStatistic />
             <PostStatistic />
         </>
