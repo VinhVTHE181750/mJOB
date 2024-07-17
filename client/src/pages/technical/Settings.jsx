@@ -1,8 +1,69 @@
-
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, FormGroup } from 'react-bootstrap';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import useWhoAmI from "../../hooks/user/useWhoAmI";
+
+// Regular expressions for validation
+const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
 const Settings = () => {
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [validNewPassword, setValidNewPassword] = useState(false);
+  const [validConfirmPassword, setValidConfirmPassword] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+  const errRef = useRef();
+  const { userId } = useWhoAmI();
+
+  // Effect to validate new password and confirm password
+  useEffect(() => {
+    setValidNewPassword(REGEX_PASSWORD.test(newPassword));
+    setValidConfirmPassword(newPassword === confirmPassword);
+  }, [newPassword, confirmPassword]);
+
+  // Effect to clear error message on input change
+  useEffect(() => {
+    setErrMsg("");
+  }, [currentPassword, newPassword, confirmPassword]);
+
+  // Add console log to verify userId
+  useEffect(() => {
+    console.log("userId:", userId);
+  }, [userId]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Client-side validation
+    if (!validNewPassword || !validConfirmPassword) {
+      setErrMsg("Invalid Entry");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/api/profile/change-password`,
+        JSON.stringify({ userId, currentPassword, newPassword }),
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
+      );
+      alert("Password changed successfully!");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      if (!err?.response) {
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Invalid password or current password is incorrect");
+      } else {
+        setErrMsg("Password change failed");
+      }
+      errRef.current.focus();
+    }
+  };
+
   return (
     <Container>
       <header>
@@ -10,74 +71,66 @@ const Settings = () => {
           <h1 className="text-black">Settings</h1>
         </div>
       </header>
-      <br></br>
+      <br />
       <Row>
         <Col md={8} className="mx-auto">
           <Card className="mb-4">
             <Card.Body>
               <Card.Title className="text-center">Change Password</Card.Title>
-              
-              <Form>
-                <Form.Group controlId="currentPassword" className="mb-3">
+              <Form onSubmit={handleSubmit}>
+                <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
+                  {errMsg}
+                </p>
+                <FormGroup controlId="currentPassword" className="mb-3" style={{ display: 'none' }}>
+                  <Form.Label>User ID:</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Enter current password"
+                    value={userId}
+                    readOnly
+                    required
+                  />
+                </FormGroup>
+                <FormGroup controlId="currentPassword" className="mb-3">
                   <Form.Label>Current Password:</Form.Label>
-                  <Form.Control type="password" placeholder="Enter current password" />
-                </Form.Group>
-                <Form.Group controlId="newPassword" className="mb-3">
+                  <Form.Control
+                    type="password"
+                    placeholder="Enter current password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
+                  />
+                </FormGroup>
+                <FormGroup controlId="newPassword" className="mb-3">
                   <Form.Label>New Password:</Form.Label>
-                  <Form.Control type="password" placeholder="Enter new password" />
-                </Form.Group>
-                <Form.Group controlId="confirmPassword" className="mb-3">
+                  <Form.Control
+                    type="password"
+                    placeholder="Enter new password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    isInvalid={!validNewPassword}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Invalid password. Must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number.
+                  </Form.Control.Feedback>
+                </FormGroup>
+                <FormGroup controlId="confirmPassword" className="mb-3">
                   <Form.Label>Confirm New Password:</Form.Label>
-                  <Form.Control type="password" placeholder="Confirm new password" />
-                </Form.Group>
-                <Button  type="submit">
+                  <Form.Control
+                    type="password"
+                    placeholder="Confirm new password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    isInvalid={!validConfirmPassword}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Passwords do not match.
+                  </Form.Control.Feedback>
+                </FormGroup>
+                <Button type="submit" disabled={!validNewPassword || !validConfirmPassword}>
                   Save
-                </Button>
-              </Form>
-            </Card.Body>
-          </Card>
-
-          <Card className="mb-4">
-            <Card.Body>
-              <Card.Title className="text-center" >Preferences</Card.Title>
-              <Form>
-                <Form.Group controlId="language" className="mb-3">
-                  <Form.Label>Language:</Form.Label>
-                  <Form.Control as="select">
-                    <option value="english">English</option>
-                    <option value="vietnamese">Vietnamese</option>
-                  </Form.Control>
-                </Form.Group>
-                <Form.Group controlId="notification" className="mb-3">
-                  <Form.Label>Notification Preferences:</Form.Label>
-                  <Form.Control as="select">
-                    <option value="all">All Notifications</option>
-                    <option value="email">Email Only</option>
-                    <option value="sms">SMS Only</option>
-                    <option value="none">None</option>
-                  </Form.Control>
-                </Form.Group>
-                <Button  type="submit">
-                  Save 
-                </Button>
-              </Form>
-            </Card.Body>
-          </Card>
-
-          <Card className="mb-4">
-            <Card.Body>
-              <Card.Title className="text-center">Theme</Card.Title>
-              <Form>
-                <Form.Group controlId="theme" className="mb-3">
-                  <Form.Label>Theme:</Form.Label>
-                  <Form.Control as="select">
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                    
-                  </Form.Control>
-                </Form.Group>
-                <Button  type="submit">
-                  Save 
                 </Button>
               </Form>
             </Card.Body>
