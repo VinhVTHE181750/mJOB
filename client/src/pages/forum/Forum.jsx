@@ -1,4 +1,4 @@
-import { Container } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import ListPost from "../../components/forum/ListPost";
 import PostSearch from "../../components/forum/PostSearch";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
@@ -14,46 +14,45 @@ const Forum = () => {
   const addSearchTag = (tag) => {
     if (!tags.includes(tag)) {
       setTags([...tags, tag]);
-      console.log("added " + tag);
     }
   };
   const removeSearchTag = (tag) => {
     setTags(tags.filter((t) => t !== tag));
-    console.log("removed " + tag);
   };
   return (
-    <Container className="d-none d-sm-block">
-      <h1>Forum</h1>
+    <Container className="">
+      <h1>
+        {/* <span className="text-logo">m</span>/<span className="text-highlight-1">Forum</span> */}
+      </h1>
       <PostSearch
         tagHandler={removeSearchTag}
         tags={tags}
       />
-      <div className="d-flex flex-row-reverse gap-2">
-        {role === "GUEST" ? (
-          null
-        ) : (
-          <NavigateButton
-            path="/forum/add"
-            variant="success"
-          >
-            <div className="d-flex align-items-center justify-content-center gap-1">
-              <FaPlusCircle /> Add Post
-            </div>
-          </NavigateButton>
-        )}
+      <div className="d-flex justify-content-center align-items-center mt-2">
+        <div className="d-flex flex-row-reverse gap-2">
+          {role === "GUEST" ? null : (
+            <NavigateButton
+              path="/forum/add"
+              variant="success"
+            >
+              <div className="d-flex align-items-center justify-content-center gap-1">
+                <FaPlusCircle /> <span className="d-none d-sm-block">Add Post</span>
+              </div>
+            </NavigateButton>
+          )}
 
-        {role === "ADMIN" && (
-          <NavigateButton
-            path="/forum/categories"
-            variant="primary"
-          >
-            <div className="d-flex align-items-center justify-content-center gap-1">
-              <FaGear /> Manage Categories
-            </div>
-          </NavigateButton>
-        )}
+          {role === "ADMIN" && (
+            <NavigateButton
+              path="/forum/categories"
+              variant="primary"
+            >
+              <div className="d-flex align-items-center justify-content-center gap-1">
+                <FaGear /> Manage Categories
+              </div>
+            </NavigateButton>
+          )}
+        </div>
       </div>
-
       <ListPost tagHandler={addSearchTag} />
       {/* <ChatBox user={"user1"} /> */}
     </Container>

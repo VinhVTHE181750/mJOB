@@ -40,7 +40,7 @@ router.get("/api/joblist", async (req, res) => {
       const result = await pool.request().query(SELECT_JOBLIST_CONTENT);
       res.json(result.recordset);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({ message: "Error occurred", error: err });
     }
   });

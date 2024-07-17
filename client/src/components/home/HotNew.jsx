@@ -14,7 +14,7 @@ function HotNew() {
     return <div>Error: {error.message}</div>;
   }
 
-  console.log(contents);
+  // console.log(contents);
 
   return (
     <div className='hot-news container'>

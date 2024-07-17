@@ -3,7 +3,7 @@ const PostCategory = require("../../../models/forum/post/PostCategory");
 // const User = require("../../../models/user/User");
 const PostHistory = require("../../../models/forum/post/PostHistory");
 const { log } = require("../../../utils/Logger");
-// const { getIo } = require("../../../../io");
+const io = require("../../../../io");
 const PostMetric = require("../../../models/forum/metric/PostMetric");
 
 const put = async (req, res) => {

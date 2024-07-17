@@ -17,7 +17,7 @@ const WorkExperience = () => {
     const fetchWorkExperience = async () => {
       try {
         const response = await axios.get(`http://localhost:8000/api/workexp/user/${userId}`);
-        console.log("Response:", response);
+        // console.log("Response:", response);
         const workExperience = response.data;
 
         // Update state with fetched data

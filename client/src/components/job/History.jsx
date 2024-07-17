@@ -87,8 +87,8 @@ function History() {
     return <div>Error: {initialError?.message || statusError?.message || jobListError?.message}</div>;
   }
 
-  console.log('data: ', jobListByStatus);
-  console.log('data filteredJobList: ', filteredJobList);
+  // console.log('data: ', jobListByStatus);
+  // console.log('data filteredJobList: ', filteredJobList);
 
   return (
     <div className="history">

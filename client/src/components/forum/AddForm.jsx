@@ -52,7 +52,7 @@ const AddForm = () => {
 
   // const handleTagSubmit = (e) => {
   //   e.preventDefault();
-  //   // console.log("submit");
+  //   // // console.log("submit");
   //   const inputValue = e.target.value;
   //   let newTag = inputValue.trim();
   //   if(newTag.startsWith('#')) newTag = newTag.slice(1);

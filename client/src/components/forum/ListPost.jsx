@@ -27,7 +27,11 @@ const ListPost = () => {
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => {
+    // move to top
+    // window.scrollTo(0, 0);
+    setCurrentPage(pageNumber);
+  };
 
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(posts.length / postsPerPage); i++) {
@@ -39,18 +43,16 @@ const ListPost = () => {
   //   setPostsPerPage(e.target.value);
   // };
 
-  if (!posts) return <Skeleton count={4} height={200} />;
+  if (!posts)
+    return (
+      <Skeleton
+        count={4}
+        height={200}
+      />
+    );
 
   return (
     <div>
-      {currentPosts.map((post) => (
-        <PostCard
-          key={post.id}
-          post={post}
-          onClick={() => navigate(`/posts/${post.id}`)}
-          category={categoryOf(post.id)}
-        />
-      ))}
       <Pagination className="justify-content-center mt-2">
         {pageNumbers.map((number) => (
           <Pagination.Item
@@ -63,6 +65,16 @@ const ListPost = () => {
           </Pagination.Item>
         ))}
       </Pagination>
+
+      {currentPosts.map((post) => (
+        <PostCard
+          key={post.id}
+          post={post}
+          onClick={() => navigate(`/posts/${post.id}`)}
+          category={categoryOf(post.id)}
+        />
+      ))}
+
       {/* <Form>
         <Form.Group controlId="postsPerPage">
           <Form.Label>Posts per page</Form.Label>
@@ -76,11 +88,22 @@ const ListPost = () => {
         </Form.Group>
       </Form> */}
       <p>
-        Showing {indexOfFirstPost + 1} - {indexOfLastPost} ({postsPerPage}) of{" "}
-        {posts.length} posts.
+        Showing {indexOfFirstPost + 1} - {indexOfLastPost > posts.length ? posts.length : indexOfLastPost} of {posts.length} posts.
         {/* Current page {currentPage} of{" "}
         {Math.ceil(posts.length / postsPerPage)}. */}
       </p>
+      <Pagination className="justify-content-center mt-2">
+        {pageNumbers.map((number) => (
+          <Pagination.Item
+            className="px-0"
+            key={number}
+            onClick={() => paginate(number)}
+            active={number === currentPage}
+          >
+            {number}
+          </Pagination.Item>
+        ))}
+      </Pagination>
     </div>
   );
 };

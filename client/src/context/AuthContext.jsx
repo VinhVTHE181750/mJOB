@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
   });
 
   // useEffect(() => {
-  //   // console.log(loggedIn)
+  //   // // console.log(loggedIn)
   //   console.table(cookie);
   // }, [loggedIn]);
 

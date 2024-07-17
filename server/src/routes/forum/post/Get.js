@@ -150,7 +150,7 @@ const getPostById = async (req, res) => {
     return res.status(404).json({ message: "Post not found" });
   } catch (err) {
     log(err, "ERROR", "FORUM");
-    console.log(err);
+    // console.log(err);
     res.status(500).json({ message: "Unexpected error while fetching this post" });
   }
 };
