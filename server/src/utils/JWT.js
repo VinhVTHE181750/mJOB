@@ -6,7 +6,7 @@ const JwtMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
 
   if (token) {
-    const decoded = jwt.verify(token, config.jwt.secret);
+    const decoded = verifyToken(token);
     req.userId = decoded.id;
     req.role = decoded.role;
   }
