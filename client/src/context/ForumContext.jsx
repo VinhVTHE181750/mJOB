@@ -10,6 +10,7 @@ const ForumContext = createContext({});
 const ForumProvider = ({ children }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
+  const error = useSelector((state) => state.posts.error);
   const categories = useSelector((state) => state.postCategories.categories);
 
   // if possible, implement username mentions
@@ -131,10 +132,9 @@ const ForumProvider = ({ children }) => {
   };
 
   const categoryOf = (postId) => {
-    return categories.find(
-      (category) =>
-        category.id === posts.find((post) => post.id === postId).PostCategoryId
-    );
+    const post = posts.find((post) => post.id === postId);
+    if (!post) return {};
+    return categories.find((category) => category.id === post.PostCategoryId);
   };
 
   const clearSearchTerms = () => {
@@ -167,6 +167,7 @@ const ForumProvider = ({ children }) => {
         unsetCategory,
         sortOption,
         setSortOption,
+        error
       }}
     >
       {children}

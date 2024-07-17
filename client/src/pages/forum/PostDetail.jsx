@@ -3,6 +3,7 @@ import "../../assets/css/Forum.css";
 import NavigateButton from "../../components/ui/buttons/NavigateButton.jsx";
 import Post from "../../components/forum/Post.jsx";
 import {Container} from "react-bootstrap";
+import { BsArrowLeft } from "react-icons/bs";
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -11,9 +12,10 @@ const PostDetail = () => {
     <div className="forum-body">
       <NavigateButton
         path="/forum"
-        text="Back to Forum"
+        text="Back"
         variant="primary"
         className="mb-2"
+        icon={<BsArrowLeft />}
       />
       <Post id={id} />
       <Container className="mt-5 border">

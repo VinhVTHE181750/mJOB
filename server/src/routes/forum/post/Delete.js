@@ -40,6 +40,7 @@ const deleteById = async (req, res) => {
       await post.destroy(),
     ]);
     io.getIo().emit("forum/posts");
+    io.getIo().emit(`forum/post/${post.id}`);
     return res.status(200).json({ message: "Post deleted" });
   } catch (err) {
     log(err, "ERROR", "FORUM");

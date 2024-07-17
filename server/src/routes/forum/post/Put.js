@@ -105,6 +105,7 @@ const put = async (req, res) => {
     // const io = getIo();
     // io.emit("posts", { action: "UPDATE", post });
     io.getIo().emit("forum/posts");
+    io.getIo().emit(`forum/post/${post.id}`);
     return res.status(200).json(post);
   } catch (err) {
     log(err, "ERROR", "FORUM");

@@ -1,18 +1,18 @@
 // import usePostsQuery from "../../hooks/forum/posts/usePostsQuery";
-import { Form, Pagination } from "react-bootstrap";
-import "../../assets/css/Forum.css";
-import { useNavigate } from "react-router-dom";
-import "react-loading-skeleton/dist/skeleton.css";
-import PostCard from "./PostCard";
 import { useContext, useEffect, useState } from "react";
-import { ForumContext } from "../../context/ForumContext";
+import { Pagination } from "react-bootstrap";
 import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { useNavigate } from "react-router-dom";
+import "../../assets/css/Forum.css";
+import { ForumContext } from "../../context/ForumContext";
+import PostCard from "./PostCard";
 
 // ...
 
 const ListPost = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(4);
+  const [postsPerPage] = useState(4);
   const { posts, categoryOf } = useContext(ForumContext);
   const navigate = useNavigate();
 
@@ -53,19 +53,6 @@ const ListPost = () => {
 
   return (
     <div>
-      <Pagination className="justify-content-center mt-2">
-        {pageNumbers.map((number) => (
-          <Pagination.Item
-            className="px-0"
-            key={number}
-            onClick={() => paginate(number)}
-            active={number === currentPage}
-          >
-            {number}
-          </Pagination.Item>
-        ))}
-      </Pagination>
-
       {currentPosts.map((post) => (
         <PostCard
           key={post.id}
@@ -75,22 +62,8 @@ const ListPost = () => {
         />
       ))}
 
-      {/* <Form>
-        <Form.Group controlId="postsPerPage">
-          <Form.Label>Posts per page</Form.Label>
-          <Form.Control
-            type="number"
-            value={postsPerPage}
-            max={posts.length}
-            min={4}
-            onChange={handleSize}
-          />
-        </Form.Group>
-      </Form> */}
       <p>
         Showing {indexOfFirstPost + 1} - {indexOfLastPost > posts.length ? posts.length : indexOfLastPost} of {posts.length} posts.
-        {/* Current page {currentPage} of{" "}
-        {Math.ceil(posts.length / postsPerPage)}. */}
       </p>
       <Pagination className="justify-content-center mt-2">
         {pageNumbers.map((number) => (

@@ -111,7 +111,7 @@ const AddForm = () => {
               <Form.Control
                 type="text"
                 value={tagsInput}
-                placeholder="Tags"
+                placeholder="#tag... (press space to add)"
                 onChange={handleTagsInputChange}
                 // onSubmit={handleTagSubmit}
               />

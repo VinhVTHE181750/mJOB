@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import avatar from "../../assets/img/default_avatar.webp";
 import { getMoment } from "../../functions/Converter";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import NavigateButton from "../ui/buttons/NavigateButton";
@@ -11,6 +11,9 @@ import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import Skeleton from "react-loading-skeleton";
 import useLikesUpdate from "../../hooks/forum/likes/useLikesUpdate";
 import useWhoAmI from "../../hooks/user/useWhoAmI";
+import socket from "../../socket";
+import { BsExclamation } from "react-icons/bs";
+import usePostDelete from "../../hooks/forum/posts/usePostDelete";
 
 const Post = ({ id }) => {
   // post related data
@@ -19,17 +22,36 @@ const Post = ({ id }) => {
   const navigate = useNavigate();
 
   // const post = useSelector((state) => state.post.post);
-  const { post, loading, error } = usePostDetail(id);
+  // const { post, loading, error } = usePostDetail(id);
   const { updateLikes } = useLikesUpdate();
   const { username } = useWhoAmI();
+  const { deletePost } = usePostDelete();
 
   // useEffect(() => {
   //   dispatch(fetchPost(id));
   // }, [dispatch, id]);
 
+  // const navigate = useNavigate();
+  const [refreshFlag, setRefreshFlag] = useState(false); // Add this line
+  const { post, loading, error } = usePostDetail(id, refreshFlag); // Modify to pass refreshFlag as a dependency
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  useEffect(() => {
+    const eventName = `forum/post/${id}`;
+    const handlePostUpdate = () => {
+      setRefreshFlag(prevFlag => !prevFlag); // Toggle refreshFlag to trigger re-fetch
+    };
+
+    socket.on(eventName, handlePostUpdate);
+
+    return () => {
+      socket.off(eventName, handlePostUpdate);
+    };
+  }, [id]);
+
 
   const handleLike = (isLike) => {
     updateLikes("post", id, isLike);
@@ -39,6 +61,7 @@ const Post = ({ id }) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this post? ");
     if (confirmDelete) {
       // dispatch(deletePost(id));
+      deletePost(id);
       navigate("/forum");
     }
   };
@@ -51,6 +74,7 @@ const Post = ({ id }) => {
           path="/report"
           text="Report this problem"
           variant="danger"
+          icon={<BsExclamation />}
         />
       </>
     );
