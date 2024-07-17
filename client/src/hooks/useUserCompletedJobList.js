@@ -35,7 +35,7 @@ const useUserCompletedJobList = (userId) => {
     }
   }, [userId, navigate]);
 
-  console.log(jobs);
+  // console.log(jobs);
   return { jobs, loading, error };
 };
 

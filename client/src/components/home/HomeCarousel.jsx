@@ -14,7 +14,7 @@ function HomeCarousel() {
   if (error) {
     return <div>Error: {error.message}</div>;
   }  
-  console.log(contents);
+  // console.log(contents);
 
   return (
     <>

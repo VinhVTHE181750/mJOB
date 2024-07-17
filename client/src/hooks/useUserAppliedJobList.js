@@ -33,7 +33,7 @@ const useUserAppliedJobList = (userId) => {
       fetchJobList();
     }
   }, []);
-  console.log('Hook data: ', jobList);
+  // console.log('Hook data: ', jobList);
   return { jobList, loading, error };
 };
 

@@ -1,11 +1,11 @@
 import axios from "axios";
-import {API_URL} from "../..";
-
+import { API_URL } from "../..";
+import socket from "../../../socket";
 
 // Action Types
-const FETCH_CATEGORIES_REQUEST = 'FETCH_CATEGORIES_REQUEST';
-const FETCH_CATEGORIES_SUCCESS = 'FETCH_CATEGORIES_SUCCESS';
-const FETCH_CATEGORIES_FAILURE = 'FETCH_CATEGORIES_FAILURE';
+const FETCH_CATEGORIES_REQUEST = "FETCH_CATEGORIES_REQUEST";
+const FETCH_CATEGORIES_SUCCESS = "FETCH_CATEGORIES_SUCCESS";
+const FETCH_CATEGORIES_FAILURE = "FETCH_CATEGORIES_FAILURE";
 
 // Action Creators
 export const fetchCategoriesRequest = () => ({
@@ -31,13 +31,20 @@ export const fetchCategories = () => async (dispatch) => {
   } catch (error) {
     dispatch(fetchCategoriesFailure(error.message));
   }
+  socket.on("forum/categories", () => {
+    dispatch(fetchCategoriesRequest());
+    axios
+      .get(`${API_URL}/forum/posts`)
+      .then((response) => dispatch(fetchCategoriesSuccess(response.data)))
+      .catch((error) => dispatch(fetchCategoriesFailure(error.message)));
+  });
 };
 
 // Reducer
 const initialState = {
   loading: false,
   categories: [],
-  error: '',
+  error: "",
 };
 
 const categoriesReducer = (state = initialState, action) => {
@@ -51,7 +58,7 @@ const categoriesReducer = (state = initialState, action) => {
       return {
         loading: false,
         categories: action.payload,
-        error: '',
+        error: "",
       };
     case FETCH_CATEGORIES_FAILURE:
       return {
