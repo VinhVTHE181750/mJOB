@@ -15,16 +15,16 @@ router.use(fileUpload());
 
 router.post("/", async (req, res) => {
   let userId;
-  //   if (!req.userId) {
-  //     return res.status(401).json({ message: "Unauthorized" });
-  //   } else userId = req.userId;
-  //   if (isNaN(req.userId)) {
-  //     return res.status(400).json({ message: "Invalid user ID" });
-  //   }
+    if (!req.userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    } else userId = req.userId;
+    if (isNaN(req.userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
   // uncomment để truyền userId từ request
 
   // test
-  userId = 1;
+  // userId = 1;
   const user = await User.findByPk(userId);
   if (!user) {
     return res.status(404).json({ message: "User not found" });
@@ -41,7 +41,8 @@ router.post("/", async (req, res) => {
     job_start_date,
     job_end_date,
     job_number_of_recruits,
-    job_requirements, // Nhớ xử lí requirements dưới dạng mảng
+    job_requirements, 
+    // Nhớ xử lí requirements dưới dạng mảng
     job_compensation_type,
     job_compensation_amounts,
     job_compensation_currencies,
