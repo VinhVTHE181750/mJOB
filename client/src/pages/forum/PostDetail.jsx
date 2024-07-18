@@ -20,8 +20,8 @@ const PostDetail = () => {
         icon={<BsArrowLeft />}
       />
       <Post id={id} />
-      <ListComment id={Number(id)} />
       <CommentForm id={Number(id)} />
+      <ListComment id={Number(id)} />
     </Container>
   );
 };
