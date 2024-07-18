@@ -1,6 +1,5 @@
-import axios from "axios";
-import { API_URL } from "../..";
 import socket from "../../../socket";
+import http from "../../../functions/httpService";
 
 // Action Types
 const FETCH_CATEGORIES_REQUEST = "FETCH_CATEGORIES_REQUEST";
@@ -26,15 +25,15 @@ export const fetchCategoriesFailure = (error) => ({
 export const fetchCategories = () => async (dispatch) => {
   dispatch(fetchCategoriesRequest());
   try {
-    const response = await axios.get(`${API_URL}/forum/categories`);
+    const response = await http.get(`/forum/categories`);
     dispatch(fetchCategoriesSuccess(response.data));
   } catch (error) {
     dispatch(fetchCategoriesFailure(error.message));
   }
   socket.on("forum/categories", () => {
     dispatch(fetchCategoriesRequest());
-    axios
-      .get(`${API_URL}/forum/posts`)
+    http
+      .get(`/forum/posts`)
       .then((response) => dispatch(fetchCategoriesSuccess(response.data)))
       .catch((error) => dispatch(fetchCategoriesFailure(error.message)));
   });

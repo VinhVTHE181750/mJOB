@@ -1,15 +1,17 @@
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "../../assets/css/Forum.css";
 import NavigateButton from "../../components/ui/buttons/NavigateButton.jsx";
 import Post from "../../components/forum/Post.jsx";
-import {Container} from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { BsArrowLeft } from "react-icons/bs";
+import ListComment from "../../components/forum/ListComment.jsx";
+import CommentForm from "../../components/forum/CommentForm.jsx";
 
 const PostDetail = () => {
   const { id } = useParams();
 
   return (
-    <div className="forum-body">
+    <Container>
       <NavigateButton
         path="/forum"
         text="Back"
@@ -18,10 +20,9 @@ const PostDetail = () => {
         icon={<BsArrowLeft />}
       />
       <Post id={id} />
-      <Container className="mt-5 border">
-        {/* <ListComment id={id} /> */}
-      </Container>
-    </div>
+      <ListComment id={Number(id)} />
+      <CommentForm id={Number(id)} />
+    </Container>
   );
 };
 
