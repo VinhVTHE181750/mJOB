@@ -59,7 +59,7 @@ const CreatedJobs = ({ searchQuery }) => {
   useEffect(() => {
     const fetchCreatedJobs = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/jobs/created-jobs');
+        const response = await http.get('/created-jobs');
         setCreatedJobs(response.data);
       } catch (error) {
         console.error('Error fetching created jobs:', error);

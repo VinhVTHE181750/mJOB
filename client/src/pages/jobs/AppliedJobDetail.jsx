@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
+import http from '../../functions/httpService';
 
 const Container = styled.div`
   max-width: 750px;
@@ -48,7 +48,7 @@ const AppliedJobDetail = () => {
   useEffect(() => {
     const fetchJobDetail = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/jobs/applied-job-detail/${job_id}`);
+        const response = await http.get(`/applied-job-detail/${job_id}`);
         setJobDetail(response.data);
       } catch (error) {
         console.error('Error fetching job detail:', error);

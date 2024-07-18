@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 // Edit this component's name
 const use____Query = (param1, param2) => {
@@ -16,8 +16,8 @@ const use____Query = (param1, param2) => {
         const response = await fetch(
           `/api/____?parameter1=${param1}&parameter2=${param2}`
         );
-        // or response = axios.get(`/api/____?parameter1=${param1}&parameter2=${param2}`);
-        // or response = axios.post(`/api/____`, { parameter1: param1, parameter2: param2 });
+        // or response = http.get(`/api/____?parameter1=${param1}&parameter2=${param2}`);
+        // or response = http.post(`/api/____`, { parameter1: param1, parameter2: param2 });
 
         // Example:
         // const response = await fetch(`/api/posts?username=${username}&password=${password}`);

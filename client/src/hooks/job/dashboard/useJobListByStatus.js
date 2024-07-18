@@ -1,7 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import http from "../../../functions/httpService";
 
-const API_URL = "http://localhost:8000/api/myjobs";
 
 const useJobListByStatus = (userId, jobStatus) => {
   const [jobs, setJobs] = useState([]);
@@ -11,8 +10,8 @@ const useJobListByStatus = (userId, jobStatus) => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const url = `${API_URL}/jobhistory/jobstatus/${userId}/${jobStatus}`;
-        const response = await axios.get(url);
+        const url = `/myjobs/jobhistory/jobstatus/${userId}/${jobStatus}`;
+        const response = await http.get(url);
         setJobs(response.data);
       } catch (error) {
         setError(error);

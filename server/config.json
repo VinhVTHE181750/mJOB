@@ -10,7 +10,7 @@
 
   "middleware": {
     "cors": {
-      "origin": "http://localhost:5173"
+      "origin": ["http://localhost:5173", "http://192.168.1.200"]
     },
     "rateLimiter": {
       "windowMs": 60000,
@@ -35,7 +35,9 @@
     "secret": "notSoSecret",
     "expiresIn": 86400,
     "issuer": "mJob",
-    "algorithm": "HS256"
+    "algorithm": "HS256",
+    "refreshSecret": "notFreshSecret",
+    "refreshExpiresIn": 2592000
   },
   "sessionSecret": "notSoSecret"
 }

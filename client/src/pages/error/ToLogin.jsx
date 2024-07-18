@@ -39,7 +39,7 @@ const ToLogin = ({ path }) => {
     }
   }
 
-  return role ? (
+  return role !== "GUEST" ? (
     {}
   ) : (
     <Container>

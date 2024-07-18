@@ -1,8 +1,5 @@
-import axios from "axios";
-import {useEffect, useState} from "react";
-
-const API_URL = "http://localhost:8000/api";
-
+import { useEffect, useState } from "react";
+import http from "../functions/httpService";
 const useJobList = () => {
   const [contents, setContents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,8 +8,8 @@ const useJobList = () => {
   useEffect(() => {
     const fetchContents = async () => {
       try {
-        const url = `${API_URL}/joblist/byDayCreated`;
-        const response = await axios.get(url);
+        const url = `/joblist/byDayCreated`;
+        const response = await http.get(url);
         setContents(response.data);
         setLoading(false);
       } catch (error) {
