@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Button, Card, Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router";
-import { FaUserEdit, FaBriefcase, FaSignOutAlt } from "react-icons/fa";
+import { FaUserEdit, FaBriefcase, FaSignOutAlt, FaCog } from "react-icons/fa";
 
 const WorkExperience = () => {
   const [jobTitle, setJobTitle] = useState("");
@@ -69,16 +69,20 @@ const WorkExperience = () => {
       <h1 className="text-center my-4">Work Experience</h1>
       <Container fluid className="mt-3">
         <Row>
-          <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
+        <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
             <h2 className="text-center">Navigation</h2>
             <Nav className="flex-column">
-              <Nav.Link href={`/editprofile/${userId}`} className="text-dark mb-2 d-flex align-items-center">
+              <Nav.Link href={`/editprofile`} className="text-dark mb-2 d-flex align-items-center">
                 <FaUserEdit className="me-2" />
                 Profile
               </Nav.Link>
-              <Nav.Link href={`/workexperience/${userId}`} className="text-dark mb-2 d-flex align-items-center">
+              <Nav.Link href={`/workexperience/`} className="text-dark mb-2 d-flex align-items-center">
                 <FaBriefcase className="me-2" />
                 Work Experience
+              </Nav.Link>
+              <Nav.Link href={`/settings`} className="text-dark mb-2 d-flex align-items-center">
+                <FaCog className="me-2" />
+                Settings
               </Nav.Link>
               <Button variant="danger" href="/logout" className="mt-3 d-flex align-items-center">
                 <FaSignOutAlt className="me-2" />
@@ -87,6 +91,7 @@ const WorkExperience = () => {
             </Nav>
           </Col>
           <Col md={10} className="p-4">
+          
             <Card className="mb-4">
               <Card.Body>
                 <Form onSubmit={handleFormSubmit}>
@@ -180,6 +185,7 @@ const WorkExperience = () => {
                 </Form>
               </Card.Body>
             </Card>
+            
           </Col>
         </Row>
       </Container>
