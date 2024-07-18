@@ -29,15 +29,15 @@ const Dashboard = () => {
     setAppliedJobList(appliedJobs);
   }, [appliedJobs]);
 
-  console.log('Data: ', completedJobList);
-  console.log('Data applied: ', appliedJobs);
+  // console.log('Data: ', completedJobList);
+  // console.log('Data applied: ', appliedJobs);
 
 
 
-  // console.log(completedJobList);
+  // // console.log(completedJobList);
   // useEffect(() => {
   //   console.table(completedJobs);
-  //   console.log(jobsLoading); 
+  //   // console.log(jobsLoading); 
   // }, [jobsLoading]);
 
   return (

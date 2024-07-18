@@ -23,7 +23,7 @@ function JobMarket() {
     return <div>Error: {error.message}</div>;
   }
 
-  console.log(contents);
+  // console.log(contents);
   const filteredContents = contents.filter(content =>
     content.job_title.toLowerCase().includes(searchQuery.toLowerCase())
   );

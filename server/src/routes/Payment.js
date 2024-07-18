@@ -65,7 +65,7 @@ router.get("/balance/:userId", async (req, res) => {
         res.json(result.recordset[0]);
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({ message: "Error occurred", error: err });
     }  
   });
@@ -86,7 +86,7 @@ router.get("/balance/:userId", async (req, res) => {
         res.json(result.recordset[0]);
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({ message: "Error occurred", error: err });
     }  
   });
@@ -94,7 +94,7 @@ router.get("/balance/:userId", async (req, res) => {
   router.put('/update-balance', async (req, res) => {
     try {
       const { userId, balance } = req.body;
-      console.log(userId, balance);
+      // console.log(userId, balance);
       if (userId == null || balance == null) {
         return res.status(400).json({ error: 'userId and balance are required' });
       }

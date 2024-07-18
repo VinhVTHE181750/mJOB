@@ -72,7 +72,7 @@ const CreatedJobs = ({ searchQuery }) => {
   const navigate = useNavigate();
 
   const handlePayClick = (job_id) => {
-    console.log(`Payment for job_id ${job_id}`);
+    // console.log(`Payment for job_id ${job_id}`);
   };
 
   const handleViewClick = (job_id) => {
