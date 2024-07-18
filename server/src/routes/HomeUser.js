@@ -60,7 +60,7 @@ const SELECT_JOB_RELATED_TO_USER =`SELECT TOP 3
     INNER JOIN 
         job_recruitment jr ON j.job_id = jr.job_id
     WHERE
-        j.job_title LIKE '%HR%'`;
+        j.job_title LIKE '%Manager%' AND jr.job_recruitment_deadline>GETDATE();`;
 
 const SELECT_3NEW_POST =`SELECT TOP 3
     p.post_id,

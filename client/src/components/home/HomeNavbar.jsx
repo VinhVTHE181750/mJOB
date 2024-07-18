@@ -14,13 +14,13 @@ const HomeNavbar = ({ user }) => {
                 <Nav className="mr-auto container container-navbar link-1 left" style={{ justifyContent: 'space-evenly' }}>
                 {/* <div style={{ display: 'flex', justifyContent: 'space-evenly', color: 'black'}}> */}
                         <Nav.Link href="/home" className={location.pathname === '/' || location.pathname === '/home' ? 'active nav-fixed' : 'nav-fixed'}>Home</Nav.Link>
-                        <Nav.Link href="/jobs" className={location.pathname === '/jobs' ? 'active nav-fixed' : 'nav-fixed'}>Jobs</Nav.Link>
+                        <Nav.Link href="/market" className={location.pathname === '/jobs' ? 'active nav-fixed' : 'nav-fixed'}>Jobs</Nav.Link>
                         <Nav.Link href="/forum" className={location.pathname === '/forum' ? 'active nav-fixed' : 'nav-fixed'}>Forum</Nav.Link>
                         <Nav.Link href="/technical" className={location.pathname === '/technical' ? 'active nav-fixed' : 'nav-fixed'}>Technical</Nav.Link>
                         <Nav.Link href="/profile" className={location.pathname === '/profile' ? 'active nav-fixed' : 'nav-fixed'}>Profile</Nav.Link>
                 {/* </div> */}
                 </Nav>
-                {true ? (
+                {location.pathname === '/homeuser' ? (
                     <Nav className='container container-navbar right' style={{ justifyContent: 'flex-end' }}>
                         <NavDropdown title="MeoMap" id="basic-nav-dropdown">
                             <NavDropdown.Item href="/profile">User Profile</NavDropdown.Item>
