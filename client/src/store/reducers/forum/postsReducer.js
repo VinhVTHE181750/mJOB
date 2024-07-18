@@ -1,4 +1,5 @@
-import http from '../../../functions/httpService'; // Adjust the import path as necessary
+import axios from "axios";
+import { API_URL } from "../..";
 import socket from "../../../socket";
 
 // Default states
@@ -32,20 +33,19 @@ export const fetchPostsFailure = (error) => ({
 export const fetchPosts = () => {
   return async (dispatch) => {
     dispatch(fetchPostsRequest());
-    await http
-      .get(`/forum/posts`)
+    await axios
+      .get(`${API_URL}/forum/posts`)
       .then((response) => dispatch(fetchPostsSuccess(response.data)))
       .catch((error) => dispatch(fetchPostsFailure(error.message)));
     socket.on("forum/posts", async () => {
       dispatch(fetchPostsRequest());
-      await http
-        .get(`/forum/posts`)
+      await axios
+        .get(`${API_URL}/forum/posts`)
         .then((response) => dispatch(fetchPostsSuccess(response.data)))
         .catch((error) => dispatch(fetchPostsFailure(error.message)));
     });
   };
 };
-
 
 const postsReducer = (state = initialState, action) => {
   switch (action.type) {

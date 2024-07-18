@@ -10,7 +10,7 @@ const post = async (req, res) => {
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   try {
     // console.log(req.body);
-    let { title, content, status, category, tags } = req.body;
+    let { title, content, userId, status, category, tags } = req.body;
     let msg;
     let PostCategoryId;
 

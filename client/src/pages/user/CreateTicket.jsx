@@ -15,7 +15,7 @@ const CreateTicketPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await http.post("/api/ticket/create", {
+      const response = await axios.post("/api/ticket/create", {
         user_id: userId,
         ticket_category: category,
         ticket_title: title,

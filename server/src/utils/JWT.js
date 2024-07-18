@@ -1,17 +1,15 @@
 const jwt = require("jsonwebtoken");
 const config = require("../../config.json");
-const { log } = require("./Logger");
 
 const JwtMiddleware = async (req, res, next) => {
   // token = cookie named token
   const token = req.cookies.token;
 
   if (token) {
-    const decoded = verifyToken(token);
+    const decoded = jwt.verify(token, config.jwt.secret);
     req.userId = decoded.id;
     req.role = decoded.role;
   }
-  log(`JWT: ${req.userId} ${req.role}`);
 
   next();
 };

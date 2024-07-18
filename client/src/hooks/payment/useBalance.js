@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import http from "../../functions/httpService";
+import { API_URL } from "../../App";
+import axios from "axios";
 const useBalance = () => {
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -9,7 +10,7 @@ const useBalance = () => {
     const fetchBalance = async () => {
       try {
         setLoading(true);
-        const response = await http.get(`/payment/balance`);
+        const response = await axios.get(`${API_URL}/payment/balance`);
         const data = response.data;
         setLoading(false);
         setBalance(data.balance);

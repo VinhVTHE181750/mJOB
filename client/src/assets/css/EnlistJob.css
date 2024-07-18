@@ -23,6 +23,9 @@ body {
   background-color: blue; /* Darker shade of Bootstrap primary color */
 }
 
+.container{
+  margin-bottom: 20px;
+}
 .background-img{
   padding-top: 10px;
 }
@@ -38,7 +41,6 @@ body {
   margin-top: 15px;
 }
 
-
 .form{
   display: block; /* Hidden by default */
   z-index: 1; /* Sit on top */
@@ -47,8 +49,9 @@ body {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   padding-bottom: 40px; 
-  /* background-color:whitesmoke; */
+  background-color:whitesmoke;
   padding-top: 5px;
+
 }
 
 .header1{
@@ -135,7 +138,13 @@ input, select, textarea {
 
 
 .enlistbutton {
-  margin-right: 20px;
-  
+  background-color: #007bff;
+  color: white;
+  border-radius: 50px;
+  padding: 10px;
+  cursor: pointer;
+  width: 100px;
+  margin-top: 50px;
+  margin-left: 45%;
 }
 

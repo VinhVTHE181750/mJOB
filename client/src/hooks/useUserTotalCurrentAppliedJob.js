@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import http from "../functions/httpService";
+import axios from "axios";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router";
 
-
+const API_URL = "http://localhost:8000/api";
 
 const useUserTotalCurrentAppliedJob = (userId) => {
   const [count, setCount] = useState(0);
@@ -15,8 +15,8 @@ const useUserTotalCurrentAppliedJob = (userId) => {
   useEffect(() => {
     const fetchCompletedJobsCount = async () => {
       try {
-        const url = `/myjobs/applied/${userId}`;  
-        const response = await http.get(url);
+        const url = `${API_URL}/myjobs/applied/${userId}`;  
+        const response = await axios.get(url);
         setCount(response.data.total);
         setLoading(false);
       } catch (error) {

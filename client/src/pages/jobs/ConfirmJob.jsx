@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, {useState} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
-import http from '../../functions/httpService';
+import axios from 'axios';
 
 const BackgroundContainer = styled.div`
   background: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
@@ -119,7 +119,7 @@ const ConfirmJob = () => {
       });
       formData.append('job_id', job.job_id);
 
-      await http.post('/upload', formData, {
+      await axios.post('http://localhost:8000/api/jobs/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

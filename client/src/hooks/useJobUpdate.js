@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import http from '../functions/httpService';
+import {useEffect, useState} from 'react';
+import axios from 'axios';
 
 const useJobUpdate = (jobId) => {
   const [job, setJob] = useState(null);
@@ -11,7 +11,7 @@ const useJobUpdate = (jobId) => {
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
-        const response = await http.get(`/jobs/${jobId}`);
+        const response = await axios.get(`http://localhost:8000/api/jobs/${jobId}`);
         setJob(response.data);
         setLoading(false);
       } catch (error) {
@@ -31,7 +31,7 @@ const useJobUpdate = (jobId) => {
   const handleSubmit = async (navigate) => {
     setLoading(true);
     try {
-      await http.put(`/jobs/update`, job);
+      await axios.put(`http://localhost:8000/api/jobs/update`, job);
       setLoading(false);
       setSuccess('Job updated successfully!');
       setTimeout(() => {

@@ -18,7 +18,7 @@ const WorkExperience = () => {
   useEffect(() => {
     const fetchWorkExperience = async () => {
       try {
-        const response = await http.get(
+        const response = await axios.get(
           `http://localhost:8000/api/workexp/user/${userId}`
         );
         const workExperience = response.data;
@@ -52,7 +52,7 @@ const WorkExperience = () => {
     };
 
     try {
-      const response = await http.put(
+      const response = await axios.put(
         `http://localhost:8000/api/workexp/${userId}`,
         userData
       );

@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
 import { Button, Card, Col, Container, Nav, Row } from "react-bootstrap";
-import { FaBriefcase, FaChartBar, FaSignOutAlt, FaUsers } from "react-icons/fa";
-import { useNavigate } from "react-router";
-import http from "../../functions/httpService";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router";
+import {  FaUsers, FaBriefcase, FaSignOutAlt, FaChartBar } from "react-icons/fa";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -13,7 +13,7 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await http.get("/users-role");
+      const response = await axios.get("http://localhost:8000/api/users-role");
       setUsers(response.data);
     } catch (err) {
       alert("Error fetching users");
@@ -26,7 +26,7 @@ const Users = () => {
 
   const handleDeleteUser = async (id) => {
     try {
-      await http.delete(`/delete/${id}`);
+      await axios.delete(`http://localhost:8080/api/delete/${id}`);
       alert("User deleted successfully!");
       fetchUsers(); // Refresh the user list
     } catch (err) {

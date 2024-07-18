@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
-import http from '../../functions/httpService';
+import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -46,7 +46,7 @@ const AppliedJobs = ({ searchQuery }) => {
   useEffect(() => {
     const fetchAppliedJobs = async () => {
       try {
-        const response = await http.get('/jobs/applied-jobs');
+        const response = await axios.get('http://localhost:8000/api/jobs/applied-jobs');
         setAppliedJobs(response.data);
       } catch (error) {
         console.error('Error fetching applied jobs:', error);

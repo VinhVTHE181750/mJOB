@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import http from "../functions/httpService";
+import {useEffect, useState} from "react";
+import axios from "axios";
+import {useNavigate} from "react-router";
 
-
+const API_URL = "http://localhost:8000/api";
 
 const useUserCompletedJobList = (userId) => {
   const [jobs, setJobs] = useState([]);
@@ -13,8 +13,8 @@ const useUserCompletedJobList = (userId) => {
   useEffect(() => {
     const fetchCompletedJobs = async () => {
       try {
-        const url = `/myjobs/completedlist/${userId}`;
-        const response = await http.get(url);
+        const url = `${API_URL}/myjobs/completedlist/${userId}`;
+        const response = await axios.get(url);
         setJobs(response.data);
         setLoading(false);
       } catch (error) {

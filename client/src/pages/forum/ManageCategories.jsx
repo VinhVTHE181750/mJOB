@@ -1,10 +1,12 @@
+import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, FloatingLabel, Form, Row, Spinner } from "react-bootstrap";
 import { BsBack, BsFloppy2, BsFront, BsTrash3 } from "react-icons/bs";
+import { API_URL } from "../../App";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import { ForumContext } from "../../context/ForumContext";
-import http from "../../functions/httpService";
 import useWhoAmI from "../../hooks/user/useWhoAmI";
+import http from "../../functions/httpService";
 
 const ManageCategories = () => {
   const { categories } = useContext(ForumContext);
@@ -42,7 +44,7 @@ const ManageCategories = () => {
 
   const deleteCategory = (category) => async () => {
     // console.log(category);
-    await http.delete(`/forum/categories/${category.id}`);
+    await axios.delete(`${API_URL}/forum/categories/${category.id}`);
   };
 
   useEffect(() => {

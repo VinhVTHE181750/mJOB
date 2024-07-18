@@ -1,10 +1,10 @@
-import {Col, Container} from "react-bootstrap";
+import {Col} from "react-bootstrap";
 import AddForm from "../../components/forum/AddForm";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 
 const AddPost = () => {
   return (
-    <Container>
+    <div className="forum-body">
       <Col md={2}>
         <NavigateButton
           path={"/forum"}
@@ -15,7 +15,7 @@ const AddPost = () => {
         />
       </Col>
       <AddForm />
-    </Container>
+    </div>
   );
 };
 

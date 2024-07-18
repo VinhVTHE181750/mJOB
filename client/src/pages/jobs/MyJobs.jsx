@@ -1,4 +1,8 @@
-import {useState} from 'react';
+//dashboard
+
+//jobs list
+
+import React, {useState} from 'react';
 import '../../assets/css/JobDashboard.css';
 import SideBar from '../../components/job/SideBar';
 import Dashboard from '../../components/job/DashBoard';

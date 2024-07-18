@@ -1,5 +1,6 @@
-import { useState } from "react";
-import http from "../../functions/httpService";
+import { useState } from 'react';
+import { API_URL } from "../../App";
+import axios from 'axios';
 
 const useInsertPaymentHistory = () => {
   const [loading, setLoading] = useState(false);
@@ -14,19 +15,19 @@ const useInsertPaymentHistory = () => {
     try {
       // Structure the payment data object here
       const formattedData = {
-        from: "1",
-        to: "2",
+        from: '1',
+        to: '2',
         amount: 100,
         onPlatform: true,
-        action: "Transfer",
-        status: "Success",
+        action: 'Transfer',
+        status: 'Success',
         createdAt: new Date().toISOString(),
-        userId: 1,
+        userId: 1
       };
 
       // console.log("Formatted Payment data: ", paymentData);
 
-      const response = await http.post(`/payment/insert-payment-history`, paymentData);
+      const response = await axios.post(`${API_URL}/payment/insert-payment-history`, paymentData);
       setSuccess(true);
     } catch (error) {
       setError(error);

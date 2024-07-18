@@ -1,5 +1,5 @@
-import { useState } from "react";
-import http from "../functions/httpService"; // Adjust the import path as necessary
+import {useState} from 'react';
+import axios from 'axios';
 
 const useJobInsert = () => {
   const [loading, setLoading] = useState(false);
@@ -12,14 +12,14 @@ const useJobInsert = () => {
     setSuccess(false);
     try {
       // Replace the URL with your actual API endpoint
-      const response = await http.post("/jobs", jobData);
-      if (response.status === 201) {
+      const response = await axios.post('http://localhost:8000/api/jobs', jobData);
+      if (response.status === 200) {
         setSuccess(true);
       } else {
-        setError("An error occurred while inserting the job.");
+        setError('An error occurred while inserting the job.');
       }
     } catch (err) {
-      setError(err.message || "An error occurred.");
+      setError(err.message || 'An error occurred.');
     } finally {
       setLoading(false);
     }

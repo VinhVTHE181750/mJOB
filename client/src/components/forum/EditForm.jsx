@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { BsExclamation } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { ForumContext } from "../../context/ForumContext";
@@ -59,7 +59,7 @@ const EditForm = ({ id }) => {
   };
 
   return (
-    <>
+    <Container style={{ minHeight: "100vh" }}>
       <Row>
         <h1 className="text-center">Edit Post</h1>
       </Row>
@@ -137,7 +137,7 @@ const EditForm = ({ id }) => {
           </Row>
           <Row className="row-submit">
             <div className="d-flex justify-content-center gap-2">
-              {/* <Button variant="secondary">Save as draft </Button> */}
+              <Button variant="secondary">Save as draft </Button>
               <Button variant="primary" type="submit">
                 Submit
               </Button>
@@ -145,7 +145,7 @@ const EditForm = ({ id }) => {
           </Row>
         </Form>
       )}
-    </>
+    </Container>
   );
 };
 

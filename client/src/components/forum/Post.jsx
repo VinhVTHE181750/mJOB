@@ -1,19 +1,19 @@
 import PropTypes from "prop-types";
+import avatar from "../../assets/img/default_avatar.webp";
+import { getMoment } from "../../functions/Converter";
 import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import avatar from "../../assets/img/default_avatar.webp";
-import { getMoment } from "../../functions/Converter";
 import NavigateButton from "../ui/buttons/NavigateButton";
 // import { useDispatch, useSelector } from "react-redux";
 // import { deletePost, fetchPost } from "../../store/reducers/forum/postReducer";
-import { BsExclamation } from "react-icons/bs";
+import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import Skeleton from "react-loading-skeleton";
 import useLikesUpdate from "../../hooks/forum/likes/useLikesUpdate";
-import usePostDelete from "../../hooks/forum/posts/usePostDelete";
-import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import useWhoAmI from "../../hooks/user/useWhoAmI";
 import socket from "../../socket";
+import { BsExclamation } from "react-icons/bs";
+import usePostDelete from "../../hooks/forum/posts/usePostDelete";
 import LikeButton from "./micro/LikeButton";
 
 const Post = ({ id }) => {
@@ -69,15 +69,13 @@ const Post = ({ id }) => {
   if (error) {
     return (
       <>
-        <h3 className="text-center">Something went wrong while fetching the post.</h3>
-        <div className="d-flex align-items-center justify-content-center">
-          <NavigateButton
-            path="/report"
-            text="Report this problem"
-            variant="danger"
-            icon={<BsExclamation />}
-          />
-        </div>
+        <h3>Something went wrong while fetching the post.</h3>
+        <NavigateButton
+          path="/report"
+          text="Report this problem"
+          variant="danger"
+          icon={<BsExclamation />}
+        />
       </>
     );
   }
@@ -90,10 +88,10 @@ const Post = ({ id }) => {
             <Col sm={2}>
               <div className="border">
                 <div>
-                  <Skeleton
-                    circle={true}
-                    height={50}
-                    width={50}
+                  <img
+                    className="avatar"
+                    src={avatar}
+                    alt="Default Avatar"
                   />
                 </div>
                 <Skeleton
@@ -114,15 +112,13 @@ const Post = ({ id }) => {
               <Row className="mx-5">
                 <Skeleton
                   width={300}
-                  height={30}
-                />
-              </Row>
-              <Row className="mx-5 mt-2">
-                <Skeleton
-                  width={250}
                   height={20}
                 />
               </Row>
+              <Skeleton
+                width={100}
+                height={20}
+              />
             </Col>
           </Row>
           <Row className="ms-2 mt-2">
@@ -130,14 +126,15 @@ const Post = ({ id }) => {
               <Skeleton height={200} />
             </Row>
             <Row>
+              {/* Add a like button */}
               <div className="d-flex justify-content-end mt-2 gap-2">
                 <Skeleton
                   width={100}
-                  height={40}
+                  height={20}
                 />
                 <Skeleton
                   width={100}
-                  height={40}
+                  height={20}
                 />
               </div>
             </Row>
@@ -147,15 +144,11 @@ const Post = ({ id }) => {
     );
   }
 
-  if (!post) {
-    return <h3 className="text-center">Post not found</h3>;
-  }
-
   return (
     <div className="post">
       <Row className="post-title">
         <Col sm={2}>
-          <div className="border border-success">
+          <div className="border">
             <div>
               <img
                 className="avatar"

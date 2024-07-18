@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import http from "../functions/httpService";
+import axios from "axios";
+import {useEffect, useState} from "react";
 
-
+const API_URL = "http://localhost:8000/api";
 
 const useMarketContent = () => {
   const [contents, setContents] = useState([]);
@@ -11,8 +11,8 @@ const useMarketContent = () => {
   useEffect(() => {
     const fetchContents = async () => {
       try {
-        const url = `/marketing`;
-        const response = await http.get(url);
+        const url = `${API_URL}/marketing`;
+        const response = await axios.get(url);
         setContents(response.data);
         setLoading(false);
       } catch (error) {

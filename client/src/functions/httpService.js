@@ -1,12 +1,10 @@
-import { SERVER_URL } from "../store/constants";
-import axios from "axios";
+import axios from 'axios';
 
 // Create an Axios instance with default configurations
-const API_URL = `${SERVER_URL}/api`;
 const http = axios.create({
-  baseURL: API_URL,
+  baseURL: 'http://localhost:8000/api',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
   withCredentials: true,
 });

@@ -14,38 +14,36 @@ const Application = require("../../models/job/Application");
 router.use(fileUpload());
 
 router.post("/", async (req, res) => {
-  // log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;
-  if (!req.userId) {
-    return res.status(401).json({ message: "Unauthorized" });
-  } else userId = req.userId;
-  if (isNaN(req.userId)) {
-    return res.status(400).json({ message: "Invalid user ID" });
-  }
+  //   if (!req.userId) {
+  //     return res.status(401).json({ message: "Unauthorized" });
+  //   } else userId = req.userId;
+  //   if (isNaN(req.userId)) {
+  //     return res.status(400).json({ message: "Invalid user ID" });
+  //   }
   // uncomment để truyền userId từ request
 
   // test
-  // userId = 1;
+  userId = 1;
   const user = await User.findByPk(userId);
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
 
   const {
-    job_title, // str
-    job_work_location, // str
-    job_tags, // str,str,str
-    job_max_applications, // int
-    job_approval_method, // boolean
-    job_description, // str
-    job_contact_info, // str
-    job_start_date, // date
-    job_end_date, // date
-    job_number_of_recruits, // str
-    job_requirements, // str;str;str
-    // Nhớ xử lí requirements dưới dạng mảng
-    job_compensation_type, // ONCE, HOURLY, DAILY, WEEKLY, MONTHLY, PERCENTAGE
-    job_compensation_amounts, // int
+    job_title,
+    job_work_location,
+    job_tags,
+    job_max_applications,
+    job_approval_method,
+    job_description,
+    job_contact_info,
+    job_start_date,
+    job_end_date,
+    job_number_of_recruits,
+    job_requirements, // Nhớ xử lí requirements dưới dạng mảng
+    job_compensation_type,
+    job_compensation_amounts,
     job_compensation_currencies,
     job_compensation_periods, // -> bỏ, dùng luôn compensation_type
     // đã có ONCE, HOURLY, DAILY, WEEKLY, MONTHLY, PERCENTAGE
@@ -53,93 +51,6 @@ router.post("/", async (req, res) => {
     status, // Thêm dòng này vào client, hoặc để nó mặc định là ACTIVE
     // Xem chi tiết tại file models/job/Job.js dòng 86 - 99
   } = req.body;
-
-  if (job_title === undefined || job_title === null || job_title === "") {
-    return res.status(400).json({ message: "Job title is required" });
-  }
-
-  if (job_work_location === undefined || job_work_location === null || job_work_location === "") {
-    return res.status(400).json({ message: "Job work location is required" });
-  }
-
-  if (job_start_date === undefined || job_start_date === null || job_start_date === "") {
-    return res.status(400).json({ message: "Job start date is required" });
-  }
-
-  if (job_end_date === undefined || job_end_date === null || job_end_date === "") {
-    return res.status(400).json({ message: "Job end date is required" });
-  }
-
-  // salary types: ONETIME, HOURLY, DAILY, WEEKLY, MONTHLY, PERCENTAGE
-  if (job_compensation_type === undefined || job_compensation_type === null || job_compensation_type === "") {
-    return res.status(400).json({ message: "Job compensation type is required" });
-  } else {
-    if (
-      job_compensation_type !== "ONETIME" &&
-      job_compensation_type !== "HOURLY" &&
-      job_compensation_type !== "DAILY" &&
-      job_compensation_type !== "WEEKLY" &&
-      job_compensation_type !== "MONTHLY" &&
-      job_compensation_type !== "PERCENTAGE"
-    ) {
-      return res.status(400).json({ message: "Invalid job compensation type" });
-    }
-  }
-
-  if (isNaN(job_compensation_amounts)) {
-    return res.status(400).json({ message: "Invalid job compensation amount" });
-  } else {
-    if (job_compensation_amounts < 0) {
-      return res.status(400).json({ message: "Invalid job compensation amount" });
-    }
-  }
-
-  if (job_compensation_currencies === undefined || job_compensation_currencies === null || job_compensation_currencies === "") {
-    return res.status(400).json({ message: "Job compensation currency is required" });
-  } else {
-    if (
-      job_compensation_currencies !== "USD" &&
-      job_compensation_currencies !== "VND" &&
-      job_compensation_currencies !== "JPY" &&
-      job_compensation_currencies !== "EUR" &&
-      job_compensation_currencies !== "GBP"
-    ) {
-      return res.status(400).json({ message: "Invalid job compensation currency" });
-    }
-  }
-
-  if (isNaN(job_max_applications) || job_max_applications < 0) {
-    return res.status(400).json({ message: "Invalid job max applications" });
-  }
-
-  if (job_approval_method === undefined || job_approval_method === null) {
-    return res.status(400).json({ message: "Job approval method is required" });
-  } else {
-    if (typeof job_approval_method !== "boolean") {
-      return res.status(400).json({ message: "Invalid job approval method" });
-    }
-  }
-
-  if (job_description === undefined || job_description === null || job_description === "") {
-    return res.status(400).json({ message: "Job description is required" });
-  }
-
-  if (job_contact_info === undefined || job_contact_info === null || job_contact_info === "") {
-    return res.status(400).json({ message: "Job contact info is required" });
-  }
-
-  if (isNaN(job_number_of_recruits) || job_number_of_recruits < 0) {
-    return res.status(400).json({ message: "Invalid job number of recruits" });
-  }
-
-  if (status === undefined || status === null || status === "") {
-    return res.status(400).json({ message: "Job status is required" });
-  } else {
-    if (status !== "ACTIVE" && status !== "INACTIVE") {
-      return res.status(400).json({ message: "Job can only be created as ACTIVE or INACTIVE" });
-    }
-  }
-
   const newJob = new Job({
     title: job_title,
     description: job_description,
@@ -151,7 +62,8 @@ router.post("/", async (req, res) => {
     contact: job_contact_info,
     startDate: job_start_date,
     endDate: job_end_date,
-    salaryAmount: job_compensation_amounts,
+    paid: true,
+    salary: job_compensation_amounts,
     salaryType: job_compensation_type,
     salaryCurrency: job_compensation_currencies,
     status: status,
@@ -159,11 +71,7 @@ router.post("/", async (req, res) => {
   try {
     const job = await newJob.save();
     // requirements is an array of {type, name}
-    if(typeof job_requirements !== "string") {
-      return res.status(400).json({ message: "Invalid job requirements" });
-    } 
-    const requirements = job_requirements.split(";");
-    for (let i = 0; i < requirements.length; i++) {
+    for (let i = 0; i < job_requirements.length; i++) {
       const requirement = await Requirement.create({
         JobId: job.id,
         type: job_requirements[i].type,
@@ -177,10 +85,12 @@ router.post("/", async (req, res) => {
       status: status,
       action: "CREATE",
     });
-    return res.status(201).json(job);
+    return res.status(200).json(job);
   } catch (err) {
     log(err, "ERROR", "JOB");
-    return res.status(500).json({ message: "Unknown error while enlisting job." });
+    return res
+      .status(500)
+      .json({ message: "Unknown error while enlisting job." });
   }
 });
 
@@ -274,7 +184,9 @@ router.put("/update", async (req, res) => {
     return res.status(200).json(job);
   } catch (err) {
     log(err, "ERROR", "JOB");
-    return res.status(500).json({ message: "Unknown error while updating job." });
+    return res
+      .status(500)
+      .json({ message: "Unknown error while updating job." });
   }
 });
 
@@ -387,7 +299,9 @@ router.get("/download/:fname", async (req, res) => {
     return res.download(filePath);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Unknown error while downloading file" });
+    return res
+      .status(500)
+      .json({ message: "Unknown error while downloading file" });
   }
 });
 
@@ -442,7 +356,9 @@ router.post("apply-job", async (req, res) => {
   }
 
   if (!eligible) {
-    return res.status(400).json({ message: "You must submit the requirements first" });
+    return res
+      .status(400)
+      .json({ message: "You must submit the requirements first" });
   }
 
   // Tạo application, trạng thái chờ duyệt
@@ -562,7 +478,9 @@ router.get("/created-job-detail/:job_id", async (req, res) => {
     return res.status(200).json(job);
   } catch (err) {
     log(err, "ERROR", "JOB");
-    return res.status(500).json({ message: "Unknown error while fetching job" });
+    return res
+      .status(500)
+      .json({ message: "Unknown error while fetching job" });
   }
 });
 
@@ -605,7 +523,9 @@ router.get("/applied-job-detail/:job_id", async (req, res) => {
     return res.status(200).json(application);
   } catch (err) {
     log(err, "ERROR", "JOB");
-    return res.status(500).json({ message: "Unknown error while fetching job" });
+    return res
+      .status(500)
+      .json({ message: "Unknown error while fetching job" });
   }
 });
 
@@ -626,7 +546,9 @@ router.get("/:id", async (req, res) => {
     return res.status(200).json(job);
   } catch (err) {
     log(err, "ERROR", "JOB");
-    return res.status(500).json({ message: "Unknown error while fetching job" });
+    return res
+      .status(500)
+      .json({ message: "Unknown error while fetching job" });
   }
 });
 
