@@ -20,10 +20,10 @@
 
   "database": {
     "dialect": "mssql",
-    "user": "remote",
-    "password": "rmpass",
+    "user": "sa",
+    "password": "sa",
     "server": "localhost",
-    "database": "mJob",
+    "database": "mJOB",
     "schema": "dbo",
     "encrypt": false,
     "pool": {
