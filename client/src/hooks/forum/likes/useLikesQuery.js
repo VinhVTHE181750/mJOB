@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import http from "../../../functions/httpService";
-import { API_URL } from "../../../App";
-
 const useLikesQuery = (type, id, refreshFlag) => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
@@ -14,8 +12,8 @@ const useLikesQuery = (type, id, refreshFlag) => {
   useEffect(() => {
     const fetchLikesAndDislikes = async () => {
       // these two don't need authorization
-      const urlLikes = `${API_URL}/forum/likes?type=${type}&id=${id}&like=true`;
-      const urlDislikes = `${API_URL}/forum/likes?type=${type}&id=${id}&like=false`;
+      const urlLikes = `/forum/likes?type=${type}&id=${id}&like=true`;
+      const urlDislikes = `/forum/likes?type=${type}&id=${id}&like=false`;
   
       try {
         const [responseLikes, responseDislikes] = await Promise.all([
@@ -32,7 +30,7 @@ const useLikesQuery = (type, id, refreshFlag) => {
   
     const fetchUserLikeStatus = async () => {
       // this one needs authorization
-      const url = `${API_URL}/forum/likes/liked?type=${type}&id=${id}`;
+      const url = `/forum/likes/liked?type=${type}&id=${id}`;
       try {
         const response = await http.get(url);
         setLiked(response.data.liked);

@@ -1,8 +1,8 @@
-import axios from "axios";
-import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import http from "../functions/httpService";
 
-const API_URL = "http://localhost:8000/api";
+
 
 const useUserAppliedJobList = (userId) => {
   const [jobList, setJobList] = useState([]);
@@ -12,8 +12,8 @@ const useUserAppliedJobList = (userId) => {
   useEffect(() => {
     const fetchJobList = async () => {
       try {
-        const url = `${API_URL}/myjobs/appliedlist/${userId}`;
-        const response = await axios.get(url);
+        const url = `/myjobs/appliedlist/${userId}`;
+        const response = await http.get(url);
         setJobList(response.data);
         setLoading(false);
       } catch (error) {

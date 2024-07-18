@@ -37,6 +37,7 @@ const insertComment = async (req, res) => {
     });
     return res.status(201).json(result);
   } catch (err) {
+    log(err, "ERROR", "Forum")
     return res
       .status(500)
       .json({ message: "Unexpected error while inserting comment" });

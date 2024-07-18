@@ -1,19 +1,18 @@
 // Marketplace.js
-import React, {useState} from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import HelpCenter from '../../components/HelpCenter.jsx';
-import Footer from '../../components/HomeFooter.jsx';
+import { useState } from "react";
+import HelpCenter from "../../components/HelpCenter.jsx";
+import Footer from "../../components/HomeFooter.jsx";
+import JobList from "../../components/job/JobList.jsx";
 import useJobList from "../../hooks/useJobList";
-import JobList from '../../components/job/JobList.jsx';
 
 // import './Marketplace.css'; // Custom styles (optional)
 
 function JobMarket() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [priceStart, setPriceStart] = useState('');
-  const [priceEnd, setPriceEnd] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [priceStart, setPriceStart] = useState("");
+  const [priceEnd, setPriceEnd] = useState("");
 
-  const {contents, loading, error } = useJobList();
+  const { contents, loading, error } = useJobList();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -24,15 +23,12 @@ function JobMarket() {
   }
 
   // console.log(contents);
-  const filteredContents = contents.filter(content =>
-    content.job_title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredContents = contents.filter((content) => content.job_title.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <>
-
       {/* <HomeNavbar /> */}
-        <JobList />
+      <JobList />
       <HelpCenter />
       <Footer />
     </>

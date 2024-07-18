@@ -66,7 +66,7 @@ const EditProfile = () => {
     };
 
     try {
-      const response = await axios.put(
+      const response = await http.put(
         `http://localhost:8000/api/profile/edit-profile/${userId}`,
         userData
       );

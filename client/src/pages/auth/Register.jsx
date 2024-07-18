@@ -1,11 +1,11 @@
-import React, {useEffect, useRef, useState} from "react";
-import {Form, FormGroup} from "react-bootstrap";
-import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+import { Form, FormGroup } from "react-bootstrap";
+import http from "../../functions/httpService";
 
 // Regular expressions for validation
 const REGEX_USERNAME = /^[A-Za-z][A-Za-z0-9_]{8,29}$/;
 const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-const REGISTER_API = "http://localhost:8000/api/auth/register";
+const REGISTER_API = "/auth/register";
 
 const Register = () => {
   const [user, setUser] = useState("");
@@ -44,7 +44,7 @@ const Register = () => {
       return;
     }
     try {
-      const response = await axios.post(
+      const response = await http.post(
         REGISTER_API,
         JSON.stringify({ username: user, password: pwd }),
         { headers: { "Content-Type": "application/json" } }
