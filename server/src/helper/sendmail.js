@@ -3,8 +3,8 @@ const sendMail = async (email, digiritRandom) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "locnt@bsscommerce.com",
-      pass: "Nguyenloc2001",
+      user: "ducdmhe176494@fpt.edu.vn", // sửa cái mail này đi
+      pass: "nheb jwhj cjzl cqjb",
     },
   });
 

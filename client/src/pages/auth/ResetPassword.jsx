@@ -27,6 +27,7 @@ const ResetPassword = () => {
   };
 
   const handleSubmit = async (e) => {
+    console.log(123456)
     e.preventDefault();
     const request = await axios.post(`/auth/reset-password`, {
       email: user,
@@ -110,7 +111,7 @@ const ResetPassword = () => {
 
             <Button
               type="submit"
-              disabled={!validName || !validPwd || !validMatch}
+              disabled={!validPwd || !validMatch}
               className="mt-2"
             >
               Submit
