@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ViewProfile.css";
-import { useParams, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import axios from "axios";
+import useWhoAmI from "../../hooks/user/useWhoAmI";
 
 const Profile = () => {
   const [profile, setProfile] = useState({});
-  const { userId } = useParams();
+  const { userId } = useWhoAmI();
   const navigate = useNavigate();
 
   const [jobTitle, setJobTitle] = useState("");
@@ -21,7 +22,9 @@ const Profile = () => {
   useEffect(() => {
     const fetchWorkExperience = async () => {
       try {
-        const response = await http.get(`http://localhost:8000/api/workexp/user/${userId}`);
+        const response = await axios.get(
+          `http://localhost:8000/api/workexp/user/${userId}`
+        );
         // console.log("Response:", response);
         const workExperience = response.data;
 
@@ -30,8 +33,16 @@ const Profile = () => {
         setJobDescription(workExperience.description || "");
         setCompany(workExperience.company || "");
         setLocation(workExperience.location || "");
-        setStartDate(workExperience.startDate ? new Date(workExperience.startDate).toLocaleDateString() : "");
-        setEndDate(workExperience.endDate ? new Date(workExperience.endDate).toLocaleDateString() : "");
+        setStartDate(
+          workExperience.startDate
+            ? new Date(workExperience.startDate).toLocaleDateString()
+            : ""
+        );
+        setEndDate(
+          workExperience.endDate
+            ? new Date(workExperience.endDate).toLocaleDateString()
+            : ""
+        );
         setOtherInformation(workExperience.otherInformation || ""); // Ensure otherInformation is set or empty string
       } catch (error) {
         console.error("Error fetching work experience data:", error);
@@ -44,7 +55,9 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await http.get(`http://localhost:8000/api/profile/${userId}`);
+        const response = await axios.get(
+          `http://localhost:8000/api/profile/${userId}`
+        );
         setProfile(response.data);
       } catch (error) {
         console.error("There was an error fetching the profile data!", error);
@@ -102,7 +115,9 @@ const Profile = () => {
                 <Col md={6}>
                   <p>
                     <strong>Full Name:</strong>{" "}
-                    <span id="fullName">{profile.firstName} {profile.lastName}</span>
+                    <span id="fullName">
+                      {profile.firstName} {profile.lastName}
+                    </span>
                   </p>
                   <p>
                     <strong>Date of Birth:</strong>{" "}
@@ -149,20 +164,17 @@ const Profile = () => {
                 <span id="jobDescription">{jobDescription}</span>
               </p>
               <p>
-                <strong>Company:</strong>{" "}
-                <span id="company">{company}</span>
+                <strong>Company:</strong> <span id="company">{company}</span>
               </p>
               <p>
-                <strong>Location:</strong>{" "}
-                <span id="location">{location}</span>
+                <strong>Location:</strong> <span id="location">{location}</span>
               </p>
               <p>
                 <strong>Start Date:</strong>{" "}
                 <span id="startDate">{startDate}</span>
               </p>
               <p>
-                <strong>End Date:</strong>{" "}
-                <span id="endDate">{endDate}</span>
+                <strong>End Date:</strong> <span id="endDate">{endDate}</span>
               </p>
               <p>
                 <strong>Other Information:</strong>{" "}

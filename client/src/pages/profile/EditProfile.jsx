@@ -94,6 +94,12 @@ const EditProfile = () => {
               >
                 Work Experience
               </Nav.Link>
+              <Nav.Link
+                href={`/settings`}
+                className="text-black"
+              >
+                Settings
+              </Nav.Link>
               <Row>
                 <Col>
                   <Button variant="danger" href="/logout">
