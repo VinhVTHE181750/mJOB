@@ -3,6 +3,7 @@ import { Container, Row, Col, Form, Button, Card, Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router";
+import { FaUserEdit, FaBriefcase, FaSignOutAlt, FaCog } from "react-icons/fa";
 
 const EditProfile = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -82,31 +83,25 @@ const EditProfile = () => {
       <h1 className="text-center my-4">Profile Edit</h1>
       <Container fluid className="mt-3">
         <Row>
-          <Col md={2}>
+        <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
+            <h2 className="text-center">Navigation</h2>
             <Nav className="flex-column">
-              <h2>Navigation</h2>
-              <Nav.Link href={`/editprofile/${userId}`} className="text-black">
+              <Nav.Link href={`/editprofile/${userId}`} className="text-dark mb-2 d-flex align-items-center">
+                <FaUserEdit className="me-2" />
                 Profile
               </Nav.Link>
-              <Nav.Link
-                href={`/workexperience/${userId}`}
-                className="text-black"
-              >
+              <Nav.Link href={`/workexperience/${userId}`} className="text-dark mb-2 d-flex align-items-center">
+                <FaBriefcase className="me-2" />
                 Work Experience
               </Nav.Link>
-              <Nav.Link
-                href={`/settings`}
-                className="text-black"
-              >
+              <Nav.Link href={`/settings`} className="text-dark mb-2 d-flex align-items-center">
+                <FaCog className="me-2" />
                 Settings
               </Nav.Link>
-              <Row>
-                <Col>
-                  <Button variant="danger" href="/logout">
-                    Log Out
-                  </Button>
-                </Col>
-              </Row>
+              <Button variant="danger" href="/logout" className="mt-3 d-flex align-items-center">
+                <FaSignOutAlt className="me-2" />
+                Logout
+              </Button>
             </Nav>
           </Col>
           <Col md={10} className="p-4">
