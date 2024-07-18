@@ -2,6 +2,7 @@
 // Home
 import HomeGuest from "./pages/home/HomeGuest";
 import HomePage from "./pages/home/HomePage";
+import HomeUser from "./pages/home/HomeUser";
 
 // Auth
 import Login from "./pages/auth/Login";
@@ -65,13 +66,16 @@ import PaymentHistory from "./pages/payment/PaymentHistory";
 import Deposit from "./pages/payment/Deposit";
 import ContinuePayment from "./pages/payment/ContinuePayment";
 
+import HomeNavbar from "./components/home/HomeNavbar";
 function App() {
   return (
     <BrowserRouter>
       <UserInformationProvider>
         <AuthProvider className="page">
           <ForumProvider>
-            <AppNavbar className="mb-auto" />
+            {/* <AppNavbar className="mb-auto" /> */}
+
+            <HomeNavbar />
             <div className="min-vh-100 mt-5">
               <Routes>
                 {/* AUTH ROUTES */}
@@ -261,20 +265,17 @@ function App() {
                 />
 
                 {/* TECHNICAL ROUTES */}
-                <Route
+                <Route exact path="/to-login" element={<ToLogin />} />
+                <Route exact path="*" element={<PageNotFound />} />
+                <Route exact path="/dashboard" element={<Dashboard />} />
+
+                <Route exact path="/faq" element={<FaqPage />} />
+                <Route exact path="/report" element={<ReportPage />} />
+                <Route exact path="/balance" element={<DrawBalacePage />} />
+                <Route 
                   exact
-                  path="/to-login"
-                  element={<ToLogin />}
-                />
-                <Route
-                  exact
-                  path="*"
-                  element={<PageNotFound />}
-                />
-                <Route
-                  exact
-                  path="/dashboard"
-                  element={<Dashboard />}
+                  path="/homeuser"
+                  element={<HomeUser />}
                 />
               </Routes>
             </div>
@@ -285,7 +286,7 @@ function App() {
     </BrowserRouter>
   );
 }
-
+export const API_URL = "http://localhost:8000/api";
 export default App;
 export const API_URL = "http://localhost:8000/api";
 export const SOCKET_URL = "http://localhost:8000/";

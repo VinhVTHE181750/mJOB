@@ -72,16 +72,44 @@ function JobList() {
     });
 
 
+    function formatCurrency(amount, currencyCode) {
+      const locales = {
+        'USD': 'en-US',
+        'EUR': 'de-DE',
+        'VND': 'vi-VN'
+      };
     
+      const formatter = new Intl.NumberFormat(locales[currencyCode] || 'en-US', {
+        style: 'currency',
+        currency: currencyCode,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    
+      // Format the amount
+      let formatted = formatter.format(amount);
+      if (currencyCode === 'USD') {
+        formatted = formatted.replace('$', '').trim() + '$';
+      }
+    
+      // Remove any space between the amount and the currency symbol
+      formatted = formatted.replace(/\s/g, '');
+    
+      return formatted;
+    }
+
+    console.log(formatCurrency(20, 'USD'));   // Output: 20.00 $
+    console.log(formatCurrency(30, 'EUR'));   // Output: 30,00 €
+    console.log(formatCurrency(100000, 'VND')); // Output: 100.000,00 ₫
 
     const formatSalary = (type, amount,currency) => {
       switch (type.toUpperCase()) {
         case 'ONETIME':
-          return `${amount} ${currency}`;
+          return `${formatCurrency(amount, currency)}`;
         case 'HOURLY':
-          return `${amount} ${currency}/hour`;
+          return `${formatCurrency(amount, currency)}/Hour`;
         case 'MONTHLY':
-          return `${amount} ${currency}/month`;
+          return `${formatCurrency(amount, currency)}/Month`;
         default:
           return amount;
       }
