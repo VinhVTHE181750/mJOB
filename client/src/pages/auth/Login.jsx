@@ -29,56 +29,53 @@ const Login = () => {
       {!loggedIn ? (
         <Container>
           <Row className="justify-content-md-center">
-            <Col md={4}>
-              <h2>Login</h2>
-              {/* <p>Current userID: {userId}</p> */}
-              <p>{error}</p>
-              <Form onSubmit={handleLogin}>
-                <Form.Group controlId="formBasicUsername">
-                  <Form.Label>Username</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                  />
-                </Form.Group>
+            <h2>Login</h2>
+            {/* <p>Current userID: {userId}</p> */}
+            <p>{error}</p>
+            <Form onSubmit={handleLogin}>
+              <Form.Group controlId="formBasicUsername">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+              </Form.Group>
 
-                <Form.Group controlId="formBasicPassword">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </Form.Group>
+              <Form.Group controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </Form.Group>
 
-                <Button
-                  variant="primary"
-                  type="submit"
-                  className="mt-2"
-                >
-                  Login
-                </Button>
-              </Form>
-            </Col>
+              <a
+                onClick={() => {
+                  navigate("/reset-password");
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                Forget Password?
+              </a>
+              <br />
+
+              <Button variant="primary" type="submit" className="mt-2">
+                Login
+              </Button>
+            </Form>
           </Row>
         </Container>
       ) : (
         <Container>
           <h2>You are already logged in</h2>
-          <NavigateButton
-            path="/home"
-            text="Go to Homepage"
-          />
-          <NavigateButton
-            path="/logout"
-            text="Logout"
-            variant="danger"
-          />
+          <NavigateButton path="/home" text="Go to Homepage" />
+          <NavigateButton path="/logout" text="Logout" variant="danger" />
         </Container>
       )}
     </>

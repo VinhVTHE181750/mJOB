@@ -20,10 +20,10 @@
 
   "database": {
     "dialect": "mssql",
-    "user": "sa",
+    "user": "new_user",
     "password": "123",
     "server": "localhost",
-    "database": "mJob",
+    "database": "mjob2",
     "schema": "dbo",
     "encrypt": false,
     "pool": {

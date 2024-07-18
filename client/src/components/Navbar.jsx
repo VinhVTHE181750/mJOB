@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 
 const AppNavbar = () => {
   // const { isLogin } = useContext(AuthContext);
-  const { isLogin } = useAuth();
+  const { isLogin, userInformation } = useAuth();
 
   return (
     <Navbar className="navbar mb-auto">
@@ -19,16 +19,31 @@ const AppNavbar = () => {
             <NavigateLink className="navbar-btn" path="/home" text="Home" />
             <NavigateLink className="navbar-btn" path="/forum" text="Forum" />
             <NavigateLink className="navbar-btn" path="/jobs" text="Jobs" />
+            <NavigateLink className="navbar-btn" path="/faq" text="FAQs" />
+            <NavigateLink
+              className="navbar-btn"
+              path="/report"
+              text="Reports"
+            />
             <NavigateLink
               className="navbar-btn"
               path="/technical"
               text="Technical"
             />
-            <NavigateLink
-              className="navbar-btn"
-              path="/profile"
-              text="Profile"
-            />
+            {isLogin && (
+              <>
+                <NavigateLink
+                  className="navbar-btn"
+                  path={`/profile/${userInformation?.id}`}
+                  text="Profile"
+                />
+                <NavigateLink
+                  className="navbar-btn"
+                  path={`/balance`}
+                  text="Balance"
+                />
+              </>
+            )}
           </Nav>
           <Nav className="navbar-section">
             {isLogin ? (
