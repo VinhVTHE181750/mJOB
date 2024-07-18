@@ -1,6 +1,7 @@
 //// Page imports
 // Home
 import HomeGuest from "./pages/home/HomeGuest";
+import HomePage from "./pages/home/HomePage";
 
 // Auth
 import Login from "./pages/auth/Login";
@@ -20,13 +21,13 @@ import Jobs from "./pages/home/Jobs";
 import ActiveJob from "./pages/jobs/ActiveJob";
 import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 import ApplyJob from "./pages/jobs/ApplyJob";
-import ConfirmJob from "./pages/jobs/ConfirmJob";
 import CreatedJobDetail from "./pages/jobs/CreatedJobDetail";
-import EditJob from "./pages/jobs/EditJob";
 import EnlistJob from "./pages/jobs/EnlistJob";
 import JobDetail from "./pages/jobs/JobDetail";
 import Market from "./pages/jobs/Market";
 import MyJobs from "./pages/jobs/MyJobs";
+import EditJob from "./pages/jobs/EditJob";
+import ConfirmJob from "./pages/jobs/ConfirmJob";
 
 // Technical
 import Dashboard from "./pages/home/Dashboard";
@@ -34,10 +35,10 @@ import PageNotFound from "./pages/technical/PageNotFound";
 
 // Users
 
-import Users from "./pages/home/Users";
 import EditProfile from "./pages/profile/EditProfile";
-import Profile from "./pages/profile/Profile";
 import WorkExperience from "./pages/profile/WorkExperience";
+import Profile from "./pages/profile/Profile";
+import Users from "./pages/home/Users";
 import Settings from "./pages/technical/Settings";
 
 // Components
@@ -56,17 +57,13 @@ import "./App.css";
 import { AuthProvider } from "./context/AuthContext";
 import { ForumProvider } from "./context/ForumContext";
 import UserInformationProvider from "./context/UserContext";
-import DrawBalacePage from "./pages/balance/drawBalance";
-import ToLogin from "./pages/error/ToLogin";
-import FaqPage from "./pages/faq/Faq";
-import Home from "./pages/home/Home";
-import JobHistory from "./pages/jobs/JobHistory";
-import ContinuePayment from "./pages/payment/ContinuePayment";
-import Deposit from "./pages/payment/Deposit";
-import PaymentHistory from "./pages/payment/PaymentHistory";
 import PaymentPortal from "./pages/payment/PaymentPortal";
-import ReportPage from "./pages/report/report";
 import CreateTicketPage from "./pages/user/CreateTicket";
+import JobHistory from "./pages/jobs/JobHistory";
+import ToLogin from "./pages/error/ToLogin";
+import PaymentHistory from "./pages/payment/PaymentHistory";
+import Deposit from "./pages/payment/Deposit";
+import ContinuePayment from "./pages/payment/ContinuePayment";
 
 function App() {
   return (
@@ -78,9 +75,21 @@ function App() {
             <div className="min-vh-100 mt-5">
               <Routes>
                 {/* AUTH ROUTES */}
-                <Route exact path="/login" element={<Login />} />
-                <Route exact path="/logout" element={<Logout />} />
-                <Route exact path="/register" element={<Register />} />
+                <Route
+                  exact
+                  path="/login"
+                  element={<Login />}
+                />
+                <Route
+                  exact
+                  path="/logout"
+                  element={<Logout />}
+                />
+                <Route
+                  exact
+                  path="/register"
+                  element={<Register />}
+                />
                 <Route
                   exact
                   path="/reset-password"
@@ -96,14 +105,30 @@ function App() {
                 <Route
                   exact
                   path="/home"
-                  element={<Home />}
+                  element={<HomePage />}
                 />
 
                 {/* FORUM ROUTES */}
-                <Route exact path="/forum" element={<Forum />} />
-                <Route exact path="/posts/:id" element={<PostDetail />} />
-                <Route exact path="/forum/add" element={<AddPost />} />
-                <Route exact path="/forum/edit/:id" element={<EditPost />} />
+                <Route
+                  exact
+                  path="/forum"
+                  element={<Forum />}
+                />
+                <Route
+                  exact
+                  path="/posts/:id"
+                  element={<PostDetail />}
+                />
+                <Route
+                  exact
+                  path="/forum/add"
+                  element={<AddPost />}
+                />
+                <Route
+                  exact
+                  path="/forum/edit/:id"
+                  element={<EditPost />}
+                />
                 <Route
                   exact
                   path="/forum/categories"
@@ -111,16 +136,56 @@ function App() {
                 />
 
                 {/* JOBS ROUTES */}
-                <Route exact path="/market" element={<Market />} />
-                <Route exact path="/jobs" element={<Jobs />} />
-                <Route exact path="/jobs/:id" element={<JobDetail />} />
-                <Route exact path="/jobs/add" element={<EnlistJob />} />
-                <Route exact path="/myjobs" element={<MyJobs />} />
-                <Route exact path="/myjobs/history" element={<JobHistory />} />
-                <Route exact path="/jobs/edit/:id" element={<EditJob />} />
-                <Route exact path="/confirm-job" element={<ConfirmJob />} />
-                <Route exact path="/apply/:job_id" element={<ApplyJob />} />
-                <Route exact path="/active-job" element={<ActiveJob />} />
+                <Route
+                  exact
+                  path="/market"
+                  element={<Market />}
+                />
+                <Route
+                  exact
+                  path="/jobs"
+                  element={<Jobs />}
+                />
+                <Route
+                  exact
+                  path="/jobs/:id"
+                  element={<JobDetail />}
+                />
+                <Route
+                  exact
+                  path="/jobs/add"
+                  element={<EnlistJob />}
+                />
+                <Route
+                  exact
+                  path="/myjobs"
+                  element={<MyJobs />}
+                />
+                <Route
+                  exact
+                  path="/myjobs/history"
+                  element={<JobHistory />}
+                />
+                <Route
+                  exact
+                  path="/jobs/edit/:id"
+                  element={<EditJob />}
+                />
+                <Route
+                  exact
+                  path="/confirm-job"
+                  element={<ConfirmJob />}
+                />
+                <Route
+                  exact
+                  path="/apply/:job_id"
+                  element={<ApplyJob />}
+                />
+                <Route
+                  exact
+                  path="/active-job"
+                  element={<ActiveJob />}
+                />
                 <Route
                   exact
                   path="/created-job-details/:job_id"
@@ -133,9 +198,17 @@ function App() {
                 />
 
                 {/* PAYMENT ROUTES */}
-                <Route exact path="/payment" element={<PaymentPortal />} />
+                <Route
+                  exact
+                  path="/payment"
+                  element={<PaymentPortal />}
+                />
 
-                <Route exact path="/deposit" element={<Deposit />} />
+                <Route
+                  exact
+                  path="/deposit"
+                  element={<Deposit />}
+                />
 
                 <Route
                   exact
@@ -148,33 +221,61 @@ function App() {
                   path="/payment-history"
                   element={<PaymentHistory />}
                 />
-                <Route exact path="/transfer" element={<TransferMoney />} />
+                <Route
+                  exact
+                  path="/transfer"
+                  element={<TransferMoney />}
+                />
 
                 {/* USERS ROUTES */}
                 <Route
                   exact
-                  path="/editprofile"
+                  path="/editprofile/:userId"
                   element={<EditProfile />}
                 />
-                <Route exact path="/profile/:userId" element={<Profile />} />
                 <Route
                   exact
-                  path="/workexperience"
+                  path="/profile"
+                  element={<Profile />}
+                />
+                <Route
+                  exact
+                  path="/workexperience/:userId"
                   element={<WorkExperience />}
                 />
 
-                <Route exact path="/users" element={<Users />} />
-                <Route exact path="/settings" element={<Settings />} />
-                <Route exact path="/ticket" element={<CreateTicketPage />} />
+                <Route
+                  exact
+                  path="/users"
+                  element={<Users />}
+                />
+                <Route
+                  exact
+                  path="/settings"
+                  element={<Settings />}
+                />
+                <Route
+                  exact
+                  path="/ticket"
+                  element={<CreateTicketPage />}
+                />
 
                 {/* TECHNICAL ROUTES */}
-                <Route exact path="/to-login" element={<ToLogin />} />
-                <Route exact path="*" element={<PageNotFound />} />
-                <Route exact path="/dashboard" element={<Dashboard />} />
-
-                <Route exact path="/faq" element={<FaqPage />} />
-                <Route exact path="/report" element={<ReportPage />} />
-                <Route exact path="/balance" element={<DrawBalacePage />} />
+                <Route
+                  exact
+                  path="/to-login"
+                  element={<ToLogin />}
+                />
+                <Route
+                  exact
+                  path="*"
+                  element={<PageNotFound />}
+                />
+                <Route
+                  exact
+                  path="/dashboard"
+                  element={<Dashboard />}
+                />
               </Routes>
             </div>
             <HomeFooter />
@@ -186,3 +287,5 @@ function App() {
 }
 
 export default App;
+export const API_URL = "http://localhost:8000/api";
+export const SOCKET_URL = "http://localhost:8000/";
