@@ -19,7 +19,7 @@ const UserInformationProvider = ({ children }) => {
       const request = await http.post("/auth/logout");
       if (request.status === 200) {
         setIsLogin(false);
-        navigate("/");
+        navigate("/login");
       }
     } catch (error) {
       // // console.log(error);

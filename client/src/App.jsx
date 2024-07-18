@@ -64,6 +64,7 @@ import ToLogin from "./pages/error/ToLogin";
 import PaymentHistory from "./pages/payment/PaymentHistory";
 import Deposit from "./pages/payment/Deposit";
 import ContinuePayment from "./pages/payment/ContinuePayment";
+import Home from "./pages/home/Home";
 
 function App() {
   return (
@@ -105,7 +106,7 @@ function App() {
                 <Route
                   exact
                   path="/home"
-                  element={<HomePage />}
+                  element={<Home />}
                 />
 
                 {/* FORUM ROUTES */}
