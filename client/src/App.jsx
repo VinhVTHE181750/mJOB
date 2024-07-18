@@ -1,6 +1,8 @@
 //// Page imports
 // Home
 import HomeGuest from "./pages/home/HomeGuest";
+import HomePage from "./pages/home/HomePage";
+import HomeUser from "./pages/home/HomeUser";
 
 // Auth
 import Login from "./pages/auth/Login";
@@ -68,13 +70,16 @@ import PaymentPortal from "./pages/payment/PaymentPortal";
 import ReportPage from "./pages/report/report";
 import CreateTicketPage from "./pages/user/CreateTicket";
 
+import HomeNavbar from "./components/home/HomeNavbar";
 function App() {
   return (
     <BrowserRouter>
       <UserInformationProvider>
         <AuthProvider className="page">
           <ForumProvider>
-            <AppNavbar className="mb-auto" />
+            {/* <AppNavbar className="mb-auto" /> */}
+
+            <HomeNavbar />
             <div className="min-vh-100 mt-5">
               <Routes>
                 {/* AUTH ROUTES */}
@@ -175,6 +180,11 @@ function App() {
                 <Route exact path="/faq" element={<FaqPage />} />
                 <Route exact path="/report" element={<ReportPage />} />
                 <Route exact path="/balance" element={<DrawBalacePage />} />
+                <Route 
+                  exact
+                  path="/homeuser"
+                  element={<HomeUser />}
+                />
               </Routes>
             </div>
             <HomeFooter />
@@ -184,5 +194,5 @@ function App() {
     </BrowserRouter>
   );
 }
-
+export const API_URL = "http://localhost:8000/api";
 export default App;

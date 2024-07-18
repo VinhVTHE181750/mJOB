@@ -12,7 +12,16 @@ function HotJobs() {
     }
   
     if (error) {
-      return <div>Error: {error.message}</div>;
+      return <Card className="post-card mb-5">
+      <Card.Body>
+        <Card.Title as="h2" style={{ color: "red" }}>
+          This Content is Currently Unavailable
+        </Card.Title>
+        <Card.Text className="post-card-content">
+          Please check back later for updates.
+        </Card.Text>
+      </Card.Body>
+    </Card>;
     }
   
     return (
