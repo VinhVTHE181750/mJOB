@@ -113,7 +113,7 @@ Job.init(
         "COMPLETED", // deny editing 
         "DELISTED", // deny editing and cannot be applied to
       ),
-      allowNull: false,
+      allowNull: true,
       defaultValue: "INACTIVE",
     },
   },
