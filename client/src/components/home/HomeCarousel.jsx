@@ -12,17 +12,9 @@ function HomeCarousel() {
   }
 
   if (error) {
-    return <Card className="post-card mb-5">
-    <Card.Body>
-      <Card.Title as="h2" style={{ color: "red" }}>
-        This Content is Currently Unavailable
-      </Card.Title>
-      <Card.Text className="post-card-content">
-        Please check back later for updates.
-      </Card.Text>
-    </Card.Body>
-  </Card>;
+    return <div>Error: {error.message}</div>;
   }  
+  // console.log(contents);
 
   return (
     <>

@@ -10,6 +10,7 @@ import Footer from '../../components/HomeFooter.jsx';
 function HomeGuest() {
     return (
       <div className="App">
+        {/* <HomeNavbar /> */}
         <CarouselComponent />    
         <HotJob />    
         <HelpCenter />
