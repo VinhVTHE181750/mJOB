@@ -2,43 +2,54 @@ const CryptoJS = require("crypto-js");
 const express = require("express");
 const router = express.Router();
 const sql = require("mssql");
-
-const SQL_CREATE_TICKET = `
-  INSERT INTO ticket (user_id, ticket_category, ticket_title, ticket_content)
-  VALUES (@user_id, @ticket_category, @ticket_title, @ticket_content);
-`;
+const Ticket = require("../models/support/Ticket");
+const { log } = require("../utils/Logger");
 
 router.post("/create", async (req, res) => {
-  const { user_id, ticket_category, ticket_title, ticket_content } = req.body;
-  const transaction = new sql.Transaction();
   try {
-    await transaction.begin();
-
-    const ticketRequest = new sql.Request(transaction);
-    const ticketResult = await ticketRequest
-      .input("user_id", sql.Int, user_id)
-      .input("ticket_category", sql.VarChar(16), ticket_category)
-      .input("ticket_title", sql.NVarChar(sql.MAX), ticket_title)
-      .input("ticket_content", sql.NVarChar(sql.MAX), ticket_content)
-      .query(`INSERT INTO ticket (user_id, ticket_category, ticket_title, ticket_content)
-              VALUES (@user_id, @ticket_category, @ticket_title, @ticket_content);
-              SELECT SCOPE_IDENTITY() AS ticket_id;`);
-
-    const newTicketID = ticketResult.recordset[0].ticket_id;
-
-    const logRequest = new sql.Request(transaction);
-    await logRequest
-      .input("ticket_id", sql.Int, newTicketID)
-      .input("ticket_log_type", sql.VarChar(16), "create")
-      .query(`INSERT INTO ticket_log (ticket_id, ticket_log_type)
-              VALUES (@ticket_id, @ticket_log_type);`);
-
-    await transaction.commit();
-    res.status(201).send({ message: "Ticket created successfully!" });
-  } catch (err) {
-    console.error("Error inserting ticket:", err);
-    res.status(500).send({ message: "Failed to create ticket." });
+    const params = req.body;
+    const ticket = await Ticket.create(params); //
+    if (ticket) {
+      return res.status(201).json({ message: "Create Ticket Successfully" });
+    } else {
+      return res.status(400).send({ message: "Failed to create" });
+    }
+  } catch (error) {
+    console.error("Error creating", error);
+    return res.status(500).send({ message: "Server error." });
   }
 });
+
+router.get("/", async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const ticket = await Ticket.findAll({ where: { by: userId } }); //
+    if (ticket) {
+      return res.status(200).json({ data: ticket });
+    } else {
+      return res.status(400).send({ message: "Failed to fetch" });
+    }
+  } catch (error) {
+    console.error("Error creating", error);
+    return res.status(500).send({ message: "Server error." });
+  }
+});
+
+// 1. Taoj route
+// router.get("/test", async (req, res) => {
+//   try {
+//     // create ticket
+//     const ticket = await Ticket.create({
+//       type: "REPORT",
+//       title: "Title",
+//       category: "test",
+//       description: "Description",
+//     });
+//     return res.status(200).json({ message: "", ticket });
+//   } catch (err) {
+//     log(err, "ERROR");
+//     res.status(500).send({ message: "Failed to create ticket" });
+//   }
+// });
 
 module.exports = router;

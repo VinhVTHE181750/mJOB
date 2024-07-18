@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import { API_URL } from "../../App";
+import { useState } from "react";
+import http from "../../functions/httpService";
 
-import axios from 'axios';
 
 const useUpdateUserBalance = () => {
   const [loading, setLoading] = useState(false);
@@ -14,7 +13,7 @@ const useUpdateUserBalance = () => {
     setSuccess(false);
 
     try {
-      const response = await axios.put(`${API_URL}/payment/update-balance`, {
+      const response = await http.put(`/payment/update-balance`, {
         userId,
         balance,
       });

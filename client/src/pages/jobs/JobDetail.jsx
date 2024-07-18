@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
-import styled, {keyframes} from 'styled-components';
-import {useNavigate, useParams} from 'react-router-dom';
-import {FaArrowLeft} from 'react-icons/fa';
-
+import { useEffect, useState } from "react";
+import { FaArrowLeft } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
+import http from "../../functions/httpService";
 
 const BackgroundContainer = styled.div`
   background: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
@@ -27,7 +26,7 @@ const JobDetailContainer = styled.div`
   @media (max-width: 600px) {
     padding: 15px;
   }
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 `;
 
 const BackButton = styled.button`
@@ -122,18 +121,18 @@ const JobDetail = () => {
   const [job, setJob] = useState(null);
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const jobId = id;
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/jobs/${jobId}`);
+        const response = await http.get(`/${jobId}`);
         setJob(response.data);
         setLoading(false);
       } catch (error) {
-        setError('Error fetching job details.');
+        setError("Error fetching job details.");
         setLoading(false);
       }
     };
@@ -141,20 +140,20 @@ const JobDetail = () => {
     fetchJobDetails();
   }, [jobId]);
   const formatDate = (dateString) => {
-    if (!dateString) return '';
+    if (!dateString) return "";
 
     // Nếu đầu vào chứa 'T' hoặc 'Z', loại bỏ phần thời gian
-    let dateOnly = dateString.split('T')[0];
+    let dateOnly = dateString.split("T")[0];
 
     // Nếu chuỗi có dạng 'YYYY-MM-DD', tách và định dạng lại
-    if (dateOnly.includes('-')) {
-      const [year, month, day] = dateOnly.split('-');
+    if (dateOnly.includes("-")) {
+      const [year, month, day] = dateOnly.split("-");
       return `${day}/${month}/${year}`;
     }
 
     // Nếu không, chuyển đổi thành đối tượng Date và định dạng lại
     const dateObj = new Date(dateOnly);
-    return dateObj.toLocaleDateString('vi-VN');
+    return dateObj.toLocaleDateString("vi-VN");
   };
 
   if (loading) {
@@ -164,7 +163,6 @@ const JobDetail = () => {
   if (error) {
     return <ErrorMessage>{error}</ErrorMessage>;
   }
-
 
   return (
     <BackgroundContainer>
@@ -198,7 +196,9 @@ const JobDetail = () => {
         <Section>
           <Label>Compensation:</Label>
           <Text>Type: {job.job_compensation_type}</Text>
-          <Text>Amount: {job.job_compensation_amounts} {job.job_compensation_currencies} per {job.job_compensation_periods}</Text>
+          <Text>
+            Amount: {job.job_compensation_amounts} {job.job_compensation_currencies} per {job.job_compensation_periods}
+          </Text>
         </Section>
         <Section>
           <Label>Custom Iterations:</Label>
@@ -212,7 +212,7 @@ const JobDetail = () => {
           <Label>Contact Info:</Label>
           <Text>{job.job_contact_info}</Text>
         </Section>
-        <ApplyButton onClick={() => navigate('/confirm-job', { state: { job } })}>Apply</ApplyButton>
+        <ApplyButton onClick={() => navigate("/confirm-job", { state: { job } })}>Apply</ApplyButton>
       </JobDetailContainer>
     </BackgroundContainer>
   );
