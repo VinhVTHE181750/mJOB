@@ -34,7 +34,7 @@ const AppNavbar = () => {
               <>
                 <NavigateLink
                   className="navbar-btn"
-                  path={`/profile/${userInformation?.id}`}
+                  path={`/profile`}
                   text="Profile"
                 />
                 <NavigateLink
