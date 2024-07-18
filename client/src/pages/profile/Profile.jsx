@@ -2,13 +2,17 @@ import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ViewProfile.css";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import useWhoAmI from "../../hooks/user/useWhoAmI";
 
 const Profile = () => {
   const [profile, setProfile] = useState({});
-  const { userId } = useWhoAmI();
+  const whoAmI = useWhoAmI();
+  const params = useParams();
+  const userId = whoAmI?.userId ?? params;
+  console.log("userId:", params);
+
   const navigate = useNavigate();
 
   const [jobTitle, setJobTitle] = useState("");
@@ -18,6 +22,21 @@ const Profile = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [otherInformation, setOtherInformation] = useState("");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/profile/${userId}`
+        );
+        setProfile(response.data);
+      } catch (error) {
+        console.error("There was an error fetching the profile data!", error);
+      }
+    };
+
+    fetchProfile();
+  }, [userId]);
 
   useEffect(() => {
     const fetchWorkExperience = async () => {
@@ -50,21 +69,6 @@ const Profile = () => {
     };
 
     fetchWorkExperience();
-  }, [userId]);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8000/api/profile/${userId}`
-        );
-        setProfile(response.data);
-      } catch (error) {
-        console.error("There was an error fetching the profile data!", error);
-      }
-    };
-
-    fetchProfile();
   }, [userId]);
 
   const handleEditClick = () => {

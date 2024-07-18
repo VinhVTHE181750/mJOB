@@ -2,10 +2,13 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import { useAuth } from "../context/UserContext";
 import NavigateLink from "./ui/buttons/NavigateLink";
 import Cookies from "js-cookie";
+import useWhoAmI from "../hooks/user/useWhoAmI";
+
 
 const AppNavbar = () => {
   // const { isLogin } = useContext(AuthContext);
   const { isLogin, userInformation } = useAuth();
+  const { userId } = useWhoAmI();
 
   return (
     <Navbar className="navbar mb-auto">
@@ -34,7 +37,7 @@ const AppNavbar = () => {
               <>
                 <NavigateLink
                   className="navbar-btn"
-                  path={`/profile`}
+                  path={`/profile/${userId}`}
                   text="Profile"
                 />
                 <NavigateLink
