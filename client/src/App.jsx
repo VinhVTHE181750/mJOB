@@ -194,5 +194,5 @@ function App() {
     </BrowserRouter>
   );
 }
-
+export const API_URL = "http://localhost:8000/api";
 export default App;
