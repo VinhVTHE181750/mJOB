@@ -284,7 +284,7 @@ const EnlistJob = () => {
               </Form.Control>
             </Form.Group>
           </Col>
-          <Col md={3}>
+          <Col>
             <Form.Group controlId="amount">
               <Form.Label>Amount</Form.Label>
               <Form.Control
@@ -295,21 +295,6 @@ const EnlistJob = () => {
                 onChange={handleChange}
               />
             </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Label>per</Form.Label>
-            <Form.Control
-              as="select"
-              name="job_compensation_periods"
-              value={formValues.job_compensation_periods}
-              onChange={handleChange}
-            >
-              <option>month</option>
-              <option>week</option>
-              <option>day</option>
-              <option>hour</option>
-              <option>custom</option>
-            </Form.Control>
           </Col>
         </Row>
         <Row>
