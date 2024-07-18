@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useEffect, useState } from "react";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { useNavigate } from "react-router";
+import http from "../../functions/httpService";
+import useWhoAmI from "../../hooks/user/useWhoAmI";
 import "./ViewProfile.css";
-import { useParams, useNavigate } from "react-router";
-import axios from "axios";
 
 const Profile = () => {
   const [profile, setProfile] = useState({});
-  const { userId } = useParams();
+  const { userId } = useWhoAmI();
   const navigate = useNavigate();
 
   const [jobTitle, setJobTitle] = useState("");
@@ -21,8 +22,8 @@ const Profile = () => {
   useEffect(() => {
     const fetchWorkExperience = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/workexp/user/${userId}`);
-        console.log("Response:", response);
+        const response = await http.get(`/workexp/user/${userId}`);
+        // console.log("Response:", response);
         const workExperience = response.data;
 
         // Update state with fetched data
@@ -44,7 +45,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/profile/${userId}`);
+        const response = await http.get(`/profile/${userId}`);
         setProfile(response.data);
       } catch (error) {
         console.error("There was an error fetching the profile data!", error);
@@ -63,7 +64,10 @@ const Profile = () => {
   };
 
   return (
-    <Container fluid className="mt-5">
+    <Container
+      fluid
+      className="mt-5"
+    >
       <Row key={profile.id}>
         <Col md={3}>
           <Card className="profile-card text-center">
@@ -102,29 +106,26 @@ const Profile = () => {
                 <Col md={6}>
                   <p>
                     <strong>Full Name:</strong>{" "}
-                    <span id="fullName">{profile.firstName} {profile.lastName}</span>
+                    <span id="fullName">
+                      {profile.firstName} {profile.lastName}
+                    </span>
                   </p>
                   <p>
-                    <strong>Date of Birth:</strong>{" "}
-                    <span id="dob">{profile.dob}</span>
+                    <strong>Date of Birth:</strong> <span id="dob">{profile.dob}</span>
                   </p>
                   <p>
-                    <strong>Email:</strong>{" "}
-                    <span id="email">{profile.email}</span>
+                    <strong>Email:</strong> <span id="email">{profile.email}</span>
                   </p>
                   <p>
-                    <strong>Contact Number:</strong>{" "}
-                    <span id="contactnumber">{profile.phone}</span>
+                    <strong>Contact Number:</strong> <span id="contactnumber">{profile.phone}</span>
                   </p>
                 </Col>
                 <Col md={6}>
                   <p>
-                    <strong>Citizen ID:</strong>{" "}
-                    <span id="citizenId">{profile.citizenId}</span>
+                    <strong>Citizen ID:</strong> <span id="citizenId">{profile.citizenId}</span>
                   </p>
                   <p>
-                    <strong>Address:</strong>{" "}
-                    <span id="address">{profile.address}</span>
+                    <strong>Address:</strong> <span id="address">{profile.address}</span>
                   </p>
                 </Col>
               </Row>
@@ -141,32 +142,25 @@ const Profile = () => {
             <Card.Body>
               <h4>Work Experience</h4>
               <p>
-                <strong>Job Title:</strong>{" "}
-                <span id="jobTitle">{jobTitle}</span>
+                <strong>Job Title:</strong> <span id="jobTitle">{jobTitle}</span>
               </p>
               <p>
-                <strong>Job Description:</strong>{" "}
-                <span id="jobDescription">{jobDescription}</span>
+                <strong>Job Description:</strong> <span id="jobDescription">{jobDescription}</span>
               </p>
               <p>
-                <strong>Company:</strong>{" "}
-                <span id="company">{company}</span>
+                <strong>Company:</strong> <span id="company">{company}</span>
               </p>
               <p>
-                <strong>Location:</strong>{" "}
-                <span id="location">{location}</span>
+                <strong>Location:</strong> <span id="location">{location}</span>
               </p>
               <p>
-                <strong>Start Date:</strong>{" "}
-                <span id="startDate">{startDate}</span>
+                <strong>Start Date:</strong> <span id="startDate">{startDate}</span>
               </p>
               <p>
-                <strong>End Date:</strong>{" "}
-                <span id="endDate">{endDate}</span>
+                <strong>End Date:</strong> <span id="endDate">{endDate}</span>
               </p>
               <p>
-                <strong>Other Information:</strong>{" "}
-                <span id="otherInformation">{otherInformation}</span>
+                <strong>Other Information:</strong> <span id="otherInformation">{otherInformation}</span>
               </p>
               <Button
                 onClick={handleWorkEdit}

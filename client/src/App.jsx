@@ -2,7 +2,6 @@
 // Home
 import HomeGuest from "./pages/home/HomeGuest";
 import HomePage from "./pages/home/HomePage";
-import HomeUser from "./pages/home/HomeUser";
 
 // Auth
 import Login from "./pages/auth/Login";
@@ -29,7 +28,6 @@ import Market from "./pages/jobs/Market";
 import MyJobs from "./pages/jobs/MyJobs";
 import EditJob from "./pages/jobs/EditJob";
 import ConfirmJob from "./pages/jobs/ConfirmJob";
-import JobHistory from "./pages/jobs/JobHistory";
 
 // Technical
 import Dashboard from "./pages/home/Dashboard";
@@ -61,7 +59,7 @@ import { ForumProvider } from "./context/ForumContext";
 import UserInformationProvider from "./context/UserContext";
 import PaymentPortal from "./pages/payment/PaymentPortal";
 import CreateTicketPage from "./pages/user/CreateTicket";
-import HomeNavbar from "./components/home/HomeNavbar";
+import JobHistory from "./pages/jobs/JobHistory";
 import ToLogin from "./pages/error/ToLogin";
 import PaymentHistory from "./pages/payment/PaymentHistory";
 import Deposit from "./pages/payment/Deposit";
@@ -77,8 +75,6 @@ function App() {
         <AuthProvider className="page">
           <ForumProvider>
             <AppNavbar className="mb-auto" />
-
-            <HomeNavbar />
             <div className="min-vh-100 mt-5">
               <Routes>
                 {/* AUTH ROUTES */}
@@ -92,9 +88,16 @@ function App() {
                 />
 
                 {/* HOME ROUTES */}
-                <Route exact path="/" element={<HomeGuest />} />
-                <Route exact path="/home" element={<HomePage />} />
-                <Route exact path="/homeuser" element={<HomeUser />} />
+                <Route
+                  exact
+                  path="/"
+                  element={<HomeGuest />}
+                />
+                <Route
+                  exact
+                  path="/home"
+                  element={<HomePage />}
+                />
 
                 {/* FORUM ROUTES */}
                 <Route exact path="/forum" element={<Forum />} />
@@ -150,13 +153,13 @@ function App() {
                 {/* USERS ROUTES */}
                 <Route
                   exact
-                  path="/editprofile/:userId"
+                  path="/editprofile"
                   element={<EditProfile />}
                 />
                 <Route exact path="/profile/:userId" element={<Profile />} />
                 <Route
                   exact
-                  path="/workexperience/:userId"
+                  path="/workexperience"
                   element={<WorkExperience />}
                 />
 
@@ -183,5 +186,3 @@ function App() {
 }
 
 export default App;
-export const API_URL = "http://localhost:8000/api";
-export const SOCKET_URL = "http://localhost:8000/";

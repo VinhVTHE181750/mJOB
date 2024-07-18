@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import http from "../../../functions/httpService";
 
-const usePostDetail = (id) => {
+const usePostDetail = (id, refreshFlag) => { // Add refreshFlag as a parameter
   const [post, setPost] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // setTimeout(() => {
-    setLoading(false);
+    setLoading(true); // Ensure loading is set to true when refetching
     const fetchPost = async () => {
       try {
         const url = `/forum/posts/${id}`;
@@ -21,8 +20,8 @@ const usePostDetail = (id) => {
       }
     };
     fetchPost();
-    // }, 5000);
-  }, [id]);
+  }, [id, refreshFlag]); // Include refreshFlag in the dependency array
+
   return { post, loading, error };
 };
 

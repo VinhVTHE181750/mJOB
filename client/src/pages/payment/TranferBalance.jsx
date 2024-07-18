@@ -51,7 +51,7 @@ const TransferMoney = () => {
       userId: fromUserInfo.user_id,
     };
 
-    console.log(paymentData);
+    // console.log(paymentData);
     
     try {
       await updateUserBalance(fromUserInfo.user_id, (fromUserInfo.balance - amount));
@@ -71,7 +71,7 @@ const TransferMoney = () => {
   //       setBalance(tx.info.balance);
   //       setMessage(tx.info.message);
   //     }
-  //     console.log(tx);
+  //     // console.log(tx);
 
   //   } catch (error) {
   //     console.error(error);

@@ -5,6 +5,8 @@ const { JwtMiddleware } = require("../utils/JWT");
 const { getUser } = require("./user/User");
 const { submitWorkExp } = require("./user/WorkExperience");
 const User = require("../models/user/User");
+const Auth = require("../models/user/Auth");
+const Hasher = require("../utils/Hasher");
 
 // router.get("/:id", getUser);
 router.post("/work-experience", submitWorkExp);
@@ -58,6 +60,35 @@ router.get('/:id', async (req, res) => {
     } catch (err) {
       console.error('Error updating profile:', err);
       res.status(500).json({ message: 'Error updating profile' });
+    }
+  });
+
+  const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+
+  router.post('/change-password', async (req, res) => {
+    const { userId, currentPassword, newPassword } = req.body;
+  
+  
+    try {
+      const auth = await Auth.findOne({ where: { UserId: userId } });
+      if (!auth) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      const hash = await Hasher.getHash(currentPassword, auth.salt);
+      const isValidPassword = hash === auth.hash;
+      if (!isValidPassword) {
+        return res.status(400).json({ message: 'Invalid current password' });
+      }
+  
+      const newSalt = await Hasher.generateSalt();
+      const newHash = await Hasher.getHash(newPassword, newSalt);
+      await auth.update({ hash: newHash, salt: newSalt });
+  
+      res.status(200).json({ message: 'Password changed successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
     }
   });
 

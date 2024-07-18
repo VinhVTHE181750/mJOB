@@ -163,7 +163,7 @@ const addMetadataMetric = async (category, tags, metric) => {
         await categoryMetric.increment(metric);
       }
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       return res.status(500).json({ message: "An error occurred", error: error.message });
     }
   }

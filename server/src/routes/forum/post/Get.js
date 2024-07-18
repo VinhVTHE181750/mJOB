@@ -6,18 +6,31 @@ const PostLike = require("../../../models/forum/post/PostLike");
 const Comment = require("../../../models/forum/comment/Comment");
 const User = require("../../../models/user/User");
 
+
 const getAllPosts = async (req, res) => {
+  log(`${req.userId}, ${req.role}`, "INFO", "FORUM");
   try {
     let posts;
-    if (req.userId && (req.role === "ADMIN" || req.role === "MOD")) {
-      posts = await Post.findAll({});
+    
+    if (req.role === "ADMIN" || req.role === "MOD") {
+      
+      posts = await Post.findAll();
+    } else if (req.userId) {
+      
+      posts = await Post.findAll({
+        where: {
+          [Op.or]: [{ status: "PUBLISHED" }, { UserId: req.userId }],
+        },
+      });
     } else {
+      
       posts = await Post.findAll({
         where: {
           status: "PUBLISHED",
         },
       });
     }
+
     if (posts && posts.length > 0) {
       const updatedPosts = await Promise.all(
         posts.map(async (post) => {
@@ -52,10 +65,6 @@ const getAllPosts = async (req, res) => {
       );
 
       return res.status(200).json(updatedPosts);
-
-      // wait until all posts are updated with likes, views, dislikes and comments
-      // await Promise.all(posts);
-      // return res.status(200).json(posts);
     }
     return res.status(404).json({ message: "No posts found." });
   } catch (err) {
@@ -65,6 +74,7 @@ const getAllPosts = async (req, res) => {
 };
 
 const getPostById = async (req, res) => {
+  log(`${req.userId}, ${req.role}`, "INFO", "FORUM");
   let userId;
   if (req.userId) userId = req.userId;
   try {
@@ -113,6 +123,7 @@ const getPostById = async (req, res) => {
       isDislike: isDislike || false,
       comments: comments || 0,
       dislikes: dislikes || 0,
+      author: author || "Unknown",
       PostCategoryId: post.PostCategoryId,
       UserId: post.UserId,
       createdAt: post.createdAt,
@@ -149,12 +160,13 @@ const getPostById = async (req, res) => {
     return res.status(404).json({ message: "Post not found" });
   } catch (err) {
     log(err, "ERROR", "FORUM");
-    console.log(err);
+    // console.log(err);
     res.status(500).json({ message: "Unexpected error while fetching this post" });
   }
 };
 
 const getPostOfUser = async (req, res) => {
+  // log(`${req.userId}, ${req,role}`, "INFO", "FORUM");
   if (!req.userId) return res.status(401).json({ message: "Unauthorized" });
 
   const { id } = req.params;

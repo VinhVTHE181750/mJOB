@@ -13,7 +13,7 @@ function passBlacklist(value) {
     // for now print all words and regexs
     console.table(words);
     console.table(regexs);
-    console.log(123)
+    // console.log(123)
     return [words, regexs];
   }
 }

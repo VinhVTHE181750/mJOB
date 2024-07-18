@@ -1,45 +1,53 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import http from "../../../functions/httpService";
-
-const API_URL = "http://localhost:8000/api";
-
-const useLikesQuery = (type, id) => {
+const useLikesQuery = (type, id, refreshFlag) => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
+  const [liked, setLiked] = useState(false);
+  const [isDislike, setIsDislike] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchLikes = async () => {
+    const fetchLikesAndDislikes = async () => {
+      // these two don't need authorization
+      const urlLikes = `/forum/likes?type=${type}&id=${id}&like=true`;
+      const urlDislikes = `/forum/likes?type=${type}&id=${id}&like=false`;
+  
       try {
-        let url1 = `/forum/likes?type=${type}&id=${id}&like=true`;
-        let url2 = `/likes?type=${type}&id=${id}&like=false`;
-
-        // Create promises for both requests
-        const promise1 = http.get(url1);
-        const promise2 = http.get(url2);
-
-        // Use Promise.all to wait for both promises to resolve
-        const [response1, response2] = await Promise.all([promise1, promise2]);
-
-        // Set likes and dislikes from the responses
-        setLikes(response1.data.likes);
-        setDislikes(response2.data.dislikes);
-        setLoading(false);
+        const [responseLikes, responseDislikes] = await Promise.all([
+          http.get(urlLikes),
+          http.get(urlDislikes),
+        ]);
+        setLikes(responseLikes.data.likes);
+        setDislikes(responseDislikes.data.dislikes);
       } catch (error) {
         setError(error);
-      } finally {
-        // Ensure loading is set to false after both requests are handled
-        setLoading(false);
+        // Optionally handle this error differently
       }
     };
+  
+    const fetchUserLikeStatus = async () => {
+      // this one needs authorization
+      const url = `/forum/likes/liked?type=${type}&id=${id}`;
+      try {
+        const response = await http.get(url);
+        setLiked(response.data.liked);
+        setIsDislike(response.data.isDislike || false);
+      } catch (error) {
+        // Handle unauthorized or other errors gracefully
+        setError(error);
+        // Don't set error state here if you want to allow unauthorized users to see likes/dislikes
+      }
+    };
+    setLoading(false);
+  
+    fetchLikesAndDislikes();
+    fetchUserLikeStatus();
+  }, [type, id, refreshFlag]);
 
-    fetchLikes();
-  }, [type, id]);
-
-  return { likes, dislikes, loading, error };
+  return { likes, dislikes, liked, isDislike, loading, error };
 };
 
 useLikesQuery.propTypes = {

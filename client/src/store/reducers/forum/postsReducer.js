@@ -1,5 +1,5 @@
-import axios from "axios";
-import { API_URL } from "../..";
+import http from '../../../functions/httpService'; // Adjust the import path as necessary
+import socket from "../../../socket";
 
 // Default states
 const initialState = {
@@ -30,14 +30,22 @@ export const fetchPostsFailure = (error) => ({
 
 // Thunk Action Creator
 export const fetchPosts = () => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(fetchPostsRequest());
-    axios
-      .get(`${API_URL}/forum/posts`)
+    await http
+      .get(`/forum/posts`)
       .then((response) => dispatch(fetchPostsSuccess(response.data)))
       .catch((error) => dispatch(fetchPostsFailure(error.message)));
+    socket.on("forum/posts", async () => {
+      dispatch(fetchPostsRequest());
+      await http
+        .get(`/forum/posts`)
+        .then((response) => dispatch(fetchPostsSuccess(response.data)))
+        .catch((error) => dispatch(fetchPostsFailure(error.message)));
+    });
   };
 };
+
 
 const postsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -49,7 +57,7 @@ const postsReducer = (state = initialState, action) => {
     case FETCH_POSTS_SUCCESS:
       return {
         loading: false,
-        posts: action.payload,
+        posts: action.payload.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)),
         error: "",
       };
     case FETCH_POSTS_FAILURE:

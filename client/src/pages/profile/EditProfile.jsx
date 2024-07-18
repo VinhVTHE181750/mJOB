@@ -66,7 +66,7 @@ const EditProfile = () => {
     };
 
     try {
-      const response = await axios.put(
+      const response = await http.put(
         `http://localhost:8000/api/profile/edit-profile/${userId}`,
         userData
       );
@@ -93,6 +93,12 @@ const EditProfile = () => {
                 className="text-black"
               >
                 Work Experience
+              </Nav.Link>
+              <Nav.Link
+                href={`/settings`}
+                className="text-black"
+              >
+                Settings
               </Nav.Link>
               <Row>
                 <Col>

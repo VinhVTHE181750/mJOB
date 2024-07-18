@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import http from "../../../functions/httpService";
 
-const API_URL = "http://localhost:8000/api";
+
 
 const usePostUpdate = (id) => {
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ const usePostUpdate = (id) => {
       setLoading(false);
       return response.status === 200;
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       setLoading(false);
     }
   };
