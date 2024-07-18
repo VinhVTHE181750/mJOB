@@ -124,14 +124,16 @@ router.post("/send-otp", async (req, res) => {
     const { userId } = req.body;
 
     const randNumber = generateRandomSixDigitNumber();
-    await sendMail("socmummim220401@gmail.com", randNumber);
     const user = await User.findOne({ where: { id: userId } });
-    const auth = await Auth.findOne({ where: { UserId: user.id } });
-    auth.code = randNumber;
-    await auth.save();
-    return res
-      .status(200)
-      .json({ message: "Send mail successfully! Check code in your email" });
+    if (user) {
+      await sendMail(user.email, randNumber);
+      const auth = await Auth.findOne({ where: { UserId: user.id } });
+      auth.code = randNumber;
+      await auth.save();
+      return res
+        .status(200)
+        .json({ message: "Send mail successfully! Check code in your email" });
+    }
   } catch (error) {
     console.log("🚀 ~ router.post ~ error:", error);
     return res.status(500).json({ message: "Server error" });

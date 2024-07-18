@@ -113,7 +113,7 @@ const ResetPassword = () => {
               disabled={!validName || !validPwd || !validMatch}
               className="mt-2"
             >
-              Register
+              Submit
             </Button>
           </>
         )}

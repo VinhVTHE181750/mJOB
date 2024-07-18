@@ -5,7 +5,7 @@ import axios from "axios";
 // Regular expressions for validation
 const REGEX_USERNAME = /^[A-Za-z][A-Za-z0-9_]{8,29}$/;
 const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-const REGEX_EMAIL = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const REGISTER_API = "http://localhost:8000/api/auth/register";
 const REGEX_PHONE = /^\d{9,11}$/;
 
@@ -58,7 +58,7 @@ const Register = () => {
       return;
     }
     try {
-      const response = await http.post(
+      const response = await axios.post(
         REGISTER_API,
         JSON.stringify({ username: user, password: pwd, email, phone }),
         { headers: { "Content-Type": "application/json" } }
