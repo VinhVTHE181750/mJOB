@@ -21,9 +21,9 @@
   "database": {
     "dialect": "mssql",
     "user": "sa",
-    "password": "sa",
+    "password": "123",
     "server": "localhost",
-    "database": "mJOB",
+    "database": "mJob",
     "schema": "dbo",
     "encrypt": false,
     "pool": {
