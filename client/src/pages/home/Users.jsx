@@ -21,7 +21,9 @@ const Users = () => {
   };
   const navigate = useNavigate();
   const handleEditUser = (id) => {
+     console.log("id:", id);
     navigate(`/profile/${id}`);
+
   };
 
   const handleDeleteUser = async (id) => {

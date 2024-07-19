@@ -26,7 +26,6 @@ router.get("/user/:userId", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const userId = req.params.id;
-  // const workId = req.params.workId;
   const { title, company, location, startDate, endDate, description } = req.body;
 
   try {
@@ -36,34 +35,42 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Find the work experience record by its ID and associated userId
-    const workExperience = await WorkExperience.findOne({
+    // Find the work experience record by its associated userId
+    let workExperience = await WorkExperience.findOne({
       where: {
         UserId: userId,
       },
     });
 
-    // If work experience record doesn't exist, return a 404 response
     if (!workExperience) {
-      return res.status(404).json({ message: "Work experience not found" });
+      // If work experience record doesn't exist, create a new one
+      workExperience = await WorkExperience.create({
+        UserId: userId,
+        title,
+        company,
+        location,
+        startDate,
+        endDate,
+        description
+      });
+    } else {
+      // Update the fields of the existing work experience record
+      workExperience.title = title;
+      workExperience.company = company;
+      workExperience.location = location;
+      workExperience.startDate = startDate; // Assuming `from` maps to `startDate`
+      workExperience.endDate = endDate; // Assuming `to` maps to `endDate`
+      workExperience.description = description;
+
+      // Save the updated work experience record
+      await workExperience.save();
     }
 
-    // Update the fields of the work experience record
-    workExperience.title = title;
-    workExperience.company = company;
-    workExperience.location = location;
-    workExperience.startDate = startDate; // Assuming `from` maps to `startDate`
-    workExperience.endDate = endDate; // Assuming `to` maps to `endDate`
-    workExperience.description = description;
-
-    // Save the updated work experience record
-    await workExperience.save();
-
-    // Respond with the updated work experience record in JSON format
+    // Respond with the work experience record (updated or newly created) in JSON format
     res.json(workExperience);
   } catch (error) {
-    console.error("Error updating work experience:", error);
-    res.status(500).json({ message: "Error updating work experience" });
+    console.error("Error updating/creating work experience:", error);
+    res.status(500).json({ message: "Error updating/creating work experience" });
   }
 });
 

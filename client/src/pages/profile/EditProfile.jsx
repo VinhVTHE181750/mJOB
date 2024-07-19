@@ -67,7 +67,7 @@ const EditProfile = () => {
     };
 
     try {
-      const response = await http.put(
+      const response = await axios.put(
         `http://localhost:8000/api/profile/edit-profile/${userId}`,
         userData
       );
@@ -83,14 +83,14 @@ const EditProfile = () => {
       <h1 className="text-center my-4">Profile Edit</h1>
       <Container fluid className="mt-3">
         <Row>
-          <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
+        <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
             <h2 className="text-center">Navigation</h2>
             <Nav className="flex-column">
-              <Nav.Link href={`/editprofile`} className="text-dark mb-2 d-flex align-items-center">
+              <Nav.Link href={`/editprofile/${userId}`} className="text-dark mb-2 d-flex align-items-center">
                 <FaUserEdit className="me-2" />
                 Profile
               </Nav.Link>
-              <Nav.Link href={`/workexperience/`} className="text-dark mb-2 d-flex align-items-center">
+              <Nav.Link href={`/workexperience/${userId}`} className="text-dark mb-2 d-flex align-items-center">
                 <FaBriefcase className="me-2" />
                 Work Experience
               </Nav.Link>
@@ -105,7 +105,6 @@ const EditProfile = () => {
             </Nav>
           </Col>
           <Col md={10} className="p-4">
-          
             <Card className="mb-4">
               <Card.Body>
                 <div className="profile-header text-center mb-4">
@@ -262,7 +261,6 @@ const EditProfile = () => {
                 </Form>
               </Card.Body>
             </Card>
-            
           </Col>
         </Row>
       </Container>
