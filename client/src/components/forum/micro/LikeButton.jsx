@@ -85,7 +85,7 @@ LikeButton.propTypes = {
   id: PropTypes.number.isRequired,
   type: PropTypes.string.isRequired,
   action: PropTypes.oneOf(["like", "dislike"]).isRequired,
-  count: PropTypes.number.isRequired,
+  // count: PropTypes.number.isRequired,
 };
 
 export default LikeButton;
