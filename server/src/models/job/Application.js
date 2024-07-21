@@ -19,12 +19,6 @@ Application.init(
       ),
       allowNull: false,
     },
-    // Date of application
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
     sequelize,

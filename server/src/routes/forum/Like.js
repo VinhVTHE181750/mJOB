@@ -38,16 +38,12 @@ router.get("/", async (req, res) => {
 
     // if type is not comment or post
     if (type !== "comment" && type !== "post") {
-      return res
-        .status(400)
-        .json({ message: "Bad request", fields: { type: "post or comment" } });
+      return res.status(400).json({ message: "Bad request", fields: { type: "post or comment" } });
     }
 
     // if like is not true or false
     if (like !== "true" && like !== "false") {
-      return res
-        .status(400)
-        .json({ message: "Bad request", fields: { like: "true or false" } });
+      return res.status(400).json({ message: "Bad request", fields: { like: "true or false" } });
     }
 
     // if type is comment
@@ -135,16 +131,12 @@ router.post("/", async (req, res) => {
 
     // if type is not comment or post
     if (type !== "comment" && type !== "post") {
-      return res
-        .status(400)
-        .json({ message: "Bad request", fields: { type: "post or comment" } });
+      return res.status(400).json({ message: "Bad request", fields: { type: "post or comment" } });
     }
 
     // if like is not true or false
     if (like !== true && like !== false) {
-      return res
-        .status(400)
-        .json({ message: "Bad request", fields: { like: "true or false" } });
+      return res.status(400).json({ message: "Bad request", fields: { like: "true or false" } });
     }
 
     // if type is comment
@@ -155,26 +147,18 @@ router.post("/", async (req, res) => {
         return res.status(404).json({ message: "Comment not found" });
       }
 
+      const isLiked = await CommentLike.findOne({ where: { UserId: userId, CommentId: id } });
+      await CommentLike.destroy({ where: { UserId: userId, CommentId: id } });
+
       // if like is true
       if (like) {
-        // invalidate likes and dislikes of the user
-        await CommentLike.destroy({
-          where: { UserId: userId, CommentId: id, isDislike: false },
-        });
-        // like the comment
-        await CommentLike.create({ UserId: userId, CommentId: id });
-
-        io.getIo().emit(`forum/liked/${type}/${id}`)
+        await CommentLike.create({ UserId: userId, CommentId: id, isDislike: false });
+        io.getIo().emit(`forum/liked/${type}/${id}`);
         return res.status(200).json({ message: "Comment liked" });
       } else {
         // dislike the comment
-        await CommentLike.destroy({ where: { UserId: userId, CommentId: id } });
-        await CommentLike.create({
-          UserId: userId,
-          CommentId: id,
-          isDislike: true,
-        });
-        io.getIo().emit(`forum/liked/${type}/${id}`)
+        await CommentLike.create({ UserId: userId, CommentId: id, isDislike: true });
+        io.getIo().emit(`forum/liked/${type}/${id}`);
         return res.status(200).json({ message: "Comment disliked" });
       }
     }
@@ -187,20 +171,18 @@ router.post("/", async (req, res) => {
         return res.status(404).json({ message: "Post not found" });
       }
 
+      const isLiked = await PostLike.findOne({ where: { UserId: userId, PostId: id } });
+      await PostLike.destroy({ where: { UserId: userId, PostId: id } });
+
       // if like is true
       if (like) {
-        // invalidate likes and dislikes of the user
-        await PostLike.destroy({ where: { UserId: userId, PostId: id } });
-        // like the post
         await PostLike.create({ UserId: userId, PostId: id, isDislike: false });
-        io.getIo().emit(`forum/liked/${type}/${id}`)
+        io.getIo().emit(`forum/liked/${type}/${id}`);
         return res.status(200).json({ message: "Post liked" });
       } else {
-        await PostLike.destroy({ where: { UserId: userId, PostId: id } });
-        // dislike the post
         await PostLike.create({ UserId: userId, PostId: id, isDislike: true });
-        io.getIo().emit(`forum/liked/${type}/${id}`)
-        log(`forum/liked/${type}/${id}`)
+        io.getIo().emit(`forum/liked/${type}/${id}`);
+        log(`forum/liked/${type}/${id}`);
         return res.status(200).json({ message: "Post disliked" });
       }
     }
@@ -234,9 +216,7 @@ router.get("/liked", async (req, res) => {
 
     // if type is not comment or post
     if (type !== "comment" && type !== "post") {
-      return res
-        .status(400)
-        .json({ message: "Bad request", fields: { type: "post or comment" } });
+      return res.status(400).json({ message: "Bad request", fields: { type: "post or comment" } });
     }
 
     // if type is comment
@@ -304,9 +284,7 @@ router.delete("/", async (req, res) => {
 
     // if type is not comment or post
     if (type !== "comment" && type !== "post") {
-      return res
-        .status(400)
-        .json({ message: "Bad request", fields: { type: "post or comment" } });
+      return res.status(400).json({ message: "Bad request", fields: { type: "post or comment" } });
     }
 
     // if type is comment
