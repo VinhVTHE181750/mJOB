@@ -13,6 +13,7 @@ const WorkExperience = require("./WorkExperience");
 const Job = require("../job/Job");
 const RequirementStorage = require("../job/RequirementStorage");
 const Application = require("../job/Application");
+const JobHistory = require("../job/JobHistory");
 
 class User extends Model {}
 
@@ -90,6 +91,9 @@ RequirementStorage.belongsTo(User);
 
 User.hasMany(Application);
 Application.belongsTo(User);
+
+User.hasMany(JobHistory);
+JobHistory.belongsTo(User);
 
 //// Forum
 User.hasMany(Post);
