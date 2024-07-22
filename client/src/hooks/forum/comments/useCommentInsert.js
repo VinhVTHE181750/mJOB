@@ -1,23 +1,18 @@
 import { useState } from "react";
 import http from "../../../functions/httpService";
 
-
-
-const usePostInsert = () => {
+const useCommentInsert = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const insertPost = async (title, content, status, category, tags) => {
+  const insertComment = async (content, postId) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await http.post(`/forum/posts`, {
-        title,
+      const response = await http.post(`/forum/comments`, {
         content,
-        status,
-        category,
-        tags,
+        postId,
       });
       setLoading(false);
       return response.data;
@@ -27,7 +22,7 @@ const usePostInsert = () => {
     }
   };
 
-  return { insertPost, loading, error };
+  return { insertComment, loading, error };
 };
 
-export default usePostInsert;
+export default useCommentInsert;

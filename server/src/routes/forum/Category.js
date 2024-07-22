@@ -6,13 +6,19 @@ const router = express.Router();
 const io = require("../../../io");
 
 const getCategories = async (req, res) => {
+  const { role } = req;
   try {
-    const categories = await PostCategory.findAll();
+    let categories;
+    if (role === "ADMIN") {
+      categories = await PostCategory.findAll();
+    } else {
+      categories = await PostCategory.findAll({ where: { enabled: true } });
+    }
     if (categories.length === 0) {
-      res.status(404).json({ message: "No categories found." });
+      return res.status(404).json({ message: "No categories found." });
       return;
     }
-    res.status(200).json(categories);
+    return res.status(200).json(categories);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -33,8 +39,7 @@ const getCategoryById = async (req, res) => {
 };
 
 const insertCategory = async (req, res) => {
-  if (!req.userId || req.role !== "ADMIN")
-    return res.status(401).json({ message: "Unauthorized" });
+  if (!req.userId || req.role !== "ADMIN") return res.status(401).json({ message: "Unauthorized" });
   try {
     let { name, bgColor, fgColor, enabled } = req.body;
     if (name === "" || !name) {
@@ -56,7 +61,7 @@ const insertCategory = async (req, res) => {
       bgColor,
       enabled,
     });
-    io.getIo().emit("forum/categories");
+    getIo().emit("forum/categories");
     return res.status(200).json(category);
   } catch (err) {
     return res.status(500).json({ message: err.message });
@@ -64,8 +69,7 @@ const insertCategory = async (req, res) => {
 };
 
 const putCategory = async (req, res) => {
-  if (!req.userId || req.role !== "ADMIN")
-    return res.status(401).json({ message: "Unauthorized" });
+  if (!req.userId || req.role !== "ADMIN") return res.status(401).json({ message: "Unauthorized" });
   try {
     let { id, name, bgColor, fgColor, enabled } = req.body;
     const category = await PostCategory.findByPk(id);
@@ -83,7 +87,7 @@ const putCategory = async (req, res) => {
       fgColor = category.fgColor;
     }
     await category.update({ name, bgColor, fgColor, enabled });
-    io.getIo().emit("forum/categories");
+    getIo().emit("forum/categories");
     return res.status(200).json(category);
   } catch (err) {
     return res.status(500).json({ message: err.message });
@@ -91,8 +95,7 @@ const putCategory = async (req, res) => {
 };
 
 const deleteCategory = async (req, res) => {
-  if (!req.userId || req.role !== "ADMIN")
-    return res.status(401).json({ message: "Unauthorized" });
+  if (!req.userId || req.role !== "ADMIN") return res.status(401).json({ message: "Unauthorized" });
   try {
     const { id } = req.params;
     const category = await PostCategory.findByPk(id);
@@ -101,7 +104,7 @@ const deleteCategory = async (req, res) => {
       return;
     }
     await category.destroy();
-    io.getIo().emit("forum/categories");
+    getIo().emit("forum/categories");
     return res.status(200).json({ message: "Category deleted." });
   } catch (err) {
     return res.status(500).json({ message: err.message });
