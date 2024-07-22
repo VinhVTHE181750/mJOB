@@ -1,4 +1,4 @@
-![mJOB's logo](https://github.com/VinhVTHE181750/mJOB/blob/main/image.jpg?raw=true))
+![mJOB's logo](https://github.com/VinhVTHE181750/mJOB/blob/main/image.jpg?raw=true)
 
 [![CodeQL](https://github.com/VinhVTHE181750/mJOB/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/VinhVTHE181750/mJOB/actions/workflows/github-code-scanning/codeql)
 [![Build ReactJS Client](https://github.com/VinhVTHE181750/mJOB/actions/workflows/BuildReactJS.yml/badge.svg)](https://github.com/VinhVTHE181750/mJOB/actions/workflows/BuildReactJS.yml)
