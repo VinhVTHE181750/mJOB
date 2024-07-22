@@ -8,7 +8,8 @@ import useWhoAmI from "../hooks/user/useWhoAmI";
 const AppNavbar = () => {
   // const { isLogin } = useContext(AuthContext);
   const { isLogin, userInformation } = useAuth();
-  const { userId } = useWhoAmI();
+  const userId  = userInformation.id
+  console.log(userId);
 
   return (
     <Navbar className="navbar mb-auto">
