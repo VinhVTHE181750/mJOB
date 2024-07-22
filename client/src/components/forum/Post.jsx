@@ -211,7 +211,7 @@ const Post = ({ id }) => {
           <p className="text-center">Last update: {getMoment(post.updatedAt)}</p>
         </Col>
         <Col>
-          <Tag tag="tag1" />
+          {/* <Tag tag="tag1" /> */}
         </Col>
         <Col sm="auto pe-0">
           <LikeButton

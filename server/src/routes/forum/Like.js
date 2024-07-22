@@ -199,13 +199,14 @@ router.post("/", async (req, res) => {
       } else {
         await PostLike.create({ UserId: userId, PostId: id, isDislike: true });
         getIo().emit(`forum/liked/${type}/${id}`);
-        log(`forum/liked/${type}/${id}`);
+        // log(`forum/liked/${type}/${id}`);
         return res.status(200).json({ message: "Post disliked" });
       }
     }
 
     return res.status(404).json({ message: "Not found" });
   } catch (err) {
+    log(err, "ERROR", "FORUM");
     return res.status(500).json({ message: "Unexpected error" });
   }
 });
