@@ -19,9 +19,10 @@ const AddForm = () => {
   const { insertPost, error: postError } = usePostInsert();
   const navigate = useNavigate();
 
-  const handleSubmit = async (event, status) => {
+  const handleSubmit = async (event, eStatus) => {
     event.preventDefault();
-    const result = await insertPost(title, content, userId, status, category, tags);
+    if (eStatus === undefined) eStatus = status;
+    const result = await insertPost(title, content, eStatus, category, tags);
 
     if (result) {
       navigate("/forum");
