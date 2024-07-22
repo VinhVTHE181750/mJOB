@@ -16,7 +16,7 @@ Job.init(
     },
     // Description
     description: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     // Location
@@ -113,7 +113,7 @@ Job.init(
         "COMPLETED", // deny editing 
         "DELISTED", // deny editing and cannot be applied to
       ),
-      allowNull: true,
+      allowNull: false,
       defaultValue: "INACTIVE",
     },
   },

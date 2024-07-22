@@ -8,7 +8,7 @@ const User = require("../../../models/user/User");
 
 
 const getAllPosts = async (req, res) => {
-  // log(`${req.userId}, ${req.role}`, "INFO", "FORUM");
+  log(`${req.userId}, ${req.role}`, "INFO", "FORUM");
   try {
     let posts;
     
@@ -74,7 +74,7 @@ const getAllPosts = async (req, res) => {
 };
 
 const getPostById = async (req, res) => {
-  // log(`${req.userId}, ${req.role}`, "INFO", "FORUM");
+  log(`${req.userId}, ${req.role}`, "INFO", "FORUM");
   let userId;
   if (req.userId) userId = req.userId;
   try {

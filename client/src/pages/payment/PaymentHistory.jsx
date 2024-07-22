@@ -1,21 +1,35 @@
 import { Container, Table } from "react-bootstrap";
 import { BsCircleFill } from "react-icons/bs";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
-import { useEffect, useState } from "react";
-import http from "../../functions/httpService";
 
 const PaymentHistory = () => {
   // data: id, amount, status, action, from, to,
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await http.get("/payment/balance/history");
-      setData(res.data);
-    };
-    fetchData();
-  }, []);
-
+  const data = [
+    {
+      id: 1,
+      amount: 100,
+      status: "SUCCESS",
+      action: "Send",
+      from: "Me",
+      to: "User 1",
+    },
+    {
+      id: 2,
+      amount: 200,
+      status: "failed",
+      action: "received",
+      from: "User 1",
+      to: "Me",
+    },
+    {
+      id: 3,
+      amount: 300,
+      status: "pending",
+      action: "send",
+      from: "Me",
+      to: "User 1",
+    },
+  ];
   const success = (
     <>
       <BsCircleFill color="green" /> Success

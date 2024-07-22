@@ -4,7 +4,6 @@ const Balance = require("../../models/payment/Balance");
 const { log } = require("../../utils/Logger");
 // Import logPayment from PaymentLogger.js
 const { logPayment } = require("../../utils/PaymentLogger"); // Adjust the path as necessary
-const PaymentHistory = require("../../models/payment/PaymentHistory");
 
 const getBalance = async (req, res) => {
   if (!req.userId) return res.status(401).json({ error: "Unauthorized" });
@@ -20,24 +19,12 @@ const getBalance = async (req, res) => {
     } else return res.json({ balance: balance.balance });
   } catch (error) {
     log(error, "ERROR", "sequelize");
-    return res.status(500).json({ message: "Unexpected error while fetching balance" });
-  }
-};
-
-const getHistory = async (req, res) => {
-  if (!req.userId) return res.status(401).json({ error: "Unauthorized" });
-  try {
-    const history = await PaymentHistory.findAll({
-      where: { UserId: req.userId },
-    });
-    return res.json(history);
-  } catch (error) {
-    log(error, "ERROR", "sequelize");
-    return res.status(500).json({ message: "Unexpected error while fetching history" });
+    return res
+      .status(500)
+      .json({ message: "Unexpected error while fetching balance" });
   }
 };
 
 router.get("/", getBalance);
-router.get("/history", getHistory);
 
 module.exports = router;

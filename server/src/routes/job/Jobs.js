@@ -94,10 +94,8 @@ router.post("/", async (req, res) => {
     }
   }
 
-  let currency;
   if (job_compensation_currencies === undefined || job_compensation_currencies === null || job_compensation_currencies === "") {
-    // return res.status(400).json({ message: "Job compensation currency is required" });
-    currency = "USD";
+    return res.status(400).json({ message: "Job compensation currency is required" });
   } else {
     if (
       job_compensation_currencies !== "USD" &&
@@ -135,7 +133,7 @@ router.post("/", async (req, res) => {
   }
 
   if (status === undefined || status === null || status === "") {
-    let cStatus = "ACTIVE";
+    return res.status(400).json({ message: "Job status is required" });
   } else {
     if (status !== "ACTIVE" && status !== "INACTIVE") {
       return res.status(400).json({ message: "Job can only be created as ACTIVE or INACTIVE" });
@@ -155,8 +153,8 @@ router.post("/", async (req, res) => {
     endDate: job_end_date,
     salaryAmount: job_compensation_amounts,
     salaryType: job_compensation_type,
-    salaryCurrency: currency,
-    status: status || "ACTIVE",
+    salaryCurrency: job_compensation_currencies,
+    status: status,
   });
   try {
     const job = await newJob.save();
@@ -176,7 +174,7 @@ router.post("/", async (req, res) => {
     const jobHistory = await JobHistory.create({
       JobId: job.id,
       UserId: req.userId,
-      status: cStatus,
+      status: status,
       action: "CREATE",
     });
     return res.status(201).json(job);

@@ -11,7 +11,7 @@ const JwtMiddleware = async (req, res, next) => {
     req.userId = decoded.id;
     req.role = decoded.role;
   }
-  // log(`JWT: ${req.userId} ${req.role}`);
+  log(`JWT: ${req.userId} ${req.role}`);
 
   next();
 };

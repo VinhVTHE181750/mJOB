@@ -33,7 +33,7 @@ export const fetchCategories = () => async (dispatch) => {
   socket.on("forum/categories", () => {
     dispatch(fetchCategoriesRequest());
     http
-      .get(`/forum/categories`)
+      .get(`/forum/posts`)
       .then((response) => dispatch(fetchCategoriesSuccess(response.data)))
       .catch((error) => dispatch(fetchCategoriesFailure(error.message)));
   });

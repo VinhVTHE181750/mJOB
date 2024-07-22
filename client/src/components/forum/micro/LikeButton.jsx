@@ -18,7 +18,7 @@ const LikeButton = ({ id, type, action }) => {
   const handleLikeClick = async () => {
     if (userLoading) return;
 
-    if (role === "GUEST") {
+    if(role === "GUEST") {
       navigate("/to-login");
       return;
     }
@@ -85,7 +85,7 @@ LikeButton.propTypes = {
   id: PropTypes.number.isRequired,
   type: PropTypes.string.isRequired,
   action: PropTypes.oneOf(["like", "dislike"]).isRequired,
-  // count: PropTypes.number.isRequired,
+  count: PropTypes.number.isRequired,
 };
 
 export default LikeButton;
