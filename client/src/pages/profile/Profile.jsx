@@ -81,9 +81,9 @@ const Profile = () => {
 
   return (
     <Container fluid className="mt-5">
-      <Row key={profile.id}>
-        <Col md={3}>
-          <Card className="profile-card text-center">
+      <Row className="justify-content-center">
+        <Col md={8}>
+          <Card className="profile-card text-center mb-4">
             <Card.Body>
               <div className="profile-header mb-4">
                 <img
@@ -110,8 +110,6 @@ const Profile = () => {
               </div>
             </Card.Body>
           </Card>
-        </Col>
-        <Col md={9}>
           <Card className="profile-card mb-4">
             <Card.Body>
               <h4>Profile Details</h4>

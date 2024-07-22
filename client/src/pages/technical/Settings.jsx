@@ -1,7 +1,15 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row, Col, Form, Button, Card, FormGroup } from 'react-bootstrap';
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  Card,
+  FormGroup,
+} from "react-bootstrap";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import useWhoAmI from "../../hooks/user/useWhoAmI";
 
 // Regular expressions for validation
@@ -46,7 +54,10 @@ const Settings = () => {
       const response = await axios.post(
         `http://localhost:8000/api/profile/change-password`,
         JSON.stringify({ userId, currentPassword, newPassword }),
-        { headers: { "Content-Type": "application/json" }, withCredentials: true }
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
       );
       alert("Password changed successfully!");
       setCurrentPassword("");
@@ -78,10 +89,18 @@ const Settings = () => {
             <Card.Body>
               <Card.Title className="text-center">Change Password</Card.Title>
               <Form onSubmit={handleSubmit}>
-                <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
+                <p
+                  ref={errRef}
+                  className={errMsg ? "errmsg" : "offscreen"}
+                  aria-live="assertive"
+                >
                   {errMsg}
                 </p>
-                <FormGroup controlId="currentPassword" className="mb-3" style={{ display: 'none' }}>
+                <FormGroup
+                  controlId="currentPassword"
+                  className="mb-3"
+                  style={{ display: "none" }}
+                >
                   <Form.Label>User ID:</Form.Label>
                   <Form.Control
                     type="number"
@@ -112,7 +131,9 @@ const Settings = () => {
                     isInvalid={!validNewPassword}
                   />
                   <Form.Control.Feedback type="invalid">
-                    Invalid password. Must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number.
+                    Invalid password. Must be at least 8 characters long,
+                    contain at least one uppercase letter, one lowercase letter,
+                    and one number.
                   </Form.Control.Feedback>
                 </FormGroup>
                 <FormGroup controlId="confirmPassword" className="mb-3">
@@ -129,7 +150,10 @@ const Settings = () => {
                     Passwords do not match.
                   </Form.Control.Feedback>
                 </FormGroup>
-                <Button type="submit" disabled={!validNewPassword || !validConfirmPassword}>
+                <Button
+                  type="submit"
+                  disabled={!validNewPassword || !validConfirmPassword}
+                >
                   Save
                 </Button>
               </Form>

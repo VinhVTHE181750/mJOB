@@ -11,10 +11,23 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { FaUser, FaUsers, FaBriefcase, FaSignOutAlt, FaChartBar } from "react-icons/fa";
+import {
+  FaUser,
+  FaUsers,
+  FaBriefcase,
+  FaSignOutAlt,
+  FaChartBar,
+} from "react-icons/fa";
 import useCountUser from "../../hooks/useCountUser.js";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const AdminDashboard = () => {
   const { count: countUsers } = useCountUser();
