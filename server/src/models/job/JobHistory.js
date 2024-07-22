@@ -29,6 +29,7 @@ JobHistory.init(
   },
   {
     sequelize,
+    updatedAt: false,
   }
 );
 

@@ -49,3 +49,5 @@ yarn-error.log*
 node_modules
 /server/scripts/.vs
 /.idea
+server/package-lock.json
+client/package-lock.json

@@ -142,7 +142,7 @@ const PaymentPortal = () => {
         >
           <EmbedCard
             title={<h3>Transactions</h3>}
-            content="27"
+            content="0"
             borderWidth={4}
           />
         </Col>

@@ -3,7 +3,6 @@ const Comment = require("../forum/comment/Comment");
 const CommentLike = require("../forum/comment/CommentLike");
 const Post = require("../forum/post/Post");
 const PostLike = require("../forum/post/PostLike");
-const PublicChatMessage = require("../forum/chat/PublicChatMessage");
 const { sequelize } = require("../SQLize");
 const { Model, DataTypes } = require("sequelize");
 const PublicRoomUser = require("../forum/chat/PublicRoomUser");
@@ -11,10 +10,10 @@ const PublicChatRoom = require("../forum/chat/PublicChatRoom");
 const Balance = require("../payment/Balance");
 const PaymentHistory = require("../payment/PaymentHistory");
 const WorkExperience = require("./WorkExperience");
-const ForumMetric = require("./ForumMetric");
 const Job = require("../job/Job");
 const RequirementStorage = require("../job/RequirementStorage");
 const Application = require("../job/Application");
+const JobHistory = require("../job/JobHistory");
 
 class User extends Model {}
 
@@ -93,6 +92,9 @@ RequirementStorage.belongsTo(User);
 User.hasMany(Application);
 Application.belongsTo(User);
 
+User.hasMany(JobHistory);
+JobHistory.belongsTo(User);
+
 //// Forum
 User.hasMany(Post);
 Post.belongsTo(User);
@@ -134,8 +136,6 @@ WorkExperience.belongsTo(User);
 // missing ProfileHistory
 
 //// Metrics: Jobs, Forum, Payment, Profile
-User.hasOne(ForumMetric);
-ForumMetric.belongsTo(User);
 
 //// Communications
 // missing Follow
