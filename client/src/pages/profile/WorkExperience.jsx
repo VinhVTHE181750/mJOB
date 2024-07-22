@@ -3,7 +3,6 @@ import { Container, Row, Col, Form, Button, Card, Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router";
-import { FaUserEdit, FaBriefcase, FaSignOutAlt } from "react-icons/fa";
 
 const WorkExperience = () => {
   const [jobTitle, setJobTitle] = useState("");
@@ -13,14 +12,14 @@ const WorkExperience = () => {
   const [endDate, setEndDate] = useState("");
   const [otherInformation, setOtherInformation] = useState("");
   const { userId } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchWorkExperience = async () => {
       try {
-        const response = await http.get(
+        const response = await axios.get(
           `http://localhost:8000/api/workexp/user/${userId}`
         );
+        console.log("Response:", response);
         const workExperience = response.data;
 
         // Update state with fetched data
@@ -29,7 +28,7 @@ const WorkExperience = () => {
         setCompany(workExperience.company || "");
         setStartDate(workExperience.startDate || "");
         setEndDate(workExperience.endDate || "");
-        setOtherInformation(workExperience.otherInformation || "");
+        setOtherInformation(workExperience.location || ""); // Ensure otherInformation is set or empty string
       } catch (error) {
         console.error("Error fetching work experience data:", error);
       }
@@ -38,6 +37,7 @@ const WorkExperience = () => {
     fetchWorkExperience();
   }, [userId]);
 
+  const navigate = useNavigate();
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
@@ -52,7 +52,7 @@ const WorkExperience = () => {
     };
 
     try {
-      const response = await http.put(
+      const response = await axios.put(
         `http://localhost:8000/api/workexp/${userId}`,
         userData
       );
@@ -69,21 +69,25 @@ const WorkExperience = () => {
       <h1 className="text-center my-4">Work Experience</h1>
       <Container fluid className="mt-3">
         <Row>
-          <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
-            <h2 className="text-center">Navigation</h2>
+          <Col md={2}>
             <Nav className="flex-column">
-              <Nav.Link href={`/editprofile/${userId}`} className="text-dark mb-2 d-flex align-items-center">
-                <FaUserEdit className="me-2" />
+              <h2>Navigation</h2>
+              <Nav.Link href={`/editprofile/${userId}`} className="text-black">
                 Profile
               </Nav.Link>
-              <Nav.Link href={`/workexperience/${userId}`} className="text-dark mb-2 d-flex align-items-center">
-                <FaBriefcase className="me-2" />
+              <Nav.Link
+                href={`/workexperience/${userId}`}
+                className="text-black"
+              >
                 Work Experience
               </Nav.Link>
-              <Button variant="danger" href="/logout" className="mt-3 d-flex align-items-center">
-                <FaSignOutAlt className="me-2" />
-                Logout
-              </Button>
+              <Row>
+                <Col>
+                  <Button variant="danger" href="/logout">
+                    Log Out
+                  </Button>
+                </Col>
+              </Row>
             </Nav>
           </Col>
           <Col md={10} className="p-4">

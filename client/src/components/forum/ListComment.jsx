@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import useCommentsQuery from "../../hooks/forum/comments/useCommentsQuery";
 import { Spinner } from "react-bootstrap";
-import Comment from "./micro/Comment";
+import Comment from "./Comment";
 
 const ListComment = ({ id }) => {
   // id is post ID

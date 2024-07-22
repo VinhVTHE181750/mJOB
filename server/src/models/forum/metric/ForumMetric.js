@@ -1,5 +1,5 @@
 const { Model, DataTypes } = require("sequelize");
-const { sequelize } = require("../SQLize");
+const { sequelize } = require("../../SQLize");
 
 class ForumMetric extends Model {}
 
