@@ -1,3 +1,4 @@
+const { getIo } = require("../../../../io");
 const Comment = require("../../../models/forum/comment/Comment");
 
 const put = async (req, res) => {
@@ -12,6 +13,7 @@ const put = async (req, res) => {
       return res.status(400).json({ message: "Content is required" });
     comment.content = content;
     await comment.save();
+    getIo().emit(`forum/comments/${postId}`, result);
     return res.status(200).json(comment);
   } catch (err) {
     return res

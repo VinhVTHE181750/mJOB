@@ -3,7 +3,7 @@ const PostCategory = require("../../../models/forum/post/PostCategory");
 // const User = require("../../../models/user/User");
 const PostHistory = require("../../../models/forum/post/PostHistory");
 const { log } = require("../../../utils/Logger");
-const io = require("../../../../io");
+const { getIo } = require("../../../../io");
 const PostMetric = require("../../../models/forum/metric/PostMetric");
 
 const put = async (req, res) => {
@@ -104,8 +104,8 @@ const put = async (req, res) => {
 
     // const io = getIo();
     // io.emit("posts", { action: "UPDATE", post });
-    io.getIo().emit("forum/posts");
-    io.getIo().emit(`forum/post/${post.id}`);
+    getIo().emit("forum/posts");
+    getIo().emit(`forum/post/${post.id}`);
     return res.status(200).json(post);
   } catch (err) {
     log(err, "ERROR", "FORUM");

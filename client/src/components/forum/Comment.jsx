@@ -2,39 +2,65 @@ import PropTypes from "prop-types";
 import { getMoment } from "../../functions/Converter";
 import { Button } from "react-bootstrap";
 import LikeButton from "./micro/LikeButton";
+import useWhoAmI from "../../hooks/user/useWhoAmI";
+import { useState } from "react";
+import useCommentDelete from "../../hooks/forum/comments/useCommentDelete";
 
 const Comment = ({ comment }) => {
-  const currentUsername = "ADMIN1";
+  const { username } = useWhoAmI();
+
+  const [editable, setEditable] = useState(false);
+  const { deleteComment } = useCommentDelete();
+
+  const toggleEdit = () => {
+    setEditable(!editable);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this comment?")) {
+      deleteComment(comment.id);
+    }
+  };
+
   return (
-    <div className="card mb-3">
+    <div className="card">
       <div className="card-body">
         <div className="d-flex flex-row align-items-center">
           <h5 className="mb-0 me-2">{comment.username}</h5>
-          <p className="mb-0">{comment.content}</p>
         </div>
+        <p>{comment.content}</p>
         <p className="card-text">
           <small className="text-muted">{getMoment(comment.updatedAt)}</small>
         </p>
       </div>
-      {comment.username === currentUsername ? (
-        <div>
-          <Button variant="danger">Delete</Button>
-          <Button variant="primary">Edit</Button>
-        </div>
-      ) : (
-        <div>
-          <LikeButton
-            id={comment.id}
-            type="comment"
-            action="like"
-          />
-          <LikeButton
-            id={comment.id}
-            type="comment"
-            action="dislike"
-          />
-        </div>
-      )}
+      <div className="d-flex flex-end align-items-end justify-content-end gap-2 m-2">
+        <LikeButton
+          id={comment.id}
+          type="comment"
+          action="like"
+        />
+        <LikeButton
+          id={comment.id}
+          type="comment"
+          action="dislike"
+        />
+        {comment.username === username ? (
+          <>
+            {/* <Button
+              variant="primary"
+              onClick={toggleEdit}
+            >
+              Edit
+            </Button> */}
+            <Button
+              variant="danger"
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
+          </>
+        ) : null}
+      </div>
     </div>
   );
 };
@@ -45,6 +71,7 @@ Comment.propTypes = {
     createdAt: PropTypes.string.isRequired,
     updatedAt: PropTypes.string,
     username: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
   }).isRequired,
 };
 

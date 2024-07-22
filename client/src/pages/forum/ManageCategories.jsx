@@ -42,6 +42,8 @@ const ManageCategories = () => {
 
   const deleteCategory = (category) => async () => {
     // console.log(category);
+
+    if (!window.confirm(`Are you sure you want to delete the category ${category.name}?`)) return;
     await http.delete(`/forum/categories/${category.id}`);
   };
 
