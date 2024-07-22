@@ -1,3 +1,5 @@
+![mJOB's logo](https://repository-images.githubusercontent.com/796652856/3858d6ae-ad0c-4b78-aa64-519565e2b568)
+
 [![CodeQL](https://github.com/VinhVTHE181750/mJOB/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/VinhVTHE181750/mJOB/actions/workflows/github-code-scanning/codeql)
 [![Build ReactJS Client](https://github.com/VinhVTHE181750/mJOB/actions/workflows/BuildReactJS.yml/badge.svg)](https://github.com/VinhVTHE181750/mJOB/actions/workflows/BuildReactJS.yml)
 
@@ -11,6 +13,16 @@ Developed in SWP391 subject (SU24 semester, FPT-University).
 3. (HE181302) Phạm Đức Minh
 4. (HE176494) Đỗ Minh Đức
 5. (HE181237) Nguyễn Quốc Khánh
+
+## Features
+- User Registration and Authentication: Allow users to create accounts and log in.
+- Job Listings: Provide a list of available jobs with search and filter functionality.
+- Job Application: Enable users to apply for jobs directly through the platform.
+- Job Payment: Allow users to pay and get paid for jobs through the platform.
+- Forum: Users can add their posts to share with the community.
+- Profile Management: Allow users to create and update their profiles.
+- Customer Service: Allow users to view FAQ, send support tickets and report problems on the platform.
+- Admin Panel: Admin functionality for managing jobs, forum and user accounts.
 
 ## Technologies used for development
 ### Client: ReactJS
@@ -54,20 +66,11 @@ Developed in SWP391 subject (SU24 semester, FPT-University).
 
 ## Installation Guide
 - For Windows: use the included `start.bat`
+- For Linux and other OSs: to be added
 
 ## Environment
 - Node.js v22.1.0
-- Microsoft SQL Server 2022
-
-## Features
-- User Registration and Authentication: Allow users to create accounts and log in.
-- Job Listings: Provide a list of available jobs with search and filter functionality.
-- Job Application: Enable users to apply for jobs directly through the platform.
-- Job Payment: Allow users to pay and get paid for jobs through the platform.
-- Forum: Users can add their posts to share with the community.
-- Profile Management: Allow users to create and update their profiles.
-- Customer Service: Allow users to view FAQ, send support tickets and report problems on the platform.
-- Admin Panel: Admin functionality for managing jobs, forum and user accounts.
+- SQL Server 2019
 
 ## Contribution Guidelines
 This repository does not accept external contributions.
