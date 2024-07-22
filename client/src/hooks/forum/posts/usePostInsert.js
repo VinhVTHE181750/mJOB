@@ -8,6 +8,7 @@ const usePostInsert = () => {
   const [error, setError] = useState(null);
 
   const insertPost = async (title, content, status, category, tags) => {
+    alert(status);
     setLoading(true);
     setError(null);
 

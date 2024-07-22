@@ -15,6 +15,7 @@ const post = async (req, res) => {
     let PostCategoryId;
 
     // if status is not PUBLISHED or DRAFT, return 400
+    console.log(req.body);
     if (status !== "PUBLISHED" && status !== "DRAFT") {
       return res.status(400).json({ message: "Post can only be created as PUBLISHED or DRAFT." });
     }

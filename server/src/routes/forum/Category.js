@@ -3,7 +3,7 @@ const PostCategory = require("../../models/forum/post/PostCategory");
 const { isHexColor } = require("../../validators/NumberValidator");
 const { JwtMiddleware } = require("../../utils/JWT");
 const router = express.Router();
-const io = require("../../../io");
+const { getIo } = require("../../../io");
 
 const getCategories = async (req, res) => {
   const { role } = req;

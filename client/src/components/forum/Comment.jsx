@@ -1,20 +1,22 @@
 import PropTypes from "prop-types";
-import { getMoment } from "../../functions/Converter";
 import { Button } from "react-bootstrap";
-import LikeButton from "./micro/LikeButton";
-import useWhoAmI from "../../hooks/user/useWhoAmI";
-import { useState } from "react";
+import { useNavigate } from "react-router";
+import { getMoment } from "../../functions/Converter";
 import useCommentDelete from "../../hooks/forum/comments/useCommentDelete";
+import useWhoAmI from "../../hooks/user/useWhoAmI";
+import LikeButton from "./micro/LikeButton";
+import { BsTrash3 } from "react-icons/bs";
 
 const Comment = ({ comment }) => {
   const { username } = useWhoAmI();
+  const navigate = useNavigate();
 
-  const [editable, setEditable] = useState(false);
+  // const [editable, setEditable] = useState(false);
   const { deleteComment } = useCommentDelete();
 
-  const toggleEdit = () => {
-    setEditable(!editable);
-  };
+  // const toggleEdit = () => {
+  //   setEditable(!editable);
+  // };
 
   const handleDelete = () => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
@@ -23,13 +25,19 @@ const Comment = ({ comment }) => {
   };
 
   return (
-    <div className="card">
+    <div className="bg-white border rounded p-2 mb-2">
       <div className="card-body">
-        <div className="d-flex flex-row align-items-center">
-          <h5 className="mb-0 me-2">{comment.username}</h5>
+        <div
+          role="button"
+          onClick={() => navigate(`/profile/${comment.username}`)}
+        >
+          <h5 className="mb-0 me-2 text-primary">
+            {comment.avatar}
+            {comment.username}
+          </h5>
         </div>
         <p>{comment.content}</p>
-        <p className="card-text">
+        <p className="card-text float-start">
           <small className="text-muted">{getMoment(comment.updatedAt)}</small>
         </p>
       </div>
@@ -56,7 +64,7 @@ const Comment = ({ comment }) => {
               variant="danger"
               onClick={handleDelete}
             >
-              Delete
+              <BsTrash3 /> Delete
             </Button>
           </>
         ) : null}
