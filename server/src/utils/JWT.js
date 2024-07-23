@@ -13,8 +13,8 @@ const JwtMiddleware = async (req, res, next) => {
       req.role = decoded.role;
     } catch (error) {
       if (error.name === "TokenExpiredError") {
+        res.clearCookie("token"); // Corrected line
         res.status(401).send({ message: "Token expired" });
-        res.clearCookies("token");
         return;
       } else {
         // Handle other errors or rethrow
