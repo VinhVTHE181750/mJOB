@@ -114,12 +114,9 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ message: "Invalid job max applications" });
   }
 
-  if (job_approval_method === undefined || job_approval_method === null) {
-    return res.status(400).json({ message: "Job approval method is required" });
-  } else {
-    if (typeof job_approval_method !== "boolean") {
-      return res.status(400).json({ message: "Invalid job approval method" });
-    }
+  if (!job_approval_method) {
+    job_approval_method = true;
+    // true = auto; false = manual
   }
 
   if (job_description === undefined || job_description === null || job_description === "") {
@@ -134,8 +131,9 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ message: "Invalid job number of recruits" });
   }
 
+  let cStatus;
   if (status === undefined || status === null || status === "") {
-    let cStatus = "ACTIVE";
+    cStatus = "ACTIVE";
   } else {
     if (status !== "ACTIVE" && status !== "INACTIVE") {
       return res.status(400).json({ message: "Job can only be created as ACTIVE or INACTIVE" });
@@ -161,24 +159,28 @@ router.post("/", async (req, res) => {
   try {
     const job = await newJob.save();
     // requirements is an array of {type, name}
-    if(typeof job_requirements !== "string") {
+    if (typeof job_requirements !== "string") {
       return res.status(400).json({ message: "Invalid job requirements" });
-    } 
+    }
+
+    // for now, assume all requirements to be FILE
     const requirements = job_requirements.split(";");
     for (let i = 0; i < requirements.length; i++) {
       const requirement = await Requirement.create({
         JobId: job.id,
-        type: job_requirements[i].type,
+        type: "FILE",
         // type can be TEXT or FILE
-        name: job_requirements[i].name,
+        name: job_requirements[i],
       });
     }
+
     const jobHistory = await JobHistory.create({
       JobId: job.id,
       UserId: req.userId,
       status: cStatus,
       action: "CREATE",
     });
+
     return res.status(201).json(job);
   } catch (err) {
     log(err, "ERROR", "JOB");
