@@ -4,6 +4,7 @@ const Requirement = require("./Requirement");
 const Compensation = require("./Compensation");
 const JobHistory = require("./JobHistory");
 const Application = require("./Application");
+const JobMetric = require("./JobMetric");
 
 class Job extends Model {}
 
@@ -64,7 +65,7 @@ Job.init(
 
 
     // Salary amount
-    salaryAmount: {
+    salary: {
       type: DataTypes.FLOAT,
       allowNull: true,
       defaultValue: 0,
@@ -137,5 +138,8 @@ Application.belongsTo(Job);
 
 Job.hasMany(JobHistory);
 JobHistory.belongsTo(Job);
+
+Job.hasMany(JobMetric);
+JobMetric.belongsTo(Job);
 
 module.exports = Job;

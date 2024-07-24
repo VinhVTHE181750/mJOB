@@ -2,6 +2,7 @@
 // Home
 import HomeGuest from "./pages/home/HomeGuest";
 import HomePage from "./pages/home/HomePage";
+import HomeUser from "./pages/home/HomeUser";
 
 // Auth
 import Login from "./pages/auth/Login";
@@ -43,7 +44,7 @@ import Settings from "./pages/technical/Settings";
 
 // Components
 import HomeFooter from "./components/HomeFooter";
-// import HomeNavbar from "./components/HomeNavbar";
+import HomeNavbar from "./components/home/HomeNavbar";
 import AppNavbar from "./components/Navbar";
 
 //Payment
@@ -71,7 +72,8 @@ function App() {
       <UserInformationProvider>
         <AuthProvider className="page">
           <ForumProvider>
-            <AppNavbar className="mb-auto" />
+            {/* <AppNavbar className="mb-auto" /> */}
+            <HomeNavbar/>
             <div className="min-vh-100 mt-5">
               <Routes>
                 {/* AUTH ROUTES */}
@@ -106,6 +108,11 @@ function App() {
                   exact
                   path="/home"
                   element={<HomePage />}
+                />
+                <Route
+                  exact
+                  path="/homeuser"
+                  element={<HomeUser />}
                 />
 
                 {/* FORUM ROUTES */}
