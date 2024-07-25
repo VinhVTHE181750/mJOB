@@ -103,7 +103,6 @@ const EditJob = () => {
                   value={req.name}
                   onChange={(e) => handleRequirementChange(index, 'name', e.target.value)}
                 />
-                <p className="date">Last updated: {new Date(req.updatedAt).toLocaleString()}</p> {/* Display date and time */}
               </div>
             ))}
           </div>
