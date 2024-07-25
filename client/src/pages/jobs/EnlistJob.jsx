@@ -275,7 +275,7 @@ const EnlistJob = () => {
               >
                 <option value="AGREEMENT">Agreement</option>
                 <option value="NONE">None</option>
-                <option value="ONCE">None</option>
+                <option value="ONETIME">ONCE</option>
                 <option value="HOURLY">Hourly</option>
                 <option value="DAILY">Daily</option>
                 <option value="WEEKLY">Weekly</option>
@@ -337,15 +337,9 @@ const EnlistJob = () => {
           >
             {loading ? "Creating..." : "Create"}
           </Button>
-          <Button
-            variant="info"
-            className="ml-2"
-          >
-            Save
-          </Button>
-          {/* {error && <p className="error-message">{error}</p>} */}
-          {success && <p className="success-message">Job successfully enlisted!</p>}
         </div>
+        {/* {error && <p className="error-message">{error}</p>} */}
+        {success && <p className="success-message">Job successfully enlisted!</p>}
       </Form>
     </Container>
   );
