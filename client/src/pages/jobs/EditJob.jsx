@@ -6,7 +6,6 @@ import useJobUpdate from "../../hooks/useJobUpdate.js";
 
 const compensationTypes = ["Agreement", "Onetime", "Hourly", "Daily", "Weekly", "Monthly", "Percentage"];
 const currencies = ["USD", "EUR", "POUND", "VND"];
-const requirementTypes = ["TEXT", "FILE"];
 
 const EditJob = () => {
   const { id } = useParams();
@@ -97,25 +96,14 @@ const EditJob = () => {
             <h2 className="label">Requirements:</h2>
             {reqs.map((req, index) => (
               <div key={index}>
-                <select
-                  className="input"
-                  name={`type-${index}`}
-                  value={req.type}
-                  onChange={(e) => handleRequirementChange(index, 'type', e.target.value)}
-                >
-                  {requirementTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
+                <p className="input-label">Type: Text</p> {/* Requirement type is static as "TEXT" */}
                 <input
                   className="input"
                   name={`name-${index}`}
                   value={req.name}
                   onChange={(e) => handleRequirementChange(index, 'name', e.target.value)}
                 />
-                <p className="date">Last updated: {new Date(req.updatedAt).toLocaleDateString()}</p>
+                <p className="date">Last updated: {new Date(req.updatedAt).toLocaleString()}</p> {/* Display date and time */}
               </div>
             ))}
           </div>
@@ -177,12 +165,19 @@ const EditJob = () => {
               onChange={handleInputChange}
             />
           </div>
+
           <button className="save-button" type="submit">
             Save
           </button>
-        </form>
-      </div>
-    </div>
+          {reqs.map((req, index) => (
+            <div key={index}>
+              <p className="date">Last updated: {new Date(req.updatedAt).toLocaleString()}</p> {/* Display date and time */}
+            </div>
+          ))}
+      {success && <p className="success-message">{success}</p>}
+    </form>
+      </div >
+    </div >
   );
 };
 
