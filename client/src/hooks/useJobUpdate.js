@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import http from '../functions/httpService';
 
-const useJobUpdate = (jobId) => {
+const useJobUpdate = (id) => {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -11,7 +11,7 @@ const useJobUpdate = (jobId) => {
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
-        const response = await http.get(`/jobs/${jobId}`);
+        const response = await http.get(`/jobs/${id}`);
         setJob(response.data);
         setLoading(false);
       } catch (error) {
@@ -21,7 +21,7 @@ const useJobUpdate = (jobId) => {
     };
 
     fetchJobDetails();
-  }, [jobId]);
+  }, [id]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
