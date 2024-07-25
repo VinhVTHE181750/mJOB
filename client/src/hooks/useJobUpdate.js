@@ -8,7 +8,6 @@ const useJobUpdate = (id) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
@@ -30,23 +29,31 @@ const useJobUpdate = (id) => {
     setJob((prevJob) => ({ ...prevJob, [name]: value }));
   };
 
+  const handleRequirementChange = (index, field, value) => {
+    setReqs((prevReqs) => {
+      const updatedReqs = [...prevReqs];
+      updatedReqs[index][field] = value;
+      return updatedReqs;
+    });
+  };
+
   const handleSubmit = async (navigate) => {
     setLoading(true);
     try {
-      await http.put(`/jobs/update`, job);
+      await http.put(`/jobs/update`, { ...job, job_requirements: reqs });
       setLoading(false);
       setSuccess('Job updated successfully!');
       setTimeout(() => {
         setSuccess('');
-        navigate(-1);
-      }, 2000); // Delay to show the success message before navigating back
+        navigate();
+      }, 2000);
     } catch (error) {
       setError('Error updating job details.');
       setLoading(false);
-    } 
+    }
   };
 
-  return { job, reqs, loading, error, success, handleInputChange, handleSubmit };
+  return { job, reqs, loading, error, success, handleInputChange, handleRequirementChange, handleSubmit };
 };
 
 export default useJobUpdate;
