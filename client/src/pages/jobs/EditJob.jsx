@@ -1,15 +1,17 @@
+import { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import "../../assets/css/EditJob.css";
 import useJobUpdate from "../../hooks/useJobUpdate.js";
 
-const compensationTypes = ["AGREEMENT", "ONETIME", "HOURLY", "DAILY", "WEEKLY", "MONTHLY", "PERCENTAGE"];
+const compensationTypes = ["Agreement", "Onetime", "Hourly", "Daily", "Weekly", "Monthly", "Percentage"];
 const currencies = ["USD", "EUR", "POUND", "VND"];
+const requirementTypes = ["TEXT", "FILE"];
 
 const EditJob = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { job, reqs, loading, error, success, handleInputChange, handleSubmit } = useJobUpdate(id);
+  const { job, reqs, loading, error, success, handleInputChange, handleRequirementChange, handleSubmit } = useJobUpdate(id);
 
   if (loading) {
     return <div className="loading-spinner" />;
@@ -21,10 +23,7 @@ const EditJob = () => {
 
   return (
     <div className="background-container">
-      <button
-        className="back-button"
-        onClick={() => navigate(-1)}
-      >
+      <button className="back-button" onClick={() => navigate(-1)}>
         <FaArrowLeft /> Back
       </button>
       <div className="job-edit-container">
@@ -94,16 +93,32 @@ const EditJob = () => {
               onChange={handleInputChange}
             />
           </div>
-          {/* <div className="section">
+          <div className="section">
             <h2 className="label">Requirements:</h2>
-            <textarea
-              rows={4}
-              className="textarea"
-              name="tags"
-              value={job.tags}
-              onChange={handleInputChange}
-            />
-          </div> */}
+            {reqs.map((req, index) => (
+              <div key={index}>
+                <select
+                  className="input"
+                  name={`type-${index}`}
+                  value={req.type}
+                  onChange={(e) => handleRequirementChange(index, 'type', e.target.value)}
+                >
+                  {requirementTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  className="input"
+                  name={`name-${index}`}
+                  value={req.name}
+                  onChange={(e) => handleRequirementChange(index, 'name', e.target.value)}
+                />
+                <p className="date">Last updated: {new Date(req.updatedAt).toLocaleDateString()}</p>
+              </div>
+            ))}
+          </div>
           <div className="section">
             <h2 className="label">Compensation Type:</h2>
             <select
@@ -113,10 +128,7 @@ const EditJob = () => {
               onChange={handleInputChange}
             >
               {compensationTypes.map((type) => (
-                <option
-                  key={type}
-                  value={type}
-                >
+                <option key={type} value={type}>
                   {type}
                 </option>
               ))}
@@ -130,7 +142,7 @@ const EditJob = () => {
               value={job.salaryAmount}
               onChange={handleInputChange}
             />
-          </div>   
+          </div>
           <div className="section">
             <h2 className="label">Currency:</h2>
             <select
@@ -140,10 +152,7 @@ const EditJob = () => {
               onChange={handleInputChange}
             >
               {currencies.map((currency) => (
-                <option
-                  key={currency}
-                  value={currency}
-                >
+                <option key={currency} value={currency}>
                   {currency}
                 </option>
               ))}
@@ -168,12 +177,7 @@ const EditJob = () => {
               onChange={handleInputChange}
             />
           </div>
-          {success && <p className="success-message">{success}</p>}
-          <button
-            className="save-button"
-            type="submit"
-            onClick={handleSubmit}
-          >
+          <button className="save-button" type="submit">
             Save
           </button>
         </form>
