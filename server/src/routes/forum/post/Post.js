@@ -4,6 +4,10 @@ const Post = require("../../../models/forum/post/Post");
 const PostHistory = require("../../../models/forum/post/PostHistory");
 const { log } = require("../../../utils/Logger");
 const { getIo } = require("../../../../io");
+const CategoryMetric = require("../../../models/forum/metric/CategoryMetric");
+const ForumMetric = require("../../../models/forum/metric/ForumMetric");
+const PostTag = require("../../../models/forum/post/PostTag");
+const TagMetric = require("../../../models/forum/metric/TagMetric");
 
 const post = async (req, res) => {
   const userId = req.userId;
@@ -15,7 +19,6 @@ const post = async (req, res) => {
     let PostCategoryId;
 
     // if status is not PUBLISHED or DRAFT, return 400
-    console.log(req.body);
     if (status !== "PUBLISHED" && status !== "DRAFT") {
       return res.status(400).json({ message: "Post can only be created as PUBLISHED or DRAFT." });
     }
@@ -91,6 +94,77 @@ const post = async (req, res) => {
       UserId: post.UserId,
       PostId: post.id,
     });
+
+    // add 1 to today category metric
+    const todayCategoryMetric = await CategoryMetric.findOne({
+      where: {
+        day: new Date(),
+        PostCategoryId,
+      },
+    });
+
+    if (todayCategoryMetric) {
+      todayCategoryMetric.uses += 1;
+      await todayCategoryMetric.save();
+    } else {
+      await CategoryMetric.create({
+        day: new Date().toISOString().split("T")[0],
+        uses: 1,
+        PostCategoryId,
+      });
+    }
+
+    const forumMetric = await ForumMetric.findOne({
+      where: {
+        UserId: userId,
+        day: new Date().toISOString().split("T")[0],
+      },
+    });
+
+    if (forumMetric) {
+      forumMetric.postCreated += 1;
+      await forumMetric.save();
+    } else {
+      await ForumMetric.create({
+        UserId: userId,
+        day: new Date().toISOString().split("T")[0],
+        postCreated: 1,
+      });
+    }
+
+    // for each tag, create a PostTag if it doesn't exist, then add 1 to its metric
+    // first, anazlyze the tags
+    const pTags = tags.split(",");
+
+    pTags.forEach(async (tag) => {
+      const t = await PostTag.findOne({
+        where: {
+          name: tag,
+        },
+      });
+
+      if (!t) {
+        await PostTag.create({
+          name: tag,
+        });
+        await TagMetric.create({
+          day: new Date().toISOString().split("T")[0],
+          PostTagId: t.id,
+          uses: 1,
+        });
+      }
+
+      const tagMetric = await TagMetric.findOne({
+        where: {
+          day: new Date().toISOString().split("T")[0],
+          PostTagId: t2.id,
+        },
+      });
+
+      tagMetric.uses += 1;
+      await tagMetric.save();
+    });
+
     getIo().emit("forum/posts");
     return res.status(201).send({ post });
   } catch (err) {
