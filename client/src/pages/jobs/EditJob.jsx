@@ -3,9 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import "../../assets/css/EditJob.css";
 import useJobUpdate from "../../hooks/useJobUpdate.js";
 
-const compensationTypes = ["One-Time", "Periodcally", "Other"];
+const compensationTypes = ["AGREEMENT", "ONETIME", "HOURLY", "DAILY", "WEEKLY", "MONTHLY", "PERCENTAGE"];
 const currencies = ["USD", "EUR", "POUND", "VND"];
-const compensationPeriods = ["year", "month", "week", "day", "hour"];
 
 const EditJob = () => {
   const { id } = useParams();
@@ -41,8 +40,8 @@ const EditJob = () => {
             <h2 className="label">Job Title:</h2>
             <input
               className="input"
-              name="job_title"
-              value={job.job_title}
+              name="title"
+              value={job.title}
               onChange={handleInputChange}
             />
           </div>
@@ -50,8 +49,8 @@ const EditJob = () => {
             <h2 className="label">Location:</h2>
             <input
               className="input"
-              name="job_work_location"
-              value={job.job_work_location}
+              name="location"
+              value={job.location}
               onChange={handleInputChange}
             />
           </div>
@@ -59,9 +58,9 @@ const EditJob = () => {
             <h2 className="label">Max Applications:</h2>
             <input
               className="input"
-              name="job_max_applications"
+              name="maxApplicants"
               type="number"
-              value={job.job_max_applications}
+              value={job.maxApplicants}
               onChange={handleInputChange}
             />
           </div>
@@ -69,9 +68,9 @@ const EditJob = () => {
             <h2 className="label">Number of Recruits:</h2>
             <input
               className="input"
-              name="job_number_of_recruits"
+              name="recruitments"
               type="number"
-              value={job.job_number_of_recruits}
+              value={job.recruitments}
               onChange={handleInputChange}
             />
           </div>
@@ -79,9 +78,9 @@ const EditJob = () => {
             <h2 className="label">Start Date:</h2>
             <input
               className="input"
-              name="job_start_date"
+              name="startDate"
               type="date"
-              value={job.job_start_date}
+              value={job.startDate}
               onChange={handleInputChange}
             />
           </div>
@@ -89,9 +88,9 @@ const EditJob = () => {
             <h2 className="label">End Date:</h2>
             <input
               className="input"
-              name="job_end_date"
+              name="endDate"
               type="date"
-              value={job.job_end_date}
+              value={job.endDate}
               onChange={handleInputChange}
             />
           </div>
@@ -100,8 +99,8 @@ const EditJob = () => {
             <textarea
               rows={4}
               className="textarea"
-              name="job_requirements"
-              value={job.job_requirements}
+              name="tags"
+              value={job.tags}
               onChange={handleInputChange}
             />
           </div>
@@ -109,8 +108,8 @@ const EditJob = () => {
             <h2 className="label">Compensation Type:</h2>
             <select
               className="input"
-              name="job_compensation_type"
-              value={job.job_compensation_type}
+              name="salaryType"
+              value={job.salaryType}
               onChange={handleInputChange}
             >
               {compensationTypes.map((type) => (
@@ -127,17 +126,17 @@ const EditJob = () => {
             <h2 className="label">Compensation Amount:</h2>
             <input
               className="input"
-              name="job_compensation_amounts"
-              value={job.job_compensation_amounts}
+              name="salaryAmount"
+              value={job.salaryAmount}
               onChange={handleInputChange}
             />
-          </div>
+          </div>   
           <div className="section">
             <h2 className="label">Currency:</h2>
             <select
               className="input"
-              name="job_compensation_currencies"
-              value={job.job_compensation_currencies}
+              name="salaryCurrency"
+              value={job.salaryCurrency}
               onChange={handleInputChange}
             >
               {currencies.map((currency) => (
@@ -151,39 +150,12 @@ const EditJob = () => {
             </select>
           </div>
           <div className="section">
-            <h2 className="label">Compensation Period:</h2>
-            <select
-              className="input"
-              name="job_compensation_periods"
-              value={job.job_compensation_periods}
-              onChange={handleInputChange}
-            >
-              {compensationPeriods.map((period) => (
-                <option
-                  key={period}
-                  value={period}
-                >
-                  {period}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="section">
-            <h2 className="label">Custom Iterations:</h2>
-            <textarea
-              className="textarea"
-              name="job_custom_iterations"
-              value={job.job_custom_iterations}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="section">
             <h2 className="label">Description:</h2>
             <textarea
               rows={5}
               className="textarea"
-              name="job_description"
-              value={job.job_description}
+              name="description"
+              value={job.description}
               onChange={handleInputChange}
             />
           </div>
@@ -191,8 +163,8 @@ const EditJob = () => {
             <h2 className="label">Contact Info:</h2>
             <textarea
               className="textarea"
-              name="job_contact_info"
-              value={job.job_contact_info}
+              name="contact"
+              value={job.contact}
               onChange={handleInputChange}
             />
           </div>
