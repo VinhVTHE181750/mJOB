@@ -75,6 +75,7 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ message: "Job compensation type is required" });
   } else {
     if (
+      job_compensation_type !== "AGREEMENT" &&
       job_compensation_type !== "ONETIME" &&
       job_compensation_type !== "HOURLY" &&
       job_compensation_type !== "DAILY" &&
@@ -135,8 +136,8 @@ router.post("/", async (req, res) => {
   if (status === undefined || status === null || status === "") {
     cStatus = "ACTIVE";
   } else {
-    if (status !== "ACTIVE" && status !== "INACTIVE") {
-      return res.status(400).json({ message: "Job can only be created as ACTIVE or INACTIVE" });
+    if (status !== "ACTIVE") {
+      return res.status(400).json({ message: "Job can only be created as ACTIVE " });
     }
   }
 
@@ -189,65 +190,59 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/update", async (req, res) => {
+  log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;
-  //   if (!req.userId) {
-  //     return res.status(401).json({ message: "Unauthorized" });
-  //   } else userId = req.userId;
-  //   if (isNaN(req.userId)) {
-  //     return res.status(400).json({ message: "Invalid user ID" });
-  //   }
+  if (!req.userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  } else userId = req.userId;
+  if (isNaN(req.userId)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+  }
   // uncomment để truyền userId từ request
 
   // test
-  userId = 1;
-  const user = await User.findByPk(userId);
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
+  // userId = 1;
   const {
-    job_id,
-    job_title,
-    job_work_location,
-    job_tags,
-    job_max_applications,
-    job_approval_method,
-    job_description,
-    job_contact_info,
-    job_start_date,
-    job_end_date,
-    job_number_of_recruits,
-    job_requirements, // Nhớ xử lí requirements dưới dạng mảng
-    job_compensation_type,
-    job_compensation_amounts,
-    job_compensation_currencies,
-    job_compensation_periods, // -> bỏ, dùng luôn compensation_type
+    id,
+    title,
+    location,
+    tags,
+    maxApplicants,
+    recruitments,
+    description,
+    contact,
+    startDate,
+    endDate,
+    //requirements, // Nhớ xử lí requirements dưới dạng mảng
+    salaryType,
+    salary,
+    salaryCurrency,
+    // -> bỏ, dùng luôn compensation_type
     // đã có ONCE, HOURLY, DAILY, WEEKLY, MONTHLY, PERCENTAGE
-    job_custom_iterations, // rườm rà -> bỏ
-    status, // Thêm dòng này vào client, hoặc để nó mặc định là ACTIVE
+    // Thêm dòng này vào client, hoặc để nó mặc định là ACTIVE
     // Xem chi tiết tại file models/job/Job.js dòng 86 - 99
   } = req.body;
-  const job = await Job.findByPk(job_id);
+  const job = await Job.findByPk(id);
   if (!job) {
+    log(job);
     return res.status(404).json({ message: "Job not found" });
   }
 
   // Lưu data mới vào model
-  job.title = job_title;
-  job.description = job_description;
-  job.location = job_work_location;
-  job.tags = job_tags;
-  job.maxApplicants = job_max_applications;
-  job.recruitments = job_number_of_recruits;
-  job.approvalMethod = job_approval_method;
-  job.contact = job_contact_info;
-  job.startDate = job_start_date;
-  job.endDate = job_end_date;
+  job.title = title;
+  job.description = description;
+  job.location = location;
+  job.tags = tags;
+  job.maxApplicants = maxApplicants;
+  job.recruitments = recruitments;
+  //job.approvalMethod = approvalMethod;
+  job.contact = contact;
+  job.startDate = startDate;
+  job.endDate = endDate;
   job.paid = true;
-  job.salary = job_compensation_amounts;
-  job.salaryType = job_compensation_type;
-  job.salaryCurrency = job_compensation_currencies;
-  job.status = status;
+  job.salary = salary;
+  job.salaryType = salaryType;
+  job.salaryCurrency = salaryCurrency;
 
   // Lưu model vào database
   try {
@@ -261,18 +256,18 @@ router.put("/update", async (req, res) => {
     }
 
     // requirements is an array of {type, name}
-    for (let i = 0; i < job_requirements.length; i++) {
-      const requirement = await Requirement.create({
-        JobId: job.id,
-        type: job_requirements[i].type,
-        // type can be TEXT or FILE
-        name: job_requirements[i].name,
-      });
-    }
+    //for (let i = 0; i < job_requirements.length; i++) {
+    //const requirement = await Requirement.create({
+    //JobId: job.id,
+    //type: job_requirements[i].type,
+    // type can be TEXT or FILE
+    //name: job_requirements[i].name,
+    //});
+    //}
     const jobHistory = await JobHistory.create({
       JobId: job.id,
       UserId: req.userId,
-      status: status,
+      //status: status,
       action: "UPDATE",
     });
     return res.status(200).json(job);
@@ -283,17 +278,18 @@ router.put("/update", async (req, res) => {
 });
 
 router.post("/upload", async (req, res) => {
+  // log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;
-  //   if (!req.userId) {
-  //     return res.status(401).json({ message: "Unauthorized" });
-  //   } else userId = req.userId;
-  //   if (isNaN(req.userId)) {
-  //     return res.status(400).json({ message: "Invalid user ID" });
-  //   }
+  if (!req.userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  } else userId = req.userId;
+  if (isNaN(req.userId)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+  }
   // uncomment để truyền userId từ request
 
   // test
-  userId = 1;
+  // userId = 1;
   const user = await User.findByPk(userId);
   if (!user) {
     return res.status(404).json({ message: "User not found" });
@@ -396,17 +392,18 @@ router.get("/download/:fname", async (req, res) => {
 });
 
 router.post("apply-job", async (req, res) => {
+  // log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;
-  //   if (!req.userId) {
-  //     return res.status(401).json({ message: "Unauthorized" });
-  //   } else userId = req.userId;
-  //   if (isNaN(req.userId)) {
-  //     return res.status(400).json({ message: "Invalid user ID" });
-  //   }
+  if (!req.userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  } else userId = req.userId;
+  if (isNaN(req.userId)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+  }
   // uncomment để truyền userId từ request
 
   // test
-  userId = 1;
+  // userId = 1;
   const user = await User.findByPk(userId);
   if (!user) {
     return res.status(404).json({ message: "User not found" });
@@ -480,22 +477,22 @@ router.post("apply-job", async (req, res) => {
 });
 
 router.get("/applied-jobs", async (req, res) => {
+  // log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;
-  //   if (!req.userId) {
-  //     return res.status(401).json({ message: "Unauthorized" });
-  //   } else userId = req.userId;
-  //   if (isNaN(req.userId)) {
-  //     return res.status(400).json({ message: "Invalid user ID" });
-  //   }
+  if (!req.userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  } else userId = req.userId;
+  if (isNaN(req.userId)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+  }
   // uncomment để truyền userId từ request
 
   // test
-  userId = 1;
+  // userId = 1;
   const user = await User.findByPk(userId);
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
-
   const applications = await Application.findAll({
     // trả về toàn bộ job đã ứng tuyển, show như thế nào do frontend quy định
     where: { UserId: userId },
@@ -507,17 +504,18 @@ router.get("/applied-jobs", async (req, res) => {
 });
 
 router.get("/created-jobs", async (req, res) => {
+  // log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;
-  //   if (!req.userId) {
-  //     return res.status(401).json({ message: "Unauthorized" });
-  //   } else userId = req.userId;
-  //   if (isNaN(req.userId)) {
-  //     return res.status(400).json({ message: "Invalid user ID" });
-  //   }
+  if (!req.userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  } else userId = req.userId;
+  if (isNaN(req.userId)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+  }
   // uncomment để truyền userId từ request
 
   // test
-  userId = 1;
+  // userId = 1;
   const user = await User.findByPk(userId);
   if (!user) {
     return res.status(404).json({ message: "User not found" });
@@ -533,17 +531,22 @@ router.get("/created-jobs", async (req, res) => {
 });
 
 router.get("/created-job-detail/:job_id", async (req, res) => {
+  // log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;
-  //   if (!req.userId) {
-  //     return res.status(401).json({ message: "Unauthorized" });
-  //   } else userId = req.userId;
-  //   if (isNaN(req.userId)) {
-  //     return res.status(400).json({ message: "Invalid user ID" });
-  //   }
+  if (!req.userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  } else userId = req.userId;
+  if (isNaN(req.userId)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+  }
   // uncomment để truyền userId từ request
 
   // test
-  userId = 1;
+  // userId = 1;
+  const user = await User.findByPk(userId);
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
   try {
     const jobId = parseInt(req.params.job_id);
 
@@ -571,17 +574,22 @@ router.get("/created-job-detail/:job_id", async (req, res) => {
 });
 
 router.get("/applied-job-detail/:job_id", async (req, res) => {
+  // log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;
-  //   if (!req.userId) {
-  //     return res.status(401).json({ message: "Unauthorized" });
-  //   } else userId = req.userId;
-  //   if (isNaN(req.userId)) {
-  //     return res.status(400).json({ message: "Invalid user ID" });
-  //   }
+  if (!req.userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  } else userId = req.userId;
+  if (isNaN(req.userId)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+  }
   // uncomment để truyền userId từ request
 
   // test
-  userId = 1;
+  // userId = 1;
+  const user = await User.findByPk(userId);
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
   try {
     const jobId = parseInt(req.params.job_id);
 
@@ -616,22 +624,23 @@ router.get("/applied-job-detail/:job_id", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const jobId = parseInt(req.params.id);
-    if (!jobId) {
-      return res.status(400).json({ message: "Invalid job ID" });
-    }
     if (isNaN(jobId)) {
       return res.status(400).json({ message: "Invalid job ID" });
     }
 
+    // Fetch the job details along with associated requirements
     const job = await Job.findByPk(jobId);
+
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
     }
+
     return res.status(200).json(job);
   } catch (err) {
     log(err, "ERROR", "JOB");
     return res.status(500).json({ message: "Unknown error while fetching job" });
   }
 });
+
 
 module.exports = router;
