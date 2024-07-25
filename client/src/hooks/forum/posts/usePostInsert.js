@@ -7,7 +7,8 @@ const usePostInsert = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const insertPost = async (title, content, userId, status, category, tags) => {
+  const insertPost = async (title, content, status, category, tags) => {
+    alert(status);
     setLoading(true);
     setError(null);
 
@@ -15,7 +16,6 @@ const usePostInsert = () => {
       const response = await http.post(`/forum/posts`, {
         title,
         content,
-        userId,
         status,
         category,
         tags,

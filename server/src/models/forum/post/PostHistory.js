@@ -9,7 +9,7 @@ class PostHistory extends Model {
 PostHistory.init(
     {
         title: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false,
         },
         content: {

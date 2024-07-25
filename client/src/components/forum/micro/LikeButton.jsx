@@ -8,7 +8,7 @@ import useWhoAmI from "../../../hooks/user/useWhoAmI";
 import socket from "../../../socket";
 import { useNavigate } from "react-router";
 
-const LikeButton = ({ id, type, action }) => {
+const LikeButton = ({ id, type, action, className, ...rest }) => {
   const [refreshFlag, setRefreshFlag] = useState(false); // Add this line
   const { role, loading: userLoading } = useWhoAmI();
   const { likes, dislikes, liked, isDislike, loading: likeLoading } = useLikesQuery(type, id, refreshFlag);
@@ -67,6 +67,7 @@ const LikeButton = ({ id, type, action }) => {
       onClick={handleLikeClick}
       variant={variant}
       disabled={userLoading || likeLoading}
+      className={className}
     >
       {action === "like" ? (
         <>
@@ -85,7 +86,8 @@ LikeButton.propTypes = {
   id: PropTypes.number.isRequired,
   type: PropTypes.string.isRequired,
   action: PropTypes.oneOf(["like", "dislike"]).isRequired,
-  count: PropTypes.number.isRequired,
+  className: PropTypes.string,
+  // count: PropTypes.number.isRequired,
 };
 
 export default LikeButton;

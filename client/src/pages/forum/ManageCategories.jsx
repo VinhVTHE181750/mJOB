@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, FloatingLabel, Form, Row, Spinner } from "react-bootstrap";
-import { BsBack, BsFloppy2, BsFront, BsTrash3 } from "react-icons/bs";
+import { BsArrowLeft, BsBack, BsFloppy2, BsFront, BsTrash3 } from "react-icons/bs";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import { ForumContext } from "../../context/ForumContext";
 import http from "../../functions/httpService";
@@ -42,6 +42,8 @@ const ManageCategories = () => {
 
   const deleteCategory = (category) => async () => {
     // console.log(category);
+
+    if (!window.confirm(`Are you sure you want to delete the category ${category.name}?`)) return;
     await http.delete(`/forum/categories/${category.id}`);
   };
 
@@ -63,8 +65,11 @@ const ManageCategories = () => {
       <Container>
         <NavigateButton
           path="/forum"
-          text="Back"
-        />
+          variant="primary"
+          className="mb-2"
+        >
+          <BsArrowLeft /> Back
+        </NavigateButton>
         <h1 className="text-center fs-1 fw-bold">Manage Categories</h1>
         <FloatingLabel
           className="mb-2"

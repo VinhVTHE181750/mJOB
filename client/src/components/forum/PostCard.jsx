@@ -1,12 +1,7 @@
 import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
-import {
-  BsChatSquare,
-  BsEyeFill,
-  BsHandThumbsDownFill,
-  BsHandThumbsUpFill,
-} from "react-icons/bs";
+import { BsChatSquare, BsEyeFill, BsHandThumbsDownFill, BsHandThumbsUpFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { ForumContext } from "../../context/ForumContext";
 import { getMoment } from "../../functions/Converter";
@@ -38,12 +33,24 @@ const PostCard = ({ post, onClick, category }) => {
   }, [post]);
 
   return (
-    <Card className="post-card" key={post.id} onClick={onClick}>
+    <Card
+      className="post-card"
+      key={post.id}
+      onClick={onClick}
+    >
       <Card.Body>
         <Card.Subtitle className="fs-5">
-          {category && <Category category={category} handler={setCategory} />}
+          {category && (
+            <Category
+              category={category}
+              handler={setCategory}
+            />
+          )}
           <span>
-            <Count count={post.views} icon={<BsEyeFill />} />
+            <Count
+              count={post.views}
+              icon={<BsEyeFill />}
+            />
             <Count
               count={post.comments}
               icon={<BsChatSquare color="black" />}
@@ -52,8 +59,7 @@ const PostCard = ({ post, onClick, category }) => {
               count={likesDelta}
               icon={
                 <>
-                  <BsHandThumbsUpFill color="green" />{" "}
-                  <BsHandThumbsDownFill color="red" />
+                  <BsHandThumbsUpFill color="green" /> <BsHandThumbsDownFill color="red" />
                 </>
               }
             />
@@ -63,7 +69,11 @@ const PostCard = ({ post, onClick, category }) => {
         <Card.Title className="fs-1 fw-bolder mb-2">{post.title}</Card.Title>
         <Card.Text className="fs-6">
           {tags.map((tag) => (
-            <Tag key={tag} tag={tag} handler={(tag) => addTag(tag)} />
+            <Tag
+              key={tag}
+              tag={tag}
+              handler={(tag) => addTag(tag)}
+            />
           ))}
         </Card.Text>
         <Card.Text className="post-card-content">{post.content}</Card.Text>
@@ -78,7 +88,7 @@ const PostCard = ({ post, onClick, category }) => {
           {post.authorAvatar ? (
             <img
               className="align-middle me-2"
-              src={`data:image/jpeg;base64,${post.authorAvatar}`}
+              src={post.authorAvatar}
               alt={`${post.author}'s avatar`}
               style={{ width: "1.5em", height: "1.5em", borderRadius: "50%" }}
             />
@@ -92,9 +102,7 @@ const PostCard = ({ post, onClick, category }) => {
           )}
           {post.author}
         </Link>
-        <Card.Text style={{ textAlign: "right", fontSize: "small" }}>
-          {getMoment(post.updatedAt)}
-        </Card.Text>
+        <Card.Text style={{ textAlign: "right", fontSize: "small" }}>{getMoment(post.updatedAt)}</Card.Text>
       </Card.Body>
     </Card>
   );

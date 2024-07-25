@@ -1,4 +1,4 @@
-const io = require("../../../io");
+const { getIo } = require("../../../io");
 const CommentLike = require("../../models/forum/comment/CommentLike");
 const Comment = require("../../models/forum/comment/Comment");
 const Post = require("../../models/forum/post/Post");
@@ -155,26 +155,26 @@ router.post("/", async (req, res) => {
         return res.status(404).json({ message: "Comment not found" });
       }
 
+      const isLiked = await CommentLike.findOne({ where: { UserId: userId, CommentId: id } });
+      if (isLiked) {
+        const isDislike = isLiked.isDislike;
+        if (like === !isDislike) {
+          await CommentLike.destroy({ where: { UserId: userId, CommentId: id } });
+          getIo().emit(`forum/liked/${type}/${id}`);
+          return res.status(200).json({ message: "Comment unliked" });
+        }
+      }
+      await CommentLike.destroy({ where: { UserId: userId, CommentId: id } });
+
       // if like is true
       if (like) {
-        // invalidate likes and dislikes of the user
-        await CommentLike.destroy({
-          where: { UserId: userId, CommentId: id, isDislike: false },
-        });
-        // like the comment
-        await CommentLike.create({ UserId: userId, CommentId: id });
-
-        io.getIo().emit(`forum/liked/${type}/${id}`)
+        await CommentLike.create({ UserId: userId, CommentId: id, isDislike: false });
+        getIo().emit(`forum/liked/${type}/${id}`);
         return res.status(200).json({ message: "Comment liked" });
       } else {
         // dislike the comment
-        await CommentLike.destroy({ where: { UserId: userId, CommentId: id } });
-        await CommentLike.create({
-          UserId: userId,
-          CommentId: id,
-          isDislike: true,
-        });
-        io.getIo().emit(`forum/liked/${type}/${id}`)
+        await CommentLike.create({ UserId: userId, CommentId: id, isDislike: true });
+        getIo().emit(`forum/liked/${type}/${id}`);
         return res.status(200).json({ message: "Comment disliked" });
       }
     }
@@ -187,26 +187,39 @@ router.post("/", async (req, res) => {
         return res.status(404).json({ message: "Post not found" });
       }
 
+      const isLiked = await PostLike.findOne({ where: { UserId: userId, PostId: id } });
+
+      if (isLiked) {
+        const isDislike = isLiked.isDislike;
+        if (like === !isDislike) {
+          await PostLike.destroy({ where: { UserId: userId, PostId: id } });
+          getIo().emit(`forum/liked/${type}/${id}`);
+          return res.status(200).json({ message: "Post unliked" });
+        }
+      }
+      await PostLike.destroy({ where: { UserId: userId, PostId: id } });
+
       // if like is true
       if (like) {
         // invalidate likes and dislikes of the user
         await PostLike.destroy({ where: { UserId: userId, PostId: id } });
         // like the post
         await PostLike.create({ UserId: userId, PostId: id, isDislike: false });
-        io.getIo().emit(`forum/liked/${type}/${id}`)
+        getIo().emit(`forum/liked/${type}/${id}`);
         return res.status(200).json({ message: "Post liked" });
       } else {
         await PostLike.destroy({ where: { UserId: userId, PostId: id } });
         // dislike the post
         await PostLike.create({ UserId: userId, PostId: id, isDislike: true });
-        io.getIo().emit(`forum/liked/${type}/${id}`)
-        log(`forum/liked/${type}/${id}`)
+        getIo().emit(`forum/liked/${type}/${id}`);
+        // log(`forum/liked/${type}/${id}`);
         return res.status(200).json({ message: "Post disliked" });
       }
     }
 
     return res.status(404).json({ message: "Not found" });
   } catch (err) {
+    log(err, "ERROR", "FORUM");
     return res.status(500).json({ message: "Unexpected error" });
   }
 });

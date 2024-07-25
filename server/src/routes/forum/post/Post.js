@@ -3,7 +3,7 @@ const PostCategory = require("../../../models/forum/post/PostCategory");
 const Post = require("../../../models/forum/post/Post");
 const PostHistory = require("../../../models/forum/post/PostHistory");
 const { log } = require("../../../utils/Logger");
-const io = require("../../../../io");
+const { getIo } = require("../../../../io");
 
 const post = async (req, res) => {
   const userId = req.userId;
@@ -15,6 +15,7 @@ const post = async (req, res) => {
     let PostCategoryId;
 
     // if status is not PUBLISHED or DRAFT, return 400
+    console.log(req.body);
     if (status !== "PUBLISHED" && status !== "DRAFT") {
       return res.status(400).json({ message: "Post can only be created as PUBLISHED or DRAFT." });
     }
@@ -90,7 +91,7 @@ const post = async (req, res) => {
       UserId: post.UserId,
       PostId: post.id,
     });
-    io.getIo().emit("forum/posts");
+    getIo().emit("forum/posts");
     return res.status(201).send({ post });
   } catch (err) {
     log(err, "ERROR", "FORUM");

@@ -7,9 +7,22 @@ const JwtMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
 
   if (token) {
-    const decoded = verifyToken(token);
-    req.userId = decoded.id;
-    req.role = decoded.role;
+    try {
+      const decoded = verifyToken(token);
+      req.userId = decoded.id;
+      req.role = decoded.role;
+    } catch (error) {
+      if (error.name === "TokenExpiredError") {
+        res.clearCookie("token"); // Corrected line
+        res.status(401).send({ message: "Token expired" });
+        return;
+      } else {
+        // Handle other errors or rethrow
+        log(`JWT Error: ${error.message}`);
+        res.status(500).send({ message: "Failed to authenticate token" });
+        return;
+      }
+    }
   }
   log(`JWT: ${req.userId} ${req.role}`);
 

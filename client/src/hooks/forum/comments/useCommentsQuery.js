@@ -1,7 +1,6 @@
-import axios from "axios";
-import {useEffect, useState} from "react";
-
-
+import { useEffect, useState } from "react";
+import http from "../../../functions/httpService";
+import socket from "../../../socket";
 
 const useCommentsQuery = (id) => {
   const [comments, setComments] = useState([]);
@@ -11,7 +10,6 @@ const useCommentsQuery = (id) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        // call /forum/comments and add commentId to body
         const url = `/forum/comments/${id}`;
         const response = await http.get(url);
         setComments(response.data);
@@ -23,7 +21,14 @@ const useCommentsQuery = (id) => {
     };
 
     fetchComments();
-  }, []);
+
+    const event = `forum/comments/${id}`;
+    socket.on(event, fetchComments);
+
+    return () => {
+      socket.off(event, fetchComments);
+    };
+  }, [id]); // Added id to the dependency array to ensure re-subscription on id change
 
   return { comments, loading, error };
 };
