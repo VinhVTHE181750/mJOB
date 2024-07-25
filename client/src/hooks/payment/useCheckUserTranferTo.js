@@ -10,7 +10,7 @@ const useCheckUserTranferTo = (userId) => {
       try {
         setLoading(true);
         const response = await http.get(`/payment/tranferuser/${userId}`);
-        const data = response.data;
+        const data = response.data.data;
         setLoading(false);
         setInfo(data);
       } catch (error) {
@@ -22,7 +22,22 @@ const useCheckUserTranferTo = (userId) => {
     fetchInfo();
   }, []);
 
-  return { info, loading, error };
+  const fetchToUserInfo = async (toUserId) => {
+    try {
+      setLoading(true);
+      const response = await http.get(`/payment/tranferuser/${toUserId}`);
+      const data = response.data.data;
+      setLoading(false);
+      setInfo(data);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  };
+
+  return { info, loading, error, fetchToUserInfo };
 };
+
+ 
 
 export default useCheckUserTranferTo;

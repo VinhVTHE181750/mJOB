@@ -2,10 +2,15 @@ import { useState } from "react";
 import "../../assets/css/JobDashboard.css";
 import History from "../../components/job/History";
 import SideBar from "../../components/job/SideBar";
-
+import useWhoAmI from '../../hooks/user/useWhoAmI';
+import { useNavigate } from 'react-router';
 const JobHistory = () => {
   const [activeComponent, setActiveComponent] = useState("history");
-
+  const { fetchMe, userId, username, role } = useWhoAmI();
+  const navigate = useNavigate();
+  if (!username) {
+    navigate('/login');
+  }
   const handleMenuClick = (component) => {
     setActiveComponent(component);
   };

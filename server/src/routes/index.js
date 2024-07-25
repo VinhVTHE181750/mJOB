@@ -25,6 +25,7 @@ const jobManage = require("./dashboard/jobManager")
 const homeuserRoute = require("./HomeUser");
 const homeguestRoute = require("./HomeGuest");
 
+
 module.exports = function applyRoutes(app) {
   app.use("/api/auth", authRoute);
   app.use("/api/forum", forumRoute);
