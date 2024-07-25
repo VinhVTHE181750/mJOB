@@ -4,6 +4,7 @@ const Requirement = require("./Requirement");
 const Compensation = require("./Compensation");
 const JobHistory = require("./JobHistory");
 const Application = require("./Application");
+const JobMetric = require("./JobMetric");
 
 class Job extends Model {}
 
@@ -69,9 +70,9 @@ Job.init(
       defaultValue: false,
     },
 
-    // Salary: null -> contact for salary
+    // Salary amount
     salary: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
     // ONE OF: hourly, daily, weekly, monthly, once
@@ -135,5 +136,8 @@ Application.belongsTo(Job);
 
 Job.hasMany(JobHistory);
 JobHistory.belongsTo(Job);
+
+Job.hasMany(JobMetric);
+JobMetric.belongsTo(Job);
 
 module.exports = Job;
