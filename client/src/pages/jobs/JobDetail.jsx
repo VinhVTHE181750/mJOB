@@ -189,7 +189,7 @@ const JobDetail = () => {
           <Label>Requirements:</Label>
           <ul>
             {reqs && reqs.map((req) => (
-              <li key={req.req_id}> Type: {req.type}, name: {req.name}</li>
+              <li key={req.id}> Type: {req.type}, name: {req.name}</li>
             ))}
           </ul>
         </Section>
