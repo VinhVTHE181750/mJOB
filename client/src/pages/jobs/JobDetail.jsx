@@ -129,7 +129,7 @@ const JobDetail = () => {
     const fetchJobDetails = async () => {
       try {
         const response = await http.get(`/jobs/${id}`);
-        setJob(response.data);
+        setJob(response.data.job);
         setReqs(response.data.requirements);
         setLoading(false);
       } catch (error) {
