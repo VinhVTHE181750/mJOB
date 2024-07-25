@@ -3,6 +3,7 @@ import http from '../functions/httpService';
 
 const useJobUpdate = (id) => {
   const [job, setJob] = useState(null);
+  const [reqs, setReqs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -12,7 +13,8 @@ const useJobUpdate = (id) => {
     const fetchJobDetails = async () => {
       try {
         const response = await http.get(`/jobs/${id}`);
-        setJob(response.data);
+        setJob(response.data.job);
+        setReqs(response.data.requirements);
         setLoading(false);
       } catch (error) {
         setError('Error fetching job details.');
@@ -44,7 +46,7 @@ const useJobUpdate = (id) => {
     } 
   };
 
-  return { job, loading, error, success, handleInputChange, handleSubmit };
+  return { job, reqs, loading, error, success, handleInputChange, handleSubmit };
 };
 
 export default useJobUpdate;

@@ -9,7 +9,7 @@ const currencies = ["USD", "EUR", "POUND", "VND"];
 const EditJob = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { job, loading, error, success, handleInputChange, handleSubmit } = useJobUpdate(id);
+  const { job, reqs, loading, error, success, handleInputChange, handleSubmit } = useJobUpdate(id);
 
   if (loading) {
     return <div className="loading-spinner" />;
@@ -94,7 +94,7 @@ const EditJob = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="section">
+          {/* <div className="section">
             <h2 className="label">Requirements:</h2>
             <textarea
               rows={4}
@@ -103,7 +103,7 @@ const EditJob = () => {
               value={job.tags}
               onChange={handleInputChange}
             />
-          </div>
+          </div> */}
           <div className="section">
             <h2 className="label">Compensation Type:</h2>
             <select
