@@ -6,24 +6,20 @@ const PostLike = require("../../../models/forum/post/PostLike");
 const Comment = require("../../../models/forum/comment/Comment");
 const User = require("../../../models/user/User");
 
-
 const getAllPosts = async (req, res) => {
   // log(`${req.userId}, ${req.role}`, "INFO", "FORUM");
   try {
     let posts;
-    
+
     if (req.role === "ADMIN" || req.role === "MOD") {
-      
       posts = await Post.findAll();
     } else if (req.userId) {
-      
       posts = await Post.findAll({
         where: {
           [Op.or]: [{ status: "PUBLISHED" }, { UserId: req.userId }],
         },
       });
     } else {
-      
       posts = await Post.findAll({
         where: {
           status: "PUBLISHED",
@@ -50,7 +46,7 @@ const getAllPosts = async (req, res) => {
 
           const user = await User.findOne({ where: { id: post.UserId } });
           const author = user.username;
-          const authorAvatar = user.avatar || "";
+          const avatar = user.avatar;
 
           return {
             ...post.toJSON(),
@@ -59,7 +55,7 @@ const getAllPosts = async (req, res) => {
             dislikes: dislikes || 0,
             comments: comments || 0,
             author,
-            authorAvatar,
+            avatar,
           };
         })
       );
@@ -111,6 +107,7 @@ const getPostById = async (req, res) => {
 
     const user = await User.findOne({ where: { id: post.UserId } });
     const author = user.username;
+    const avatar = user.avatar;
 
     const response = {
       id: post.id,
@@ -124,6 +121,7 @@ const getPostById = async (req, res) => {
       comments: comments || 0,
       dislikes: dislikes || 0,
       author: author || "Unknown",
+      avatar: avatar || null,
       PostCategoryId: post.PostCategoryId,
       UserId: post.UserId,
       createdAt: post.createdAt,
