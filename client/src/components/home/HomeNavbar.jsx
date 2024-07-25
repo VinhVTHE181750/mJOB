@@ -1,10 +1,11 @@
 import React from 'react';
 import {Button, Nav, Navbar, NavDropdown} from 'react-bootstrap';
+import useWhoAmI from '../../hooks/user/useWhoAmI';
 import '../../assets/css/Navbar.css';
+import { useNavigate } from 'react-router-dom';
 
 const HomeNavbar = ({ user }) => {
-
-    const currentuser = null;
+    const { fetchMe, userId, username, role } = useWhoAmI();
     return (
         <>
         <Navbar bg="light" expand="lg">
@@ -20,9 +21,9 @@ const HomeNavbar = ({ user }) => {
                         <Nav.Link href="/profile" className={location.pathname === '/profile' ? 'active nav-fixed' : 'nav-fixed'}>Profile</Nav.Link>
                 {/* </div> */}
                 </Nav>
-                {location.pathname !== '/' && location.pathname !== '/login' ? (
+                {userId!= -1 ? (
                     <Nav className='container container-navbar right' style={{ justifyContent: 'flex-end' }}>
-                        <NavDropdown title="MeoMap" id="basic-nav-dropdown">
+                        <NavDropdown title={`${username}`} id="basic-nav-dropdown">
                             <NavDropdown.Item href="/profile">User Profile</NavDropdown.Item>
                             <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
                             <NavDropdown.Item href="/myjobs">My Jobs</NavDropdown.Item>

@@ -62,22 +62,25 @@ function JobsStatistic() {
     }
   };
 
-  const trimStatus = (status) => status.trim().toLowerCase();
+  const formatStatus = (status) => {
+    if (!status) return '';
+    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+};
 
-  const getStatusStyle = (status) => {
-    switch (trimStatus(status)) {
-      case 'ongoing':
-        return { color: 'orange' };
-      case 'done':
-        return { color: 'green' };
-      case 'cancelled':
-        return { color: 'red' };
-      case 'pending':
-        return { color: 'blue' };
-      default:
-        return {};
-    }
-  };
+const getStatusStyle = (status) => {
+  switch (formatStatus(status)) {
+    case 'Ongoing':
+      return { color: 'orange' };
+    case 'Completed':
+      return { color: 'green' };
+    case 'Rejected':
+      return { color: 'red' };
+    case 'Pending':
+      return { color: 'blue' };
+    default:
+      return {};
+  }
+};
 
   
 
@@ -96,37 +99,41 @@ function JobsStatistic() {
       
       {/* Display Ongoing Jobs */}
       {selectedJobs === 'ongoing' && (
-        <div className='mt-3 row'>
-          {ongoingJobs.map(job => (
-            <Card className='job-card-statistic' key={job.job_id} style={{ width: '18rem' }}>
+        <div className='row '>
+          {ongoingJobs.length === 0 ? (
+            <h2 style={{color: 'darkgrey', textAlign: 'center', marginTop: '20px'}}>Currently, you don't have any ongoing jobs.</h2>
+          ) : (ongoingJobs.map(job => (
+            <Card className='job-card-statistic' key={job.Job.id} style={{ width: '18rem' }}>
               <Card.Img variant="top" src="holder.js/100px180" />
               <Card.Body>
-                <Card.Title style={{ fontWeight: 'bold' }}>{job.job_title}</Card.Title>
-                <Card.Text>Location: {job.job_work_location}</Card.Text>
-                <Card.Text>{job.username}</Card.Text>
-                <Card.Text>Status: <span  style={getStatusStyle(job.job_status)}>{trimStatus(job.job_status)}</span></Card.Text>
-                <Button variant="primary" href={`/jobs/${job.job_id}`}>Detail</Button>
+                <Card.Title style={{ fontWeight: 'bold' }}>{job.Job.title}</Card.Title>
+                <Card.Text>Location: {job.Job.location}</Card.Text>
+                <Card.Text>{job.Job.User.username}</Card.Text>
+                <Card.Text>Status: <span  style={getStatusStyle(job.status)}>{formatStatus(job.status)}</span></Card.Text>
+                <Button variant="primary" href={`/jobs/${job.Job.id}`}>Detail</Button>
               </Card.Body>
             </Card>
-          ))}
+          )))}
         </div>
       )}
 
       {/* Display Pending Jobs */}
       {selectedJobs === 'pending' && (
-        <div className='mt-3 row'>
-          {pendingJobs.map(job => (
-             <Card className='job-card-statistic' key={job.job_id} style={{ width: '18rem' }}>
+        <div className='row'>
+           {pendingJobs.length === 0 ? (
+            <h2 style={{color: 'darkgrey', textAlign: 'center', marginTop: '20px'}}>You haven't applied to any jobs.</h2>
+          ) : (pendingJobs.map(job => (
+             <Card className='job-card-statistic' key={job.Job.id} style={{ width: '18rem' }}>
              <Card.Img variant="top" src="holder.js/100px180" />
              <Card.Body>
-               <Card.Title style={{ fontWeight: 'bold' }}>{job.job_title}</Card.Title>
-               <Card.Text>Location: {job.job_work_location}</Card.Text>
-               <Card.Text>{job.username}</Card.Text>
-               <Card.Text>Status: <span  style={getStatusStyle(job.job_status)}>{trimStatus(job.job_status)}</span></Card.Text>
-               <Button variant="primary" href={`/jobs/${job.job_id}`}>Detail</Button>
+               <Card.Title style={{ fontWeight: 'bold' }}>{job.Job.title}</Card.Title>
+               <Card.Text>Location: {job.Job.location}</Card.Text>
+               <Card.Text>{job.Job.User.username}</Card.Text>
+               <Card.Text>Status: <span  style={getStatusStyle(job.status)}>{formatStatus(job.status)}</span></Card.Text>
+               <Button variant="primary" href={`/jobs/${job.Job.id}`}>Detail</Button>
              </Card.Body>
            </Card>
-          ))}
+          )))}
         </div>
       )}
 
