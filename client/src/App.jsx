@@ -22,13 +22,13 @@ import Jobs from "./pages/home/Jobs";
 import ActiveJob from "./pages/jobs/ActiveJob";
 import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 import ApplyJob from "./pages/jobs/ApplyJob";
+import ConfirmJob from "./pages/jobs/ConfirmJob";
 import CreatedJobDetail from "./pages/jobs/CreatedJobDetail";
+import EditJob from "./pages/jobs/EditJob";
 import EnlistJob from "./pages/jobs/EnlistJob";
 import JobDetail from "./pages/jobs/JobDetail";
 import Market from "./pages/jobs/Market";
 import MyJobs from "./pages/jobs/MyJobs";
-import EditJob from "./pages/jobs/EditJob";
-import ConfirmJob from "./pages/jobs/ConfirmJob";
 
 // Technical
 import Dashboard from "./pages/home/Dashboard";
@@ -36,16 +36,15 @@ import PageNotFound from "./pages/technical/PageNotFound";
 
 // Users
 
-import EditProfile from "./pages/profile/EditProfile";
-import WorkExperience from "./pages/profile/WorkExperience";
-import Profile from "./pages/profile/Profile";
 import Users from "./pages/home/Users";
+import EditProfile from "./pages/profile/EditProfile";
+import Profile from "./pages/profile/Profile";
+import WorkExperience from "./pages/profile/WorkExperience";
 import Settings from "./pages/technical/Settings";
 
 // Components
-import HomeFooter from "./components/HomeFooter";
 import HomeNavbar from "./components/home/HomeNavbar";
-import AppNavbar from "./components/Navbar";
+import HomeFooter from "./components/HomeFooter";
 
 //Payment
 import TransferMoney from "./pages/payment/TranferBalance";
@@ -58,13 +57,13 @@ import "./App.css";
 import { AuthProvider } from "./context/AuthContext";
 import { ForumProvider } from "./context/ForumContext";
 import UserInformationProvider from "./context/UserContext";
+import ToLogin from "./pages/error/ToLogin";
+import JobHistory from "./pages/jobs/JobHistory";
+import ContinuePayment from "./pages/payment/ContinuePayment";
+import Deposit from "./pages/payment/Deposit";
+import PaymentHistory from "./pages/payment/PaymentHistory";
 import PaymentPortal from "./pages/payment/PaymentPortal";
 import CreateTicketPage from "./pages/user/CreateTicket";
-import JobHistory from "./pages/jobs/JobHistory";
-import ToLogin from "./pages/error/ToLogin";
-import PaymentHistory from "./pages/payment/PaymentHistory";
-import Deposit from "./pages/payment/Deposit";
-import ContinuePayment from "./pages/payment/ContinuePayment";
 
 function App() {
   return (
@@ -73,7 +72,7 @@ function App() {
         <AuthProvider className="page">
           <ForumProvider>
             {/* <AppNavbar className="mb-auto" /> */}
-            <HomeNavbar/>
+            <HomeNavbar />
             <div className="min-vh-100 mt-5">
               <Routes>
                 {/* AUTH ROUTES */}
