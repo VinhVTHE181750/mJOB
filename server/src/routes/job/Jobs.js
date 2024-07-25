@@ -631,11 +631,15 @@ router.get("/:id", async (req, res) => {
     // Fetch the job details along with associated requirements
     const job = await Job.findByPk(jobId);
 
+    const reqs = await Requirement.findAll({
+      where: { JobId: jobId },
+    });
+
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
     }
 
-    return res.status(200).json(job);
+    return res.status(200).json({ job: job, requirements: reqs });
   } catch (err) {
     log(err, "ERROR", "JOB");
     return res.status(500).json({ message: "Unknown error while fetching job" });

@@ -119,6 +119,7 @@ const ErrorMessage = styled.p`
 
 const JobDetail = () => {
   const [job, setJob] = useState(null);
+  const [reqs, setReqs] = useState([]);
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -129,6 +130,7 @@ const JobDetail = () => {
       try {
         const response = await http.get(`/jobs/${id}`);
         setJob(response.data);
+        setReqs(response.data.requirements);
         setLoading(false);
       } catch (error) {
         setError("Error fetching job details.");
@@ -184,16 +186,12 @@ const JobDetail = () => {
           <Text>{formatDate(job.endDate)}</Text>
         </Section>
         <Section>
-        <Label>Requirements:</Label>
-  {job.requirements && job.requirements.length > 0 ? (
-    job.requirements.map((requirement, index) => (
-      <Text key={index}>
-        Type: {requirement.type} - Name: {requirement.name}
-      </Text>
-    ))
-  ) : (
-    <Text>No specific requirements listed.</Text>
-  )}
+          <Label>Requirements:</Label>
+          <ul>
+            {reqs && reqs.map((req) => (
+              <li key={req.req_id}> Type: {req.type}, name: {req.name}</li>
+            ))}
+          </ul>
         </Section>
         <Section>
           <Label>Compensation:</Label>
