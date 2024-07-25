@@ -167,11 +167,12 @@ router.post("/", async (req, res) => {
     // for now, assume all requirements to be FILE
     const requirements = job_requirements.split(";");
     for (let i = 0; i < requirements.length; i++) {
+      const job_requirements = requirements[i].trim();
       const requirement = await Requirement.create({
         JobId: job.id,
-        type: "FILE",
+        type: "TEXT",
         // type can be TEXT or FILE
-        name: job_requirements[i],
+        name: job_requirements,
       });
     }
 
@@ -213,7 +214,7 @@ router.put("/update", async (req, res) => {
     contact,
     startDate,
     endDate,
-    //requirements, // Nhớ xử lí requirements dưới dạng mảng
+    job_requirements, // Nhớ xử lí requirements dưới dạng mảng
     salaryType,
     salary,
     salaryCurrency,
@@ -247,23 +248,21 @@ router.put("/update", async (req, res) => {
   // Lưu model vào database
   try {
     await job.save();
-    // Xóa hết requirements cũ
-    const oldRequirements = await Requirement.findAll({
-      where: { JobId: job.id },
-    });
-    for (let i = 0; i < oldRequirements.length; i++) {
-      await oldRequirements[i].destroy();
+
+    const oldRequirements = await Requirement.findAll({ where: { JobId: job.id } });
+    for (let req of oldRequirements) {
+      await req.destroy();
     }
 
-    // requirements is an array of {type, name}
-    //for (let i = 0; i < job_requirements.length; i++) {
-    //const requirement = await Requirement.create({
-    //JobId: job.id,
-    //type: job_requirements[i].type,
-    // type can be TEXT or FILE
-    //name: job_requirements[i].name,
-    //});
-    //}
+    if (job_requirements) {
+      for (let req of job_requirements) {
+        await Requirement.create({
+          JobId: job.id,
+          type: req.type,
+          name: req.name,
+        });
+      }
+    }
     const jobHistory = await JobHistory.create({
       JobId: job.id,
       UserId: req.userId,
