@@ -111,6 +111,9 @@ const ConfirmJob = () => {
   const { job, requirementId } = location.state || {};  // Ensure requirementId is passed from previous page
   const [selectedFiles, setSelectedFiles] = useState([]);
 
+  // Debugging: Log location state
+  console.log('Location state:', location.state);
+
   const createFormData = (selectedFiles, requirementId) => {
     const formData = new FormData();
     selectedFiles.forEach((file) => {
@@ -125,7 +128,7 @@ const ConfirmJob = () => {
   
     return formData;
   };
-  
+
   const uploadFiles = async (formData) => {
     try {
       await http.post('/jobs/upload', formData, {
@@ -138,27 +141,28 @@ const ConfirmJob = () => {
       throw error;
     }
   };
-  
+
   const handleConfirm = async () => {
     try {
       if (!requirementId) {
+        console.error('Requirement ID is missing:', requirementId);
         throw new Error('requirementId is missing');
       }
       if (!selectedFiles || selectedFiles.length === 0) {
         throw new Error('No files selected');
       }
-  
+
       const formData = createFormData(selectedFiles, requirementId);
       console.log('FormData before upload:', formData);
       await uploadFiles(formData);
       alert('Application confirmed!');
-      navigate('/market');
+      navigate('/jobs');
     } catch (error) {
       console.error('Error uploading files:', error);
       alert('Error uploading files');
     }
   };
-  
+
   const handleFileChange = (e) => {
     setSelectedFiles([...selectedFiles, ...Array.from(e.target.files)]);
   };
