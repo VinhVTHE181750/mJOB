@@ -144,25 +144,33 @@ const post = async (req, res) => {
       });
 
       if (!t) {
-        await PostTag.create({
+        const tempTag = await PostTag.create({
           name: tag,
         });
+
         await TagMetric.create({
           day: new Date().toISOString().split("T")[0],
-          PostTagId: t.id,
+          PostTagId: tempTag.id,
           uses: 1,
         });
+      } else {
+        const tagMetric = await TagMetric.findOne({
+          where: {
+            day: new Date().toISOString().split("T")[0],
+            PostTagId: t.id,
+          },
+        });
+        if (!tagMetric) {
+          await TagMetric.create({
+            day: new Date().toISOString().split("T")[0],
+            PostTagId: t.id,
+            uses: 1,
+          });
+        } else {
+          tagMetric.uses = tagMetric.uses + 1;
+          await tagMetric.save();
+        }
       }
-
-      const tagMetric = await TagMetric.findOne({
-        where: {
-          day: new Date().toISOString().split("T")[0],
-          PostTagId: t2.id,
-        },
-      });
-
-      tagMetric.uses += 1;
-      await tagMetric.save();
     });
 
     getIo().emit("forum/posts");
