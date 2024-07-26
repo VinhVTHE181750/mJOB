@@ -276,8 +276,8 @@ router.put("/update", async (req, res) => {
   }
 });
 
-router.post("/upload", async (req, res) => {
-  // log(JSON.stringify(req.body), "INFO", "JOB");
+router.get("/job/:id", async (req, res) => {
+  log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;
   if (!req.userId) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -298,58 +298,81 @@ router.post("/upload", async (req, res) => {
   // mỗi requirement
   // Vẫn hỗ trợ 1 requirement nhiều file như cũ, nhưng support thêm nhiều requirement
   // mỗi job
-  const { requirementId, files } = req.body;
-  if (!requirementId) {
-    return res.status(400).json({ message: "Invalid requirement ID" });
-  }
-  if (isNaN(requirementId)) {
-    return res.status(400).json({ message: "Invalid requirement ID" });
-  }
-  if (!files) {
-    return res.status(400).json({ message: "Files are required" });
-  }
-
-  const rqm = await Requirement.findByPk(requirementId);
-  if (!req) {
-    return res.status(404).json({ message: "Requirement not found" });
-  }
-
-  const fileArray = Array.isArray(files) ? files : [files];
-
-  // Ensure the uploads directory exists
-  const uploadDir = path.join(__dirname, "uploads");
-  // nên đổi tên hoặc tạo sub-folder
-  // có thể sau này cần upload file loại khác
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-  }
-
-  // Check if already uploaded, if yes -> replace
-  const oldFiles = await RequirementStorage.findAll({
-    where: { RequirementId: rqm.id, UserId: userId },
-  });
-
-  if (oldFiles.length > 0) {
-    // delete associated files
-    for (const file of oldFiles) {
-      const filePath = JSON.parse(file.data).file_path;
-      fs.unlinkSync(filePath);
-      // chưa có code xóa file trong file storage
-      // để sau
-      await file.destroy(); // xóa trong database
+  try {
+    const job = await Job.findByPk(req.params.id);
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
     }
+
+    const reqs = await Requirement.findAll({
+      where: { JobId: req.params.id},
+    });
+
+    res.json({ job, requirements: reqs });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
   }
+});
 
-  // Code cũ chưa check nếu user đã upload file trước đó
-  for (const file of fileArray) {
-    const filePath = path.join(uploadDir, file.name);
-    await file.mv(filePath);
-    const jobRequirement = {
-      RequirementId: rqm.id,
-      data: JSON.stringify({ file_name: file.name, file_path: filePath }),
-    };
+router.post("/upload", async (req, res) => {
+  try {
+    let userId;
+    if (!req.userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    } else userId = req.userId;
 
-    await Requirement.create(jobRequirement);
+    if (isNaN(req.userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { requirementId } = req.body;
+    if (!requirementId) {
+      return res.status(400).json({ message: "Invalid requirement ID" });
+    }
+    if (isNaN(requirementId)) {
+      return res.status(400).json({ message: "Invalid requirement ID" });
+    }
+
+    const requirement = await Requirement.findByPk(requirementId);
+    if (!requirement) {
+      return res.status(404).json({ message: "Requirement not found" });
+    }
+
+    const files = req.files?.files;
+    if (!files) {
+      return res.status(400).json({ message: "Files are required" });
+    }
+
+    const fileArray = Array.isArray(files) ? files : [files];
+    const uploadDir = path.join(__dirname, "uploads");
+    
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    for (const file of fileArray) {
+      const filePath = path.join(uploadDir, file.name);
+      await file.mv(filePath);
+      
+      // Create a record in RequirementStorage table
+      const fileData = {
+        RequirementId: requirement.id,
+        UserId: userId,
+        data: JSON.stringify({ file_name: file.name, file_path: filePath }),
+      };
+      
+      await RequirementStorage.create(fileData);
+    }
+
+    res.status(200).json({ message: "Files uploaded successfully" });
+  } catch (error) {
+    console.error('Error uploading files:', error);
+    res.status(500).json({ message: "Server error", error });
   }
 });
 
