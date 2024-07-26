@@ -21,13 +21,17 @@ const useBalancebyId = (userId) => {
 
     fetchInfo();
   }, []);
+  
   const fetchToUserInfo = async (toUserId) => {
     try {
+      setLoading(true);
       const response = await http.get(`/payment/balance/${toUserId}`);
       const data = response.data;
-      // setToUserInfo({ user_id: data.user_id, username: data.username });
+      setInfo(data);
+      setLoading(false);
     } catch (error) {
-      // setTransferError('Failed to fetch recipient information.');
+      setError(error);
+      setLoading(false);
     }
   };
 
