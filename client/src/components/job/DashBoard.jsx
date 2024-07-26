@@ -5,19 +5,22 @@ import useUserTotalCurrentAppliedJob from '../../hooks/useUserTotalCurrentApplie
 import useUserTotalCreatedJob from '../../hooks/useUserTotalCreatedJob';
 import useUserCompletedJobList from '../../hooks/useUserCompletedJobList';
 import useUserAppliedJobList from '../../hooks/useUserAppliedJobList';
-import {Table} from 'react-bootstrap';
+// import useTotalCompletedJob from '../../hooks/job/dashboard/useTotalCompletedJob';
+// import useTotalCreatedJob from '../../hooks/job/dashboard/useTotalCreatedJob';
+// import useTotalCurrentAppliedJob from '../../hooks/job/dashboard/useTotalCurrentAppliedJob';
+import useWhoAmI from '../../hooks/user/useWhoAmI';
+import {Button, Table} from 'react-bootstrap';
 
 
 const Dashboard = () => {
+  const { userId} = useWhoAmI();
+  console.log(userId);
+  const { count: completedCount, loading: completedLoading, error: completedError } = useUserTotalCompletedJob(userId);
+  const { count: appliedCount, loading: appliedLoading, error: appliedError } = useUserTotalCurrentAppliedJob(userId);
+  const { count: createdCount, loading: createdLoading, error: createdError } = useUserTotalCreatedJob(userId);
 
-  const { count: completedCount, loading: completedLoading, error: completedError } = useUserTotalCompletedJob(1);
-  const { count: appliedCount, loading: appliedLoading, error: appliedError } = useUserTotalCurrentAppliedJob(1);
-  const { count: createdCount, loading: createdLoading, error: createdError } = useUserTotalCreatedJob(1);
-
-  const { jobs: completedJobs, loading: jobsLoading, error: jobsError } = useUserCompletedJobList(1);
-  const { jobList: appliedJobs, loading: appliedJobsLoading, error: appliedJobsError } = useUserAppliedJobList(1);
-
-
+  const { jobs: completedJobs, loading: jobsLoading, error: jobsError } = useUserCompletedJobList(userId);
+  const { jobList: appliedJobs, loading: appliedJobsLoading, error: appliedJobsError } = useUserAppliedJobList(userId);
   const [completedJobList, setCompletedJobList] = useState([]);
   const [appliedJobList, setAppliedJobList] = useState([]);
 
@@ -29,6 +32,25 @@ const Dashboard = () => {
     setAppliedJobList(appliedJobs);
   }, [appliedJobs]);
 
+  const formatStatus = (status) => {
+    if (!status) return '';
+    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+};
+
+const getStatusStyle = (status) => {
+  switch (formatStatus(status)) {
+    case 'Ongoing':
+      return { color: 'orange' };
+    case 'Completed':
+      return { color: 'green' };
+    case 'Rejected':
+      return { color: 'red' };
+    case 'Pending':
+      return { color: 'blue' };
+    default:
+      return {};
+  }
+};
   // console.log('Data: ', completedJobList);
   // console.log('Data applied: ', appliedJobs);
 
@@ -44,7 +66,7 @@ const Dashboard = () => {
     <div className="dashboard">
       <div className="dashboard-header">
         <h2>Dashboard</h2>
-        <button className="create-job-button">Create Job</button>
+        <button className="create-job-button" onClick={() => window.location.href = '/jobs/add'}>Create Job</button>
       </div>
       <div className="stats-container">
         <div className="stat-box">
@@ -81,8 +103,8 @@ const Dashboard = () => {
       <div className="job-section">
         <h4>Job Applied</h4>
         <div className="job-list">
-        <Table striped bordered hover variant="white">
-                <thead>
+        {appliedJobs.length == 0 ? <h1 style={{color: 'darkgrey', textAlign: 'center'}}>No Jobs Currently Applied</h1> : (<Table striped bordered hover variant="white">
+          <thead>
                   <tr>
                     <th>Job ID</th>
                     <th>Title</th>
@@ -90,27 +112,29 @@ const Dashboard = () => {
                     <th>Location</th>
                     <th>Created by</th>
                     <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                {appliedJobList.map(job => (
-                  <tr key={job.job_id}> 
-                  <td>{job.job_id}</td>            
-                  <td>{job.job_title}</td>
-                  <td>{job.job_tags}</td>
-                  <td>{job.job_work_location}</td>
-                  <td>{job.username}</td>
-                  <td>{job.job_status}</td>
+                {appliedJobs.map(job => (
+                  <tr key={job.id}> 
+                  <td>{job.Job.id}</td>            
+                  <td>{job.Job.title}</td>
+                  <td>{job.Job.tags}</td>
+                  <td>{job.Job.location}</td>
+                  <td>{job.Job.User.username}</td>
+                  <td style={getStatusStyle(job.status)}>{formatStatus(job.status)}</td>
+                  <td><Button variant="primary" size="sm" href={`/job/${job.Job.id}`}>Detail</Button></td>
                 </tr>
                 ))}
                 </tbody>
-              </Table>
+              </Table>)}
         </div>
       </div>
       <div className="job-section">
         <h4>Job Completed</h4>
         <div className="job-list">
-            <Table striped bordered hover variant="white">
+          {completedJobs.length == 0 ? <h1 style={{color: 'darkgrey', textAlign: 'center'}}>No Jobs Completed</h1> : (<Table striped bordered hover variant="white">
                 <thead>
                   <tr>
                     <th>Job ID</th>
@@ -119,21 +143,25 @@ const Dashboard = () => {
                     <th>Location</th>
                     <th>Created by</th>
                     <th>Status</th>
+                    <th>Action</th>
+
                   </tr>
                 </thead>
                 <tbody>
                 {completedJobs.map(job => (
-                  <tr key={job.job_id}> 
-                  <td>{job.job_id}</td>            
-                  <td>{job.job_title}</td>
-                  <td>{job.job_tags}</td>
-                  <td>{job.job_work_location}</td>
-                  <td>{job.username}</td>
-                  <td>{job.job_status}</td>
+                  <tr key={job.id}> 
+                  <td>{job.Job.id}</td>            
+                  <td>{job.Job.title}</td>
+                  <td>{job.Job.tags}</td>
+                  <td>{job.Job.location}</td>
+                  <td>{job.Job.User.username}</td>
+                  <td style={getStatusStyle(job.status)}>{formatStatus(job.status)}</td>
+                  <td><Button variant="primary" size="sm" href={`/job/${job.Job.id}`}>Detail</Button></td>
                 </tr>
                 ))}
                 </tbody>
-              </Table>
+              </Table>)}
+            
           {/* {jobsLoading ? (
             <p>Loading...</p>
           ) : jobsError ? (
