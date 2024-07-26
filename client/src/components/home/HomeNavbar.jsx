@@ -1,12 +1,9 @@
 import { Button, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import "../../assets/css/Navbar.css";
 import logo from "../../../logo.png";
-import { useAuth } from "../../context/UserContext";
 import { BsGearFill } from "react-icons/bs";
 
 const HomeNavbar = ({ user }) => {
-  const { userInformation } = useAuth();
-  const userId  = userInformation.id
   //   const currentuser = null;
   return (
     <>
@@ -54,8 +51,8 @@ const HomeNavbar = ({ user }) => {
               Technical
             </Nav.Link>
             <Nav.Link
-              href={`/profile/${userId}`}
-              className={location.pathname === "/profile/:userId" ? "active nav-fixed" : "nav-fixed"}
+              href="/profile"
+              className={location.pathname === "/profile" ? "active nav-fixed" : "nav-fixed"}
             >
               Profile
             </Nav.Link>

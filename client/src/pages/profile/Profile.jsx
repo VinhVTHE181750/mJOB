@@ -4,13 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./ViewProfile.css";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../../context/UserContext";
-import useWhoAmI from "../../hooks/user/useWhoAmI";
-import { AuthContext } from "../../context/AuthContext";
-import { useContext } from "react";
 
 const Profile = () => {
-  const { userInformation } = useAuth();
   const [profile, setProfile] = useState({});
   const params = useParams();
   const userId = params.userId;
@@ -22,8 +17,6 @@ const Profile = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [otherInformation, setOtherInformation] = useState("");
-  const { loggedIn } = useContext(AuthContext);
-
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -74,22 +67,12 @@ const Profile = () => {
   }, [userId]);
 
   const handleEditClick = () => {
-    // Check if the current user's role is ADMIN
-    if (userInformation.id == userId) {
-      navigate(`/editprofile/${userId}`);
-    } else {
-      alert("You don't have permission to edit this profile.");
-    }
+    navigate(`/editprofile/${userId}`);
   };
 
   const handleWorkEdit = () => {
-    if (userInformation.id == userId) {
-      navigate(`/workexperience/${userId}`);
-    } else {
-      alert("You don't have permission to edit this work experience.");
-    }
+    navigate(`/workexperience/${userId}`);
   };
-
 
   return (
     <Container fluid className="mt-5">
@@ -190,10 +173,10 @@ const Profile = () => {
               <p>
                 <strong>End Date:</strong> <span id="endDate">{endDate}</span>
               </p>
-              {/* <p>
+              <p>
                 <strong>Other Information:</strong>{" "}
                 <span id="otherInformation">{otherInformation}</span>
-              </p> */}
+              </p>
               <Button
                 onClick={handleWorkEdit}
                 variant="primary"
