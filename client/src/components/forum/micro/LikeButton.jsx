@@ -18,7 +18,7 @@ const LikeButton = ({ id, type, action, className, ...rest }) => {
   const handleLikeClick = async () => {
     if (userLoading) return;
 
-    if(role === "GUEST") {
+    if (role === "GUEST") {
       navigate("/to-login");
       return;
     }

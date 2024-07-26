@@ -9,32 +9,26 @@ TagMetric.init(
       type: DataTypes.DATEONLY,
       allowNull: false,
       defaultValue: DataTypes.NOW,
-      primaryKey: true,
-    },
-    PostTagId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      references: {
-        model: "PostTags",
-        key: "id",
-      },
     },
     searches: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    views: { 
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
-    uses: {
+    views: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
   },
   {
     sequelize,
+    setterMethods: {
+      _incrementUsage() {
+        this.usage++;
+      },
+      _decrementUsage() {
+        this.usage--;
+      },
+    },
     updatedAt: false,
   }
 );

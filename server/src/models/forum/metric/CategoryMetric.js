@@ -29,13 +29,17 @@ CategoryMetric.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    uses: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
   },
   {
     sequelize,
+    setterMethods: {
+      _incrementUsage() {
+        this.usage++;
+      },
+      _decrementUsage() {
+        this.usage--;
+      },
+    },
     updatedAt: false,
   }
 );
