@@ -79,7 +79,11 @@
   box-sizing: border-box;
   background-color:aliceblue;
 }
-
+.input-label {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: black;
+}
 
 .save-button {
   background-color: #28a745;
@@ -124,4 +128,8 @@
   color: green;
   text-align: center;
   font-size: 1.5em;
+}
+
+.date{
+  font-size: 1.1em;
 }

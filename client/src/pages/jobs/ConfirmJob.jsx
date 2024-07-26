@@ -110,25 +110,55 @@ const ConfirmJob = () => {
   const { handleRedirectError } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { job } = location.state || {};
+  const { job, requirementId } = location.state || {};  // Ensure requirementId is passed from previous page
   const [selectedFiles, setSelectedFiles] = useState([]);
 
-  const handleConfirm = async () => {
-    try {
-      const formData = new FormData();
-      selectedFiles.forEach((file) => {
-        formData.append('files', file);
-      });
-      formData.append('job_id', job.job_id);
+  // Debugging: Log location state
+  console.log('Location state:', location.state);
 
-      await http.post('/upload', formData, {
+  const createFormData = (selectedFiles, requirementId) => {
+    const formData = new FormData();
+    selectedFiles.forEach((file) => {
+      formData.append('files', file);
+    });
+    formData.append('requirementId', requirementId);
+  
+    // Debugging: Log form data to ensure requirementId is included
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
+  
+    return formData;
+  };
+
+  const uploadFiles = async (formData) => {
+    try {
+      await http.post('/jobs/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+    } catch (error) {
+      console.error('Error in uploadFiles:', error);
+      throw error;
+    }
+  };
 
+  const handleConfirm = async () => {
+    try {
+      if (!requirementId) {
+        console.error('Requirement ID is missing:', requirementId);
+        throw new Error('requirementId is missing');
+      }
+      if (!selectedFiles || selectedFiles.length === 0) {
+        throw new Error('No files selected');
+      }
+
+      const formData = createFormData(selectedFiles, requirementId);
+      console.log('FormData before upload:', formData);
+      await uploadFiles(formData);
       alert('Application confirmed!');
-      navigate('/market');
+      navigate('/jobs');
     } catch (error) {
       handleRedirectError("server error");
       console.error('Error uploading files:', error);
@@ -148,12 +178,7 @@ const ConfirmJob = () => {
     <BackgroundContainer>
       <ConfirmationContainer>
         <Title>Confirm Your Application</Title>
-        <h2>Requirements:</h2>
-        <RequirementList>
-          {job.job_requirements.split('. ').map((req, index) => (
-            <RequirementItem key={index}>{req}</RequirementItem>
-          ))}
-        </RequirementList>
+        <h2>Requirements</h2>
         <Label>Upload File</Label>
         <UploadButton>
           +
