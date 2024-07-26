@@ -19,6 +19,7 @@ import {
   FaChartBar,
 } from "react-icons/fa";
 import useCountUser from "../../hooks/useCountUser.js";
+import useCountJob from "../../hooks/useCountJob";
 
 ChartJS.register(
   CategoryScale,
@@ -31,6 +32,7 @@ ChartJS.register(
 
 const AdminDashboard = () => {
   const { count: countUsers } = useCountUser();
+  const { count: countJobs } = useCountJob();
   const activeUsers = 0;
   const guests = 0;
 
@@ -122,7 +124,7 @@ const AdminDashboard = () => {
                   <Card className="text-white bg-success text-center p-4">
                     <Card.Body>
                       <Card.Title>
-                        <FaBriefcase className="me-2" /> 0
+                        <FaBriefcase className="me-2" /> {countJobs}
                       </Card.Title>
                       <Card.Text>Total Jobs</Card.Text>
                     </Card.Body>

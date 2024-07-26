@@ -18,7 +18,7 @@ router.get('/users-role', async (req, res) => {
     }
   });
 
-router.delete('delete/:id', async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
     try {
       const user = await User.findByPk(req.params.id);
       if (!user) {
@@ -30,5 +30,5 @@ router.delete('delete/:id', async (req, res) => {
       res.status(500).json({ success: false, message: err.message });
     }
   });
-
+ 
   module.exports = router;

@@ -12,4 +12,13 @@ router.get('/job-list', async (req, res) => {
     }
 });
 
+router.get("/job-count" , async (req, res) => {
+    try{
+        const count = await Job.count();
+        return res.status(200).json(count);
+    } catch (err) {
+        return res.status(500).json({ message: "Error occurred", error: err });
+    }
+});
+
 module.exports = router;
