@@ -1,6 +1,5 @@
 const express = require("express");
 const db = require("../models/DBContext");
-
 const router = express.Router();
 
 // Select user balance by user id
@@ -56,9 +55,9 @@ const Auth = require("../models/user/Auth");
 router.use("/transfer", transferRoute);
 
 //Get user balance
-router.get("/balance", async (req, res) => {
+router.get("/balance/:userId", async (req, res) => {
   try {
-    const { userId } = 1;
+    const { userId } = req.params;
     const balance = await Balance.findOne({ where: { userId } });
     return res.status(200).json({ data: balance });
   } catch (err) {
@@ -72,9 +71,15 @@ router.get("/tranferuser/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const user = await User.findOne({ where: { id: userId } });
-    if (user) {
-      return res.status(200).json({ data: user });
+    const pool = await db.poolPromise;
+    const result = await pool
+      .request()
+      .input("userId", db.sql.Int, userId)
+      .query(CHECK_USER_BALANCE_EXISTS);
+    if (result.recordset.length === 0) {
+      res.status(404).json({ message: "Data not found" });
+    } else {
+      res.json(result.recordset[0]);
     }
   } catch (err) {
     console.log(err);
@@ -84,16 +89,22 @@ router.get("/tranferuser/:userId", async (req, res) => {
 
 router.put("/update-balance", async (req, res) => {
   try {
-    const { userId, amount } = req.body;
-    if (userId == null || amount == null) {
+    const { userId, balance } = req.body;
+    console.log(userId, balance);
+    if (userId == null || balance == null) {
       return res.status(400).json({ error: "userId and balance are required" });
     }
-    const balance = await Balance.findOne({ where: { userId } });
-    if (!balance) {
-      return res.status(404).json({ error: "Balance not found" });
+
+    const pool = await db.poolPromise;
+    const result = await pool
+      .request()
+      .input("balance", db.sql.Decimal(10, 2), balance)
+      .input("userId", db.sql.Int, userId)
+      .query(UPDATE_USER_BALANCE);
+
+    if (result.rowsAffected[0] === 0) {
+      return res.status(404).json({ error: "User not found" });
     }
-    const newBalance = balance.balance + amount;
-    await balance.update({ balance: newBalance });
 
     res.status(200).json({ message: "Balance updated successfully" });
   } catch (error) {

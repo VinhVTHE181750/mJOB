@@ -1,3 +1,7 @@
+.navbar{
+    padding: 0px;
+}
+
 .nav-link:hover {
     color: #007bff; /* You can change this to your desired color */
 }
@@ -6,6 +10,4 @@
 .nav-link.active {
     font-weight: bold;
     color: #4f75ff; /* You can set this to the color you prefer for the active link */
-    border-bottom: 4px solid black;
-    border-radius: 0px;
 }

@@ -15,18 +15,17 @@ const useUserTotalCompletedJob = (userId) => {
       try {
         const url = `/myjobs/completed/${userId}`;
         const response = await http.get(url);
-        console.log(response.data.totalCompletedJob);
-        // setCount(response.data);
-        setCount(response.data.totalCompletedJob);
+        setCount(response.data);
+        setCount(response.data.total);
         setLoading(false);
       } catch (error) {
-        // navigate("/error", {
-        //   state: {
-        //     message: error.response
-        //       ? error.response.data.message
-        //       : "An error occurred",
-        //   },
-        // });
+        navigate("/error", {
+          state: {
+            message: error.response
+              ? error.response.data.message
+              : "An error occurred",
+          },
+        });
         setError(error);
         setLoading(false);
       }

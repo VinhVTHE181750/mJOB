@@ -8,7 +8,7 @@ const useUserAppliedJobList = (userId) => {
   const [jobList, setJobList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchJobList = async () => {
       try {
@@ -17,6 +17,13 @@ const useUserAppliedJobList = (userId) => {
         setJobList(response.data);
         setLoading(false);
       } catch (error) {
+        navigate("/error", {
+          state: {
+            message: error.response
+              ? error.response.data.message
+              : "An error occurred",
+          },
+        });
         setError(error);
         setLoading(false);
       }
@@ -26,6 +33,7 @@ const useUserAppliedJobList = (userId) => {
       fetchJobList();
     }
   }, []);
+  // console.log('Hook data: ', jobList);
   return { jobList, loading, error };
 };
 

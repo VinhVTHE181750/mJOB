@@ -7,15 +7,16 @@ const useUpdateUserBalance = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  const updateUserBalance = async (userId, amount) => {
-    console.log(userId,amount);
+  const updateUserBalance = async (userId, balance) => {
     setLoading(true);
     setError(null);
     setSuccess(false);
 
     try {
-      const response = await http.put(`/payment/update-balance`, { userId, amount });
-      console.log(response.data);
+      const response = await http.put(`/payment/update-balance`, {
+        userId,
+        balance,
+      });
       setSuccess(true);
     } catch (error) {
       setError(error);

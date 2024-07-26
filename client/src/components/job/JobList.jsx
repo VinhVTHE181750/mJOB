@@ -7,9 +7,6 @@ import JobPagination from '../../components/job/JobPagination.jsx';
 import useJobList from "../../hooks/useJobList";
 import useJobListbyview from "../../hooks/useJobListbyView.js";
 import useJobListbytime from "../../hooks/useJobListbyTime.js";
-import useJobListbyDefault from '../../hooks/job/market/useJobListbbyDefault.js';
-import useJobListbyView from '../../hooks/job/market/useJobListbyView.js';
-import useJobListbyDate from '../../hooks/job/market/useJobListbyDate.js';
 import '../../assets/css/JobList.css'
 
 function JobList() {
@@ -20,13 +17,10 @@ function JobList() {
     const [currentPage, setCurrentPage] = useState(1);
     const jobsPerPage = 10;
   
-    // const { contents: defaultContents, loading: defaultLoading, error: defaultError } = useJobList();
-    // const { contents: viewContents, loading: viewLoading, error: viewError } = useJobListbyview();
-    // const { contents: timeContents, loading: timeLoading, error: timeError } = useJobListbytime();
-
-    const { contents: defaultContents, loading: defaultLoading, error: defaultError } = useJobListbyDefault();
-    const { contents: viewContents, loading: viewLoading, error: viewError } = useJobListbyView();
-    const { contents: timeContents, loading: timeLoading, error: timeError } = useJobListbyDate();
+    const { contents: defaultContents, loading: defaultLoading, error: defaultError } = useJobList();
+    const { contents: viewContents, loading: viewLoading, error: viewError } = useJobListbyview();
+    const { contents: timeContents, loading: timeLoading, error: timeError } = useJobListbytime();
+  
     let contents = defaultContents;
     let loading = defaultLoading;
     let error = defaultError;
@@ -44,10 +38,10 @@ function JobList() {
         error = timeError;
         break;
       case 'salaryIncrease':
-        contents.sort((a, b) => parseFloat(a.salary) - parseFloat(b.salary));
+        contents.sort((a, b) => parseFloat(a.job_compensation_amount) - parseFloat(b.job_compensation_amount));
         break;
       case 'salaryDecrease':
-        contents.sort((a, b) => parseFloat(b.salary) - parseFloat(a.salary));
+        contents.sort((a, b) => parseFloat(b.job_compensation_amount) - parseFloat(a.job_compensation_amount));
         break;
       default:
         contents = defaultContents;
@@ -72,9 +66,9 @@ function JobList() {
     };
   
     const filteredContents = contents.filter(content => {
-      const salary = parseFloat(content.salary);
+      const salary = parseFloat(content.job_compensation_amount);
       const isWithinSalaryRange = (!minSalary || salary >= parseFloat(minSalary)) && (!maxSalary || salary <= parseFloat(maxSalary));
-      return content.title.toLowerCase().includes(searchQuery.toLowerCase()) && isWithinSalaryRange;
+      return content.job_title.toLowerCase().includes(searchQuery.toLowerCase()) && isWithinSalaryRange;
     });
 
 
@@ -140,21 +134,21 @@ function JobList() {
               ): (
                 
                 currentJobs.map(content => (
-              <div className="job-card" key={content.id}>
+              <div className="job-card" key={content.job_id}>
                 <div className="job-card-img">IMG Background</div>
                 <div className="job-card-content">
                   <div className="job-card-header">
-                    <h2 className="job-title">{content.title}</h2>
-                    <a href={`/jobs/${content.id}`} className="job-detail-link">Detail</a>
+                    <h2 className="job-title">{content.job_title}</h2>
+                    <a href={`/jobs/${content.job_id}`} className="job-detail-link">Detail</a>
                   </div>
                   <div className="job-card-body">
                     <div className="job-info">
-                      <p>Creator: {content.User.username}</p>
-                      <p>Job Tag: {content.tags}</p>
-                      <p>Location: {content.location}</p>
+                      <p>Creator: {content.username}</p>
+                      <p>Job Tag: {content.job_tags}</p>
+                      <p>Location: {content.job_work_location}</p>
                     </div>
                      <div className="job-info-right">
-                      <p  className='tag'>{formatSalary(content.salaryType, content.salary,content.salaryCurrency)}</p>
+                      <p  className='tag'>{formatSalary(content.job_compensation_type, content.job_compensation_amount,content.job_compensation_currency)}</p>
                       <p>{content.timeleft} days left</p>
                     </div> 
                   </div>

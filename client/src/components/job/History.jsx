@@ -7,12 +7,12 @@ import '../../assets/css/JobHistory.css';
 import { Link } from 'react-router-dom';
 import { Doughnut } from 'react-chartjs-2';
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js';
-import useWhoAmI from '../../hooks/user/useWhoAmI';
+
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function History() {
-  const { fetchMe, userId, username, role } = useWhoAmI();
+  const userId = 1; // Example user ID, you might want to pass this as a prop or get it from context
   const { jobList: initialJobList, loading: initialLoading, error: initialError } = useUserJobHistory(userId);
   const { statuses: statusList, loading: statusLoading, error: statusError } = useJobStatus(userId);
   const [selectedStatus, setSelectedStatus] = useState('');
@@ -32,21 +32,18 @@ function History() {
   const handleSelect = (event) => {
     setSelectedStatus(event.target.value);
   };
-  const formatStatus = (status) => {
-    if (!status) return '';
-    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
-};
-  // const trimStatus = (status) => status.trim().toLowerCase();
 
-  const countJobsByStatus = (status) => initialJobList.filter((job) => formatStatus(job.status) === status).length;
+  const trimStatus = (status) => status.trim().toLowerCase();
 
-  const countCompleted = countJobsByStatus('Completed');
-  const countApplied = countJobsByStatus('Pending');
-  const countOngoing = countJobsByStatus('Ongoing');
-  const countCancelled = countJobsByStatus('Rejected');
+  const countJobsByStatus = (status) => initialJobList.filter((job) => trimStatus(job.job_status) === status).length;
+
+  const countCompleted = countJobsByStatus('done');
+  const countApplied = countJobsByStatus('pending');
+  const countOngoing = countJobsByStatus('ongoing');
+  const countCancelled = countJobsByStatus('cancelled');
 
   const data = {
-    labels: ['Completed', 'Pending', 'Ongoing', 'Rejected'],
+    labels: ['Completed', 'Applied', 'Ongoing', 'Cancelled'],
     datasets: [
       {
         data: [countCompleted, countApplied, countOngoing, countCancelled],
@@ -67,20 +64,20 @@ function History() {
     ],
   };
 
-  // const getStatusStyle = (status) => {
-  //   switch (trimStatus(status)) {
-  //     case 'ongoing':
-  //       return { color: 'orange' };
-  //     case 'done':
-  //       return { color: 'green' };
-  //     case 'cancelled':
-  //       return { color: 'red' };
-  //     case 'pending':
-  //       return { color: 'blue' };
-  //     default:
-  //       return {};
-  //   }
-  // };
+  const getStatusStyle = (status) => {
+    switch (trimStatus(status)) {
+      case 'ongoing':
+        return { color: 'orange' };
+      case 'done':
+        return { color: 'green' };
+      case 'cancelled':
+        return { color: 'red' };
+      case 'pending':
+        return { color: 'blue' };
+      default:
+        return {};
+    }
+  };
 
   if (initialLoading || statusLoading || jobListLoading) {
     return <div>Loading...</div>;
@@ -93,22 +90,6 @@ function History() {
   // console.log('data: ', jobListByStatus);
   // console.log('data filteredJobList: ', filteredJobList);
 
-  
-
-  const getStatusStyle = (status) => {
-    switch (formatStatus(status)) {
-      case 'Ongoing':
-        return { color: 'orange' };
-      case 'Completed':
-        return { color: 'green' };
-      case 'Rejected':
-        return { color: 'red' };
-      case 'Pending':
-        return { color: 'blue' };
-      default:
-        return {};
-    }
-  };
   return (
     <div className="history">
       <div className="history-header">
@@ -163,7 +144,7 @@ function History() {
                     </div>
                 </div>
             </div>
-             <div className='history-statistic-chart'>
+            {/* <div className='history-statistic-chart'>
                 <Doughnut data={data} />
             </div> */}
 
@@ -172,8 +153,8 @@ function History() {
           <select style={{ margin: '20px' }} value={selectedStatus} onChange={handleSelect}>
             <option value="">All</option>
             {statusList.map((status, index) => (
-              <option key={index} value={status}>
-                {formatStatus(status)}
+              <option key={index} value={status.job_status}>
+                {status.job_status}
               </option>
             ))}
           </select>
@@ -206,15 +187,15 @@ function History() {
           <tbody>
             {filteredJobList && filteredJobList.length > 0 ? (
               filteredJobList.map((job, index) => (
-                <tr key={job.id}>
+                <tr key={job.job_id}>
                   <td>{index + 1}</td>
-                  <td>{job.Job.title}</td>
-                  <td>{job.Job.tags}</td>
-                  <td>{job.Job.location}</td>
-                  <td>{job.Job.User.username}</td>
-                  <td style={getStatusStyle(job.status)}>{formatStatus(job.status)}</td>
+                  <td>{job.job_title}</td>
+                  <td>{job.job_tags}</td>
+                  <td>{job.job_work_location}</td>
+                  <td>{job.username}</td>
+                  <td style={getStatusStyle(job.job_status)}>{trimStatus(job.job_status)}</td>
                   <td>
-                    <Button as={Link} to={`/jobs/${job.id}`} variant="primary" size="sm">Detail</Button>
+                    <Button as={Link} to={`/jobs/${job.job_id}`} variant="primary" size="sm">Detail</Button>
                   </td>
                 </tr>
               ))
