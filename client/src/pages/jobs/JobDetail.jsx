@@ -124,7 +124,6 @@ const JobDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const requirementId = reqs.map((req) => req.id);
 
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -210,7 +209,7 @@ const JobDetail = () => {
           <Label>Contact Info:</Label>
           <Text>{job.contact}</Text>
         </Section>
-        <ApplyButton onClick={() => navigate("/confirm-job", { state: { job, requirementId} })}>Apply</ApplyButton>
+        <ApplyButton onClick={() => navigate("/confirm-job", { state: { job} })}>Apply</ApplyButton>
       </JobDetailContainer>
     </BackgroundContainer>
   );

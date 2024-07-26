@@ -3,7 +3,7 @@ import http from '../functions/httpService';
 
 const useJobUpdate = (id) => {
   const [job, setJob] = useState(null);
-  const [reqs, setReqs] = useState([]); // Ensure reqs is always an array
+  const [reqs, setReqs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -13,7 +13,7 @@ const useJobUpdate = (id) => {
       try {
         const response = await http.get(`/jobs/${id}`);
         setJob(response.data.job);
-        setReqs(response.data.requirements || []); // Ensure reqs is always an array
+        setReqs(response.data.requirements);
         setLoading(false);
       } catch (error) {
         setError('Error fetching job details.');
@@ -31,15 +31,8 @@ const useJobUpdate = (id) => {
 
   const handleRequirementChange = (index, field, value) => {
     setReqs((prevReqs) => {
-      // Make sure index is valid
-      if (index < 0 || index >= prevReqs.length) {
-        return prevReqs; // Return previous state if index is invalid
-      }
       const updatedReqs = [...prevReqs];
-      updatedReqs[index] = {
-        ...updatedReqs[index],
-        [field]: value,
-      };
+      updatedReqs[index][field] = value;
       return updatedReqs;
     });
   };
