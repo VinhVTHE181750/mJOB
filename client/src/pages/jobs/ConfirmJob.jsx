@@ -108,7 +108,7 @@ const FileItem = styled.li`
 const ConfirmJob = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { job } = location.state || {};
+  const { job, requirementId } = location.state || {};  // Ensure requirementId is passed from previous page
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   const handleConfirm = async () => {
@@ -117,14 +117,19 @@ const ConfirmJob = () => {
       selectedFiles.forEach((file) => {
         formData.append('files', file);
       });
-      formData.append('job_id', job.job_id);
-
-      await http.post('/upload', formData, {
+      formData.append('requirementId', requirementId);
+  
+      // Debugging: Log form data to ensure requirementId is included
+      for (let pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
+      }
+  
+      await http.post('/jobs/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+  
       alert('Application confirmed!');
       navigate('/market');
     } catch (error) {
@@ -132,7 +137,7 @@ const ConfirmJob = () => {
       alert('Error uploading files');
     }
   };
-
+  
   const handleFileChange = (e) => {
     setSelectedFiles([...selectedFiles, ...Array.from(e.target.files)]);
   };
@@ -145,12 +150,7 @@ const ConfirmJob = () => {
     <BackgroundContainer>
       <ConfirmationContainer>
         <Title>Confirm Your Application</Title>
-        <h2>Requirements:</h2>
-        <RequirementList>
-          {job.job_requirements.split('. ').map((req, index) => (
-            <RequirementItem key={index}>{req}</RequirementItem>
-          ))}
-        </RequirementList>
+        <h2>Requirements</h2>
         <Label>Upload File</Label>
         <UploadButton>
           +
