@@ -68,7 +68,7 @@ const Users = () => {
                 id={user.id}
                 name={`${user.firstName} ${user.lastName}`}
                 email={user.email}
-                role={user.Auth ? user.Auth.role : "N/A"}
+                role={user.Auth ? user.Auth.role : "USER"}
                 registered={user.createdAt}
                 onEdit={handleEditUser}
                 onDelete={handleDeleteUser}

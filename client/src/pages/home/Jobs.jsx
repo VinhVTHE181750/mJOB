@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Col, Container, Nav, Row } from 'react-bootstrap';
+import http from "../../functions/httpService";
 
 const Jobs = () => {
     const [jobs, setJobs] = useState([]);
@@ -22,11 +23,18 @@ const Jobs = () => {
     };
 
     const handleEditJob = () => {
-        alert('Edit Job function not implemented.');
+        alert('Edit Job function not implemented!');
     };
 
-    const handleDeleteJob = () => {
-        alert('Delete Job function not implemented.');
+    const handleDeleteJob = async (id) => {
+        try {
+            await http.delete(`/delete-job/${id}`);
+            alert("Job deleted successfully!");
+            fetchJobs(); // Refresh the job list
+        } catch (err) {
+            console.error('Error deleting job:', err);
+            alert("Error deleting job");
+        }
     };
 
     return (
@@ -51,12 +59,13 @@ const Jobs = () => {
                         {jobs.map(job => (
                             <JobCard
                                 key={job.id}
+                                id={job.id}
                                 title={job.title}
                                 company={job.contact}
                                 location={job.location}
                                 posted={job.recruitments}
                                 onEdit={handleEditJob}
-                                onDelete={handleDeleteJob}
+                                onDelete={() => handleDeleteJob(job.id)}
                             />
                         ))}
                     </Col>
@@ -66,7 +75,7 @@ const Jobs = () => {
     );
 };
 
-const JobCard = ({ title, company, location, posted, onEdit, onDelete }) => (
+const JobCard = ({ id, title, company, location, posted, onEdit, onDelete }) => (
     <Card className="mb-4 shadow-sm">
         <Card.Body>
             <Card.Title>{title}</Card.Title>
@@ -78,7 +87,7 @@ const JobCard = ({ title, company, location, posted, onEdit, onDelete }) => (
                 <Button variant="primary" className="mr-2" onClick={onEdit}>
                     Detail
                 </Button>
-                <Button variant="danger" onClick={onDelete}>
+                <Button variant="danger" onClick={() => onDelete(id)}>
                     Delete
                 </Button>
             </div>
