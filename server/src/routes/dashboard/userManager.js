@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../../models/user/User");
 const Auth = require("../../models/user/Auth");
+const Job = require("../../models/job/Job");
 const router = express.Router();
 
 
@@ -18,7 +19,7 @@ router.get('/users-role', async (req, res) => {
     }
   });
 
-router.delete('delete/:id', async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
     try {
       const user = await User.findByPk(req.params.id);
       if (!user) {
@@ -31,4 +32,12 @@ router.delete('delete/:id', async (req, res) => {
     }
   });
 
+  router.get('/job-count' , async (req, res) => {
+    try {
+      const count = await Job.count();
+      return res.status(200).json(count);
+    } catch (err) {
+      return res.status(500).json({ message: "Error occurred", error: err });
+    }
+  });
   module.exports = router;
