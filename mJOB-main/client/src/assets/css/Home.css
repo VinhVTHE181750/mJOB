@@ -1,0 +1,84 @@
+.App {
+    font-family: Arial, sans-serif;
+  }
+  
+  .header {
+    margin-bottom: 20px;
+  }
+  
+  .content-boxes {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  
+  .content-box {
+    background-color: #d3d3d3;
+    padding: 20px;
+    flex: 1;
+    margin: 0 10px;
+    text-align: center;
+    border-radius: 5px;
+  }
+  
+  .hot-news {
+    margin-top: 20px;
+  }
+  
+  .new-box {
+    background-color: #d3d3d3;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+  }
+  
+  .help-center {
+    text-align: right;
+    padding: 20px;
+    font-size: 14px;
+    color: #7f7f7f;
+  }
+  .logo{
+    background-color: darkgrey;
+    padding: 2%;
+    font-size: 40px !important ;
+  }
+  .navbar-items{
+    width: 80%;
+    display: flex !important;
+    justify-content: space-evenly; 
+  }
+  #navbarNav{
+    /* width: 80%;
+    display: flex !important; */
+    justify-content: space-evenly;  
+  }
+  .content-boxs{
+    display: flex;
+    height: 300px;
+    width: 100%;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+  }
+.carousel-container{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 2%;
+}
+.Carousel{
+  width: 90%;
+}
+.hot-news{
+  margin: 4%;
+  /* height: 200px; */
+}
+.new-box{
+  display: flex;
+  /* width: 100%; */
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+}
+  

@@ -10,7 +10,6 @@ const UserInformationProvider = ({ children }) => {
   const navigate = useNavigate();
   const [cookie] = useCookies(["token"]);
   const [userInformation, setUserInformation] = useState({});
-  console.log("🚀 ~ UserInformationProvider ~ userInformation:", userInformation)
 
   const [isLogin, setIsLogin] = useState(
     // () => cookies.get("token") || false

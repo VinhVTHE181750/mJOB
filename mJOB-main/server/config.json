@@ -1,0 +1,41 @@
+{
+  "boot": {
+    "port": 8000,
+    "maxRetries": 3,
+    "retryDelay": 5000
+  },
+  "logger": {
+    "level": "DEBUG"
+  },
+
+  "middleware": {
+    "cors": {
+      "origin": "http://localhost:5173"
+    },
+    "rateLimiter": {
+      "windowMs": 60000,
+      "max": 10000
+    }
+  },
+
+  "database": {
+    "dialect": "mssql",
+    "user": "new_user",
+    "password": "123",
+    "server": "localhost",
+    "database": "mJOB",
+    "schema": "dbo",
+    "encrypt": false,
+    "pool": {
+      "max": 8,
+      "min": 0
+    }
+  },
+  "jwt": {
+    "secret": "notSoSecret",
+    "expiresIn": 86400,
+    "issuer": "mJob",
+    "algorithm": "HS256"
+  },
+  "sessionSecret": "notSoSecret"
+}

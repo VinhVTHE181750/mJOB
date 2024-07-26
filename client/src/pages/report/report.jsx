@@ -9,6 +9,10 @@ const ModalReport = ({ show, handleClose, userId, setReload }) => {
     title: "",
     category: "",
     description: "",
+    username: "",
+    email: "",
+    phone: "",
+    priority: 0,
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,6 +26,7 @@ const ModalReport = ({ show, handleClose, userId, setReload }) => {
     try {
       const response = await axios.post("/ticket/create", {
         ...ticket,
+        priority: parseInt(ticket.priority),
         by: userId,
       });
       if (response.status === 201) {
@@ -32,6 +37,10 @@ const ModalReport = ({ show, handleClose, userId, setReload }) => {
           title: "",
           category: "",
           description: "",
+          username: "",
+          email: "",
+          phone: "",
+          priority: 0,
         });
       }
       handleClose();
@@ -53,6 +62,46 @@ const ModalReport = ({ show, handleClose, userId, setReload }) => {
               placeholder="Enter title"
               name="title"
               value={ticket.title}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Priority</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Enter priority"
+              name="priority"
+              value={ticket.priority}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter username"
+              name="username"
+              value={ticket.username}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter email"
+              name="email"
+              value={ticket.email}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Phone</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter phone"
+              name="phone"
+              value={ticket.phone}
               onChange={handleChange}
             />
           </Form.Group>
