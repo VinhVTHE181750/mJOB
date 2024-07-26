@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Col, Container, Nav, Row } from 'react-bootstrap';
 import http from "../../functions/httpService";
+import { FaBriefcase, FaChartBar, FaSignOutAlt, FaUsers } from "react-icons/fa";
 
 const Jobs = () => {
     const [jobs, setJobs] = useState([]);
@@ -44,17 +45,25 @@ const Jobs = () => {
             </header>
             <Container fluid className="mt-3">
                 <Row>
-                    <Col md={2}>
-                        <h2>Navigation</h2>
-                        <Nav className="flex-column">
-                            <Nav.Link href="/dashboard" className="text-black">Dashboard</Nav.Link>
-                            <Nav.Link href="/jobs" className="text-black">Jobs</Nav.Link>
-                            <Nav.Link href="/users" className="text-black">Users</Nav.Link>
-                            <Row>
-                                <Col><Button variant="danger" href="/logout">Logout</Button></Col>
-                            </Row>
-                        </Nav>
-                    </Col>
+                <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
+            <h2 className="text-center">Navigation</h2>
+            <Nav className="flex-column">
+              <Nav.Link href="/dashboard" className="text-dark ">
+              <FaChartBar className="me-2" /> Dashboard
+              </Nav.Link>
+              <Nav.Link href="/jobs" className="text-dark ">
+              <FaBriefcase className="me-2" /> Jobs
+              </Nav.Link>
+              <Nav.Link href="/users" className="text-dark">
+              <FaUsers className="me-2" /> Users
+              </Nav.Link>
+              <div >
+                <Button variant="danger" href="/logout" className="mt-2">
+                <FaSignOutAlt className="me-2" /> Logout
+                </Button>
+              </div>
+            </Nav>
+          </Col>
                     <Col md={10} className="p-4">
                         {jobs.map(job => (
                             <JobCard
