@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useAuth } from '../../../../../client/src/context/UserContext';
 
 const BackgroundContainer = styled.div`
   background: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
@@ -106,6 +107,7 @@ const FileItem = styled.li`
 `;
 
 const ConfirmJob = () => {
+  const { handleRedirectError } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { job } = location.state || {};
@@ -130,6 +132,7 @@ const ConfirmJob = () => {
     } catch (error) {
       console.error('Error uploading files:', error);
       alert('Error uploading files');
+      handleRedirectError("server error");
     }
   };
 

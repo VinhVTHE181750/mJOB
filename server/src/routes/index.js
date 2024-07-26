@@ -23,6 +23,7 @@ const homeuserRoute = require("./HomeUser");
 const homeguestRoute = require("./HomeGuest");
 
 const ticketRoute = require("./ticket");
+const faqRoute = require("./faq");
 
 module.exports = function applyRoutes(app) {
   app.use("/api/auth", authRoute);
@@ -45,5 +46,6 @@ module.exports = function applyRoutes(app) {
   app.use("/api/homeuser", homeuserRoute);
   app.use("/api/homeguest", homeguestRoute);
   app.use("/api/ticket", ticketRoute);
+  app.use("/api/faq", faqRoute);
   // Setup other routes here
 };

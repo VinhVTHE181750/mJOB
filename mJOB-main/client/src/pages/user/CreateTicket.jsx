@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, {useEffect, useState} from "react";
-import {Alert, Button, Card, Container, Form} from "react-bootstrap";
-import {useNavigate} from "react-router";
+import React, { useEffect, useState } from "react";
+import { Alert, Button, Card, Container, Form } from "react-bootstrap";
+import { useNavigate } from "react-router";
 
 const CreateTicketPage = () => {
   const navigate = useNavigate();

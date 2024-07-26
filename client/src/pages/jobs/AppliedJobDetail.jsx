@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import http from '../../functions/httpService';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import styled from "styled-components";
+import http from "../../functions/httpService";
+import { useAuth } from "../../context/UserContext";
 
 const Container = styled.div`
   max-width: 750px;
@@ -42,6 +43,7 @@ const FlexContainer = styled.div`
 `;
 
 const AppliedJobDetail = () => {
+  const { handleRedirectError } = useAuth();
   const { job_id } = useParams();
   const [jobDetail, setJobDetail] = useState(null);
 
@@ -51,7 +53,8 @@ const AppliedJobDetail = () => {
         const response = await http.get(`/applied-job-detail/${job_id}`);
         setJobDetail(response.data);
       } catch (error) {
-        console.error('Error fetching job detail:', error);
+        handleRedirectError("server error");
+        console.error("Error fetching job detail:", error);
       }
     };
 
@@ -66,13 +69,25 @@ const AppliedJobDetail = () => {
     <Container>
       <BackButton href="/active-job">Back</BackButton>
       <Title>Manage: {jobDetail.job_title}</Title>
-      <Paragraph><strong>Created by:</strong> User {jobDetail.user_id}</Paragraph>
+      <Paragraph>
+        <strong>Created by:</strong> User {jobDetail.user_id}
+      </Paragraph>
       <FlexContainer>
-        <Paragraph><strong>Payment period:</strong> {jobDetail.job_compensation_type}</Paragraph>
-        <Paragraph><strong>Amount:</strong> {jobDetail.job_compensation_amount} {jobDetail.job_compensation_currency} / {jobDetail.job_compensation_period}</Paragraph>
+        <Paragraph>
+          <strong>Payment period:</strong> {jobDetail.job_compensation_type}
+        </Paragraph>
+        <Paragraph>
+          <strong>Amount:</strong> {jobDetail.job_compensation_amount}{" "}
+          {jobDetail.job_compensation_currency} /{" "}
+          {jobDetail.job_compensation_period}
+        </Paragraph>
       </FlexContainer>
-      <Paragraph><strong>Attendance:</strong> {jobDetail.job_description}</Paragraph>
-      <Paragraph><strong>Today:</strong> {jobDetail.job_start_date}</Paragraph>
+      <Paragraph>
+        <strong>Attendance:</strong> {jobDetail.job_description}
+      </Paragraph>
+      <Paragraph>
+        <strong>Today:</strong> {jobDetail.job_start_date}
+      </Paragraph>
     </Container>
   );
 };

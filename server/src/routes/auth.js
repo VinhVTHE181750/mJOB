@@ -20,7 +20,11 @@ router.get("/check-user", async (req, res) => {
     const user = await User.findOne({ where: { email } });
     if (user) {
       const randNumber = generateRandomSixDigitNumber();
-      await sendMailOTP(user.email, randNumber);
+      await sendMailOTP(
+        user.email,
+        randNumber,
+        "This is code for change password"
+      );
       const auth = await Auth.findOne({ where: { UserId: user.id } });
       auth.code = randNumber;
       await auth.save();

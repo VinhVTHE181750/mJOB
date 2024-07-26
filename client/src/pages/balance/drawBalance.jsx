@@ -13,6 +13,7 @@ function ModalOTP({
   reason,
   currentBalance,
 }) {
+  const { handleRedirectError } = useAuth();
   const [otp, setOtp] = useState("");
   const handleCheckOTP = async () => {
     try {
@@ -35,6 +36,7 @@ function ModalOTP({
       }
     } catch (e) {
       console.error(e);
+      handleRedirectError("server error");
     }
   };
   return (
@@ -97,6 +99,7 @@ function DrawBalacePage() {
       console.log(response.data);
       // Handle successful response
     } catch (error) {
+      handleRedirectError("server error");
       console.error("There was an error processing the request!", error);
     }
   };

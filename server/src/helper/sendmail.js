@@ -1,5 +1,9 @@
 const nodemailer = require("nodemailer");
-const sendMailOTP = async (email, digiritRandom) => {
+const sendMailOTP = async (
+  email,
+  digiritRandom,
+  message = "You're already request to take money"
+) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -11,7 +15,7 @@ const sendMailOTP = async (email, digiritRandom) => {
   const mailOptions = {
     from: "MJob Admin",
     to: email,
-    subject: "You're already request to take money",
+    subject: message,
     text: "This is a test email from Node.js!",
     html: `<p>This is the code for it! <b>${digiritRandom}</b></p>`,
   };

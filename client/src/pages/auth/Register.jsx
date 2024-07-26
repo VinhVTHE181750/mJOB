@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Container, Form, FormGroup } from "react-bootstrap";
 import axios from "axios";
+import { useAuth } from "../../context/UserContext";
 
 // Regular expressions for validation
 const REGEX_USERNAME = /^[A-Za-z][A-Za-z0-9_]{8,29}$/;
@@ -10,6 +11,7 @@ const REGISTER_API = "http://localhost:8000/api/auth/register";
 const REGEX_PHONE = /^\d{9,11}$/;
 
 const Register = () => {
+  const { handleRedirectError } = useAuth();
   const [user, setUser] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -95,6 +97,7 @@ const Register = () => {
       } else {
         setErrMsg("Registration Failed");
       }
+      handleRedirectError("server error");
       errRef.current.focus();
     }
   };

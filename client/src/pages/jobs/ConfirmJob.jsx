@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import http from '../../functions/httpService';
+import { useAuth } from '../../context/UserContext';
 
 const BackgroundContainer = styled.div`
   background: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
@@ -106,6 +107,7 @@ const FileItem = styled.li`
 `;
 
 const ConfirmJob = () => {
+  const { handleRedirectError } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { job } = location.state || {};
@@ -128,6 +130,7 @@ const ConfirmJob = () => {
       alert('Application confirmed!');
       navigate('/market');
     } catch (error) {
+      handleRedirectError("server error");
       console.error('Error uploading files:', error);
       alert('Error uploading files');
     }

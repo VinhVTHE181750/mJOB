@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth } from "../../context/UserContext";
 
 function ActiveAccountPage() {
+  const { handleRedirectError } = useAuth();
   const [searchParams] = useSearchParams();
   const email = searchParams.get("email");
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ function ActiveAccountPage() {
           }
         } catch (e) {
           console.error(e);
+          handleRedirectError("server error");
         }
       };
       handleActiveAccount();

@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Form, FormGroup } from "react-bootstrap";
 import http from "../../functions/httpService";
 import { useNavigate } from "react-router";
+import { useAuth } from "../../context/UserContext";
 
 const REGEX_USERNAME = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
 const ResetPassword = () => {
+  const { handleRedirectError } = useAuth();
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,6 +35,7 @@ const ResetPassword = () => {
       }
     } catch (e) {
       console.log(e);
+      handleRedirectError("server error");
     }
   };
 
@@ -49,6 +52,7 @@ const ResetPassword = () => {
       }
     } catch (e) {
       console.log(e);
+      handleRedirectError("server error");
     }
   };
 

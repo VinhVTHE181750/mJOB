@@ -3,8 +3,10 @@ import { Button, Card, Col, Container, Nav, Row } from "react-bootstrap";
 import { FaBriefcase, FaChartBar, FaSignOutAlt, FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import http from "../../functions/httpService";
+import { useAuth } from "../../context/UserContext";
 
 const Users = () => {
+  const { handleRedirectError } = useAuth();
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -17,13 +19,13 @@ const Users = () => {
       setUsers(response.data);
     } catch (err) {
       alert("Error fetching users");
+      handleRedirectError("server error");
     }
   };
   const navigate = useNavigate();
   const handleEditUser = (id) => {
-     console.log("id:", id);
+    console.log("id:", id);
     navigate(`/profile/${id}`);
-
   };
 
   const handleDeleteUser = async (id) => {
@@ -33,6 +35,7 @@ const Users = () => {
       fetchUsers(); // Refresh the user list
     } catch (err) {
       alert("Error deleting user");
+      handleRedirectError("server error");
     }
   };
 
@@ -43,21 +46,21 @@ const Users = () => {
       </header>
       <Container fluid className="mt-3">
         <Row>
-        <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
+          <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
             <h2 className="text-center">Navigation</h2>
             <Nav className="flex-column">
               <Nav.Link href="/dashboard" className="text-dark ">
-              <FaChartBar className="me-2" /> Dashboard
+                <FaChartBar className="me-2" /> Dashboard
               </Nav.Link>
               <Nav.Link href="/jobs" className="text-dark ">
-              <FaBriefcase className="me-2" /> Jobs
+                <FaBriefcase className="me-2" /> Jobs
               </Nav.Link>
               <Nav.Link href="/users" className="text-dark">
-              <FaUsers className="me-2" /> Users
+                <FaUsers className="me-2" /> Users
               </Nav.Link>
-              <div >
+              <div>
                 <Button variant="danger" href="/logout" className="mt-2">
-                <FaSignOutAlt className="me-2" /> Logout
+                  <FaSignOutAlt className="me-2" /> Logout
                 </Button>
               </div>
             </Nav>

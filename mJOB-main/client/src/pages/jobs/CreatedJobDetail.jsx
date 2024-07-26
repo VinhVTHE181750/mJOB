@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useAuth } from '../../../../../client/src/context/UserContext';
 
 const Container = styled.div`
   max-width: 800px;
@@ -52,6 +53,7 @@ const BackButton = styled.a`
 `;
 
 const CreatedJobDetail = () => {
+  const { handleRedirectError } = useAuth();
   const { job_id } = useParams();
   const [jobDetails, setJobDetails] = useState(null);
 
@@ -61,6 +63,7 @@ const CreatedJobDetail = () => {
         const response = await axios.get(`http://localhost:8000/api/jobs/created-job-detail/${job_id}`);
         setJobDetails(response.data);
       } catch (error) {
+        handleRedirectError("server error");
         console.error('Error fetching job details:', error);
       }
     };

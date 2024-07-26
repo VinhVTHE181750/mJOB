@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Col, Container, Nav, Row } from 'react-bootstrap';
+import { useAuth } from '../../context/UserContext';
 
 const Jobs = () => {
+    const { handleRedirectError } = useAuth();
     const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
@@ -18,6 +20,7 @@ const Jobs = () => {
             setJobs(data);
         } catch (error) {
             console.error('Error fetching jobs:', error);
+            handleRedirectError("server error");
         }
     };
 

@@ -53,7 +53,7 @@ import TransferMoney from "./pages/payment/TranferBalance";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 
-// import ErrorPage from "./pages/error/ErrorPage";
+import ErrorPage from "./pages/error/ErrorPage";
 import { AuthProvider } from "./context/AuthContext";
 import { ForumProvider } from "./context/ForumContext";
 import UserInformationProvider from "./context/UserContext";
@@ -68,6 +68,7 @@ import ActiveAccountPage from "./pages/auth/ActiveAccount";
 import FaqPage from "./pages/faq/Faq";
 import ReportPage from "./pages/report/report";
 import DrawBalacePage from "./pages/balance/drawBalance";
+import AdminFAQsPage from "./pages/faq/Adminfaqs";
 
 function App() {
   return (
@@ -89,6 +90,7 @@ function App() {
                   element={<ActiveAccountPage />}
                 />
                 <Route exact path="/faq" element={<FaqPage />} />
+                <Route exact path="/admin-faqs" element={<AdminFAQsPage />} />
                 <Route exact path="/reports" element={<ReportPage />} />
                 <Route
                   exact
@@ -128,6 +130,7 @@ function App() {
                   path="/created-job-details/:job_id"
                   element={<CreatedJobDetail />}
                 />
+                <Route path="/error" element={<ErrorPage />} />
                 <Route
                   exact
                   path="/applied-job-details/:job_id"
