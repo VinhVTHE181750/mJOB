@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
   // uncomment để truyền userId từ request
 
   // test
-  // userId = 1;
+  //userId = 1;
   const user = await User.findByPk(userId);
   if (!user) {
     return res.status(404).json({ message: "User not found" });
