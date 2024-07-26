@@ -11,6 +11,7 @@ const { log } = require("../../utils/Logger");
 const Requirement = require("../../models/job/Requirement");
 const RequirementStorage = require("../../models/job/RequirementStorage");
 const Application = require("../../models/job/Application");
+const formidable = require('formidable');
 
 app.use(fileUpload());
 
@@ -277,63 +278,75 @@ router.put("/update", async (req, res) => {
   }
 });
 
-router.post("/upload", async (req, res) => {
-  try {
-    const userId = req.userId;
-    if (!userId || isNaN(userId)) {
-      return res.status(401).json({ message: "Unauthorized or invalid user ID" });
-    }
+router.post('/upload', (req, res) => {
+  const form = new formidable.IncomingForm();
+  form.uploadDir = path.join(__dirname, 'uploads'); // Set the upload directory
+  form.keepExtensions = true; // Keep the file extensions
 
-    const requirementId = parseInt(req.body.requirementId, 10);
-    if (!requirementId || isNaN(requirementId)) {
-      return res.status(400).json({ message: "Invalid requirement ID" });
-    }
-
-    const requirement = await Requirement.findByPk(requirementId);
-    if (!requirement) {
-      return res.status(404).json({ message: "Requirement not found" });
-    }
-
-    // Ensure files are handled as an array
-    const fileArray = Array.isArray(req.files.files) ? req.files.files : [req.files.files];
-
-    // Ensure the uploads directory exists
-    const uploadDir = path.join(__dirname, "uploads");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    // Check if already uploaded, if yes -> replace
-    const oldFiles = await RequirementStorage.findAll({
-      where: { RequirementId: requirement.id, UserId: userId },
-    });
-
-    if (oldFiles.length > 0) {
-      for (const file of oldFiles) {
-        const filePath = JSON.parse(file.data).file_path;
-        fs.unlinkSync(filePath);
-        await file.destroy(); // Delete from database
-      }
-    }
-
-    // Save new files
-    for (const file of fileArray) {
-      const filePath = path.join(uploadDir, file.name);
-      await file.mv(filePath);
-      const jobRequirement = {
-        RequirementId: requirement.id,
-        data: JSON.stringify({ file_name: file.name, file_path: filePath }),
-      };
-
-      await RequirementStorage.create(jobRequirement);
-    }
-
-    res.status(200).json({ message: 'Files uploaded successfully!' });
-  } catch (error) {
-    log(error, "ERROR", "JOB");
-    res.status(500).json({ message: 'An error occurred' });
+  // Ensure the uploads directory exists
+  const uploadDir = path.join(__dirname, 'uploads');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
   }
+
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.error('Error parsing form:', err);
+      return res.status(500).json({ message: 'Error parsing form' });
+    }
+
+    try {
+      const userId = req.userId;
+      if (!userId || isNaN(userId)) {
+        return res.status(401).json({ message: 'Unauthorized or invalid user ID' });
+      }
+
+      const requirementId = parseInt(fields.requirementId, 10);
+      if (!requirementId || isNaN(requirementId)) {
+        return res.status(400).json({ message: 'Invalid requirement ID' });
+      }
+
+      const requirement = await Requirement.findByPk(requirementId);
+      if (!requirement) {
+        return res.status(404).json({ message: 'Requirement not found' });
+      }
+
+      // Check if old files exist and delete them
+      const oldFiles = await RequirementStorage.findAll({
+        where: { RequirementId: requirement.id, UserId: userId },
+      });
+
+      if (oldFiles.length > 0) {
+        for (const file of oldFiles) {
+          const filePath = JSON.parse(file.data).file_path;
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          }
+          await file.destroy(); // Delete from database
+        }
+      }
+
+      // Save new files
+      const fileArray = Array.isArray(files.files) ? files.files : [files.files];
+      for (const file of fileArray) {
+        const newFilePath = path.join(uploadDir, file.originalFilename);
+        fs.renameSync(file.filepath, newFilePath); // Rename file from temp path to target path
+        const jobRequirement = {
+          RequirementId: requirement.id,
+          data: JSON.stringify({ file_name: file.originalFilename, file_path: newFilePath }),
+        };
+
+        await RequirementStorage.create(jobRequirement);
+      }
+
+      res.status(200).json({ message: 'Files uploaded successfully!' });
+    } catch (error) {
+      console.error('Error in upload:', error);
+      res.status(500).json({ message: 'An error occurred' });
+    }
+  });
 });
+
 
 
 router.get("/download/:fname", async (req, res) => {
