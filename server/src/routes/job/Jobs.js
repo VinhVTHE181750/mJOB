@@ -330,7 +330,7 @@ router.post("/upload", async (req, res) => {
 
     res.status(200).json({ message: 'Files uploaded successfully!' });
   } catch (error) {
-    console.error(error);
+    log(error, "ERROR", "JOB");
     res.status(500).json({ message: 'An error occurred' });
   }
 });

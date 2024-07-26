@@ -111,25 +111,46 @@ const ConfirmJob = () => {
   const { job, requirementId } = location.state || {};  // Ensure requirementId is passed from previous page
   const [selectedFiles, setSelectedFiles] = useState([]);
 
-  const handleConfirm = async () => {
+  const createFormData = (selectedFiles, requirementId) => {
+    const formData = new FormData();
+    selectedFiles.forEach((file) => {
+      formData.append('files', file);
+    });
+    formData.append('requirementId', requirementId);
+  
+    // Debugging: Log form data to ensure requirementId is included
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
+  
+    return formData;
+  };
+  
+  const uploadFiles = async (formData) => {
     try {
-      const formData = new FormData();
-      selectedFiles.forEach((file) => {
-        formData.append('files', file);
-      });
-      formData.append('requirementId', requirementId);
-  
-      // Debugging: Log form data to ensure requirementId is included
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}: ${pair[1]}`);
-      }
-  
       await http.post('/jobs/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+    } catch (error) {
+      console.error('Error in uploadFiles:', error);
+      throw error;
+    }
+  };
   
+  const handleConfirm = async () => {
+    try {
+      if (!requirementId) {
+        throw new Error('requirementId is missing');
+      }
+      if (!selectedFiles || selectedFiles.length === 0) {
+        throw new Error('No files selected');
+      }
+  
+      const formData = createFormData(selectedFiles, requirementId);
+      console.log('FormData before upload:', formData);
+      await uploadFiles(formData);
       alert('Application confirmed!');
       navigate('/market');
     } catch (error) {
