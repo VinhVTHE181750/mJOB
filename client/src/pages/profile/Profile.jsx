@@ -138,6 +138,10 @@ const Profile = () => {
                     <strong>Address:</strong>{" "}
                     <span id="address">{profile.address}</span>
                   </p>
+                  <p>
+                    <strong>Bio:</strong>{" "}
+                    <span id="bio">{profile.bio}</span>
+                  </p>
                 </Col>
               </Row>
               <Button
@@ -166,6 +170,7 @@ const Profile = () => {
               <p>
                 <strong>Location:</strong> <span id="location">{location}</span>
               </p>
+              
               <p>
                 <strong>Start Date:</strong>{" "}
                 <span id="startDate">{startDate}</span>
@@ -173,10 +178,7 @@ const Profile = () => {
               <p>
                 <strong>End Date:</strong> <span id="endDate">{endDate}</span>
               </p>
-              <p>
-                <strong>Other Information:</strong>{" "}
-                <span id="otherInformation">{otherInformation}</span>
-              </p>
+              
               <Button
                 onClick={handleWorkEdit}
                 variant="primary"

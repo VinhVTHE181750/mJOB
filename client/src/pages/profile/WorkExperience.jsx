@@ -225,8 +225,8 @@ const WorkExperience = () => {
                     </Form.Label>
                     <Col sm={10}>
                       <Form.Control
-                        as="textarea"
-                        placeholder="Other Information"
+                        
+                        placeholder="Location"
                         value={otherInformation}
                         onChange={(e) => setOtherInformation(e.target.value)}
                       />
