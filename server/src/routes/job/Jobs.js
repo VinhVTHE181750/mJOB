@@ -1,4 +1,5 @@
 const express = require("express");
+const app = express();
 const router = express.Router();
 const Job = require("../../models/job/Job");
 const User = require("../../models/user/User");
@@ -11,10 +12,10 @@ const Requirement = require("../../models/job/Requirement");
 const RequirementStorage = require("../../models/job/RequirementStorage");
 const Application = require("../../models/job/Application");
 
-router.use(fileUpload());
+app.use(fileUpload());
 
 router.post("/", async (req, res) => {
-  // log(JSON.stringify(req.body), "INFO", "JOB");
+  log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;
   if (!req.userId) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -276,65 +277,15 @@ router.put("/update", async (req, res) => {
   }
 });
 
-router.get("/job/:id", async (req, res) => {
-  log(JSON.stringify(req.body), "INFO", "JOB");
-  let userId;
-  if (!req.userId) {
-    return res.status(401).json({ message: "Unauthorized" });
-  } else userId = req.userId;
-  if (isNaN(req.userId)) {
-    return res.status(400).json({ message: "Invalid user ID" });
-  }
-  // uncomment để truyền userId từ request
-
-  // test
-  // userId = 1;
-  const user = await User.findByPk(userId);
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  // Đổi job_id thành requirementId, vì 1 job có nhiều requirements
-  // mỗi requirement
-  // Vẫn hỗ trợ 1 requirement nhiều file như cũ, nhưng support thêm nhiều requirement
-  // mỗi job
-  try {
-    const job = await Job.findByPk(req.params.id);
-    if (!job) {
-      return res.status(404).json({ message: "Job not found" });
-    }
-
-    const reqs = await Requirement.findAll({
-      where: { JobId: req.params.id},
-    });
-
-    res.json({ job, requirements: reqs });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-});
-
 router.post("/upload", async (req, res) => {
   try {
-    let userId;
-    if (!req.userId) {
-      return res.status(401).json({ message: "Unauthorized" });
-    } else userId = req.userId;
-
-    if (isNaN(req.userId)) {
-      return res.status(400).json({ message: "Invalid user ID" });
+    const userId = req.userId;
+    if (!userId || isNaN(userId)) {
+      return res.status(401).json({ message: "Unauthorized or invalid user ID" });
     }
 
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const { requirementId } = req.body;
-    if (!requirementId) {
-      return res.status(400).json({ message: "Invalid requirement ID" });
-    }
-    if (isNaN(requirementId)) {
+    const requirementId = parseInt(req.body.requirementId, 10);
+    if (!requirementId || isNaN(requirementId)) {
       return res.status(400).json({ message: "Invalid requirement ID" });
     }
 
@@ -343,53 +294,47 @@ router.post("/upload", async (req, res) => {
       return res.status(404).json({ message: "Requirement not found" });
     }
 
-    const files = req.files?.files;
-    if (!files) {
-      return res.status(400).json({ message: "Files are required" });
-    }
+    // Ensure files are handled as an array
+    const fileArray = Array.isArray(req.files.files) ? req.files.files : [req.files.files];
 
-    const fileArray = Array.isArray(files) ? files : [files];
+    // Ensure the uploads directory exists
     const uploadDir = path.join(__dirname, "uploads");
-    
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
 
+    // Check if already uploaded, if yes -> replace
+    const oldFiles = await RequirementStorage.findAll({
+      where: { RequirementId: requirement.id, UserId: userId },
+    });
+
+    if (oldFiles.length > 0) {
+      for (const file of oldFiles) {
+        const filePath = JSON.parse(file.data).file_path;
+        fs.unlinkSync(filePath);
+        await file.destroy(); // Delete from database
+      }
+    }
+
+    // Save new files
     for (const file of fileArray) {
       const filePath = path.join(uploadDir, file.name);
       await file.mv(filePath);
-      
-      // Create a record in RequirementStorage table
-      const fileData = {
+      const jobRequirement = {
         RequirementId: requirement.id,
-        UserId: userId,
         data: JSON.stringify({ file_name: file.name, file_path: filePath }),
       };
-      
-      await RequirementStorage.create(fileData);
+
+      await RequirementStorage.create(jobRequirement);
     }
 
-    res.status(200).json({ message: "Files uploaded successfully" });
+    res.status(200).json({ message: 'Files uploaded successfully!' });
   } catch (error) {
-    console.error('Error uploading files:', error);
-    res.status(500).json({ message: "Server error", error });
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
   }
 });
 
-router.get("/job-requirements/:jobId", async (req, res) => {
-  const jobId = parseInt(req.params.jobId);
-  if (!jobId) {
-    return res.status(400).json({ message: "Invalid job ID" });
-  }
-  if (isNaN(jobId)) {
-    return res.status(400).json({ message: "Invalid job ID" });
-  }
-
-  const requirements = await Requirement.findAll({
-    where: { JobId: jobId },
-  });
-  return res.status(200).json(requirements);
-});
 
 router.get("/download/:fname", async (req, res) => {
   const fname = req.params.fname;
