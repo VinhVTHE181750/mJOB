@@ -130,6 +130,7 @@ const JobDetail = () => {
       try {
         const response = await http.get(`/jobs/${id}`);
         setJob(response.data.job);
+
         setReqs(response.data.requirements);
         setLoading(false);
       } catch (error) {
@@ -208,7 +209,7 @@ const JobDetail = () => {
           <Label>Contact Info:</Label>
           <Text>{job.contact}</Text>
         </Section>
-        <ApplyButton onClick={() => navigate("/confirm-job", { state: { job } })}>Apply</ApplyButton>
+        <ApplyButton onClick={() => navigate("/confirm-job", { state: { job} })}>Apply</ApplyButton>
       </JobDetailContainer>
     </BackgroundContainer>
   );
