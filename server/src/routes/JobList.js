@@ -1,5 +1,6 @@
 const express = require("express");
 const db = require("../models/DBContext");
+const {getJobListbyDefaut, getJobListbyView, getJobListbyDate} = require("./joblist/JobList");
 
 const router = express.Router();
 
@@ -118,5 +119,13 @@ router.get("/byView", async (req, res) => {
       res.status(500).json({ message: "Error occurred", error: err });
     }
   });
+
+router.get("/default",getJobListbyDefaut);
+
+router.get("/view",getJobListbyView);
+
+router.get("/date",getJobListbyDate);
+
+
 
 module.exports = router;

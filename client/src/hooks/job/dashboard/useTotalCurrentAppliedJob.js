@@ -4,29 +4,29 @@ import http from "../functions/httpService";
 
 
 
-const useUserTotalCompletedJob = (userId) => {
+const useTotalCurrentAppliedJob = (userId) => {
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  // console.log('User:' + userId);
   
   useEffect(() => {
     const fetchCompletedJobsCount = async () => {
       try {
-        const url = `/myjobs/completed/${userId}`;
+        const url = `/myjobs/applied`;  
         const response = await http.get(url);
-        console.log(response.data.totalCompletedJob);
-        // setCount(response.data);
-        setCount(response.data.totalCompletedJob);
+        setCount(response.data.total);
         setLoading(false);
       } catch (error) {
-        // navigate("/error", {
-        //   state: {
-        //     message: error.response
-        //       ? error.response.data.message
-        //       : "An error occurred",
-        //   },
-        // });
+        navigate("/error", {
+          state: {
+            message: error.response
+              ? error.response.data.message
+              : "An error occurred",
+          },
+        });
         setError(error);
         setLoading(false);
       }
@@ -39,4 +39,4 @@ const useUserTotalCompletedJob = (userId) => {
   return { count, loading, error };
 };
 
-export default useUserTotalCompletedJob;
+export default useTotalCurrentAppliedJob;
