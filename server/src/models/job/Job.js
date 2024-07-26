@@ -62,17 +62,18 @@ Job.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    // If false -> no salary job (volunteer, etc)
-    // If true -> salary job
-    paid: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-    },
+
 
     // Salary amount
     salary: {
       type: DataTypes.FLOAT,
+      allowNull: true,
+      defaultValue: 0,
+    },
+
+    // Salary: null -> contact for salary
+    salary: {
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     // ONE OF: hourly, daily, weekly, monthly, once
