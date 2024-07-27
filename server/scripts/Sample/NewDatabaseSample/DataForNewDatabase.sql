@@ -8,6 +8,8 @@ DELETE FROM [mJOB].[dbo].[Posts];
 DELETE FROM [mJOB].[dbo].[PostCategories];
 DELETE FROM [mJOB].[dbo].[PostMetrics];
 DELETE FROM [mJOB].[dbo].[Balances];
+DELETE FROM [mJOB].[dbo].[Requirements];
+
 
 
 
@@ -24,6 +26,8 @@ DBCC CHECKIDENT ('[mJOB].[dbo].[Posts]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[PostCategories]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[PostMetrics]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Balances]', RESEED, 0);
+DBCC CHECKIDENT ('[mJOB].[dbo].[Requirements]', RESEED, 0);
+
 
 
 
@@ -372,3 +376,61 @@ BEGIN
 
     SET @UserId = @UserId + 1;
 END
+
+INSERT INTO [dbo].[Requirements]
+           ([name]
+           ,[type]
+           ,[createdAt]
+           ,[updatedAt]
+           ,[JobId])
+     VALUES
+           ('Requirement_1', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 1),
+           ('Requirement_2', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 2),
+           ('Requirement_3', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 3),
+           ('Requirement_4', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 4),
+           ('Requirement_5', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 5),
+           ('Requirement_6', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 6),
+           ('Requirement_7', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 7),
+           ('Requirement_8', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 8),
+           ('Requirement_9', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 9),
+           ('Requirement_10', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 10),
+           ('Requirement_11', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 11),
+           ('Requirement_12', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 12),
+           ('Requirement_13', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 13),
+           ('Requirement_14', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 14),
+           ('Requirement_15', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 15),
+           ('Requirement_16', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 16),
+           ('Requirement_17', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 17),
+           ('Requirement_18', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 18),
+           ('Requirement_19', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 19),
+           ('Requirement_20', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 20),
+           ('Requirement_21', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 21),
+           ('Requirement_22', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 22),
+           ('Requirement_23', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 23),
+           ('Requirement_24', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 24),
+           ('Requirement_25', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 25),
+           ('Requirement_26', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 26),
+           ('Requirement_27', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 27),
+           ('Requirement_28', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 28),
+           ('Requirement_29', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 29),
+           ('Requirement_30', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 30),
+           ('Requirement_31', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 31),
+           ('Requirement_32', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 32),
+           ('Requirement_33', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 33),
+           ('Requirement_34', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 34),
+           ('Requirement_35', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 35),
+           ('Requirement_36', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 36),
+           ('Requirement_37', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 37),
+           ('Requirement_38', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 38),
+           ('Requirement_39', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 39),
+           ('Requirement_40', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 40),
+           ('Requirement_41', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 41),
+           ('Requirement_42', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 42),
+           ('Requirement_43', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 43),
+           ('Requirement_44', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 44),
+           ('Requirement_45', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 45),
+           ('Requirement_46', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 46),
+           ('Requirement_47', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 47),
+           ('Requirement_48', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 48),
+           ('Requirement_49', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 49),
+           ('Requirement_50', 'TEXT', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 50);
