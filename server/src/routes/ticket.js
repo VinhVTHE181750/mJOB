@@ -35,36 +35,21 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.put("/update", async (req, res) => {
-  try {
-    const { ticketId } = req.query;
-    const updateTicket = await Ticket.update(req.body, {
-      where: { id: ticketId },
-    });
-    if (updateTicket) {
-      return res.status(200).send({ message: "Updated ticket." });
-    } else {
-      return res.status(203).send({ message: "Update ticket failed." });
-    }
-  } catch (error) {
-    console.error("Error creating", error);
-    return res.status(500).send({ message: "Server error." });
-  }
-});
-
-router.delete("/delete", async function (req, res) {
-  try {
-    const { ticketId } = req.query;
-    const ticket = await Ticket.destroy({ where: { id: ticketId } }); //
-    if (ticket) {
-      return res.status(200).json({ message: "Delete Report Success" });
-    } else {
-      return res.status(400).send({ message: "Failed to delete report" });
-    }
-  } catch (error) {
-    console.error("Error creating", error);
-    return res.status(500).send({ message: "Server error." });
-  }
-});
+// 1. Taoj route
+// router.get("/test", async (req, res) => {
+//   try {
+//     // create ticket
+//     const ticket = await Ticket.create({
+//       type: "REPORT",
+//       title: "Title",
+//       category: "test",
+//       description: "Description",
+//     });
+//     return res.status(200).json({ message: "", ticket });
+//   } catch (err) {
+//     log(err, "ERROR");
+//     res.status(500).send({ message: "Failed to create ticket" });
+//   }
+// });
 
 module.exports = router;
