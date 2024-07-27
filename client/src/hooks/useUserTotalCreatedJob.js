@@ -18,18 +18,10 @@ const useUserTotalCreatedJob = (userId) => {
         setCount(response.data.totalJob);
         setLoading(false);
       } catch (error) {
-        // navigate("/error", {
-        //   state: {
-        //     message: error.response
-        //       ? error.response.data.message
-        //       : "An error occurred",
-        //   },
-        // });
         setError(error);
         setLoading(false);
       }
     };
-
     if (userId) {
       fetchCompletedJobsCount();
     }
