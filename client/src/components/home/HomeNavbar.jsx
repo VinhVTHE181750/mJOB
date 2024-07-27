@@ -58,16 +58,7 @@ const HomeNavbar = ({ user }) => {
             >
               Forum
             </Nav.Link>
-            <Nav.Link
-              href="/technical"
-              className={
-                location.pathname === "/technical"
-                  ? "active nav-fixed"
-                  : "nav-fixed"
-              }
-            >
-              Technical
-            </Nav.Link>
+            
             <Nav.Link
               href="/faq"
               className={
@@ -81,39 +72,9 @@ const HomeNavbar = ({ user }) => {
           </Nav>
           {isLogin ? (
             <>
-              <Nav.Link
-                href="/reports"
-                className={
-                  location.pathname === "/reports"
-                    ? "active nav-fixed"
-                    : "nav-fixed"
-                }
-              >
-                Report
-              </Nav.Link>
-              <Nav.Link
-                href="/draw-balance"
-                className={
-                  location.pathname === "/draw-balance"
-                    ? "active nav-fixed"
-                    : "nav-fixed"
-                }
-              >
-                Balance
-              </Nav.Link>
-              <Nav.Link
-                href="/profile"
-                className={
-                  location.pathname === "/profile"
-                    ? "active nav-fixed"
-                    : "nav-fixed"
-                }
-              >
-                Profile
-              </Nav.Link>
               <Nav className="container container-navbar d-flex justify-content-end">
                 <NavDropdown title={`${username}`} id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/profile">
+                  <NavDropdown.Item href={`/profile/${userId}`}>
                     User Profile
                   </NavDropdown.Item>
                   <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>

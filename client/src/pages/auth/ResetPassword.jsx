@@ -20,7 +20,7 @@ const ResetPassword = () => {
   const [step, setStep] = useState(0);
   const [otpCode, setOTPCode] = useState("");
   const [securityQuestion, setSecurityQuestion] = useState(
-    "Bạn sống ở thành phố nào"
+    "Where do you live?"
   );
   const [securityAnswer, setSecurityAnswer] = useState("");
 
@@ -164,7 +164,7 @@ const ResetPassword = () => {
                 Passwords do not match.
               </Form.Control.Feedback>
               <FormGroup>
-                <Form.Label>Security Question</Form.Label>
+                <Form.Label>Please answer your security question:</Form.Label>
                 <Form.Control
                   as="select"
                   name="securityQuestion"
@@ -172,16 +172,16 @@ const ResetPassword = () => {
                   onChange={(e) => setSecurityQuestion(e.target.value)}
                   required
                 >
-                  <option value="Bạn sống ở thành phố nào">
-                    Bạn sống ở thành phố nào
+                  <option value="Where do you live?">
+                    Where do you live?
                   </option>
-                  <option value="Con mèo bạn nuôi màu gì?">
-                    Con mèo bạn nuôi màu gì?
+                  <option value="What is your pet name?">
+                    What is your pet name?
                   </option>
                 </Form.Control>
               </FormGroup>
               <FormGroup>
-                <Form.Label>Security Answer</Form.Label>
+                <Form.Label>Answer:</Form.Label>
                 <Form.Control
                   type="text"
                   name="securityAnswer"
