@@ -4,7 +4,7 @@ import axios from "axios";
 import { useAuth } from "../../context/UserContext";
 
 // Regular expressions for validation
-const REGEX_USERNAME = /^[A-Za-z][A-Za-z0-9_]{8,29}$/;
+const REGEX_USERNAME = /^[A-Za-z][A-Za-z0-9_]{7,29}$/;
 const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const REGISTER_API = "http://localhost:8000/api/auth/register";
@@ -18,7 +18,7 @@ const Register = () => {
   const [pwd, setPwd] = useState("");
   const [matchPwd, setMatchPwd] = useState("");
   const [securityQuestion, setSecurityQuestion] = useState(
-    "Bạn sống ở thành phố nào"
+    "Where do you live?"
   );
   const [securityAnswer, setSecurityAnswer] = useState("");
   const [address, setAddress] = useState("");
@@ -84,7 +84,7 @@ const Register = () => {
         setMatchPwd("");
         setEmail("");
         setPhone("");
-        setSecurityQuestion("Bạn sống ở thành phố nào");
+        setSecurityQuestion("Where do you live?");
         setSecurityAnswer("");
         setAddress("");
         setDateOfBirth("");
@@ -150,7 +150,7 @@ const Register = () => {
                 <Form.Control.Feedback type="invalid">
                   Invalid password. Must be at least 8 characters long, contain
                   at least one uppercase letter, one lowercase letter, and one
-                  number.
+                  number. (Special characters are currently not allowed)
                 </Form.Control.Feedback>
               </FormGroup>
               <FormGroup>
@@ -204,11 +204,11 @@ const Register = () => {
                   onChange={(e) => setSecurityQuestion(e.target.value)}
                   required
                 >
-                  <option value="Bạn sống ở thành phố nào">
-                    Bạn sống ở thành phố nào
+                  <option value="Where do you live?">
+                    Where do you live?
                   </option>
-                  <option value="Con mèo bạn nuôi màu gì?">
-                    Con mèo bạn nuôi màu gì?
+                  <option value="What is your pet name?">
+                    What is your pet name?
                   </option>
                 </Form.Control>
               </FormGroup>

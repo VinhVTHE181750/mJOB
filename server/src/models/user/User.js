@@ -26,38 +26,49 @@ User.init(
     },
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     phone: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     citizenId: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
 
     // personal info
     firstName: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     lastName: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     dob: {
       type: DataTypes.DATE,
+      allowNull: true,
     },
     securityQuestion: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     answerQuestionSecurityQuestion: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     address: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     avatar: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     bio: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
 
     // actor info
