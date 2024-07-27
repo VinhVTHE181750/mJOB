@@ -119,17 +119,20 @@ const ErrorMessage = styled.p`
 
 const JobDetail = () => {
   const [job, setJob] = useState(null);
+  const [reqs, setReqs] = useState([]);
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const jobId = id;
   const navigate = useNavigate();
+  const requirementId = reqs.map((req) => req.id);
 
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
-        const response = await http.get(`/${jobId}`);
-        setJob(response.data);
+        const response = await http.get(`/jobs/${id}`);
+        setJob(response.data.job);
+
+        setReqs(response.data.requirements);
         setLoading(false);
       } catch (error) {
         setError("Error fetching job details.");
@@ -138,20 +141,15 @@ const JobDetail = () => {
     };
 
     fetchJobDetails();
-  }, [jobId]);
+  }, [id]);
+
   const formatDate = (dateString) => {
     if (!dateString) return "";
-
-    // Nếu đầu vào chứa 'T' hoặc 'Z', loại bỏ phần thời gian
     let dateOnly = dateString.split("T")[0];
-
-    // Nếu chuỗi có dạng 'YYYY-MM-DD', tách và định dạng lại
     if (dateOnly.includes("-")) {
       const [year, month, day] = dateOnly.split("-");
       return `${day}/${month}/${year}`;
     }
-
-    // Nếu không, chuyển đổi thành đối tượng Date và định dạng lại
     const dateObj = new Date(dateOnly);
     return dateObj.toLocaleDateString("vi-VN");
   };
@@ -170,49 +168,49 @@ const JobDetail = () => {
         <FaArrowLeft /> Back
       </BackButton>
       <JobDetailContainer>
-        <Title>{job.job_title}</Title>
+        <Title>{job.title}</Title>
         <Section>
           <Label>Location:</Label>
-          <Text>{job.job_work_location}</Text>
+          <Text>{job.location}</Text>
         </Section>
         <Section>
           <Label>Max Applications:</Label>
-          <Text>{job.job_max_applications}</Text>
+          <Text>{job.maxApplicants}</Text>
         </Section>
         <Section>
-          <Label>Number of recruits:</Label>
-          <Text>{job.job_number_of_recruits}</Text>
+          <Label>Number of Recruits:</Label>
+          <Text>{job.recruitments}</Text>
         </Section>
         <Section>
           <Label>From:</Label>
-          <Text>{formatDate(job.job_start_date)}</Text>
+          <Text>{formatDate(job.startDate)}</Text>
           <Label>To:</Label>
-          <Text>{formatDate(job.job_end_date)}</Text>
+          <Text>{formatDate(job.endDate)}</Text>
         </Section>
         <Section>
           <Label>Requirements:</Label>
-          <Text>{job.job_requirements} </Text>
+          <ul>
+            {reqs && reqs.map((req) => (
+            <Text><li key={req.id}> Type: {req.type}, Require: {req.name}</li></Text>
+            ))}
+          </ul>
         </Section>
         <Section>
           <Label>Compensation:</Label>
-          <Text>Type: {job.job_compensation_type}</Text>
+          <Text>Type: {job.salaryType}</Text>
           <Text>
-            Amount: {job.job_compensation_amounts} {job.job_compensation_currencies} per {job.job_compensation_periods}
+            Amount: {job.salaryAmount} {job.salaryCurrency}
           </Text>
         </Section>
         <Section>
-          <Label>Custom Iterations:</Label>
-          <Text> {job.job_custom_iterations}</Text>
-        </Section>
-        <Section>
           <Label>Description:</Label>
-          <Text>{job.job_description}</Text>
+          <Text>{job.description}</Text>
         </Section>
         <Section>
           <Label>Contact Info:</Label>
-          <Text>{job.job_contact_info}</Text>
+          <Text>{job.contact}</Text>
         </Section>
-        <ApplyButton onClick={() => navigate("/confirm-job", { state: { job } })}>Apply</ApplyButton>
+        <ApplyButton onClick={() => navigate("/confirm-job", { state: { job, requirementId} })}>Apply</ApplyButton>
       </JobDetailContainer>
     </BackgroundContainer>
   );
