@@ -8,7 +8,7 @@ Ticket.init(
     /**
      * Do not use **by** directly unless neccessary.
      * Use **getAuthor()** instead.
-     * 
+     *
      */
     by: {
       type: DataTypes.STRING,
@@ -36,6 +36,18 @@ Ticket.init(
       // true = OPEN, false = CLOSED
       type: DataTypes.BOOLEAN,
       defaultValue: true,
+    },
+    username: {
+      type: DataTypes.STRING,
+    },
+    email: {
+      type: DataTypes.STRING,
+    },
+    phone: {
+      type: DataTypes.STRING,
+    },
+    priority: {
+      type: DataTypes.INTEGER,
     },
   },
   {

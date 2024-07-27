@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import http from '../../functions/httpService';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import http from "../../functions/httpService";
+import { useAuth } from "../../context/UserContext";
 
 const Container = styled.div`
   max-width: 1200px;
@@ -41,15 +42,17 @@ const ViewButton = styled.button`
 `;
 
 const AppliedJobs = ({ searchQuery }) => {
+  const { handleRedirectError } = useAuth();
   const [appliedJobs, setAppliedJobs] = useState([]);
 
   useEffect(() => {
     const fetchAppliedJobs = async () => {
       try {
-        const response = await http.get('/jobs/applied-jobs');
+        const response = await http.get("/jobs/applied-jobs");
         setAppliedJobs(response.data);
       } catch (error) {
-        console.error('Error fetching applied jobs:', error);
+        handleRedirectError("server error");
+        console.error("Error fetching applied jobs:", error);
       }
     };
 
@@ -64,20 +67,20 @@ const AppliedJobs = ({ searchQuery }) => {
 
   const renderCurrency = (currency, amount) => {
     switch (currency) {
-      case 'USD':
+      case "USD":
         return `$${amount}`;
-      case 'VND':
-        return `${Math.floor(amount)} VND`; 
-      case 'EUR':
+      case "VND":
+        return `${Math.floor(amount)} VND`;
+      case "EUR":
         return `€${amount}`;
-      case 'POUND':
+      case "POUND":
         return `£${amount}`;
       default:
         return `${amount} ${currency}`;
     }
   };
 
-  const filteredJobs = appliedJobs.filter(job =>
+  const filteredJobs = appliedJobs.filter((job) =>
     job.job_title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -95,14 +98,23 @@ const AppliedJobs = ({ searchQuery }) => {
           </tr>
         </thead>
         <tbody>
-        {filteredJobs.map((job, index) => (
+          {filteredJobs.map((job, index) => (
             <tr key={job.job_id}>
               <Td>{index + 1}</Td>
               <Td>{job.job_title}</Td>
               <Td>{job.job_status}</Td>
-              <Td>{renderCurrency(job.job_compensation_currency, job.job_compensation_amount)}</Td>
+              <Td>
+                {renderCurrency(
+                  job.job_compensation_currency,
+                  job.job_compensation_amount
+                )}
+              </Td>
               <Td></Td>
-              <Td><ViewButton onClick={() => handleViewClick(job.job_id)}>View</ViewButton></Td>
+              <Td>
+                <ViewButton onClick={() => handleViewClick(job.job_id)}>
+                  View
+                </ViewButton>
+              </Td>
             </tr>
           ))}
         </tbody>
