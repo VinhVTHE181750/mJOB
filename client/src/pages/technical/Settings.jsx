@@ -125,7 +125,9 @@ const Settings = () => {
             <Col md={8} className="mx-auto">
               <Card className="mb-4">
                 <Card.Body>
-                  <Card.Title className="text-center">Change Password</Card.Title>
+                  <Card.Title className="text-center">
+                    Change Password
+                  </Card.Title>
                   <Form onSubmit={handleSubmit}>
                     <p
                       ref={errRef}
@@ -156,8 +158,8 @@ const Settings = () => {
                       />
                       <Form.Control.Feedback type="invalid">
                         Invalid password. Must be at least 8 characters long,
-                        contain at least one uppercase letter, one lowercase letter,
-                        and one number.
+                        contain at least one uppercase letter, one lowercase
+                        letter, and one number.
                       </Form.Control.Feedback>
                     </FormGroup>
                     <FormGroup controlId="confirmPassword" className="mb-3">
@@ -171,7 +173,7 @@ const Settings = () => {
                         isInvalid={!validConfirmPassword}
                       />
                       <Form.Control.Feedback type="invalid">
-                        Passwords do not match.
+                        Password does not match.
                       </Form.Control.Feedback>
                     </FormGroup>
                     <Button
