@@ -89,9 +89,6 @@ const AdminDashboard = () => {
               <Nav.Link href="/users" className="text-dark">
                 <FaUsers className="me-2" /> Users
               </Nav.Link>
-              <Nav.Link href="/admin-faqs" className="text-dark">
-                <FaUsers className="me-2" /> FAQs
-              </Nav.Link>
               <div>
                 <Button variant="danger" href="/logout" className="mt-2">
                   <FaSignOutAlt className="me-2" /> Logout

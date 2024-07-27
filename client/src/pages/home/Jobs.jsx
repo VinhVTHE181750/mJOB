@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Col, Container, Nav, Row } from 'react-bootstrap';
-import { useAuth } from '../../context/UserContext';
 import http from "../../functions/httpService";
 import { FaBriefcase, FaChartBar, FaSignOutAlt, FaUsers } from "react-icons/fa";
 
 const Jobs = () => {
-    const { handleRedirectError } = useAuth();
     const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
@@ -22,7 +20,6 @@ const Jobs = () => {
             setJobs(data);
         } catch (error) {
             console.error('Error fetching jobs:', error);
-            handleRedirectError("server error");
         }
     };
 

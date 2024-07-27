@@ -8,7 +8,7 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const { login } = useLoginQuery();
-  const [cookie, setCookie, removeCookie] = useCookies(["token"]);
+  const [cookie, setCookie, removeCookie] = useCookies(['token'])
 
   const [loggedIn, setLoggedIn] = useState(() => {
     return cookie.token ? true : false;
@@ -34,7 +34,6 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     // Remove 'token' cookie
     if (!loggedIn) return;
-    setLoggedIn(false);
     removeCookie("token");
   };
 
