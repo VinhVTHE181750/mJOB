@@ -42,13 +42,7 @@ User.init(
       type: DataTypes.STRING,
     },
     dob: {
-      type: DataTypes.DATE,
-    },
-    securityQuestion: {
-      type: DataTypes.STRING,
-    },
-    answerQuestionSecurityQuestion: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATEONLY,
     },
     address: {
       type: DataTypes.STRING,
@@ -123,6 +117,7 @@ Balance.belongsTo(User);
 
 User.hasMany(PaymentHistory);
 PaymentHistory.belongsTo(User);
+
 
 //// Profile
 // missing LinkedProfile

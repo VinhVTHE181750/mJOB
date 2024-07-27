@@ -23,18 +23,6 @@ Ticket.init(
       allowNull: false,
       defaultValue: "OTHER",
     },
-    username: {
-      type: DataTypes.STRING,
-    },
-    email: {
-      type: DataTypes.STRING,
-    },
-    phone: {
-      type: DataTypes.STRING,
-    },
-    priority: {
-      type: DataTypes.INTEGER
-    }
   },
   {
     sequelize,
