@@ -4,17 +4,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./ViewProfile.css";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import useWhoAmI from "../../hooks/user/useWhoAmI";
 
 const Profile = () => {
   const [profile, setProfile] = useState({});
-  const whoAmI = useWhoAmI();
   const params = useParams();
-  const userId = whoAmI?.userId ?? params;
-  console.log("userId:", params);
-
+  const userId = params.userId;
   const navigate = useNavigate();
-
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [company, setCompany] = useState("");
@@ -81,9 +76,9 @@ const Profile = () => {
 
   return (
     <Container fluid className="mt-5">
-      <Row key={profile.id}>
-        <Col md={3}>
-          <Card className="profile-card text-center">
+      <Row className="justify-content-center">
+        <Col md={8}>
+          <Card className="profile-card text-center mb-4">
             <Card.Body>
               <div className="profile-header mb-4">
                 <img
@@ -110,8 +105,6 @@ const Profile = () => {
               </div>
             </Card.Body>
           </Card>
-        </Col>
-        <Col md={9}>
           <Card className="profile-card mb-4">
             <Card.Body>
               <h4>Profile Details</h4>
@@ -145,6 +138,10 @@ const Profile = () => {
                     <strong>Address:</strong>{" "}
                     <span id="address">{profile.address}</span>
                   </p>
+                  <p>
+                    <strong>Bio:</strong>{" "}
+                    <span id="bio">{profile.bio}</span>
+                  </p>
                 </Col>
               </Row>
               <Button
@@ -173,6 +170,7 @@ const Profile = () => {
               <p>
                 <strong>Location:</strong> <span id="location">{location}</span>
               </p>
+              
               <p>
                 <strong>Start Date:</strong>{" "}
                 <span id="startDate">{startDate}</span>
@@ -180,10 +178,7 @@ const Profile = () => {
               <p>
                 <strong>End Date:</strong> <span id="endDate">{endDate}</span>
               </p>
-              <p>
-                <strong>Other Information:</strong>{" "}
-                <span id="otherInformation">{otherInformation}</span>
-              </p>
+              
               <Button
                 onClick={handleWorkEdit}
                 variant="primary"

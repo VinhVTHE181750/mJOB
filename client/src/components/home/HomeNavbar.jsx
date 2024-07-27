@@ -4,11 +4,10 @@ import logo from "../../../logo.png";
 import useWhoAmI from '../../hooks/user/useWhoAmI';
 import { useNavigate } from 'react-router-dom';
 import { BsGearFill } from "react-icons/bs";
-import React from 'react';
-
 
 const HomeNavbar = ({ user }) => {
     const { userId, username, role } = useWhoAmI();
+
   return (
     <>
       <Navbar bg="light" expand="lg">
@@ -85,23 +84,11 @@ const HomeNavbar = ({ user }) => {
             >
               Report
             </Nav.Link>
+            
             <Nav.Link
-              href="/draw-balance"
-              className={
-                location.pathname === "/draw-balance"
-                  ? "active nav-fixed"
-                  : "nav-fixed"
-              }
-            >
-              Balance
-            </Nav.Link>
-            <Nav.Link
-              href="/profile"
-              className={
-                location.pathname === "/profile"
-                  ? "active nav-fixed"
-                  : "nav-fixed"
-              }
+
+              href={`/profile/${userId}`}
+              className={location.pathname === "/profile" ? "active nav-fixed" : "nav-fixed"}
             >
               Profile
             </Nav.Link>
