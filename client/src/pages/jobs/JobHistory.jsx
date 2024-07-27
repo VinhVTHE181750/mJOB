@@ -8,12 +8,17 @@ const JobHistory = () => {
   const [activeComponent, setActiveComponent] = useState("history");
   const { fetchMe, userId, username, role } = useWhoAmI();
   const navigate = useNavigate();
-  if (!username) {
+  if (role === "GUEST") {
     navigate('/login');
   }
   const handleMenuClick = (component) => {
     setActiveComponent(component);
   };
+  const user = {
+    id: parseInt(userId),
+    username: username,
+    role: role
+  }
 
   return (
     <>
@@ -21,7 +26,7 @@ const JobHistory = () => {
         <div className="div-2">
           <SideBar onMenuClick={handleMenuClick} />
           <div className="column-2">
-            {activeComponent === "history" && <History />}
+            {activeComponent === "history" && <History user={user}/>}
             {activeComponent !== "history" && <div>Sorry, this service is currently unavailable.</div>}
           </div>
         </div>

@@ -9,43 +9,6 @@ const { getUserJobbyStatus, getUserJobHistory } = require("./jobDashBoard/jobhis
 const { route } = require("./Auth");
 const router = express.Router();
 
-//Select content for DashBoard
-const SELECT_USER_COMPLETED_JOB = `SELECT COUNT(*) AS total
-  FROM job_history
-  WHERE job_status = 'done' AND user_id = @userId;`;
-
-const SELECT_USER_APPLIED_JOB = `SELECT COUNT(*) AS total
-  FROM job_history
-  WHERE job_status = 'pending' AND user_id = @userId;`;
-
-const SELECT_USER_CREATED_JOB = `Select Count(*) AS total from job j where j.user_id= @userId;`;
-
-const SELECT_USER_COMPLETED_JOBLIST = `Select Top 3 j.job_id,u.username,j.job_title,j.job_tags,j.job_work_location,jh.job_status from job_history jh
-join  job j on j.job_id=jh.job_id 
-join auth u on j.user_id=u.user_id
-where jh.job_status='done' and jh.user_id= @userId;`
-
-const SELECT_USER_APPLIED_JOBLIST = `Select Top 3 j.job_id,u.username,j.job_title,j.job_tags,j.job_work_location,jh.job_status from job_history jh
-join  job j on j.job_id=jh.job_id 
-join auth u on j.user_id=u.user_id
-where jh.job_status='pending' and jh.user_id= @userId;`
-
-
-//History Page
-const SELECT_USER_JOB_HISTORY = `Select 
-j.job_id,u.username,j.job_title,j.job_tags,j.job_work_location,jh.job_status,jc.job_compensation_amount,jc.job_compensation_currency,jc.job_compensation_type
-from job_history jh
-join  job j on j.job_id=jh.job_id 
-join auth u on j.user_id=u.user_id
-join job_compensation jc on j.job_id = jc.job_id 
-where jh.user_id= @userId;`;
-
-const SELECT_USER_JOBLIST_BY_STATUS = `Select j.job_id,u.username,j.job_title,j.job_tags,j.job_work_location,jh.job_status from job_history jh
-join  job j on j.job_id=jh.job_id 
-join auth u on j.user_id=u.user_id
-where jh.user_id = @userId AND jh.job_status = @jobStatus`;
-
-const SELECT_LIST_OF_STATUS = `select distinct job_status from job_history jh join auth u on jh.user_id=u.user_id where u.user_id= @userId;`;
 router.get("/history", getUserJobHistory);
 // router.get("/applied",getUserAppliedJob);
 // router.get("/created",getUserCreatedJob);
@@ -64,9 +27,9 @@ router.get("/completed/:userId", async (req, res) => {
       where: { UserId: userId, status: "COMPLETED" }
     });
 
-    res.status(200).json({ totalCompletedJob });
+    return res.status(200).json({ totalCompletedJob });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -83,9 +46,9 @@ router.get("/applied/:userId", async (req, res) => {
         }
       }
     });
-    res.status(200).json({ totalAppliedJob });
+    return res.status(200).json({ totalAppliedJob });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -97,9 +60,9 @@ router.get("/created/:userId", async (req, res) => {
     const totalJob = await Job.count({
       where: { UserId: userId }
     });
-    res.status(200).json({ totalJob });
+    return res.status(200).json({ totalJob });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 }
 );
@@ -150,21 +113,23 @@ router.get("/completedlist/:userId", async (req, res) => {
       ]
 
     });
-    // if (jobHistory.length > 0) {
-    res.status(200).json(jobHistory);
+    
+    return res.status(200).json(jobHistory);
     // } else {
     //     res.status(200).json({ message: 'No job found' });
     // }
     // res.status(200).json(jobHistory);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 });
 
 
 //Select user applied joblist
 router.get("/appliedlist/:userId", async (req, res) => {
+  console.log("After");
   try {
+    console.log("After 2");
     const { userId } = req.params;
     const jobHistory = await Application.findAll({
       where: {
@@ -205,10 +170,10 @@ router.get("/appliedlist/:userId", async (req, res) => {
       ]
 
     });
-
-    res.status(200).json(jobHistory);
+    console.log("3");    
+    return res.status(200).json(jobHistory);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 });
 
