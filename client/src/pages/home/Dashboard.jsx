@@ -11,13 +11,29 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { FaUser, FaUsers, FaBriefcase, FaSignOutAlt, FaChartBar } from "react-icons/fa";
+import {
+  FaUser,
+  FaUsers,
+  FaBriefcase,
+  FaSignOutAlt,
+  FaChartBar,
+} from "react-icons/fa";
 import useCountUser from "../../hooks/useCountUser.js";
+import useCountJob from "../../hooks/useCountJob.js";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const AdminDashboard = () => {
   const { count: countUsers } = useCountUser();
+  const { count: countJobs } = useCountJob();
+
   const activeUsers = 0;
   const guests = 0;
 
@@ -26,7 +42,7 @@ const AdminDashboard = () => {
     datasets: [
       {
         label: "User Statistics",
-        data: [countUsers, activeUsers, guests],
+        data: [countUsers, activeUsers, countJobs],
         backgroundColor: ["rgba(75, 192, 192, 0.2)"],
         borderColor: ["rgba(75, 192, 192, 1)"],
         borderWidth: 1,
@@ -109,7 +125,7 @@ const AdminDashboard = () => {
                   <Card className="text-white bg-success text-center p-4">
                     <Card.Body>
                       <Card.Title>
-                        <FaBriefcase className="me-2" /> 0
+                        <FaBriefcase className="me-2" /> {countJobs}
                       </Card.Title>
                       <Card.Text>Total Jobs</Card.Text>
                     </Card.Body>

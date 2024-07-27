@@ -7,6 +7,7 @@ const { submitWorkExp } = require("./user/WorkExperience");
 const User = require("../models/user/User");
 const Auth = require("../models/user/Auth");
 const Hasher = require("../utils/Hasher");
+const Job = require("../models/job/Job");
 
 // router.get("/:id", getUser);
 router.post("/work-experience", submitWorkExp);
@@ -92,5 +93,5 @@ router.get('/:id', async (req, res) => {
     }
   });
 
-
+  
 module.exports = router;
