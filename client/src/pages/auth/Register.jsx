@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Container, Form, FormGroup } from "react-bootstrap";
+import { Button, Container, Form, FormGroup } from "react-bootstrap";
 import axios from "axios";
+import { useAuth } from "../../context/UserContext";
 
 // Regular expressions for validation
 const REGEX_USERNAME = /^[A-Za-z][A-Za-z0-9_]{8,29}$/;
@@ -10,11 +11,18 @@ const REGISTER_API = "http://localhost:8000/api/auth/register";
 const REGEX_PHONE = /^\d{9,11}$/;
 
 const Register = () => {
+  const { handleRedirectError } = useAuth();
   const [user, setUser] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [pwd, setPwd] = useState("");
   const [matchPwd, setMatchPwd] = useState("");
+  const [securityQuestion, setSecurityQuestion] = useState(
+    "Bạn sống ở thành phố nào"
+  );
+  const [securityAnswer, setSecurityAnswer] = useState("");
+  const [address, setAddress] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
   const [validName, setValidName] = useState(false);
   const [validEmail, setValidEmail] = useState(false);
   const [validPhone, setValidPhone] = useState(false);
@@ -24,33 +32,29 @@ const Register = () => {
   const [success, setSuccess] = useState(false);
   const errRef = useRef();
 
-  // Effect to validate username
-  
   useEffect(() => {
     setValidEmail(REGEX_EMAIL.test(email));
   }, [email]);
-  
+
   useEffect(() => {
     setValidPhone(REGEX_PHONE.test(phone));
   }, [phone]);
-  
+
   useEffect(() => {
     setValidName(REGEX_USERNAME.test(user));
   }, [user]);
-  // Effect to validate password and match
+
   useEffect(() => {
     setValidPwd(REGEX_PASSWORD.test(pwd));
     setValidMatch(pwd === matchPwd);
   }, [pwd, matchPwd]);
 
-  // Effect to clear error message on input change
   useEffect(() => {
     setErrMsg("");
   }, [user, pwd, matchPwd, email, phone]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Client-side validation
     const v1 = REGEX_USERNAME.test(user);
     const v2 = REGEX_PASSWORD.test(pwd);
     if (!v1 || !v2) {
@@ -60,15 +64,31 @@ const Register = () => {
     try {
       const response = await axios.post(
         REGISTER_API,
-        JSON.stringify({ username: user, password: pwd, email, phone }),
+        JSON.stringify({
+          username: user,
+          password: pwd,
+          email,
+          phone,
+          securityQuestion,
+          securityAnswer,
+          address,
+          dateOfBirth,
+        }),
         { headers: { "Content-Type": "application/json" } }
       );
-      setSuccess(true);
-      setUser("");
-      setPwd("");
-      setMatchPwd("");
-      setEmail("");
-      setPhone("");
+      if (response.status === 201) {
+        setSuccess(true);
+        alert("You need confirm email to active account");
+        setUser("");
+        setPwd("");
+        setMatchPwd("");
+        setEmail("");
+        setPhone("");
+        setSecurityQuestion("Bạn sống ở thành phố nào");
+        setSecurityAnswer("");
+        setAddress("");
+        setDateOfBirth("");
+      }
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No Server Response");
@@ -77,6 +97,7 @@ const Register = () => {
       } else {
         setErrMsg("Registration Failed");
       }
+      handleRedirectError("server error");
       errRef.current.focus();
     }
   };
@@ -86,10 +107,9 @@ const Register = () => {
       <Container>
         {success ? (
           <section>
-            <h1>Registration Successful!</h1>
-            <p>
-              <a href="/login">Sign In</a>
-            </p>
+            <h1>
+              Registration Successful! Check your email for active the account
+            </h1>
           </section>
         ) : (
           <section>
@@ -147,7 +167,6 @@ const Register = () => {
                   Passwords do not match.
                 </Form.Control.Feedback>
               </FormGroup>
-
               <FormGroup>
                 <Form.Label>Email</Form.Label>
                 <Form.Control
@@ -162,7 +181,6 @@ const Register = () => {
                   Invalid Email
                 </Form.Control.Feedback>
               </FormGroup>
-
               <FormGroup>
                 <Form.Label>Phone</Form.Label>
                 <Form.Control
@@ -177,7 +195,55 @@ const Register = () => {
                   Invalid Phone
                 </Form.Control.Feedback>
               </FormGroup>
-              <button
+              <FormGroup>
+                <Form.Label>Security Question</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="securityQuestion"
+                  value={securityQuestion}
+                  onChange={(e) => setSecurityQuestion(e.target.value)}
+                  required
+                >
+                  <option value="Bạn sống ở thành phố nào">
+                    Bạn sống ở thành phố nào
+                  </option>
+                  <option value="Con mèo bạn nuôi màu gì?">
+                    Con mèo bạn nuôi màu gì?
+                  </option>
+                </Form.Control>
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Security Answer</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="securityAnswer"
+                  value={securityAnswer}
+                  onChange={(e) => setSecurityAnswer(e.target.value)}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Address</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Date of Birth</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="dateOfBirth"
+                  value={dateOfBirth}
+                  onChange={(e) => setDateOfBirth(e.target.value)}
+                  required
+                />
+              </FormGroup>
+              <Button
+                className="mt-3"
                 type="submit"
                 disabled={
                   !validName ||
@@ -188,7 +254,7 @@ const Register = () => {
                 }
               >
                 Register
-              </button>
+              </Button>
             </Form>
           </section>
         )}
