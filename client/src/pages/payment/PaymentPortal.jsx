@@ -69,8 +69,8 @@ const PaymentPortal = () => {
               <div style={{ fontSize: 40 }}>
                 <Balance
                   amount={amount}
-                  currency="VND"
-                  locale="vi-VN"
+                  currency="USD"
+                  locale="en-US"
                 />
                 <Col className="d-flex gap-2 gap-sm-2">
                   <Button
