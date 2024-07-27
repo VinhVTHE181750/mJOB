@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Form, Button , Row, Col, Container, Alert} from 'react-bootstrap';
+import {useBalance} from '../../hooks/payment/useBalance';
 import useBalancebyId from '../../hooks/payment/useBalancebyID';
 import useUpdateUserBalance from '../../hooks/payment/useUpdateUserBalance';
 import useInsertPaymentHistory from '../../hooks/payment/useInsertPaymentHistory';
@@ -7,29 +8,41 @@ import useCheckUserTranferTo from '../../hooks/payment/useCheckUserTranferTo';
 import useTranfer from '../../hooks/payment/useTranfer';
 import { useNavigate } from 'react-router-dom';
 import Transfer from '../../components/payment/Transfer';
+import useWhoAmI from '../../hooks/user/useWhoAmI';
+
 // import useBalance from '../../hooks/payment/useBalance';
 
 const TransferMoney = () => {
+      const { fetchMe, userId, username, role } = useWhoAmI();
+    if(userId == -1){
+        navigate('/login');
+    }
   const navigate = useNavigate();
-  const [fromUserId, setFromUserId] = useState(''); // Assume you will set this properly
   const [toUserId, setToUserId] = useState('');
   const [amount, setAmount] = useState(0);
-  const [balance, setBalance] = useState(0);
-  const [message, setMessage] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
   const [transferError, setTransferError] = useState(null);
   const [transferSuccess, setTransferSuccess] = useState(false);
-  const [toUserName, setToUserName] = useState('');
 
-  const { info: fromUserInfo, loading: fromUserLoading, error: fromUserError } = useBalancebyId(1);
-  const { info: toUserInfo, loading: toUserLoading, error: toUserError } = useBalancebyId(2);
+  const { info: fromUserInfo, loading: fromUserLoading, error: fromUserError } = useBalancebyId(userId);
+  const { balance: fromUserBalance, loading: fromUserBalanceLoading, error: fromUserBalanceError } = useBalance();
+  const { info: toUserInfo, loading: toUserLoading, error: toUserError, fetchToUserInfo } = useCheckUserTranferTo(2);
   const { loading: updateLoading, error: updateError, success: updateSuccess, updateUserBalance } = useUpdateUserBalance();
-  const { loading, error, success, insertPaymentHistory } = useInsertPaymentHistory();
-  const { tranfer } = useTranfer();
-  
+  // const { loading, error, success, insertPaymentHistory } = useInsertPaymentHistory();
+  // const { tranfer } = useTranfer();
+  const [transferData, setTransferData] = useState(false);
+  useEffect(() => {
+    if (isVerified && !transferData) {
+      setTransferData(true);
+      fetchToUserInfo(toUserId);
+    }
+  }, [isVerified, toUserId, fetchToUserInfo]);
+
   const handleVerify = () => {
     setIsVerified(true);
   };
+
+  console.log(fromUserInfo, toUserInfo);
 
   const handleTransfer = async () => {
     setTransferError(null);
@@ -40,23 +53,24 @@ const TransferMoney = () => {
       return;
     }
 
-    const paymentData = {
-      from: '1',
-      to: '2',
-      amount: amount,
-      onPlatform: true,
-      action: 'Transfer',
-      status: 'Success',
-      createdAt: new Date().toISOString(),
-      userId: fromUserInfo.user_id,
-    };
+    // const paymentData = {
+    //   from: '1',
+    //   to: '2',
+    //   amount: amount,
+    //   onPlatform: true,
+    //   action: 'Transfer',
+    //   status: 'Success',
+    //   createdAt: new Date().toISOString(),
+    //   userId: fromUserInfo.user_id,
+    // };
 
     // console.log(paymentData);
     
     try {
-      await updateUserBalance(fromUserInfo.user_id, (fromUserInfo.balance - amount));
-      await updateUserBalance(toUserInfo.user_id, toUserInfo.balance + amount);
-      await insertPaymentHistory(paymentData);
+      await updateUserBalance(userId, (-1 * amount));
+      await updateUserBalance(toUserInfo.id, amount);
+
+      // await insertPaymentHistory(paymentData);
       alert('Transfer successful.');
       location.reload();
     } catch (error) {
@@ -78,10 +92,14 @@ const TransferMoney = () => {
   //   }
   // }
   const handleSubmit = (e) => {
+    console.log("Submitted");
     e.preventDefault();
     handleTransfer(toUserInfo.username, amount);
   };
 
+  // const handlecheckUser = (e) => {
+  //   if(e.)
+  // }
   return (
     <div>
       {/* <Transfer /> */}
@@ -92,14 +110,14 @@ const TransferMoney = () => {
           <h3>From</h3>
           <Card className="mb-4">
             <Card.Body>
-              <Card.Text><strong>User ID:</strong> {fromUserInfo?.user_id}</Card.Text>
-              <Card.Text><strong>Username:</strong> {fromUserInfo?.username}</Card.Text>
+              <Card.Text><strong>User ID:</strong> {userId}</Card.Text>
+              <Card.Text><strong>Username:</strong> {username}</Card.Text>
               <Card.Text>
-                {fromUserLoading && <p>Loading balance...</p>}
+                {/* {fromUserLoading && <p>Loading balance...</p>}
                 {fromUserError && <p className="text-danger">Error: {fromUserError.message}</p>}
                 {!fromUserLoading && !fromUserError && (
-                  <p><strong>Balance:</strong> {fromUserInfo?.balance}</p>
-                )}
+                )} */}
+                  <p><strong>Balance:</strong> {fromUserBalance}</p>
               </Card.Text>
             </Card.Body>
           </Card>
@@ -112,6 +130,8 @@ const TransferMoney = () => {
                   type="text"
                   value={toUserId}
                   onChange={(e) => setToUserId(e.target.value)}
+                                    // onChange={(e) => setToUserId(e.target.value)}
+
                   required
                 />
               </Form.Group>
@@ -136,11 +156,11 @@ const TransferMoney = () => {
                 </Form.Group>
                 
               <h3 className="mt-3">Transfer To</h3>
-              {toUserInfo?.user_id && (
+              {toUserInfo?.id && (
                 <Card className="mb-4">
                   <Card.Body>
                     <Card.Title></Card.Title>
-                    <Card.Text><strong>ID:</strong> {toUserInfo.user_id}</Card.Text>
+                    <Card.Text><strong>ID:</strong> {toUserInfo.id}</Card.Text>
                     <Card.Text><strong>Username:</strong> {toUserInfo.username}</Card.Text>
                   </Card.Body>
                 </Card>

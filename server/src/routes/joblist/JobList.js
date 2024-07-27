@@ -1,11 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../../models/user/User");
-const PostCategory = require("../../models/forum/post/PostCategory");
-const Post = require("../../models/forum/post/Post");
 const Job = require("../../models/job/Job");
-const JobHistory = require("../../models/job/JobHistory");
-const Application = require("../../models/job/Application");
 const JobMetric = require("../../models/job/JobMetric");
 const { log } = require("../../utils/Logger");
 const io = require("../../../io");
@@ -16,6 +12,18 @@ const getJobListbyDefaut = async (req, res) => {
             where: {
                 status: "ACTIVE",
             },
+            include: {
+              model: User,
+              attributes: ['username']
+            }
+        });
+        // Calculate timeleft for each job
+        const currentTime = new Date();
+        jobs.forEach(job => {
+          const endDate = new Date(job.endDate);
+          const timeDifference = endDate.getTime() - currentTime.getTime();
+          const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24)); // Convert milliseconds to days
+          job.dataValues.timeleft = daysLeft;
         });
         res.status(200).json(jobs);
     } catch (err) {
@@ -26,11 +34,27 @@ const getJobListbyDefaut = async (req, res) => {
 const getJobListbyView = async (req, res) => {
     try {
         const jobs = await Job.findAll({
-          include: {
+          where: {
+            status: "ACTIVE",
+        },
+          include: [{
             model: JobMetric,
             attributes: ['view']
           },
-          order: [[{ model: JobMetric }, 'view', 'DESC']]
+          {
+            model: User,
+            attributes: ['username']
+          }
+        ],
+          order: [[{ model: JobMetric }, 'view', 'DESC']],
+          
+        });
+        const currentTime = new Date();
+        jobs.forEach(job => {
+          const endDate = new Date(job.endDate);
+          const timeDifference = endDate.getTime() - currentTime.getTime();
+          const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24)); // Convert milliseconds to days
+          job.dataValues.timeleft = daysLeft;
         });
         res.json(jobs);
       } catch (error) {
@@ -42,7 +66,23 @@ const getJobListbyView = async (req, res) => {
 const getJobListbyDate= async (req, res) => {
     try {
         const jobs = await Job.findAll({
+          where: {
+            status: "ACTIVE",
+        },
+        include: [
+        {
+          model: User,
+          attributes: ['username']
+        }
+      ],
           order: [['startDate', 'DESC']]
+        });
+        const currentTime = new Date();
+        jobs.forEach(job => {
+          const endDate = new Date(job.endDate);
+          const timeDifference = endDate.getTime() - currentTime.getTime();
+          const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24)); // Convert milliseconds to days
+          job.dataValues.timeleft = daysLeft;
         });
         res.json(jobs);
       } catch (error) {

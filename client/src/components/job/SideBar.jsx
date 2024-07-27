@@ -21,15 +21,15 @@ const Sidebar = ({ onMenuClick }) => {
       <hr />
       <div className="sidebar-menu">
       <a
-          href="#"
-          className={`menu-item ${selectedMenu === 'dashboard' ? 'selected' : ''}`}
+          href="/myjobs"
+          className={`menu-item ${location.pathname === '/myjobs' ? 'selected' : ''}`}
           onClick={() => handleMenuClick('dashboard')}
         >
           Dashboard
         </a>
         <a
-          href="#"
-          className={`menu-item ${selectedMenu === 'jobHistory' ? 'selected' : ''}`}
+          href="/myjobs/history"
+          className={`menu-item ${location.pathname === '/myjobs/history' ? 'selected' : ''}`}
           onClick={() => handleMenuClick('jobHistory')}
         >
           Job History

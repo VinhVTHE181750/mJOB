@@ -1,5 +1,9 @@
 const express = require("express");
 const db = require("../models/DBContext");
+const Application = require("../models/job/Application");
+const Job = require("../models/job/Job");
+const User = require("../models/user/User");
+const { getOngoingJob, getAppliedJob, getRelatedJob, getNewPost, getHotPosts } = require("./home/HomeUser");
 
 const router = express.Router();
 
@@ -94,47 +98,66 @@ ORDER BY
 
 
 // Route to fetch top 3 newest posts
-router.get('/newpost', async (req, res) => {
-  try {
-    const pool = await db.poolPromise;
-    const result = await pool.request().query(SELECT_3NEW_POST);
-    res.json(result.recordset);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Error occurred", error: err });
-  }
-  });
+// router.get('/newpost', async (req, res) => {
+//   try {
+//     const pool = await db.poolPromise;
+//     const result = await pool.request().query(SELECT_3NEW_POST);
+//     res.json(result.recordset);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ message: "Error occurred", error: err });
+//   }
+//   });
+router.get('/newpost', getNewPost);
+router.get('/hotpost', getHotPosts);
+// router.get('/ongoing', getOngoingJob);
+// router.get('/applied', getAppliedJob);
+// router.get('/related', getRelatedJob);
 
 
 
-// Route to fetch top 3 hottest posts
-router.get('/hotpost', async (req, res) => {
-  try {
-    const pool = await db.poolPromise;
-    const result = await pool.request().query(SELECT_3HOT_POST);
-    res.json(result.recordset);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Error occurred", error: err });
-  }
-});
+
+
+
+
 
 // Route to fetch user's ongoing jobs
 router.get('/ongoing/:userId',  async (req, res) => {
 try {
   const { userId } = req.params;
 
-  const pool = await db.poolPromise;
-  const result = await pool
-    .request()
-    .input("userId", db.sql.Int, userId)
-    .query(SELECT_USER_CURRENT_ONGOING_JOB);
+  const jobs = await Application.findAll({
+    where: { UserId: userId, status: "ONGOING" },
+    include: [
+      { model: Job,
+        attributes: [
+          'id',
+          'title',
+          'description',
+          'location',
+          'tags',
+          'maxApplicants',
+          'recruitments',
+          'approvalMethod',
+          'contact',
+          'startDate',
+          'endDate',
+          'salary',
+          'salaryType',
+          'salaryCurrency',
+          'status' // Assuming you want to include job status
+        ],
+        include: [
+          { model: User,
+            attributes: ['username']
+          }
+        ]
+      },
+     ],
+    limit: 4   
+  });
+  res.json(jobs);
 
-  if (result.recordset.length === 0) {
-    res.status(404).json({ message: "Data not found" });
-  } else {
-    res.json(result.recordset);
-  }
 } catch (err) {
   console.log(err);
   res.status(500).json({ message: "Error occurred", error: err });
@@ -146,17 +169,37 @@ router.get('/pending/:userId', async (req, res) => {
 try {
   const { userId } = req.params;
 
-  const pool = await db.poolPromise;
-  const result = await pool
-    .request()
-    .input("userId", db.sql.Int, userId)
-    .query(SELECT_USER_APPLIED_JOB);
-
-  if (result.recordset.length === 0) {
-    res.status(404).json({ message: "Data not found" });
-  } else {
-    res.json(result.recordset);
-  }
+ const jobs = await Application.findAll({
+    where: { UserId: userId, status: "PENDING" },
+    include: [
+      { model: Job,
+        attributes: [
+          'id',
+          'title',
+          'description',
+          'location',
+          'tags',
+          'maxApplicants',
+          'recruitments',
+          'approvalMethod',
+          'contact',
+          'startDate',
+          'endDate',
+          'salary',
+          'salaryType',
+          'salaryCurrency',
+          'status' // Assuming you want to include job status
+        ],
+        include: [
+          {
+            model: User,
+            attributes: ['username'],
+          }
+        ]
+       }],
+    limit: 4   
+  });
+  res.json(jobs);
 } catch (err) {
   console.log(err);
   res.status(500).json({ message: "Error occurred", error: err });

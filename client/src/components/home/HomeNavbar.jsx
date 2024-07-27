@@ -1,13 +1,13 @@
 import { Button, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import "../../assets/css/Navbar.css";
 import logo from "../../../logo.png";
+import useWhoAmI from '../../hooks/user/useWhoAmI';
+import { useNavigate } from 'react-router-dom';
 import { BsGearFill } from "react-icons/bs";
-import { useAuth } from "../../context/UserContext";
 
 const HomeNavbar = ({ user }) => {
-  //   const currentuser = null;
-  const { userInformation } = useAuth();
-  const userId  = userInformation.id
+    const { userId, username, role } = useWhoAmI();
+
   return (
     <>
       <Navbar
@@ -61,10 +61,10 @@ const HomeNavbar = ({ user }) => {
             </Nav.Link>
             {/* </div> */}
           </Nav>
-          {location.pathname !== "/" && location.pathname !== "/login" ? (
+          {userId!= -1 ? (
             <Nav className="container container-navbar d-flex justify-content-end">
               <NavDropdown
-                title="Options"
+                title={`${username}`}
                 id="basic-nav-dropdown"
               >
                 <NavDropdown.Item href="/profile">User Profile</NavDropdown.Item>
