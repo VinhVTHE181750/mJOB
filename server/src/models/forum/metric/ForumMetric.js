@@ -6,13 +6,19 @@ class ForumMetric extends Model {}
 ForumMetric.init(
   {
     UserId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        references: {
-            model: "Users",
-            key: "id",
-        },
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+    },
+    day: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      primaryKey: true,
+      defaultValue: new Date().toISOString().split("T")[0],
     },
     postCreated: {
       type: DataTypes.INTEGER,
