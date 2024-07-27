@@ -103,7 +103,7 @@ function App() {
                 <Route exact path="/reports" element={<ReportPage />} />
                 <Route
                   exact
-                  path="/payment/withdraw"
+                  path="/draw-balance"
                   element={<DrawBalacePage />}
                 />
                 {/* HOME ROUTES */}
@@ -147,7 +147,7 @@ function App() {
                 {/* PAYMENT ROUTES */}
                 <Route exact path="/payment" element={<PaymentPortal />} />
 
-                <Route exact path="/payment/deposit" element={<Deposit />} />
+                <Route exact path="/deposit" element={<Deposit />} />
 
                 <Route
                   exact
@@ -160,7 +160,7 @@ function App() {
                   path="/payment-history"
                   element={<PaymentHistory />}
                 />
-                <Route exact path="/payment/transfer" element={<TransferMoney />} />
+                <Route exact path="/transfer" element={<TransferMoney />} />
 
                 {/* USERS ROUTES */}
                 <Route
