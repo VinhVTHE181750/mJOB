@@ -98,7 +98,7 @@ const EnlistJob = () => {
         onSubmit={handleSubmit}
       >
         <NavigateButton
-          path="/market"
+          path="/myjobs"
           text={"Back"}
           icon={<BsArrowLeft />}
         />

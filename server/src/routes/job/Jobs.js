@@ -456,6 +456,28 @@ router.post("apply-job", async (req, res) => {
   return res.status(200).json(application);
 });
 
+router.get('/job-requirements/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const requirements = await Requirement.findAll({
+      include: [{
+        model: RequirementStorage,
+        as: 'RequirementStorages', // Ensure this alias matches your association
+        where: { JobId: id }, // Assuming you have a JobId in your RequirementStorage model
+      }],
+    });
+
+    const requirementStorages = requirements.flatMap(req => req.RequirementStorages);
+
+    res.status(200).json(requirementStorages);
+  } catch (error) {
+    console.error('Error fetching requirement storages:', error);
+    res.status(500).json({ message: 'Failed to fetch requirement storages' });
+  }
+});
+
+
 router.get("/applied-jobs", async (req, res) => {
   // log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;

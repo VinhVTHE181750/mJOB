@@ -125,8 +125,8 @@ const EditJob = () => {
             <h2 className="label">Compensation Amount:</h2>
             <input
               className="input"
-              name="salaryAmount"
-              value={job.salaryAmount}
+              name="salary"
+              value={job.salary}
               onChange={handleInputChange}
             />
           </div>
