@@ -214,7 +214,7 @@ function App() {
 
                 <Route
                   exact
-                  path="/deposit"
+                  path="payment/deposit"
                   element={<Deposit />}
                 />
 
@@ -231,7 +231,7 @@ function App() {
                 />
                 <Route
                   exact
-                  path="/transfer"
+                  path="payment/transfer"
                   element={<TransferMoney />}
                 />
 

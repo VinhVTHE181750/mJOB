@@ -22,8 +22,8 @@ function HomeCarousel() {
     <div className='carousel-container'>
       <Carousel data-bs-theme="dark" className='Carousel'>        
         {contents.map((marketcontent) => (
-        <Carousel.Item className='content-box'>  
-        <Card className="post-card shadow-sm" key={marketcontent.id} style={{border: '2px solid darkgrey', backgroundImage: `url(${marketcontent.banner})`}}>          
+        <Carousel.Item className='shadow-sm'>  
+        <Card className="post-card shadow-sm" key={marketcontent.id} style={{backgroundImage: `url(${marketcontent.banner})`}}>          
           <Card.Body style={{height: '200px'}}>
             <Card.Title as="h2" style={{ color: "blue" }}>
               {marketcontent.title}

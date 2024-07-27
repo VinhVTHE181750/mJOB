@@ -158,6 +158,7 @@ router.post("/", async (req, res) => {
     salaryType: job_compensation_type,
     salaryCurrency: currency,
     status: status || "ACTIVE",
+    UserId: req.userId,
   });
   try {
     const job = await newJob.save();
