@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import http from "../functions/httpService";
 
 
 
-const useUserAppliedJobList = (userId) => {
+const useUserAppliedJobList = () => {
   const [jobList, setJobList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchJobList = async () => {
+  
+    console.log("1");
+    const fetchJobList = async (userId) => {
       try {
         const url = `/myjobs/appliedlist/${userId}`;
         const response = await http.get(url);
+        console.log("2");
+
         setJobList(response.data);
         setLoading(false);
       } catch (error) {
@@ -22,11 +25,13 @@ const useUserAppliedJobList = (userId) => {
       }
     };
 
-    if (userId) {
-      fetchJobList();
-    }
-  }, []);
-  return { jobList, loading, error };
+    // if (userId) {
+    //   fetchJobList();
+    //   console.log("3");
+
+    // }
+  
+  return { jobList, loading, error, fetchJobList };
 };
 
 export default useUserAppliedJobList;

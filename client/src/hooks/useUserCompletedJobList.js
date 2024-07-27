@@ -18,13 +18,6 @@ const useUserCompletedJobList = (userId) => {
         setJobs(response.data);
         setLoading(false);
       } catch (error) {
-        navigate("/error", {
-          state: {
-            message: error.response
-              ? error.response.data.message
-              : "An error occurred",
-          },
-        });
         setError(error);
         setLoading(false);
       }
@@ -38,5 +31,6 @@ const useUserCompletedJobList = (userId) => {
   // console.log(jobs);
   return { jobs, loading, error };
 };
+
 
 export default useUserCompletedJobList;
