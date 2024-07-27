@@ -180,15 +180,16 @@ function DrawBalacePage() {
 
           <Row>
             <Col>
-              <Form.Group controlId="formAmount">
-                <Form.Label>Amount to Withdraw</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  required
-                />
-              </Form.Group>
+            <Form.Group controlId="formAmount">
+      <Form.Label>Amount to Withdraw</Form.Label>
+      <Form.Control
+        type="number"
+        value={amount}
+        onChange={(e) => setAmount(Math.max(0, e.target.value))}
+        min="0"
+        required
+      />
+    </Form.Group>
             </Col>
             <Col>
               <Form.Group controlId="formPassword">
