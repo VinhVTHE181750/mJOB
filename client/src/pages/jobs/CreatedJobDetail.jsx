@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import http from "../../functions/httpService";
-import { useAuth } from "../../context/UserContext";
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import http from '../../functions/httpService';
 
 const Container = styled.div`
   max-width: 800px;
@@ -27,8 +26,7 @@ const Table = styled.table`
   border-collapse: collapse;
   margin-top: 20px;
 
-  th,
-  td {
+  th, td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
@@ -54,7 +52,6 @@ const BackButton = styled.a`
 `;
 
 const CreatedJobDetail = () => {
-  const { handleRedirectError } = useAuth();
   const { job_id } = useParams();
   const [jobDetails, setJobDetails] = useState(null);
 
@@ -64,8 +61,7 @@ const CreatedJobDetail = () => {
         const response = await http.get(`/created-job-detail/${job_id}`);
         setJobDetails(response.data);
       } catch (error) {
-        handleRedirectError("server error");
-        console.error("Error fetching job details:", error);
+        console.error('Error fetching job details:', error);
       }
     };
 
@@ -81,18 +77,15 @@ const CreatedJobDetail = () => {
       <BackButton href="/active-job">Back</BackButton>
       <Heading>Manage: {jobDetails.job_title}</Heading>
       <div>
-        <Label>Created by:</Label>{" "}
-        {jobDetails.user_id === 1 ? "You" : jobDetails.creator_name}
+        <Label>Created by:</Label> {jobDetails.user_id === 1 ? 'You' : jobDetails.creator_name}
       </div>
       <div>
         <Label>Payment period:</Label> {jobDetails.job_compensation_type}
       </div>
       <div>
-        <Label>Amount:</Label> {jobDetails.job_compensation_amount}{" "}
-        {jobDetails.job_compensation_currency} /{" "}
-        {jobDetails.job_compensation_period}
+        <Label>Amount:</Label> {jobDetails.job_compensation_amount} {jobDetails.job_compensation_currency} / {jobDetails.job_compensation_period}
       </div>
-
+      
       <Table>
         <thead>
           <tr>

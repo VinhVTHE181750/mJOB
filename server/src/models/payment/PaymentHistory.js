@@ -30,9 +30,6 @@ PaymentHistory.init(
       type: DataTypes.ENUM("SUCCESS", "FAILED", "PAUSED"),
       allowNull: false,
     },
-    reason: {
-      type: DataTypes.TEXT,
-    },
   },
   {
     sequelize,

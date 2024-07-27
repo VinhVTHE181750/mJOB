@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import backgroundImg from "../../assets/img/apply.jpg";
-import http from "../../functions/httpService";
-import { useAuth } from "../../context/UserContext";
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import backgroundImg from '../../assets/img/apply.jpg';
+import http from '../../functions/httpService';
 
 const PageContainer = styled.div`
   background-image: url(${backgroundImg});
@@ -32,7 +31,7 @@ const RequirementsContainer = styled.div`
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   max-width: 800px;
   margin: 50px auto;
-  font-family: "Arial", sans-serif;
+  font-family: 'Arial', sans-serif;
   position: relative;
   z-index: 1;
 `;
@@ -108,7 +107,6 @@ const ApplyButton = styled.button`
 `;
 
 const ApplyJob = () => {
-  const { handleRedirectError } = useAuth();
   const [requirements, setRequirements] = useState([]);
   const { job_id } = useParams();
   const user_id = 1; // Replace this with the actual user ID, perhaps from context or props
@@ -119,8 +117,7 @@ const ApplyJob = () => {
         const response = await http.get(`/job-requirements/${job_id}`);
         setRequirements(response.data);
       } catch (error) {
-        console.error("Error fetching job requirements:", error);
-        handleRedirectError("server error");
+        console.error('Error fetching job requirements:', error);
       }
     };
 
@@ -130,16 +127,15 @@ const ApplyJob = () => {
   const handleApply = async () => {
     try {
       const job_requirement_data = JSON.stringify(requirements);
-      await http.post("/apply-job", {
+      await http.post('/apply-job', {
         job_id,
         user_id,
         job_requirement_data,
       });
-      alert("Applied to job successfully!");
+      alert('Applied to job successfully!');
     } catch (error) {
-      alert("Failed to apply for the job.");
-      console.error("Error applying to job:", error);
-      handleRedirectError("server error");
+      console.error('Error applying to job:', error);
+      alert('Failed to apply for the job.');
     }
   };
 
@@ -156,10 +152,7 @@ const ApplyJob = () => {
               return (
                 <RequirementItem key={req.requirement_id}>
                   <FileName>{fileDetails.file_name}</FileName>
-                  <DownloadLink
-                    href={downloadUrl}
-                    download={fileDetails.file_name}
-                  >
+                  <DownloadLink href={downloadUrl} download={fileDetails.file_name}>
                     Download
                   </DownloadLink>
                 </RequirementItem>

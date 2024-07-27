@@ -50,11 +50,9 @@ router.use("/deposit", depositRoute);
 
 const transferRoute = require("./payment/Transfer");
 const Balance = require("../models/payment/Balance");
-const { sendMailOTP } = require("../helper/sendmail");
+const { sendMail } = require("../helper/sendmail");
 const User = require("../models/user/User");
 const Auth = require("../models/user/Auth");
-const Hasher = require("../utils/Hasher");
-const PaymentHistory = require("../models/payment/PaymentHistory");
 router.use("/transfer", transferRoute);
 
 //Get user balance
@@ -112,21 +110,12 @@ router.post("/send-otp", async (req, res) => {
       return randomSixDigitNumber;
     }
 
-    const { username, password } = req.body;
+    const { userId } = req.body;
 
     const randNumber = generateRandomSixDigitNumber();
-    const user = await User.findOne({ where: { username } });
-    if (!user) {
-      return res.status(400).json({ error: "Invalid username or password" });
-    }
-    const auth = await Auth.findOne({ where: { UserId: user.id } });
-    const hash = await Hasher.getHash(password, auth.salt);
-    const isValidPassword = hash === auth.hash;
-    if (!isValidPassword) {
-      return res.status(400).json({ error: "Invalid username or password" });
-    }
+    const user = await User.findOne({ where: { id: userId } });
     if (user) {
-      await sendMailOTP(user.email, randNumber);
+      await sendMail(user.email, randNumber);
       const auth = await Auth.findOne({ where: { UserId: user.id } });
       auth.code = randNumber;
       await auth.save();
@@ -135,43 +124,30 @@ router.post("/send-otp", async (req, res) => {
         .json({ message: "Send mail successfully! Check code in your email" });
     }
   } catch (error) {
-    console.error(error);
+    console.log("🚀 ~ router.post ~ error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 });
 
 router.post("/check-validate-otp", async (req, res) => {
   try {
-    const { userId, otp, amount, reason, accountNumber, currentBalance } =
-      req.body;
-
-    if (currentBalance < amount) {
-      return res.status(203).json({ message: "Insufficient balance" });
-    }
+    const { userId, otp } = req.body;
 
     const user = await User.findOne({ where: { id: userId } });
     const auth = await Auth.findOne({ where: { UserId: user.id } });
-
     if (auth.code === otp) {
       const balance = await Balance.findOne({ where: { userId } });
-      balance.balance = parseFloat(currentBalance) - parseFloat(amount);
+      balance.balance = 0;
       await balance.save();
       auth.code = null;
       await auth.save();
-      await PaymentHistory.create({
-        from: "System",
-        to: accountNumber,
-        amount: parseFloat(amount),
-        onPlatform: 1,
-        action: "WITHDRAW",
-        status: "SUCCESS",
-        reason,
-      });
       return res
         .status(200)
         .json({ message: "Wait a second to receive your money!" });
     } else {
-      return res.status(203).json({ message: "OTP wrong" });
+       return res
+         .status(203)
+         .json({ message: "OTP wrong" });
     }
   } catch (error) {
     console.log("🚀 ~ router.post ~ error:", error);
