@@ -8,11 +8,6 @@ import JobList from "../../components/job/JobList.jsx";
 
 function JobMarket() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [priceStart, setPriceStart] = useState("");
-  const [priceEnd, setPriceEnd] = useState("");
-
-  // console.log(contents);
-  // const filteredContents = contents.filter((content) => content.job_title.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <>

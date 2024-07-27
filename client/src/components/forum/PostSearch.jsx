@@ -1,10 +1,8 @@
 import PropTypes from "prop-types";
-import { Button, Col, Dropdown, Form, Row } from "react-bootstrap";
-import { FaSearch } from "react-icons/fa";
-import { FaFilter, FaSort } from "react-icons/fa6";
 import { useContext, useEffect } from "react";
-import Tag from "./micro/Tag";
+import { Form, Row } from "react-bootstrap";
 import { ForumContext } from "../../context/ForumContext";
+import Tag from "./micro/Tag";
 
 const PostSearch = () => {
   const { searchTerms, removeTag, addTag, setUser, unsetUser, setTitle, setContent, setCategory, clearSearchTerms } = useContext(ForumContext);
@@ -81,7 +79,7 @@ const PostSearch = () => {
           <Form.Control
             className="d-inline form-control-lg"
             type="text"
-            placeholder="Enter title query or a #tag, @user, $post content$, ... /clear to remove all queries."
+            placeholder="Enter #tag or $post content$, ... /clear to remove all queries."
             onChange={handleChange}
           />
           {/* <Button type="submit" className="d-none d-sm-inline mt-1">
