@@ -22,7 +22,6 @@ DBCC CHECKIDENT ('[mJOB].[dbo].[JobMetrics]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Marketings]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Posts]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[PostCategories]', RESEED, 0);
-DBCC CHECKIDENT ('[mJOB].[dbo].[PostMetrics]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Balances]', RESEED, 0);
 
 
@@ -43,8 +42,22 @@ VALUES
 ('henry_rodriguez', 'henry.rodriguez@example.com', '555-0108', 'CIT000008', 'Henry', 'Rodriguez', '1992-08-30', '108 Eighth Ave', 'henry_avatar.png', 'Henry is a system administrator.', 1, 1, GETDATE(), GETDATE()),
 ('isabel_hernandez', 'isabel.hernandez@example.com', '555-0109', 'CIT000009', 'Isabel', 'Hernandez', '1993-09-15', '109 Ninth Rd', 'isabel_avatar.png', 'Isabel is an HR manager.', 0, 0, GETDATE(), GETDATE()),
 ('jack_lopez', 'jack.lopez@example.com', '555-0110', 'CIT000010', 'Jack', 'Lopez', '1994-10-20', '110 Tenth Blvd', 'jack_avatar.png', 'Jack is a content creator.', 1, 0, GETDATE(), GETDATE());
+GO
 
-select * from Users
+INSERT INTO [Auths] (UserId, role, hash, salt, createdAt, updatedAt)
+VALUES 
+(1, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(2, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(3, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(4, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(5, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(6, 'SUPPORT', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(7, 'SUPPORT', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(8, 'MOD', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(9, 'MOD', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(10, 'ADMIN', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE());
+GO
+
 INSERT INTO [mJOB].[dbo].[Jobs]
            ([title]
            ,[description]
@@ -56,7 +69,6 @@ INSERT INTO [mJOB].[dbo].[Jobs]
            ,[contact]
            ,[startDate]
            ,[endDate]
-           ,[paid]
            ,[salary]
            ,[salaryType]
            ,[salaryCurrency]
@@ -66,56 +78,56 @@ INSERT INTO [mJOB].[dbo].[Jobs]
            ,[deletedAt]
            ,[UserId])
 VALUES
-('HR Specialist', 'Handle recruitment and employee relations.', 'Philadelphia', 'HR, Management', 3, 1, 1, 'hr@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 40.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 1),
-('Finance Manager', 'Manage company finances and reporting.', 'San Diego', 'Finance, Management', 4, 1, 1, 'finance@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 4000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 2),
-('Network Administrator', 'Maintain and secure company network.', 'Denver', 'IT, Networking', 6, 1, 1, 'network@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 50.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 3),
-('Graphic Designer', 'Create graphics for marketing materials.', 'San Jose', 'Design, Marketing', 3, 1, 1, 'graphics@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 3500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 4),
-('SEO Specialist', 'Optimize website for search engines.', 'Columbus', 'SEO, Marketing', 5, 1, 1, 'seo@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 60.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 5),
-('Mobile Developer', 'Develop and maintain mobile applications.', 'Charlotte', 'IT, Developer', 8, 1, 1, 'mobile@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 5000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 6),
-('Systems Analyst', 'Analyze and improve IT systems.', 'Fort Worth', 'IT, Analytics', 7, 1, 1, 'systems@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 55.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 7),
-('IT Support', 'Provide IT support to employees.', 'Indianapolis', 'Support, IT', 10, 1, 1, 'itsupport@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 4500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 8),
-('Business Analyst', 'Analyze business processes and recommend improvements.', 'San Francisco', 'Analytics, Business', 6, 1, 1, 'business@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 70.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 9),
-('QA Tester', 'Test software applications for bugs and issues.', 'Seattle', 'QA, IT', 5, 1, 1, 'qa@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 3800.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 10),
-('Operations Manager', 'Oversee daily operations of the company.', 'New York', 'Management, Operations', 4, 1, 1, 'operations@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 75.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 1),
-('Security Analyst', 'Monitor and improve IT security.', 'Los Angeles', 'Security, IT', 7, 1, 1, 'security@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 5500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 2),
-('Database Administrator', 'Maintain and optimize company databases.', 'Chicago', 'IT, Database', 3, 1, 1, 'dba@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 80.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 3),
-('Full Stack Developer', 'Develop and maintain full stack applications.', 'San Francisco', 'IT, Developer', 6, 1, 1, 'fullstack@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 6000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 4),
-('Social Media Manager', 'Manage social media accounts and strategy.', 'Austin', 'Marketing, Social Media', 5, 1, 1, 'socialmedia@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 85.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 5),
-('Technical Writer', 'Create technical documentation.', 'Boston', 'Writing, IT', 4, 1, 1, 'techwriter@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 4200.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 6),
-('Event Coordinator', 'Plan and coordinate events.', 'Dallas', 'Events, Marketing', 3, 1, 1, 'events@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 90.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 7),
-('Legal Advisor', 'Provide legal advice and services.', 'Houston', 'Legal', 2, 1, 1, 'legal@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 5000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 8),
-('IT Manager', 'Manage IT team and projects.', 'Phoenix', 'IT, Management', 5, 1, 1, 'itmanager@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 95.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 9),
-('Customer Success Manager', 'Ensure customer satisfaction and success.', 'Philadelphia', 'Support, Management', 6, 1, 1, 'customersuccess@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 5500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 10),
-('Recruiter', 'Handle recruitment and hiring process.', 'San Diego', 'HR, Recruitment', 4, 1, 1, 'recruitment@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 100.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 1),
-('Digital Marketing Specialist', 'Develop and implement digital marketing strategies.', 'San Francisco', 'Marketing, Digital', 5, 1, 1, 'digitalmarketing@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 6000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 2),
-('Software Engineer', 'Design and develop software applications.', 'Seattle', 'IT, Developer', 8, 1, 1, 'softwareengineer@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 105.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 3),
-('Content Writer', 'Write engaging content for various platforms.', 'New York', 'Writing, Content', 6, 1, 1, 'contentwriter@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 5500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 4),
-('Project Manager', 'Manage projects and teams.', 'Chicago', 'Management, Projects', 7, 1, 1, 'projectmanager@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 110.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 5),
-('Sales Representative', 'Sell company products or services.', 'Los Angeles', 'Sales, Marketing', 5, 1, 1, 'sales@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 6500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 6),
-('UI/UX Designer', 'Design user interfaces and user experiences.', 'Dallas', 'Design, UX/UI', 4, 1, 1, 'uiux@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 115.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 7),
-('Customer Support Specialist', 'Provide support to customers.', 'San Jose', 'Support, Customer Service', 3, 1, 1, 'customersupport@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 6000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 8),
-('DevOps Engineer', 'Implement and manage DevOps processes.', 'Houston', 'IT, DevOps', 6, 1, 1, 'devops@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 120.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 9),
-('Content Marketing Manager', 'Develop and manage content marketing strategies.', 'Phoenix', 'Marketing, Content', 7, 1, 1, 'contentmarketing@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 7000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 10),
-('HR Coordinator', 'Support HR department with administrative tasks.', 'Philadelphia', 'HR, Administration', 3, 1, 1, 'hrcoordinator@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 125.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 1),
-('Financial Analyst', 'Analyze financial data and provide insights.', 'San Diego', 'Finance, Analytics', 4, 1, 1, 'financialanalyst@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 6500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 2),
-('Network Engineer', 'Design and maintain network infrastructure.', 'Denver', 'IT, Networking', 6, 1, 1, 'networkengineer@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 130.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 3),
-('Marketing Coordinator', 'Support marketing campaigns and initiatives.', 'San Jose', 'Marketing, Administration', 5, 1, 1, 'marketingcoordinator@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 7000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 4),
-('UX/UI Designer', 'Design user experiences and interfaces.', 'Columbus', 'Design, UX/UI', 7, 1, 1, 'uxuidesigner@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 135.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 5),
-('Software Developer', 'Develop software solutions.', 'Charlotte', 'IT, Developer', 8, 1, 1, 'softwaredeveloper@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 7500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 6),
-('Business Intelligence Analyst', 'Analyze data and provide business insights.', 'Fort Worth', 'Analytics, Business', 6, 1, 1, 'bi@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 140.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 7),
-('Technical Support Specialist', 'Provide technical support to users.', 'Indianapolis', 'Support, IT', 10, 1, 1, 'techsupport@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 8000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 8),
-('Marketing Manager', 'Oversee marketing strategies and campaigns.', 'San Francisco', 'Marketing, Management', 5, 1, 1, 'marketingmanager@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 145.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 9),
-('Quality Assurance Analyst', 'Test and ensure quality of software applications.', 'Seattle', 'QA, IT', 5, 1, 1, 'qaanalyst@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 8500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 10),
-('Operations Coordinator', 'Coordinate daily operations and logistics.', 'New York', 'Operations, Administration', 4, 1, 1, 'operationscoordinator@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 150.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 1),
-('Cybersecurity Analyst', 'Monitor and protect company systems from cyber threats.', 'Los Angeles', 'Security, IT', 7, 1, 1, 'cybersecurity@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 9000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 2),
-('Database Developer', 'Develop and maintain databases.', 'Chicago', 'IT, Database', 3, 1, 1, 'dbdeveloper@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 155.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 3),
-('Front End Developer', 'Develop and implement front end applications.', 'San Francisco', 'IT, Developer', 6, 1, 1, 'frontenddeveloper@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 9500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 4),
-('Social Media Coordinator', 'Manage social media platforms and content.', 'Austin', 'Marketing, Social Media', 5, 1, 1, 'socialmediacoordinator@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 160.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 5),
-('Technical Documentation Specialist', 'Create technical documentation and manuals.', 'Boston', 'Writing, IT', 4, 1, 1, 'techdocs@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 10000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 6),
-('Event Manager', 'Plan and execute events and conferences.', 'Dallas', 'Events, Management', 3, 1, 1, 'eventmanager@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 165.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 7),
-('Legal Consultant', 'Provide legal advice and consultation.', 'Houston', 'Legal, Consulting', 2, 1, 1, 'legalconsultant@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 10500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 8),
-('IT Director', 'Oversee IT operations and strategy.', 'Phoenix', 'IT, Management', 5, 1, 1, 'itdirector@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 170.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 9),
-('Customer Service Manager', 'Manage customer service team and operations.', 'Philadelphia', 'Customer Service, Management', 6, 1, 1, 'customerservice@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 0, 11000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 10);
+('HR Specialist', 'Handle recruitment and employee relations.', 'Philadelphia', 'HR, Management', 3, 1, 1, 'hr@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 40.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 1),
+('Finance Manager', 'Manage company finances and reporting.', 'San Diego', 'Finance, Management', 4, 1, 1, 'finance@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 4000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 2),
+('Network Administrator', 'Maintain and secure company network.', 'Denver', 'IT, Networking', 6, 1, 1, 'network@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 50.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 3),
+('Graphic Designer', 'Create graphics for marketing materials.', 'San Jose', 'Design, Marketing', 3, 1, 1, 'graphics@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 3500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 4),
+('SEO Specialist', 'Optimize website for search engines.', 'Columbus', 'SEO, Marketing', 5, 1, 1, 'seo@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 60.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 5),
+('Mobile Developer', 'Develop and maintain mobile applications.', 'Charlotte', 'IT, Developer', 8, 1, 1, 'mobile@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 5000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 6),
+('Systems Analyst', 'Analyze and improve IT systems.', 'Fort Worth', 'IT, Analytics', 7, 1, 1, 'systems@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 55.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 7),
+('IT Support', 'Provide IT support to employees.', 'Indianapolis', 'Support, IT', 10, 1, 1, 'itsupport@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 4500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 8),
+('Business Analyst', 'Analyze business processes and recommend improvements.', 'San Francisco', 'Analytics, Business', 6, 1, 1, 'business@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 70.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 9),
+('QA Tester', 'Test software applications for bugs and issues.', 'Seattle', 'QA, IT', 5, 1, 1, 'qa@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 3800.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 10),
+('Operations Manager', 'Oversee daily operations of the company.', 'New York', 'Management, Operations', 4, 1, 1, 'operations@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 75.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 1),
+('Security Analyst', 'Monitor and improve IT security.', 'Los Angeles', 'Security, IT', 7, 1, 1, 'security@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 5500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 2),
+('Database Administrator', 'Maintain and optimize company databases.', 'Chicago', 'IT, Database', 3, 1, 1, 'dba@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 80.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 3),
+('Full Stack Developer', 'Develop and maintain full stack applications.', 'San Francisco', 'IT, Developer', 6, 1, 1, 'fullstack@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 6000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 4),
+('Social Media Manager', 'Manage social media accounts and strategy.', 'Austin', 'Marketing, Social Media', 5, 1, 1, 'socialmedia@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 85.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 5),
+('Technical Writer', 'Create technical documentation.', 'Boston', 'Writing, IT', 4, 1, 1, 'techwriter@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 4200.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 6),
+('Event Coordinator', 'Plan and coordinate events.', 'Dallas', 'Events, Marketing', 3, 1, 1, 'events@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 90.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 7),
+('Legal Advisor', 'Provide legal advice and services.', 'Houston', 'Legal', 2, 1, 1, 'legal@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 5000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 8),
+('IT Manager', 'Manage IT team and projects.', 'Phoenix', 'IT, Management', 5, 1, 1, 'itmanager@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 95.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 9),
+('Customer Success Manager', 'Ensure customer satisfaction and success.', 'Philadelphia', 'Support, Management', 6, 1, 1, 'customersuccess@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 5500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 10),
+('Recruiter', 'Handle recruitment and hiring process.', 'San Diego', 'HR, Recruitment', 4, 1, 1, 'recruitment@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 100.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 1),
+('Digital Marketing Specialist', 'Develop and implement digital marketing strategies.', 'San Francisco', 'Marketing, Digital', 5, 1, 1, 'digitalmarketing@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 6000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 2),
+('Software Engineer', 'Design and develop software applications.', 'Seattle', 'IT, Developer', 8, 1, 1, 'softwareengineer@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 105.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 3),
+('Content Writer', 'Write engaging content for various platforms.', 'New York', 'Writing, Content', 6, 1, 1, 'contentwriter@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 5500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 4),
+('Project Manager', 'Manage projects and teams.', 'Chicago', 'Management, Projects', 7, 1, 1, 'projectmanager@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 110.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 5),
+('Sales Representative', 'Sell company products or services.', 'Los Angeles', 'Sales, Marketing', 5, 1, 1, 'sales@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 6500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 6),
+('UI/UX Designer', 'Design user interfaces and user experiences.', 'Dallas', 'Design, UX/UI', 4, 1, 1, 'uiux@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 115.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 7),
+('Customer Support Specialist', 'Provide support to customers.', 'San Jose', 'Support, Customer Service', 3, 1, 1, 'customersupport@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 6000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 8),
+('DevOps Engineer', 'Implement and manage DevOps processes.', 'Houston', 'IT, DevOps', 6, 1, 1, 'devops@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 120.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 9),
+('Content Marketing Manager', 'Develop and manage content marketing strategies.', 'Phoenix', 'Marketing, Content', 7, 1, 1, 'contentmarketing@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 7000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 10),
+('HR Coordinator', 'Support HR department with administrative tasks.', 'Philadelphia', 'HR, Administration', 3, 1, 1, 'hrcoordinator@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 125.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 1),
+('Financial Analyst', 'Analyze financial data and provide insights.', 'San Diego', 'Finance, Analytics', 4, 1, 1, 'financialanalyst@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 6500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 2),
+('Network Engineer', 'Design and maintain network infrastructure.', 'Denver', 'IT, Networking', 6, 1, 1, 'networkengineer@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 130.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 3),
+('Marketing Coordinator', 'Support marketing campaigns and initiatives.', 'San Jose', 'Marketing, Administration', 5, 1, 1, 'marketingcoordinator@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 7000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 4),
+('UX/UI Designer', 'Design user experiences and interfaces.', 'Columbus', 'Design, UX/UI', 7, 1, 1, 'uxuidesigner@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 135.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 5),
+('Software Developer', 'Develop software solutions.', 'Charlotte', 'IT, Developer', 8, 1, 1, 'softwaredeveloper@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 7500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 6),
+('Business Intelligence Analyst', 'Analyze data and provide business insights.', 'Fort Worth', 'Analytics, Business', 6, 1, 1, 'bi@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 140.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 7),
+('Technical Support Specialist', 'Provide technical support to users.', 'Indianapolis', 'Support, IT', 10, 1, 1, 'techsupport@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 8000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 8),
+('Marketing Manager', 'Oversee marketing strategies and campaigns.', 'San Francisco', 'Marketing, Management', 5, 1, 1, 'marketingmanager@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 145.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 9),
+('Quality Assurance Analyst', 'Test and ensure quality of software applications.', 'Seattle', 'QA, IT', 5, 1, 1, 'qaanalyst@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 8500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 10),
+('Operations Coordinator', 'Coordinate daily operations and logistics.', 'New York', 'Operations, Administration', 4, 1, 1, 'operationscoordinator@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 150.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 1),
+('Cybersecurity Analyst', 'Monitor and protect company systems from cyber threats.', 'Los Angeles', 'Security, IT', 7, 1, 1, 'cybersecurity@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 9000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 2),
+('Database Developer', 'Develop and maintain databases.', 'Chicago', 'IT, Database', 3, 1, 1, 'dbdeveloper@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 155.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 3),
+('Front End Developer', 'Develop and implement front end applications.', 'San Francisco', 'IT, Developer', 6, 1, 1, 'frontenddeveloper@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 9500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 4),
+('Social Media Coordinator', 'Manage social media platforms and content.', 'Austin', 'Marketing, Social Media', 5, 1, 1, 'socialmediacoordinator@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 160.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 5),
+('Technical Documentation Specialist', 'Create technical documentation and manuals.', 'Boston', 'Writing, IT', 4, 1, 1, 'techdocs@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 10000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 6),
+('Event Manager', 'Plan and execute events and conferences.', 'Dallas', 'Events, Management', 3, 1, 1, 'eventmanager@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 165.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 7),
+('Legal Consultant', 'Provide legal advice and consultation.', 'Houston', 'Legal, Consulting', 2, 1, 1, 'legalconsultant@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 10500.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 8),
+('IT Director', 'Oversee IT operations and strategy.', 'Phoenix', 'IT, Management', 5, 1, 1, 'itdirector@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 170.00, 'HOURLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 9),
+('Customer Service Manager', 'Manage customer service team and operations.', 'Philadelphia', 'Customer Service, Management', 6, 1, 1, 'customerservice@company.com', SYSDATETIMEOFFSET(), DATEADD(day, 30, SYSDATETIMEOFFSET()), 11000.00, 'MONTHLY', 'USD', 'ACTIVE', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), NULL, 10);
 
 UPDATE [mJOB].[dbo].[Jobs]
    SET [startDate] = DATEADD(day, -(id % 10), [startDate])
@@ -127,74 +139,62 @@ select * from [mJOB].[dbo].[Jobs]
 -- Generate 50 entries for the [Applications] table with UserIds within the range of 1 to 10
 INSERT INTO [mJOB].[dbo].[Applications]
        ([status]
-       ,[date]
        ,[createdAt]
        ,[updatedAt]
        ,[JobId]
        ,[UserId])
 VALUES
-('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 1, 3),
-('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 2, 4),
-('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 3, 5),
-('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 4, 6),
-('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 5, 7),
-('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 6, 8),
-('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 7, 9),
-('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 8, 10),
-('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 9, 1),
-('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 10, 2),
-('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 11, 3),
-('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 12, 4),
-('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 13, 5),
-('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 14, 6),
-('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 15, 7),
-('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 16, 8),
-('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 17, 9),
-('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 18, 10),
-('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 19, 1),
-('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 20, 2),
-('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 21, 3),
-('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 22, 4),
-('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 23, 5),
-('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 24, 6),
-('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 25, 7),
-('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 26, 8),
-('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 27, 9),
-('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 28, 10),
-('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 29, 1),
-('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 30, 2),
-('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 31, 3),
-('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 32, 4),
-('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 33, 5),
-('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 34, 6),
-('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 35, 7),
-('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 36, 8),
-('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 37, 9),
-('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 38, 10),
-('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 39, 1),
-('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 40, 2),
-('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 41, 3),
-('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 42, 4),
-('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 43, 5),
-('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 44, 6),
-('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 45, 7),
-('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 46, 8),
-('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 47, 9),
-('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 48, 10),
-('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 49, 1),
-('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 50, 2);
-
-DECLARE @i INT;
-
-SET @i = 1; 
-
-UPDATE [mJOB].[dbo].[Auths]
-SET [hash] = 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95',
-    [salt] ='85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52',
-    [UserId] = ISNULL([UserId], @i)
-WHERE [UserId] IS NULL;
-
-SET @i = @i + 1; -- Increment @i for the next update
+('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 1, 3),
+('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 2, 4),
+('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 3, 5),
+('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 4, 6),
+('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 5, 7),
+('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 6, 8),
+('ACCEPTED',  SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 7, 9),
+('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 8, 10),
+('ONGOING',  SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 9, 1),
+('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 10, 2),
+('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 11, 3),
+('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 12, 4),
+('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 13, 5),
+('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 14, 6),
+('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 15, 7),
+('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 16, 8),
+('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 17, 9),
+('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 18, 10),
+('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 19, 1),
+('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 20, 2),
+('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 21, 3),
+('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 22, 4),
+('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 23, 5),
+('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 24, 6),
+('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 25, 7),
+('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 26, 8),
+('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 27, 9),
+('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 28, 10),
+('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 29, 1),
+('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 30, 2),
+('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 31, 3),
+('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 32, 4),
+('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 33, 5),
+('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 34, 6),
+('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 35, 7),
+('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 36, 8),
+('ACCEPTED',SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 37, 9),
+('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 38, 10),
+('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 39, 1),
+('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 40, 2),
+('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 41, 3),
+('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 42, 4),
+('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 43, 5),
+('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 44, 6),
+('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 45, 7),
+('PENDING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 46, 8),
+('ACCEPTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 47, 9),
+('REJECTED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 48, 10),
+('ONGOING', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 49, 1),
+('COMPLETED', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 50, 2);
+GO
 
 
 INSERT INTO [mJOB].[dbo].[JobMetrics]
@@ -316,7 +316,7 @@ VALUES
            ('Healthy Living Tips', 'A comprehensive guide to maintaining a healthy lifestyle through diet and exercise.', 'health,wellness,fitness', 'PUBLISHED', '2024-07-25 13:00:00 +00:00', '2024-07-25 13:00:00 +00:00', NULL, 2, 2),  -- Health & Wellness
            ('Travel Destinations 2024', 'Top travel destinations to explore in 2024 for an unforgettable experience.', 'travel,adventure,2024', 'PUBLISHED', '2024-07-25 14:00:00 +00:00', '2024-07-25 14:00:00 +00:00', NULL, 3, 3),  -- Travel
            ('The Rise of Remote Work', 'Analyzing the shift towards remote work and its impact on productivity and work-life balance.', 'remote work,productivity,work-life balance', 'PUBLISHED', '2024-07-25 15:00:00 +00:00', '2024-07-25 15:00:00 +00:00', NULL, 1, 4),  -- Technology
-           ('Investing in Cryptocurrencies', 'A beginner’s guide to investing in cryptocurrencies and understanding the market trends.', 'cryptocurrency,investment,finance', 'PUBLISHED', '2024-07-25 16:00:00 +00:00', '2024-07-25 16:00:00 +00:00', NULL, 4, 5),  -- Finance
+           ('Investing in Cryptocurrencies', 'A beginnerï¿½s guide to investing in cryptocurrencies and understanding the market trends.', 'cryptocurrency,investment,finance', 'PUBLISHED', '2024-07-25 16:00:00 +00:00', '2024-07-25 16:00:00 +00:00', NULL, 4, 5),  -- Finance
            ('Sustainable Living', 'Tips and strategies for adopting a sustainable lifestyle and reducing your carbon footprint.', 'sustainability,environment,green living', 'PUBLISHED', '2024-07-25 17:00:00 +00:00', '2024-07-25 17:00:00 +00:00', NULL, 2, 6),  -- Health & Wellness
            ('Latest Tech Gadgets', 'A review of the latest tech gadgets that are making waves in the market.', 'technology,gadgets,review', 'PUBLISHED', '2024-07-25 18:00:00 +00:00', '2024-07-25 18:00:00 +00:00', NULL, 1, 7),  -- Technology
            ('Cooking Recipes for Beginners', 'Simple and delicious recipes for those who are new to cooking.', 'cooking,recipes,beginner', 'PUBLISHED', '2024-07-25 19:00:00 +00:00', '2024-07-25 19:00:00 +00:00', NULL, 5, 8),  -- Lifestyle
