@@ -3,13 +3,24 @@ import { useEffect, useState } from "react";
 import { Container, Table, Button, Modal, Form } from "react-bootstrap";
 import { useAuth } from "../../context/UserContext";
 
-const ModalReport = ({ show, handleClose, userId, setReload }) => {
+const ModalReport = ({
+  show,
+  handleClose,
+  userId,
+  setReload,
+  dataSelected,
+}) => {
   const [ticket, setTicket] = useState({
     type: "REPORT",
     title: "",
     category: "",
     description: "",
+    username: "",
+    email: "",
+    phone: "",
+    priority: 0,
   });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTicket((prevTicket) => ({
@@ -20,29 +31,77 @@ const ModalReport = ({ show, handleClose, userId, setReload }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/ticket/create", {
-        ...ticket,
-        by: userId,
-      });
-      if (response.status === 201) {
-        alert(response.data.message);
-        setReload(true);
-        setTicket({
-          type: "REPORT",
-          title: "",
-          category: "",
-          description: "",
+      if (!dataSelected) {
+        const response = await axios.post("/ticket/create", {
+          ...ticket,
+          priority: parseInt(ticket.priority),
+          by: userId,
         });
+        if (response.status === 201) {
+          alert(response.data.message);
+          setReload(true);
+          setTicket({
+            type: "REPORT",
+            title: "",
+            category: "",
+            description: "",
+            username: "",
+            email: "",
+            phone: "",
+            priority: 0,
+          });
+          handleClose();
+        }
+      } else {
+        const response = await axios.put(
+          `/ticket/update?ticketId=${ticket.id}`,
+          {
+            ...ticket,
+            priority: parseInt(ticket.priority),
+          }
+        );
+        if (response.status === 200) {
+          alert(response.data.message);
+          setReload(true);
+          handleClose();
+        }
       }
-      handleClose();
     } catch (error) {
       console.error("There was an error creating the ticket!", error);
     }
   };
+  useEffect(() => {
+    if (dataSelected)
+      setTicket({
+        type: "REPORT",
+        title: dataSelected.title,
+        category: dataSelected.category,
+        description: dataSelected.description,
+        username: dataSelected.username,
+        email: dataSelected.email,
+        phone: dataSelected.phone,
+        priority: dataSelected.priority,
+        id: dataSelected.id,
+      });
+    else {
+      setTicket({
+        type: "REPORT",
+        title: "",
+        category: "",
+        description: "",
+        username: "",
+        email: "",
+        phone: "",
+        priority: 0,
+      });
+    }
+  }, [dataSelected]);
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Create new Report</Modal.Title>
+        <Modal.Title>
+          {dataSelected ? "Update new Report" : "Create new Report"}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -53,6 +112,49 @@ const ModalReport = ({ show, handleClose, userId, setReload }) => {
               placeholder="Enter title"
               name="title"
               value={ticket.title}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Priority</Form.Label>
+            <Form.Select
+              placeholder="Enter priority"
+              name="priority"
+              value={ticket.priority}
+              onChange={handleChange}
+            >
+              <option value={0}>Low</option>
+              <option value={1}>Medium</option>
+              <option value={2}>High</option>
+            </Form.Select>
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter username"
+              name="username"
+              value={ticket.username}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter email"
+              name="email"
+              value={ticket.email}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Phone</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter phone"
+              name="phone"
+              value={ticket.phone}
               onChange={handleChange}
             />
           </Form.Group>
@@ -97,9 +199,24 @@ function ReportPage() {
   const [show, setShow] = useState(false);
   const [data, setData] = useState([]);
   const [reload, setReload] = useState(true);
+  const [dataSelected, setDataSelected] = useState(null);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const handelDeleteReport = async (id) => {
+    try {
+      const request = await axios.delete(`/ticket/delete?ticketId=${id}`);
+      if (request.status === 200) {
+        alert(request.data.message);
+        setReload(true);
+      } else {
+        alert(request.data.message);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const TableBodyComponent = data.map((item, index) => {
     return (
@@ -108,6 +225,28 @@ function ReportPage() {
         <td>{item.title}</td>
         <td>{item.category}</td>
         <td>{item.description}</td>
+        <td>
+          <div style={{ display: "flex", color: "blue" }}>
+            <span
+              style={{ textDecoration: "underline", cursor: "pointer" }}
+              onClick={() => {
+                setDataSelected(item);
+                handleShow();
+              }}
+            >
+              Edit
+            </span>
+            &ensp;
+            <span
+              style={{ textDecoration: "underline", cursor: "pointer" }}
+              onClick={() => {
+                handelDeleteReport(item.id);
+              }}
+            >
+              Delete
+            </span>
+          </div>
+        </td>
       </tr>
     );
   });
@@ -131,7 +270,13 @@ function ReportPage() {
   return (
     <>
       <Container>
-        <Button className="mb-4" onClick={handleShow}>
+        <Button
+          className="mb-4"
+          onClick={() => {
+            handleShow();
+            setDataSelected(null);
+          }}
+        >
           Create new report
         </Button>
         {data.length ? (
@@ -142,6 +287,7 @@ function ReportPage() {
                 <th>Issue</th>
                 <th>Category</th>
                 <th>Description</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>{TableBodyComponent}</tbody>
@@ -155,6 +301,7 @@ function ReportPage() {
         handleClose={handleClose}
         userId={userInformation.id}
         setReload={setReload}
+        dataSelected={dataSelected}
       />
     </>
   );
