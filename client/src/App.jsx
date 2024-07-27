@@ -64,15 +64,17 @@ import Deposit from "./pages/payment/Deposit";
 import PaymentHistory from "./pages/payment/PaymentHistory";
 import PaymentPortal from "./pages/payment/PaymentPortal";
 import CreateTicketPage from "./pages/user/CreateTicket";
-
+import useWhoAmI from "./hooks/user/useWhoAmI";
 function App() {
+  const { userId, username, role, fetchMe } = useWhoAmI();
+    fetchMe();
   return (
     <BrowserRouter>
       <UserInformationProvider>
         <AuthProvider className="page">
           <ForumProvider>
             {/* <AppNavbar className="mb-auto" /> */}
-            <HomeNavbar />
+            <HomeNavbar user={{userId: userId, username: username, role: role}}/>
             <div className="min-vh-100 mt-5">
               <Routes>
                 {/* AUTH ROUTES */}
@@ -101,18 +103,18 @@ function App() {
                 <Route
                   exact
                   path="/"
-                  element={<HomeGuest />}
+                  element={<HomePage />}
                 />
                 <Route
                   exact
                   path="/home"
                   element={<HomePage />}
                 />
-                <Route
+                {/* <Route
                   exact
                   path="/homeuser"
                   element={<HomeUser />}
-                />
+                /> */}
 
                 {/* FORUM ROUTES */}
                 <Route

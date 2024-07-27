@@ -4,10 +4,14 @@ import logo from "../../../logo.png";
 import useWhoAmI from '../../hooks/user/useWhoAmI';
 import { useNavigate } from 'react-router-dom';
 import { BsGearFill } from "react-icons/bs";
+import { useEffect } from "react";
 
 const HomeNavbar = ({ user }) => {
-    const { userId, username, role } = useWhoAmI();
-
+    const { userId, username, role, fetchMe } = useWhoAmI();
+    useEffect(() => {
+        fetchMe();
+    })
+    console.log(user);
   return (
     <>
       <Navbar

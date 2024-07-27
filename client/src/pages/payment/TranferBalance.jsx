@@ -23,6 +23,7 @@ const TransferMoney = () => {
   const [isVerified, setIsVerified] = useState(false);
   const [transferError, setTransferError] = useState(null);
   const [transferSuccess, setTransferSuccess] = useState(false);
+  const [checkwrong, setCheckwrong] = useState(true);
 
   const { info: fromUserInfo, loading: fromUserLoading, error: fromUserError } = useBalancebyId(userId);
   const { balance: fromUserBalance, loading: fromUserBalanceLoading, error: fromUserBalanceError } = useBalance();
@@ -39,7 +40,13 @@ const TransferMoney = () => {
   }, [isVerified, toUserId, fetchToUserInfo]);
 
   const handleVerify = () => {
-    setIsVerified(true);
+    fetchToUserInfo(toUserId);
+    if(toUserId==userId){
+      setCheckwrong(false);
+    } else{
+      setIsVerified(true);
+    }
+    
   };
 
   console.log(fromUserInfo, toUserInfo);
@@ -130,14 +137,13 @@ const TransferMoney = () => {
                   type="text"
                   value={toUserId}
                   onChange={(e) => setToUserId(e.target.value)}
-                                    // onChange={(e) => setToUserId(e.target.value)}
-
                   required
                 />
               </Form.Group>
               <Button variant="primary" type="submit" disabled={toUserLoading} className="mt-2">
                 Verify User
               </Button>
+              {checkwrong && <p className="text-danger">Invalid User ID</p>}
               {toUserLoading && <p>Verifying...</p>}
               {toUserError && <p className="text-danger">Error: {toUserError.message}</p>}
             </Form>

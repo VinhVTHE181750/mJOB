@@ -145,18 +145,18 @@ const getStatusStyle = (status) => {
             <div className="job-card-img">IMG Background</div>
             <div className="job-card-content">
               <div className="job-card-header">
-                <h2 className="job-title">{job.job_title}</h2>
-                <a href={`/jobs/${job.job_id}`} className="job-detail-link">Detail</a>
+                <h2 className="job-title">{job.title}</h2>
+                <a href={`/jobs/${job.id}`} className="job-detail-link">Detail</a>
               </div>
               <div className="job-card-body">
                 <div className="job-info">
-                  <p>Creator: {job.username}</p>
-                  <p>Job Tag: {job.job_tags}</p>
-                  <p>Location: {job.job_work_location}</p>
+                  <p>Creator: {job.User.username}</p>
+                  <p>Job Tag: {job.tags}</p>
+                  <p>Location: {job.location}</p>
                 </div>
                 <div className="job-info-right">
-                  <p className='tag'>{formatSalary(job.job_compensation_type, job.job_compensation_amount,job.job_compensation_currency)}</p>
-                  <p>{job.timeleft} days left</p>
+                <p  className='tag'>{formatSalary(job.salaryType, job.salary,job.salaryCurrency)}</p>
+                <p>{job.timeleft} days left</p>
                 </div>
               </div>
             </div>
