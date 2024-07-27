@@ -11,15 +11,22 @@ import useWhoAmI from '../../hooks/user/useWhoAmI';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-function History() {
-  const { fetchMe, userId, username, role } = useWhoAmI();
-  const { jobList: initialJobList, loading: initialLoading, error: initialError } = useUserJobHistory(userId);
+function History(user) {
+  // const { fetchMe, userId, username, role } = useWhoAmI();
+  const userId = user.user.id;
+
+  const { jobList: initialJobList, loading: initialLoading, error: initialError, fetchJobList } = useUserJobHistory();
   const { statuses: statusList, loading: statusLoading, error: statusError } = useJobStatus(userId);
   const [selectedStatus, setSelectedStatus] = useState('');
   const { jobs: jobListByStatus, loading: jobListLoading, error: jobListError } = useJobListByStatus(userId, selectedStatus || 'ongoing')
 
   
   const [filteredJobList, setFilteredJobList] = useState([]);
+
+  // console.log(userId);
+  useEffect(() => {
+    fetchJobList(userId);
+  }, [userId]);
 
   useEffect(() => {
     if (selectedStatus === '') {
