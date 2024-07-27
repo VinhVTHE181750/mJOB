@@ -1,14 +1,216 @@
-import {Card, CardBody, Container} from "react-bootstrap";
+import {
+  Button,
+  Card,
+  CardBody,
+  Container,
+  Form,
+  Modal,
+} from "react-bootstrap";
 import "./error.css";
-import {useLocation} from "react-router";
-import {useState} from "react";
+import { useLocation } from "react-router";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../context/UserContext";
+import axios from "axios";
+
+const ModalReport = ({
+  show,
+  handleClose,
+  userId,
+  setReload,
+  dataSelected,
+}) => {
+  const [ticket, setTicket] = useState({
+    type: "REPORT",
+    title: "",
+    category: "",
+    description: "",
+    username: "",
+    email: "",
+    phone: "",
+    priority: 0,
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setTicket((prevTicket) => ({
+      ...prevTicket,
+      [name]: value,
+    }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("/ticket/create", {
+        ...ticket,
+        priority: parseInt(ticket.priority),
+        by: userId,
+      });
+      if (response.status === 201) {
+        alert(response.data.message);
+        setTicket({
+          type: "REPORT",
+          title: "",
+          category: "",
+          description: "",
+          username: "",
+          email: "",
+          phone: "",
+          priority: 0,
+        });
+        handleClose();
+      }
+    } catch (error) {
+      console.error("There was an error creating the ticket!", error);
+    }
+  };
+  useEffect(() => {
+    if (dataSelected)
+      setTicket({
+        type: "REPORT",
+        title: dataSelected.title,
+        category: dataSelected.category,
+        description: dataSelected.description,
+        username: dataSelected.username,
+        email: dataSelected.email,
+        phone: dataSelected.phone,
+        priority: dataSelected.priority,
+        id: dataSelected.id,
+      });
+    else {
+      setTicket({
+        type: "REPORT",
+        title: "",
+        category: "",
+        description: "",
+        username: "",
+        email: "",
+        phone: "",
+        priority: 0,
+      });
+    }
+  }, [dataSelected]);
+  return (
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>
+          {dataSelected ? "Update new Report" : "Create new Report"}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Title</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter title"
+              name="title"
+              value={ticket.title}
+              onChange={handleChange}
+              disabled
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Priority</Form.Label>
+            <Form.Select
+              placeholder="Enter priority"
+              name="priority"
+              value={ticket.priority}
+              onChange={handleChange}
+              disabled
+            >
+              <option value={0}>Low</option>
+              <option value={1}>Medium</option>
+              <option value={2}>High</option>
+            </Form.Select>
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter username"
+              name="username"
+              value={ticket.username}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter email"
+              name="email"
+              value={ticket.email}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Phone</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter phone"
+              name="phone"
+              value={ticket.phone}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formCategory">
+            <Form.Label>Category</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter category"
+              name="category"
+              value={ticket.category}
+              onChange={handleChange}
+            />
+          </Form.Group>
+
+          <Form.Group controlId="formDescription">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              placeholder="Enter description"
+              name="description"
+              value={ticket.description}
+              onChange={handleChange}
+            />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={handleSubmit}>
+          Save
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
 
 function ErrorPage() {
+  const { userInformation } = useAuth();
   const params = useLocation();
   const { state } = params;
   const [toggle, setToggle] = useState(false);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const dataSelected = {
+    priority: 2,
+    title: state?.message || "",
+  };
+
   return (
     <Container className="mt-5">
+      <ModalReport
+        show={show}
+        handleClose={handleClose}
+        userId={userInformation.id}
+        dataSelected={dataSelected}
+      />
       <div>
         <div className="ex-page-content bootstrap snippets bootdeys">
           <div className="container">
@@ -99,7 +301,10 @@ function ErrorPage() {
                   </div>
                   {toggle && (
                     <Card className="mt-3">
-                      <CardBody>{state?.message}</CardBody>
+                      <CardBody>
+                        <p>{state?.message}</p>
+                        <Button onClick={handleShow}>Report this error</Button>
+                      </CardBody>
                     </Card>
                   )}
                 </div>
