@@ -126,4 +126,6 @@ router.get("/view",getJobListbyView);
 
 router.get("/date",getJobListbyDate);
 
+
+
 module.exports = router;
