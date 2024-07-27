@@ -275,7 +275,7 @@ const EnlistJob = () => {
               >
                 <option value="AGREEMENT">Agreement</option>
                 <option value="NONE">None</option>
-                <option value="ONCE">None</option>
+                <option value="ONETIME">ONCE</option>
                 <option value="HOURLY">Hourly</option>
                 <option value="DAILY">Daily</option>
                 <option value="WEEKLY">Weekly</option>
@@ -284,7 +284,7 @@ const EnlistJob = () => {
               </Form.Control>
             </Form.Group>
           </Col>
-          <Col md={3}>
+          <Col>
             <Form.Group controlId="amount">
               <Form.Label>Amount</Form.Label>
               <Form.Control
@@ -295,21 +295,6 @@ const EnlistJob = () => {
                 onChange={handleChange}
               />
             </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Label>per</Form.Label>
-            <Form.Control
-              as="select"
-              name="job_compensation_periods"
-              value={formValues.job_compensation_periods}
-              onChange={handleChange}
-            >
-              <option>month</option>
-              <option>week</option>
-              <option>day</option>
-              <option>hour</option>
-              <option>custom</option>
-            </Form.Control>
           </Col>
         </Row>
         <Row>
@@ -352,15 +337,9 @@ const EnlistJob = () => {
           >
             {loading ? "Creating..." : "Create"}
           </Button>
-          <Button
-            variant="info"
-            className="ml-2"
-          >
-            Save
-          </Button>
-          {/* {error && <p className="error-message">{error}</p>} */}
-          {success && <p className="success-message">Job successfully enlisted!</p>}
         </div>
+        {/* {error && <p className="error-message">{error}</p>} */}
+        {success && <p className="success-message">Job successfully enlisted!</p>}
       </Form>
     </Container>
   );
