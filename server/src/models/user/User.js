@@ -14,6 +14,7 @@ const Job = require("../job/Job");
 const RequirementStorage = require("../job/RequirementStorage");
 const Application = require("../job/Application");
 const JobHistory = require("../job/JobHistory");
+const JobPreference = require("./JobPreference");
 
 class User extends Model {}
 
@@ -86,6 +87,11 @@ User.init(
   {
     sequelize,
     getterMethods: {
+      /**
+       * 
+       * @param {string} locale Country code. Currently support "vi-VN" only. Without this parameter, the default is "en-US"
+       * @returns 
+       */
       _fullName(locale) {
         if (locale === "vi-VN") {
           return this.lastName + " " + this.firstName;
@@ -146,6 +152,8 @@ WorkExperience.belongsTo(User);
 // missing Skill
 
 // missing JobPreference
+User.hasOne(JobPreference);
+JobPreference.belongsTo(User);
 
 // missing ProfileLog
 
