@@ -18,7 +18,7 @@ const User = require("../../models/user/User");
  * - Salary: 4 points if matched, 5 points if the salary is higher than the user's expectation, 2 points if the salary is lower than the user's expectation
  * - Tags: for each matched keywords, 1 point
  */
-async function relativeJobSearch(id, jobList) {
+async function relevantJobSearch(id, jobList) {
   // if jobList is not an array, return null
   if (!Array.isArray(jobList)) {
     return null;
@@ -127,7 +127,7 @@ async function relativeJobSearch(id, jobList) {
  * - Tags: for each matched keywords, 1 point
  * - Categories: for each matched keywords, 5 point
  */
-async function relativePostSearch(id, postList) {
+async function relevantPostSearch(id, postList) {
   // if postList is not an array, return null
   if (!Array.isArray(postList)) {
     return null;
@@ -201,6 +201,6 @@ async function relativePostSearch(id, postList) {
 }
 
 module.exports = {
-  relativeJobSearch,
-  relativePostSearch,
+  relevantJobSearch,
+  relevantPostSearch,
 };

@@ -1,5 +1,5 @@
 const express = require("express");
-const relativeJobSearch = require("../utils/algorithms/RelativeSearch");
+const { relevantJobSearch } = require("../utils/algorithms/RelativeSearch");
 const Job = require("../models/job/Job");
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.get("/relevant-jobs/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const jobList = await Job.findAll();
-    const result = await relativeJobSearch(id, jobList);
+    const result = await relevantJobSearch(id, jobList);
     if (!result) {
       return res.status(400).send("No relevant jobs found");
     }
