@@ -14,6 +14,7 @@ const Job = require("../job/Job");
 const RequirementStorage = require("../job/RequirementStorage");
 const Application = require("../job/Application");
 const JobHistory = require("../job/JobHistory");
+const JobPreference = require("./JobPreference");
 
 class User extends Model {}
 
@@ -151,6 +152,8 @@ WorkExperience.belongsTo(User);
 // missing Skill
 
 // missing JobPreference
+User.hasOne(JobPreference);
+JobPreference.belongsTo(User);
 
 // missing ProfileLog
 

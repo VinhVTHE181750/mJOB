@@ -1,6 +1,7 @@
 const express = require("express");
 const { relevantJobSearch } = require("../utils/algorithms/RelativeSearch");
 const Job = require("../models/job/Job");
+const { log } = require("../utils/Logger");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -9,7 +10,7 @@ router.get("/", async (req, res) => {
 
 router.get("/relevant-jobs/:id", async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = 1;
     const jobList = await Job.findAll();
     const result = await relevantJobSearch(id, jobList);
     if (!result) {
@@ -17,6 +18,7 @@ router.get("/relevant-jobs/:id", async (req, res) => {
     }
     return res.status(200).send(result);
   } catch (error) {
+    log(error, "ERROR", "TEST");
     return res.status(500).send(error.message);
   }
 });

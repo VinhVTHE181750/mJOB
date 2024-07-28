@@ -34,7 +34,7 @@ JobPreference.init(
 
     // Indicate if user is actively looking for a job, used for recommendation to employers
     availability: {
-      type: DataTypes.STRING,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
   },
