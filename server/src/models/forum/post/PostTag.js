@@ -1,20 +1,16 @@
-const {Model, DataTypes} = require("sequelize");
-const {sequelize} = require("../../SQLize");
-const TagMetric = require("../metric/TagMetric");
+const { Model, DataTypes } = require("sequelize");
+const { sequelize } = require("../../SQLize");
 
-class PostTag extends Model {
-}
+class PostTag extends Model {}
 
 PostTag.init(
-    {
-        name: DataTypes.STRING,
-    }, {
-        sequelize,
-        updatedAt: false,
-    }
-)
-
-PostTag.hasMany(TagMetric)
-TagMetric.belongsTo(PostTag)
+  {
+    name: DataTypes.STRING,
+  },
+  {
+    sequelize,
+    updatedAt: false,
+  }
+);
 
 module.exports = PostTag;

@@ -10,7 +10,6 @@ const UserInformationProvider = ({ children }) => {
   const navigate = useNavigate();
   const [cookie] = useCookies(["token"]);
   const [userInformation, setUserInformation] = useState({});
-  console.log("🚀 ~ UserInformationProvider ~ userInformation:", userInformation)
 
   const [isLogin, setIsLogin] = useState(
     // () => cookies.get("token") || false
@@ -28,6 +27,10 @@ const UserInformationProvider = ({ children }) => {
     }
   }, [cookie]);
 
+  const handleRedirectError = (messsage) => {
+    navigate("/error", { state: { messsage } });
+  };
+
   const handleLogout = async () => {
     try {
       const request = await http.post("/auth/logout");
@@ -36,7 +39,7 @@ const UserInformationProvider = ({ children }) => {
         navigate("/login");
       }
     } catch (error) {
-      // // console.log(error);
+      console.log(error);
     }
   };
 
@@ -47,6 +50,7 @@ const UserInformationProvider = ({ children }) => {
         isLogin,
         handleLogout,
         userInformation,
+        handleRedirectError,
       }}
     >
       {children}

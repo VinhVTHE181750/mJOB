@@ -1,3 +1,0 @@
-USE mJOB;
-GO
-

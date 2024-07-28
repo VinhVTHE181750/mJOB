@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Card, CardBody, Container } from "react-bootstrap";
+import { useAuth } from "../../context/UserContext";
 
 function FaqPage() {
+  const { handleRedirectError } = useAuth();
   const [data, setData] = useState([]);
   useEffect(() => {
     const handleFetchData = async () => {
@@ -13,6 +15,7 @@ function FaqPage() {
         }
       } catch (err) {
         console.error(err);
+        handleRedirectError("server error");
       }
     };
     handleFetchData();
@@ -32,7 +35,7 @@ function FaqPage() {
         {data?.length > 0 &&
           data.map((item, index) => {
             return (
-              <Card>
+              <Card className="mt-2">
                 <CardBody>
                   <h6>
                     <b>Question:</b> {item.question}
