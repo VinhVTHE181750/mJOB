@@ -86,6 +86,11 @@ User.init(
   {
     sequelize,
     getterMethods: {
+      /**
+       * 
+       * @param {string} locale Country code. Currently support "vi-VN" only. Without this parameter, the default is "en-US"
+       * @returns 
+       */
       _fullName(locale) {
         if (locale === "vi-VN") {
           return this.lastName + " " + this.firstName;
