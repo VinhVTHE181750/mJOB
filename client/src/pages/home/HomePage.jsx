@@ -1,25 +1,26 @@
 import React from 'react';
 import '../../assets/css/Home.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import HelpCenter from '../../components/HelpCenter.jsx';
-import CarouselComponent from '../../components/home/HomeCarousel.jsx';
-import HotNew from '../../components/home/HotNew.jsx';
-import HotJob from '../../components/home/HotJobs.jsx';
-import Footer from '../../components/HomeFooter.jsx';
+import HomeUser from './HomeUser.jsx';
+import HomeGuest from './HomeGuest.jsx';
+import useWhoAmI from '../../hooks/user/useWhoAmI.js';
 
-function HomeGuest() {
+function HomePage() {
+  const { role,fetchMe } = useWhoAmI();
+  fetchMe();
+  if(role === "USER"){
+    return (
+    <div className="App">
+      <HomeUser/>
+    </div>
+    );
+  } else{
     return (
       <div className="App">
-        {/* <HomeNavbar /> */}
-        <CarouselComponent />    
-        <HotJob />    
-        <HelpCenter />
-        <HotNew />
-        <Footer />
-        
-        {/* <TestData /> */}
+        <HomeGuest/>
       </div>
     );
+  }
 }
 
-export default HomeGuest
+export default HomePage;

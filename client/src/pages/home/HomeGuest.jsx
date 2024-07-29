@@ -6,8 +6,8 @@ import CarouselComponent from '../../components/home/HomeCarousel.jsx';
 import HotNew from '../../components/home/HotNew.jsx';
 import HotJob from '../../components/home/HotJobs.jsx';
 import Footer from '../../components/HomeFooter.jsx';
-
 function HomeGuest() {
+
     return (
       <div className="App">
         {/* <HomeNavbar /> */}
@@ -15,7 +15,6 @@ function HomeGuest() {
         <HotJob />    
         <HelpCenter />
         <HotNew />
-        <Footer />
         
         {/* <TestData /> */}
       </div>

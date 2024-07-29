@@ -14,7 +14,7 @@ function PostStatistic() {
   const { posts: newPosts, loading: newLoading, error: newError } = useNewPosts();
   const { contents: hotPosts, loading: hotLoading, error: hotError } = useHotPosts();
   const [selectedPosts, setSelectedPosts] = useState('new'); // 'new' or 'hot'
-  console.log(hotPosts);
+
   const handleNewPostsClick = () => {
     setSelectedPosts('new');
   };

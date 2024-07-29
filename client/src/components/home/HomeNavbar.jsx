@@ -8,8 +8,10 @@ import React from "react";
 import { useAuth } from "../../context/UserContext";
 
 const HomeNavbar = ({ user }) => {
-  const { userId, username, role } = useWhoAmI();
+  const { userId, username, role, fetchMe } = useWhoAmI();
   const { isLogin, userInformation } = useAuth();
+  fetchMe();
+  // console.log("Current User in Auth:", userId," ", username," ", role);
   return (
     <>
       <Navbar bg="light" expand="lg">
@@ -60,21 +62,54 @@ const HomeNavbar = ({ user }) => {
             </Nav.Link>
             
             <Nav.Link
-              href="/faq"
-              className={
-                location.pathname === "/faq" ? "active nav-fixed" : "nav-fixed"
-              }
+              href="/technical"
+              className={location.pathname === "/technical" ? "active nav-fixed" : "nav-fixed"}
             >
               FAQs
             </Nav.Link>
-
+            <Nav.Link
+              href={`/profile/${userId}`}
+              className={location.pathname === "/profile" ? "active nav-fixed" : "nav-fixed"}
+            >
+              Profile
+            </Nav.Link>
             {/* </div> */}
           </Nav>
           {isLogin ? (
             <>
+              <Nav.Link
+                href="/reports"
+                className={
+                  location.pathname === "/reports"
+                    ? "active nav-fixed"
+                    : "nav-fixed"
+                }
+              >
+                Report
+              </Nav.Link>
+              <Nav.Link
+                href="/draw-balance"
+                className={
+                  location.pathname === "/draw-balance"
+                    ? "active nav-fixed"
+                    : "nav-fixed"
+                }
+              >
+                Balance
+              </Nav.Link>
+              <Nav.Link
+                href="/profile"
+                className={
+                  location.pathname === "/profile"
+                    ? "active nav-fixed"
+                    : "nav-fixed"
+                }
+              >
+                Profile
+              </Nav.Link>
               <Nav className="container container-navbar d-flex justify-content-end">
                 <NavDropdown title={`${username}`} id="basic-nav-dropdown">
-                  <NavDropdown.Item href={`/profile/${userId}`}>
+                  <NavDropdown.Item href="/profile">
                     User Profile
                   </NavDropdown.Item>
                   <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>

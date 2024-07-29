@@ -64,13 +64,12 @@ import Deposit from "./pages/payment/Deposit";
 import PaymentHistory from "./pages/payment/PaymentHistory";
 import PaymentPortal from "./pages/payment/PaymentPortal";
 import CreateTicketPage from "./pages/user/CreateTicket";
-
+import useWhoAmI from "./hooks/user/useWhoAmI";
 import FaqPage from "./pages/faq/Faq";
 import ReportPage from "./pages/report/report";
 import DrawBalacePage from "./pages/balance/drawBalance";
 import AdminFAQsPage from "./pages/faq/Adminfaqs";
 import ActiveAccountPage from "./pages/auth/ActiveAccount";
-
 function App() {
   return (
     <BrowserRouter>
@@ -103,13 +102,18 @@ function App() {
                 <Route exact path="/reports" element={<ReportPage />} />
                 <Route
                   exact
-                  path="/payment/withdraw"
+                  path="/draw-balance"
                   element={<DrawBalacePage />}
                 />
                 {/* HOME ROUTES */}
                 <Route exact path="/" element={<HomeGuest />} />
                 <Route exact path="/home" element={<HomePage />} />
                 <Route exact path="/homeuser" element={<HomeUser />} />
+                {/* <Route
+                  exact
+                  path="/homeuser"
+                  element={<HomeUser />}
+                /> */}
 
                 {/* FORUM ROUTES */}
                 <Route exact path="/forum" element={<Forum />} />
@@ -147,7 +151,7 @@ function App() {
                 {/* PAYMENT ROUTES */}
                 <Route exact path="/payment" element={<PaymentPortal />} />
 
-                <Route exact path="/payment/deposit" element={<Deposit />} />
+                <Route exact path="/deposit" element={<Deposit />} />
 
                 <Route
                   exact
@@ -160,7 +164,7 @@ function App() {
                   path="/payment-history"
                   element={<PaymentHistory />}
                 />
-                <Route exact path="/payment/transfer" element={<TransferMoney />} />
+                <Route exact path="/transfer" element={<TransferMoney />} />
 
                 {/* USERS ROUTES */}
                 <Route

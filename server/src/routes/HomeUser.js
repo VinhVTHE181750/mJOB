@@ -207,16 +207,7 @@ try {
 });
 
 // Route to fetch related jobs
-router.get('/relatedjobs', async (req, res) => {
-  try {
-    const pool = await db.poolPromise;
-    const result = await pool.request().query(SELECT_JOB_RELATED_TO_USER);
-    res.json(result.recordset);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Error occurred", error: err });
-  }
-});
+router.get('/relatedjobs', getRelatedJob);
 
 
 module.exports = router;

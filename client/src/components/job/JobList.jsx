@@ -4,9 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import SearchBar from '../../components/job/SearchBar.jsx';
 import FilterPrice from '../../components/job/FilterPrice.jsx';
 import JobPagination from '../../components/job/JobPagination.jsx';
-import useJobList from "../../hooks/useJobList";
-import useJobListbyview from "../../hooks/useJobListbyView.js";
-import useJobListbytime from "../../hooks/useJobListbyTime.js";
 import useJobListbyDefault from '../../hooks/job/market/useJobListbbyDefault.js';
 import useJobListbyView from '../../hooks/job/market/useJobListbyView.js';
 import useJobListbyDate from '../../hooks/job/market/useJobListbyDate.js';
@@ -20,10 +17,6 @@ function JobList() {
     const [currentPage, setCurrentPage] = useState(1);
     const jobsPerPage = 10;
   
-    // const { contents: defaultContents, loading: defaultLoading, error: defaultError } = useJobList();
-    // const { contents: viewContents, loading: viewLoading, error: viewError } = useJobListbyview();
-    // const { contents: timeContents, loading: timeLoading, error: timeError } = useJobListbytime();
-
     const { contents: defaultContents, loading: defaultLoading, error: defaultError } = useJobListbyDefault();
     const { contents: viewContents, loading: viewLoading, error: viewError } = useJobListbyView();
     const { contents: timeContents, loading: timeLoading, error: timeError } = useJobListbyDate();
