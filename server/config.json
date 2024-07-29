@@ -39,5 +39,22 @@
     "refreshSecret": "notFreshSecret",
     "refreshExpiresIn": 2592000
   },
-  "sessionSecret": "notSoSecret"
+  "sessionSecret": "notSoSecret",
+  "mail": {
+    "host": "smtp.gmail.com",
+    "port": 465,
+    "secure": true,
+    "auth": {
+      "user": "abc",
+      "pass": "xyz",
+      "clientId": "123"
+    }
+  },
+  "payment": {
+    "paypal": {
+      "mode": "sandbox",
+      "client_id": "abc",
+      "client_secret": "xyz"
+    }
+  }
 }

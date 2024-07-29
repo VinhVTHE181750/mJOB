@@ -1,6 +1,7 @@
 import { Button, Col, Container, FloatingLabel, Form, Row } from "react-bootstrap";
 import EmbedCard from "./micro/EmbedCard";
 import Balance from "./micro/Balance";
+import PayPalComponent from "../../components/payment/PayPalComponent";
 
 const Deposit = () => {
   const amount = 1234.567;
@@ -60,7 +61,7 @@ const Deposit = () => {
           sm={6}
           className="d-flex align-items-center text-left"
         >
-          You will be redirected to ...
+          <PayPalComponent />
         </Col>
       </Row>
     </Container>
