@@ -7,14 +7,12 @@ import JobList from "../../components/job/JobList.jsx";
 // import './Marketplace.css'; // Custom styles (optional)
 
 function JobMarket() {
-  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <>
       {/* <HomeNavbar /> */}
       <JobList />
       <HelpCenter />
-      <Footer />
     </>
   );
 }

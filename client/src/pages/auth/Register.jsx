@@ -32,29 +32,33 @@ const Register = () => {
   const [success, setSuccess] = useState(false);
   const errRef = useRef();
 
+  // Effect to validate username
+  
   useEffect(() => {
     setValidEmail(REGEX_EMAIL.test(email));
   }, [email]);
-
+  
   useEffect(() => {
     setValidPhone(REGEX_PHONE.test(phone));
   }, [phone]);
-
+  
   useEffect(() => {
     setValidName(REGEX_USERNAME.test(user));
   }, [user]);
-
+  // Effect to validate password and match
   useEffect(() => {
     setValidPwd(REGEX_PASSWORD.test(pwd));
     setValidMatch(pwd === matchPwd);
   }, [pwd, matchPwd]);
 
+  // Effect to clear error message on input change
   useEffect(() => {
     setErrMsg("");
   }, [user, pwd, matchPwd, email, phone]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Client-side validation
     const v1 = REGEX_USERNAME.test(user);
     const v2 = REGEX_PASSWORD.test(pwd);
     if (!v1 || !v2) {
@@ -64,30 +68,24 @@ const Register = () => {
     try {
       const response = await axios.post(
         REGISTER_API,
-        JSON.stringify({
-          username: user,
-          password: pwd,
-          email,
-          phone,
-          securityQuestion,
-          securityAnswer,
-          address,
-          dateOfBirth,
-        }),
+        JSON.stringify({ username: user, password: pwd, email, phone }),
         { headers: { "Content-Type": "application/json" } }
       );
       if (response.status === 201) {
+       
         setSuccess(true);
         alert("You need confirm email to active account");
+          alert("You need confirm email to active account");
         setUser("");
-        setPwd("");
-        setMatchPwd("");
-        setEmail("");
-        setPhone("");
+          setPwd("");
+          setMatchPwd("");
+          setEmail("");
+          setPhone("");
         setSecurityQuestion("Where do you live?");
         setSecurityAnswer("");
         setAddress("");
         setDateOfBirth("");
+      
       }
     } catch (err) {
       if (!err?.response) {

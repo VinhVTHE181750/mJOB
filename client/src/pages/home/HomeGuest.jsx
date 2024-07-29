@@ -15,7 +15,6 @@ function HomeGuest() {
         <HotJob />    
         <HelpCenter />
         <HotNew />
-        <Footer />
         
         {/* <TestData /> */}
       </div>

@@ -64,7 +64,7 @@ import Deposit from "./pages/payment/Deposit";
 import PaymentHistory from "./pages/payment/PaymentHistory";
 import PaymentPortal from "./pages/payment/PaymentPortal";
 import CreateTicketPage from "./pages/user/CreateTicket";
-
+import useWhoAmI from "./hooks/user/useWhoAmI";
 import FaqPage from "./pages/faq/Faq";
 import ReportPage from "./pages/report/report";
 import DrawBalacePage from "./pages/balance/drawBalance";
@@ -110,6 +110,11 @@ function App() {
                 <Route exact path="/" element={<HomeGuest />} />
                 <Route exact path="/home" element={<HomePage />} />
                 <Route exact path="/homeuser" element={<HomeUser />} />
+                {/* <Route
+                  exact
+                  path="/homeuser"
+                  element={<HomeUser />}
+                /> */}
 
                 {/* FORUM ROUTES */}
                 <Route exact path="/forum" element={<Forum />} />
