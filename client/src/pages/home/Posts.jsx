@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Nav, Button, Card } from 'react-bootstrap';
 import { FaChartBar, FaBriefcase, FaComments, FaUsers, FaSignOutAlt } from 'react-icons/fa';
 
-const Forums = () => {
+const Posts = () => {
 
     const handleEditPost = () => {
         alert('Edit Post function not implemented!');
@@ -15,7 +15,7 @@ const Forums = () => {
     return (
         <div>
             <header className="text-center">
-                <h1>Forum Management</h1>
+                <h1>Post Management</h1>
             </header>
             <Container fluid className="mt-3">
                 <Row>
@@ -28,8 +28,8 @@ const Forums = () => {
                             <Nav.Link href="/jobs" className="text-dark">
                                 <FaBriefcase className="me-2" /> Jobs
                             </Nav.Link>
-                            <Nav.Link href="/forums" className="text-dark">
-                                <FaComments className="me-2" /> Forum
+                            <Nav.Link href="/posts" className="text-dark">
+                                <FaComments className="me-2" /> Posts
                             </Nav.Link>
                             <Nav.Link href="/users" className="text-dark">
                                 <FaUsers className="me-2" /> Users
@@ -67,4 +67,4 @@ const Forums = () => {
     );
 };
 
-export default Forums;
+export default Posts;

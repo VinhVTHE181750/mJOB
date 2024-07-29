@@ -37,7 +37,7 @@ import PageNotFound from "./pages/technical/PageNotFound";
 // Users
 
 import Users from "./pages/home/Users";
-import Forums from "./pages/home/Forums";
+import Posts from "./pages/home/Posts";
 import EditProfile from "./pages/profile/EditProfile";
 import Profile from "./pages/profile/Profile";
 import WorkExperience from "./pages/profile/WorkExperience";
@@ -268,8 +268,8 @@ function App() {
                 />
                 <Route
                   exact
-                  path="/forums"
-                  element={<Forums />}
+                  path="/posts"
+                  element={<Posts />}
                 />
 
                 {/* TECHNICAL ROUTES */}

@@ -51,8 +51,8 @@ const Users = () => {
               <Nav.Link href="/jobs" className="text-dark ">
               <FaBriefcase className="me-2" /> Jobs
               </Nav.Link>
-              <Nav.Link href="/forums" className="text-dark">
-                                <FaComments className="me-2" /> Forum
+              <Nav.Link href="/posts" className="text-dark">
+                                <FaComments className="me-2" /> Posts
                             </Nav.Link>
               <Nav.Link href="/users" className="text-dark">
               <FaUsers className="me-2" /> Users
