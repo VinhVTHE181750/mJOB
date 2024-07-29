@@ -1,10 +1,14 @@
-import { Button, Col, Container, FloatingLabel, Form, Row } from "react-bootstrap";
-import EmbedCard from "./micro/EmbedCard";
+import { lazy, Suspense, useState } from "react";
+import { Col, Container, FloatingLabel, Form, Row, Spinner } from "react-bootstrap";
+import { useBalance } from "../../hooks/payment/useBalance";
 import Balance from "./micro/Balance";
-import PayPalComponent from "../../components/payment/PayPalComponent";
+import EmbedCard from "./micro/EmbedCard";
+const PayPalComponent = lazy(() => import("../../components/payment/PayPalComponent"));
 
 const Deposit = () => {
-  const amount = 1234.567;
+  const [amount, setAmount] = useState(0);
+  const { balance, loading, error } = useBalance();
+
   return (
     <Container>
       <h1>Deposit</h1>
@@ -18,50 +22,40 @@ const Deposit = () => {
           <EmbedCard
             title={<h1 style={{ fontSize: 60, fontWeight: "bold" }}>Current Balance</h1>}
             content={
-              <div style={{ fontSize: 40 }}>
-                <Balance
-                  amount={amount}
-                  currency="VND"
-                  locale="vi-VN"
-                />
+              <div className="fs-1">
+                {loading && <Spinner animation="border" />}
+                {(!loading && !error) && (
+                  <Balance
+                    amount={balance}
+                    currency="USD"
+                    locale="en-US"
+                  />
+                )}
+                {error && <p>Error: {error.message}</p>}
               </div>
             }
           />
         </Col>
       </Row>
-      <Row className="border mt-5">
+      <Row className="border mt-5 d-flex justify-content-center align-items-center">
         <Col
           className="px-0 mx-0"
           sm={3}
         >
           <FloatingLabel
-            className="m-2 p-0"
+            className="m-2 p-0 mb-3"
             controlId="floatingInput"
-            label="Amount"
+            label="Amount to deposit"
           >
             <Form.Control
               type="number"
-              placeholder="Amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
             />
           </FloatingLabel>
-        </Col>
-        <Col
-          className="d-flex align-items-center"
-          sm={3}
-        >
-          <Button
-            variant="primary"
-            size="lg"
-            className=""
-          >
-            Deposit
-          </Button>
-        </Col>
-        <Col
-          sm={6}
-          className="d-flex align-items-center text-left"
-        >
-          <PayPalComponent />
+          <Suspense fallback={<Spinner animation="border" />}>
+            <PayPalComponent amount={amount} />
+          </Suspense>
         </Col>
       </Row>
     </Container>

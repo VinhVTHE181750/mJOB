@@ -1,5 +1,9 @@
+const express = require("express");
 const config = require("../../../config.json");
+const router = express.Router();
 
+const PAYPAL_CLIENT_ID = config.payment.paypal.client_id;
+const PAYPAL_CLIENT_SECRET = config.payment.paypal.client_secret;
 const base = "https://api-m.sandbox.paypal.com";
 
 /**
@@ -57,7 +61,7 @@ const createOrder = async (cart) => {
       {
         amount: {
           currency_code: "USD",
-          value: "100",
+          value: 100, // Use the amount from the cart
         },
       },
     ],
@@ -81,10 +85,16 @@ const createOrder = async (cart) => {
 };
 
 // createOrder route
-app.post("/api/orders", async (req, res) => {
+router.post("/orders", async (req, res) => {
   try {
     // use the cart information passed from the front-end to calculate the order amount detals
     const { cart } = req.body;
+    // if (!amount) {
+    //   return res.status(400).json({ error: "Amount is required" });
+    // }
+    // if (isNaN(amount) || amount <= 0) {
+    //   return res.status(400).json({ error: "Invalid amount" });
+    // }
     const { jsonResponse, httpStatusCode } = await createOrder(cart);
     res.status(httpStatusCode).json(jsonResponse);
   } catch (error) {
@@ -93,7 +103,33 @@ app.post("/api/orders", async (req, res) => {
   }
 });
 
-// serve index.html
-app.get("/", (req, res) => {
-  res.sendFile(path.resolve("./checkout.html"));
+// Define the captureOrder function
+const captureOrder = async (orderID) => {
+  const accessToken = await generateAccessToken();
+  const url = `${base}/v2/checkout/orders/${orderID}/capture`;
+
+  const response = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${accessToken}`,
+    },
+    method: "POST",
+  });
+
+  return handleResponse(response);
+};
+
+// Create the capture route
+router.post("/orders/:orderID/capture", async (req, res) => {
+  try {
+    const { orderID } = req.params;
+    const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
+    res.status(httpStatusCode).json(jsonResponse);
+  } catch (error) {
+    console.error("Failed to capture order:", error);
+    res.status(500).json({ error: "Failed to capture order." });
+  }
 });
+
+
+module.exports = router;

@@ -1,26 +1,29 @@
-import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
+import PropTypes from "prop-types";
 import { useState } from "react";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import http from "../../functions/httpService";
 
 // Renders errors or successfull transactions on the screen.
 function Message({ content }) {
   return <p>{content}</p>;
 }
 
-function PayPalComponent() {
+function PayPalComponent({ amount }) {
   const initialOptions = {
     "client-id": "AdxQJndu_yQCm_pbmbE2BRfVwSsJ2qBQ8u_FAtm00QuS_uT0-Y1TzN7Lk5mb_SvJaXL52WYyJmWnbqWS",
-    "disable-funding": "",
-    "country": "US",
+    // "enable-funding": "venmo",
+    "disable-funding": "venmo",
+    // "country": "US",
     "currency": "USD",
     "data-page-type": "product-details",
     "components": "buttons",
-    "data-sdk-integration-source": "developer-studio",
+    // "data-sdk-integration-source": "developer-studio",
   };
 
   const [message, setMessage] = useState("");
 
   return (
-    <div>
+    <div className="App">
       <PayPalScriptProvider options={initialOptions}>
         <PayPalButtons
           style={{
@@ -31,24 +34,16 @@ function PayPalComponent() {
           }}
           createOrder={async () => {
             try {
-              const response = await fetch("/api/orders", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                // use the "body" param to optionally pass additional order information
-                // like product ids and quantities
-                body: JSON.stringify({
-                  cart: [
-                    {
-                      id: "YOUR_PRODUCT_ID",
-                      quantity: "YOUR_PRODUCT_QUANTITY",
-                    },
-                  ],
-                }),
+              const response = await http.post("/payment/paypal/orders", {
+                cart: [
+                  {
+                    id: "123",
+                    quantity: "1",
+                  },
+                ],
               });
 
-              const orderData = await response.json();
+              const orderData = await response.data;
 
               if (orderData.id) {
                 return orderData.id;
@@ -65,14 +60,9 @@ function PayPalComponent() {
           }}
           onApprove={async (data, actions) => {
             try {
-              const response = await fetch(`/api/orders/${data.orderID}/capture`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              });
+              const response = await http.post(`/payment/paypal/orders/${data.orderID}/capture`, {});
 
-              const orderData = await response.json();
+              const orderData = await response.data;
               // Three cases to handle:
               //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
               //   (2) Other non-recoverable errors -> Show a failure message
@@ -105,5 +95,9 @@ function PayPalComponent() {
     </div>
   );
 }
+
+PayPalComponent.propTypes = {
+  amount: PropTypes.number.isRequired,
+};
 
 export default PayPalComponent;
