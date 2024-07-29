@@ -11,7 +11,6 @@ const useHotPosts = () => {
       try {
         const url = `/homeguest/hotposts`;
         const response = await http.get(url);
-        console.log(response.data);
         setContents(response.data);
         setLoading(false);
       } catch (error) {

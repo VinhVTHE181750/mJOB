@@ -8,8 +8,10 @@ import React from "react";
 import { useAuth } from "../../context/UserContext";
 
 const HomeNavbar = ({ user }) => {
-  const { userId, username, role } = useWhoAmI();
+  const { userId, username, role, fetchMe } = useWhoAmI();
   const { isLogin, userInformation } = useAuth();
+  fetchMe();
+  // console.log("Current User in Auth:", userId," ", username," ", role);
   return (
     <>
       <Navbar bg="light" expand="lg">

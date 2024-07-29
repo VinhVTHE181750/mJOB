@@ -70,7 +70,6 @@ import ReportPage from "./pages/report/report";
 import DrawBalacePage from "./pages/balance/drawBalance";
 import AdminFAQsPage from "./pages/faq/Adminfaqs";
 import ActiveAccountPage from "./pages/auth/ActiveAccount";
-
 function App() {
   return (
     <BrowserRouter>
