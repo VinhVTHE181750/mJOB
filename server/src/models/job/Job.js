@@ -16,7 +16,7 @@ Job.init(
       allowNull: false,
     },
     type: {
-      type: DataTypes.ENUM("FULL_TIME", "PART_TIME", "INTERNSHIP", "COMMISION", "FREELANCE", "CONTRACT"),
+      type: DataTypes.ENUM("FULL_TIME", "PART_TIME", "INTERNSHIP", "COMMISSION", "FREELANCE", "CONTRACT"),
       allowNull: false,
     },
     // Description
