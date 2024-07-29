@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Container, Nav, Row } from "react-bootstrap";
-import { FaBriefcase, FaChartBar, FaSignOutAlt, FaUsers } from "react-icons/fa";
+import { FaBriefcase, FaChartBar, FaSignOutAlt, FaUsers,FaComments } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import http from "../../functions/httpService";
 
@@ -51,6 +51,9 @@ const Users = () => {
               <Nav.Link href="/jobs" className="text-dark ">
               <FaBriefcase className="me-2" /> Jobs
               </Nav.Link>
+              <Nav.Link href="/forums" className="text-dark">
+                                <FaComments className="me-2" /> Forum
+                            </Nav.Link>
               <Nav.Link href="/users" className="text-dark">
               <FaUsers className="me-2" /> Users
               </Nav.Link>

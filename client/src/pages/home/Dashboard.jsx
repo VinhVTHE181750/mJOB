@@ -17,6 +17,7 @@ import {
   FaBriefcase,
   FaSignOutAlt,
   FaChartBar,
+  FaComments
 } from "react-icons/fa";
 import useCountUser from "../../hooks/useCountUser.js";
 import useCountJob from "../../hooks/useCountJob.js";
@@ -86,6 +87,9 @@ const AdminDashboard = () => {
               <Nav.Link href="/jobs" className="text-dark">
                 <FaBriefcase className="me-2" /> Jobs
               </Nav.Link>
+              <Nav.Link href="/forums" className="text-dark">
+                                <FaComments className="me-2" /> Forum
+                            </Nav.Link>
               <Nav.Link href="/users" className="text-dark">
                 <FaUsers className="me-2" /> Users
               </Nav.Link>

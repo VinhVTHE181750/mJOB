@@ -37,6 +37,7 @@ import PageNotFound from "./pages/technical/PageNotFound";
 // Users
 
 import Users from "./pages/home/Users";
+import Forums from "./pages/home/Forums";
 import EditProfile from "./pages/profile/EditProfile";
 import Profile from "./pages/profile/Profile";
 import WorkExperience from "./pages/profile/WorkExperience";
@@ -264,6 +265,11 @@ function App() {
                   exact
                   path="/ticket"
                   element={<CreateTicketPage />}
+                />
+                <Route
+                  exact
+                  path="/forums"
+                  element={<Forums />}
                 />
 
                 {/* TECHNICAL ROUTES */}
