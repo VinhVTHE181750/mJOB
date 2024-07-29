@@ -1,3 +1,4 @@
+const Post = require("../../models/forum/post/Post");
 const Job = require("../../models/job/Job");
 const JobPreference = require("../../models/user/JobPreference");
 const PostPreference = require("../../models/user/PostPreference");
@@ -265,6 +266,72 @@ async function relatedJobs(job, jobList) {
   let result = [];
   for (let i = 0; i < scoreList.length; i++) {
     result.push(scoreList[i].job);
+  }
+
+  return result;
+}
+
+
+/**
+ * 
+ * @param {Post} post 
+ * @param {Array<Post>} postList 
+ * 
+ * @returns {Array<Post>} the list of posts that are most relevant to the post
+ * 
+ * The relevance is calculated by scores:
+ * - Tags: for each matched keywords, 1 point
+ * - Categories: for each matched keywords, 5 point
+ * 
+ * The postList is sorted by score in descending order
+ * If the input post list contains fewer than 5 posts, return the list as is
+ * 
+ */
+async function relatedPosts(post, postList) {
+  if (!Array.isArray(postList)) {
+    return null;
+  }
+
+  if (!post) {
+    return null;
+  }
+
+  if (postList.length < 5) {
+    return postList;
+  }
+
+  let scoreList = [];
+  for (let p of postList) {
+    let score = 0;
+
+    if (post.tags) {
+      const tagList = post.tags.split(",");
+      const postTagList = p.tags.split(",");
+      for (let tag of tagList) {
+        if (postTagList.includes(tag)) {
+          score += 1;
+        }
+      }
+    }
+
+    if (post.categories) {
+      const categoryList = post.categories.split(",");
+      const postCategoryList = p.categories.split(",");
+      for (let category of categoryList) {
+        if (postCategoryList.includes(category)) {
+          score += 5;
+          break;
+        }
+      }
+    }
+
+    scoreList.push({ post: p, score });
+  }
+
+  scoreList.sort((a, b) => b.score - a.score);
+  let result = [];
+  for (let i = 0; i < scoreList.length; i++) {
+    result.push(scoreList[i].post);
   }
 
   return result;
