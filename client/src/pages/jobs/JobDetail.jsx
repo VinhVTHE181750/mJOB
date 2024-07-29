@@ -170,6 +170,10 @@ const JobDetail = () => {
       <JobDetailContainer>
         <Title>{job.title}</Title>
         <Section>
+          <Label>Type:</Label>
+          <Text>{job.type}</Text>
+        </Section>
+        <Section>
           <Label>Location:</Label>
           <Text>{job.location}</Text>
         </Section>
@@ -199,7 +203,7 @@ const JobDetail = () => {
           <Label>Compensation:</Label>
           <Text>Type: {job.salaryType}</Text>
           <Text>
-            Amount: {job.salaryAmount} {job.salaryCurrency}
+            Amount: {job.salary} {job.salaryCurrency}
           </Text>
         </Section>
         <Section>
