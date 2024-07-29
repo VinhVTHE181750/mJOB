@@ -200,6 +200,76 @@ async function relevantPostSearch(id, postList) {
   return result;
 }
 
+/**
+ *
+ * @param {Job} job
+ * @param {Array<Job>} jobList
+ *
+ * @returns {Array<Job>} the list of jobs that are most relevant to the job
+ *
+ * The relevance is calculated by scores:
+ * - Location: 5 points if matched (district, city), 4 points if the location is in the same city, 3 points if the location is in nearby city
+ * - Salary: 4 points if matched, 5 points if the salary is higher than the user's expectation, 2 points if the salary is lower than the user's expectation
+ * - Tags: for each matched keywords, 1 point
+ *
+ * The jobList is sorted by score in descending order
+ * If the input job list contains fewer than 5 jobs, return the list as is
+ *
+ */
+async function relatedJobs(job, jobList) {
+  if (!Array.isArray(jobList)) {
+    return null;
+  }
+
+  if (!job) {
+    return null;
+  }
+
+  if (jobList.length < 5) {
+    return jobList;
+  }
+
+  let scoreList = [];
+  for (let j of jobList) {
+    let score = 0;
+    if (job.location === j.location) {
+      score += 5;
+    } else if (j.location.includes(job.location.split(",")[1])) {
+      score += 4;
+    } else {
+      // missing nearby city score
+    }
+
+    if (job.salaryMin <= j.salary && j.salary <= job.salaryMax) {
+      score += 4;
+    } else if (j.salary > job.salaryMax) {
+      score += 5;
+    } else {
+      score += 2;
+    }
+
+    if (job.tags) {
+      const tagList = job.tags.split(",");
+      const jobTagList = j.tags.split(",");
+      for (let tag of tagList) {
+        if (jobTagList.includes(tag)) {
+          score += 1;
+        }
+      }
+    }
+
+    scoreList.push({ job: j, score });
+  }
+
+  scoreList.sort((a, b) => b.score - a.score);
+  let result = [];
+  for (let i = 0; i < scoreList.length; i++) {
+    result.push(scoreList[i].job);
+  }
+
+  return result;
+}
+
 module.exports = {
   relevantJobSearch,
   relevantPostSearch,
