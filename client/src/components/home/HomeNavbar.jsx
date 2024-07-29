@@ -48,8 +48,8 @@ const HomeNavbar = ({ user }) => {
               Forum
             </Nav.Link>
             <Nav.Link
-              href="/technical"
-              className={location.pathname === "/technical" ? "active nav-fixed" : "nav-fixed"}
+              href="/dashboard"
+              className={location.pathname === "/dashboard" ? "active nav-fixed" : "nav-fixed"}
             >
               Technical
             </Nav.Link>
