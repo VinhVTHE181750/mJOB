@@ -7,16 +7,11 @@ const whoami = async (req, res) => {
   const userId = req.userId;
   if (userId) {
     const user = await User.findOne({ where: { id: userId } });
-    if (user) {
-      const username = user.username;
-      const auth = await Auth.findOne({ where: { UserId: userId } });
-      const role = auth ? auth.role : "USER"; // Default to "USER" if no auth found
-      return res.status(200).json({ role, userId, username });
-    }
-    // User ID is present but no user found, treat as guest
-    return res.status(200).json({ role: "GUEST", userId: -1, username: "Guest" });
+    const username = user.username;
+    const auth = await Auth.findOne({ where: { UserId: userId } });
+    const role = auth.role;
+    return res.status(200).json({ role, userId, username });
   } else {
-    // No userId present, treat as guest
     return res.status(200).json({ role: "GUEST", userId: -1, username: "Guest" });
   }
 };

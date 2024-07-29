@@ -3,7 +3,6 @@ import { Container, Row, Col, Form, Button, Card, Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router";
-import { FaUserEdit, FaBriefcase, FaSignOutAlt, FaCog } from "react-icons/fa";
 
 const WorkExperience = () => {
   const [jobTitle, setJobTitle] = useState("");
@@ -12,7 +11,6 @@ const WorkExperience = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [otherInformation, setOtherInformation] = useState("");
-  const [errors, setErrors] = useState({});
   const { userId } = useParams();
 
   useEffect(() => {
@@ -40,30 +38,8 @@ const WorkExperience = () => {
   }, [userId]);
 
   const navigate = useNavigate();
-
-  const validate = () => {
-    const newErrors = {};
-    if (!jobTitle.trim()) newErrors.jobTitle = "Job Title is required";
-    if (!jobDescription.trim())
-      newErrors.jobDescription = "Job Description is required";
-    else if (jobDescription.length > 150)
-      newErrors.jobDescription = "Job Description must be less than 150 characters";
-    if (!company.trim()) newErrors.company = "Company is required";
-    if (!startDate) newErrors.startDate = "Start Date is required";
-    if (!endDate) newErrors.endDate = "End Date is required";
-    else if (startDate && endDate && startDate >= endDate)
-      newErrors.endDate = "End Date must be after Start Date";
-    return newErrors;
-  };
-
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const newErrors = validate();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-    setErrors({});
 
     const userData = {
       userId: userId,
@@ -93,38 +69,25 @@ const WorkExperience = () => {
       <h1 className="text-center my-4">Work Experience</h1>
       <Container fluid className="mt-3">
         <Row>
-          <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
-            <h2 className="text-center">Navigation</h2>
+          <Col md={2}>
             <Nav className="flex-column">
-              <Nav.Link
-                href={`/editprofile/${userId}`}
-                className="text-dark mb-2 d-flex align-items-center"
-              >
-                <FaUserEdit className="me-2" />
+              <h2>Navigation</h2>
+              <Nav.Link href={`/editprofile/${userId}`} className="text-black">
                 Profile
               </Nav.Link>
               <Nav.Link
                 href={`/workexperience/${userId}`}
-                className="text-dark mb-2 d-flex align-items-center"
+                className="text-black"
               >
-                <FaBriefcase className="me-2" />
                 Work Experience
               </Nav.Link>
-              <Nav.Link
-                href={`/settings`}
-                className="text-dark mb-2 d-flex align-items-center"
-              >
-                <FaCog className="me-2" />
-                Settings
-              </Nav.Link>
-              <Button
-                variant="danger"
-                href="/logout"
-                className="mt-3 d-flex align-items-center"
-              >
-                <FaSignOutAlt className="me-2" />
-                Logout
-              </Button>
+              <Row>
+                <Col>
+                  <Button variant="danger" href="/logout">
+                    Log Out
+                  </Button>
+                </Col>
+              </Row>
             </Nav>
           </Col>
           <Col md={10} className="p-4">
@@ -141,11 +104,7 @@ const WorkExperience = () => {
                         placeholder="Job Title"
                         value={jobTitle}
                         onChange={(e) => setJobTitle(e.target.value)}
-                        isInvalid={!!errors.jobTitle}
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.jobTitle}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
 
@@ -159,11 +118,7 @@ const WorkExperience = () => {
                         placeholder="Job Description"
                         value={jobDescription}
                         onChange={(e) => setJobDescription(e.target.value)}
-                        isInvalid={!!errors.jobDescription}
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.jobDescription}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
 
@@ -177,11 +132,7 @@ const WorkExperience = () => {
                         placeholder="Company"
                         value={company}
                         onChange={(e) => setCompany(e.target.value)}
-                        isInvalid={!!errors.company}
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.company}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
 
@@ -194,11 +145,7 @@ const WorkExperience = () => {
                         type="date"
                         value={startDate}
                         onChange={(e) => setStartDate(e.target.value)}
-                        isInvalid={!!errors.startDate}
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.startDate}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
 
@@ -211,22 +158,18 @@ const WorkExperience = () => {
                         type="date"
                         value={endDate}
                         onChange={(e) => setEndDate(e.target.value)}
-                        isInvalid={!!errors.endDate}
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.endDate}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
 
                   <Form.Group as={Row} controlId="otherInformation">
                     <Form.Label column sm={2}>
-                      Location
+                      Other Information
                     </Form.Label>
                     <Col sm={10}>
                       <Form.Control
-                        
-                        placeholder="Location"
+                        as="textarea"
+                        placeholder="Other Information"
                         value={otherInformation}
                         onChange={(e) => setOtherInformation(e.target.value)}
                       />

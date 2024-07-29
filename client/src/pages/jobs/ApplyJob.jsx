@@ -108,13 +108,12 @@ const ApplyButton = styled.button`
 
 const ApplyJob = () => {
   const [requirements, setRequirements] = useState([]);
-  const { job_id } = useParams();
-  const user_id = 1; // Replace this with the actual user ID, perhaps from context or props
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchRequirements = async () => {
       try {
-        const response = await http.get(`/job-requirements/${job_id}`);
+        const response = await http.get(`/jobs/job-requirements/${id}`);
         setRequirements(response.data);
       } catch (error) {
         console.error('Error fetching job requirements:', error);
@@ -122,14 +121,14 @@ const ApplyJob = () => {
     };
 
     fetchRequirements();
-  }, [job_id]);
+  }, [id]);
 
   const handleApply = async () => {
     try {
       const job_requirement_data = JSON.stringify(requirements);
-      await http.post('/apply-job', {
+      await http.post('/jobs/apply-job', {
         job_id,
-        user_id,
+        user_id, // Make sure `user_id` is defined or fetched from a proper source
         job_requirement_data,
       });
       alert('Applied to job successfully!');
@@ -147,10 +146,10 @@ const ApplyJob = () => {
         {requirements.length > 0 ? (
           <RequirementList>
             {requirements.map((req) => {
-              const fileDetails = JSON.parse(req.job_requirement);
+              const fileDetails = JSON.parse(req.data); // Assuming `req.data` contains the JSON string
               const downloadUrl = `/download/${fileDetails.file_name}`;
               return (
-                <RequirementItem key={req.requirement_id}>
+                <RequirementItem key={req.RequirementId}>
                   <FileName>{fileDetails.file_name}</FileName>
                   <DownloadLink href={downloadUrl} download={fileDetails.file_name}>
                     Download
