@@ -13,6 +13,7 @@ const EnlistJob = () => {
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     job_title: "",
+    job_type: "",
     job_work_location: "",
     job_tags: "",
     job_max_applications: "",
@@ -120,6 +121,26 @@ const EnlistJob = () => {
                 value={formValues.job_title}
                 onChange={handleChange}
               />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className="mx-0 align-self-center w-100">
+          <Col>
+            <Form.Group controlId="compensationType">
+              <Form.Label>Job Type</Form.Label>
+              <Form.Control
+                as="select"
+                name="job_type"
+                value={formValues.job_type}
+                onChange={handleChange}
+              >
+                <option value="FULL_TIME">Full-Time</option>
+                <option value="PART_TIME">Part-Time</option>
+                <option value="INTERNSHIP">Internship</option>
+                <option value="COMMISSION">Commision</option>
+                <option value="FREELANCE">Freelance</option>
+                <option value="CONTRACT">Contract</option>
+              </Form.Control>
             </Form.Group>
           </Col>
         </Row>
@@ -275,7 +296,7 @@ const EnlistJob = () => {
               >
                 <option value="AGREEMENT">Agreement</option>
                 <option value="NONE">None</option>
-                <option value="ONETIME">ONCE</option>
+                <option value="ONETIME">Once</option>
                 <option value="HOURLY">Hourly</option>
                 <option value="DAILY">Daily</option>
                 <option value="WEEKLY">Weekly</option>
