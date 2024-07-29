@@ -1,4 +1,5 @@
 const Post = require("../../models/forum/post/Post");
+const Application = require("../../models/job/Application");
 const Job = require("../../models/job/Job");
 const JobPreference = require("../../models/user/JobPreference");
 const PostPreference = require("../../models/user/PostPreference");
@@ -435,6 +436,106 @@ async function suggestApplicants(job) {
     }
 
     return result;
+  } catch (err) {
+    log(err, "ERROR", "RelativeSearch.js");
+    return null;
+  }
+}
+
+/**
+ *
+ * @param {Job} job
+ * @returns {Array<User>} the list of applicants that are most compatible to the job
+ *
+ * The compatibility is calculated by scores:
+ * - Location: 5 points if matched (district, city), 4 points if the location is in the same city, 3 points if the location is in nearby city
+ * - Salary: 4 points if matched, 5 points if the salary is higher than the user's expectation, 2 points if the salary is lower than the user's expectation
+ * - Tags: for each matched keywords, 1 point
+ * - Type: 2 points if matched, 0 otherwise
+ *
+ * For a job which recruits X applicants, this function will return at most X applicants
+ * To be approved, the applicant must have a score of at least 10
+ * And includes:
+ * - The applicant's availability is true
+ * - The applicant's is applying for the job
+ */
+async function autoApproval(job) {
+  try {
+    const userList = await Application.findAll({
+      where: {
+        JobId: job.id,
+        status: "PENDING",
+      },
+    });
+
+    let scoreList = [];
+
+    for (let user of userList) {
+      let score = 0;
+
+      const userPreference = await JobPreference.findOne({
+        where: {
+          UserId: user.UserId,
+        },
+      });
+
+      if (!userPreference) {
+        continue;
+      }
+
+      if (job.location === userPreference.location) {
+        score += 5;
+      } else if (job.location.includes(userPreference.location.split(",")[1])) {
+        score += 4;
+      } else {
+        // missing nearby city score
+      }
+
+      if (userPreference.salaryMin <= job.salary && job.salary <= userPreference.salaryMax) {
+        score += 4;
+      } else if (job.salary > userPreference.salaryMax) {
+        score += 5;
+      } else {
+        score += 2;
+      }
+
+      if (job.type === userPreference.type) {
+        score += 2;
+      }
+
+      if (userPreference.tags) {
+        const tagList = userPreference.tags.split(",");
+        const jobTagList = job.tags.split(",");
+        for (let tag of tagList) {
+          if (jobTagList.includes(tag)) {
+            score += 1;
+          }
+        }
+      }
+      scoreList.push({ user, score });
+    }
+
+    scoreList.sort((a, b) => b.score - a.score);
+    let result = [];
+    for (let i = 0; i < job.recruitments; i++) {
+      if (scoreList[i].score >= 10) {
+        result.push(scoreList[i].user);
+      }
+    }
+
+    for (let user of result) {
+      await Application.update(
+        {
+          status: "ACCEPTED",
+        },
+        {
+          where: {
+            JobId: job.id,
+            UserId: user.id,
+          },
+        }
+      );
+    }
   } catch (err) {
     log(err, "ERROR", "RelativeSearch.js");
     return null;

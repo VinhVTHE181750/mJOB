@@ -15,6 +15,10 @@ Job.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    type: {
+      type: DataTypes.ENUM("FULL_TIME", "PART_TIME", "INTERNSHIP", "COMMISION", "FREELANCE", "CONTRACT"),
+      allowNull: false,
+    },
     // Description
     description: {
       type: DataTypes.STRING,
@@ -62,29 +66,16 @@ Job.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    // If false -> no salary job (volunteer, etc)
-    // If true -> salary job
-    paid: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-    },
 
     // Salary amount
     salary: {
       type: DataTypes.FLOAT,
       allowNull: true,
     },
-    // ONE OF: hourly, daily, weekly, monthly, once
+
+    // ONE OF: hourly, daily, weekly, monthly, once, percentage or none
     salaryType: {
-      type: DataTypes.ENUM(
-        "HOURLY",
-        "DAILY",
-        "WEEKLY",
-        "MONTHLY",
-        "ONCE",
-        "PERCENTAGE"
-      ),
+      type: DataTypes.ENUM("HOURLY", "DAILY", "WEEKLY", "MONTHLY", "ONCE", "PERCENTAGE", "NONE"),
       allowNull: true,
     },
     salaryCurrency: {
@@ -105,13 +96,7 @@ Job.init(
 
     // COMPLETED: job is completed and cannot be applied to. This may happen when the job
     status: {
-      type: DataTypes.ENUM(
-        "ACTIVE",
-        "INACTIVE",
-        "DELISTED",
-        "ONGOING",
-        "COMPLETED"
-      ),
+      type: DataTypes.ENUM("ACTIVE", "INACTIVE", "DELISTED", "ONGOING", "COMPLETED"),
       allowNull: false,
       defaultValue: "INACTIVE",
     },
