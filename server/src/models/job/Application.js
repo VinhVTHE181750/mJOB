@@ -15,7 +15,8 @@ Application.init(
         "ACCEPTED", // waiting -> accepted
         "REJECTED", // waiting -> rejected
         "ONGOING", // accepted -> ongoing
-        "COMPLETED" // ongoing -> completed
+        "COMPLETED", // ongoing -> completed
+        "CANCELLED" // ongoing -> cancelled
       ),
       allowNull: false,
     },
@@ -24,6 +25,5 @@ Application.init(
     sequelize,
   }
 );
-
 
 module.exports = Application;
