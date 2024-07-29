@@ -6,22 +6,17 @@ const jobsRoute = require("./job/Jobs");
 const dashboardRoute = require("./Dashboard");
 const jobListRoute = require("./JobList");
 const marketingRoute = require("./marketing");
-
 const dataPostRoute = require("./datapost");
-
 const hotJobRoute = require("./job/top3job");
-
 const countTotalUser = require("./dashboard/countTotalUser");
 const userRoute = require("./User");
 const profileRoute = require("./Profile");
 const workExperienceRoute = require("./WorkExperience");
-const User = require("../models/user/User");
 const whoami = require("./WhoAmI");
 const profileRole = require("./dashboard/userManager");
 const jobManage = require("./dashboard/jobManager");
 const homeuserRoute = require("./HomeUser");
 const homeguestRoute = require("./HomeGuest");
-
 const ticketRoute = require("./ticket");
 const faqRoute = require("./faq");
 
