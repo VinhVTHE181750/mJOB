@@ -48,8 +48,6 @@ const getOngoingJob = async (req, res) => {
 
 const getRelatedJob = async (req, res) => {
     try {
-        const userId = 1;
-
         // const userId = req.userId;
         // if (!req.userId) return res.status(401).json({ message: "Unauthorized" });        
         const jobHistory = await Job.findAll({
@@ -57,7 +55,21 @@ const getRelatedJob = async (req, res) => {
                 tags: {
                     [Op.like]: '%HR%'
                 }
-            }
+            },
+            include: [
+                {
+                    model: User,
+                    attributes: ['username']
+                }
+            ],
+            limit: 3
+        });
+        const currentTime = new Date();
+        jobHistory.forEach(job => {
+          const endDate = new Date(job.endDate);
+          const timeDifference = endDate.getTime() - currentTime.getTime();
+          const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24)); // Convert milliseconds to days
+          job.dataValues.timeleft = daysLeft;
         });
         res.status(200).json(jobHistory);
     } catch (err) {
