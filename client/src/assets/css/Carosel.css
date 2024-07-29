@@ -15,15 +15,15 @@
   
   .post-card {
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-content: center; */
     background-size: cover;
     background-position: center;
-    color: white;
+    /* color: white; */
   }
-  
+/*   
   .post-card .card-body {
-    background: rgba(0, 0, 0, 0.5); /* Optional: add a dark overlay for better text visibility */
+    background: rgba(0, 0, 0, 0.5); 
   }
-  
+   */
