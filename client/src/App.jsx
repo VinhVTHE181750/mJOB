@@ -29,6 +29,7 @@ import EnlistJob from "./pages/jobs/EnlistJob";
 import JobDetail from "./pages/jobs/JobDetail";
 import Market from "./pages/jobs/Market";
 import MyJobs from "./pages/jobs/MyJobs";
+import ApplicationList from "./components/job/ApplicationList";
 
 // Technical
 import Dashboard from "./pages/home/Dashboard";
@@ -146,6 +147,11 @@ function App() {
                   exact
                   path="/applied-job-details/:job_id"
                   element={<AppliedJobDetail />}
+                />
+                <Route
+                  exact
+                  path="/myjobs/appliedlist"
+                  element={<ApplicationList />}
                 />
 
                 {/* PAYMENT ROUTES */}
