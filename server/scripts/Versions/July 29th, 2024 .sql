@@ -458,3 +458,4 @@ INSERT INTO [mJOB].[dbo].[JobPreferences]
            ('Systems Analyst', 'FREELANCE', 'Atlanta', 60000, 80000, 1, SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 9),
            ('Software Engineer', 'FULL_TIME', 'San Diego', 80000, 100000, 1, SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 10);
 
+select * from JobPreferences
