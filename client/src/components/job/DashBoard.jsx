@@ -170,7 +170,7 @@ const getStatusStyle = (status) => {
                   <td>{job.Job.location}</td>
                   <td>{job.Job.User.username}</td>
                   <td style={getStatusStyle(job.status)}>{formatStatus(job.status)}</td>
-                  <td><Button variant="primary" size="sm" href={`/job/${job.Job.id}`}>Detail</Button></td>
+                  <td><Button variant="primary" size="sm" href={`/jobs/${job.Job.id}`}>Detail</Button></td>
                 </tr>
                 ))}
                 </tbody>
