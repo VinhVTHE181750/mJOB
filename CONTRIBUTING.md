@@ -1,0 +1,1 @@
+This repository does not accept external contributions. However, you are allowed to fork and make any changes you want. If you want to use this repository for commercial purposes, please contact us via vinhvthe181750@fpt.edu.vn.
