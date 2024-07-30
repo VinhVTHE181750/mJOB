@@ -19,6 +19,7 @@ import PostDetail from "./pages/forum/PostDetail";
 
 // Jobs
 import Jobs from "./pages/home/Jobs";
+import ActiveJob from "./pages/jobs/ActiveJob";
 import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 import ApplyJob from "./pages/jobs/ApplyJob";
 import ConfirmJob from "./pages/jobs/ConfirmJob";
@@ -28,7 +29,7 @@ import EnlistJob from "./pages/jobs/EnlistJob";
 import JobDetail from "./pages/jobs/JobDetail";
 import Market from "./pages/jobs/Market";
 import MyJobs from "./pages/jobs/MyJobs";
-import CreatedJobs from "./pages/jobs/CreatedJobs";
+import ApplicationList from "./components/job/ApplicationList";
 
 // Technical
 import Dashboard from "./pages/home/Dashboard";
@@ -133,10 +134,10 @@ function App() {
                 <Route exact path="/jobs/add" element={<EnlistJob />} />
                 <Route exact path="/myjobs" element={<MyJobs />} />
                 <Route exact path="/myjobs/history" element={<JobHistory />} />
-                <Route exact path="/myjobs/created-jobs" element={<CreatedJobs />} />
                 <Route exact path="/jobs/edit/:id" element={<EditJob />} />
                 <Route exact path="/confirm-job" element={<ConfirmJob />} />
                 <Route exact path="/apply/:job_id" element={<ApplyJob />} />
+                <Route exact path="/active-job" element={<ActiveJob />} />
                 <Route
                   exact
                   path="/created-job-details/:job_id"
@@ -147,11 +148,16 @@ function App() {
                   path="/applied-job-details/:job_id"
                   element={<AppliedJobDetail />}
                 />
+                <Route
+                  exact
+                  path="/myjobs/appliedlist"
+                  element={<ApplicationList />}
+                />
 
                 {/* PAYMENT ROUTES */}
                 <Route exact path="/payment" element={<PaymentPortal />} />
 
-                <Route exact path="/payment/deposit" element={<Deposit />} />
+                <Route exact path="/deposit" element={<Deposit />} />
 
                 <Route
                   exact
