@@ -39,7 +39,6 @@
     "refreshSecret": "notFreshSecret",
     "refreshExpiresIn": 2592000
   },
-
   "sessionSecret": "notSoSecret",
   "mail": {
     "host": "smtp.gmail.com",
@@ -54,6 +53,7 @@
   "payment": {
     "paypal": {
       "mode": "sandbox",
+
       "client_id": "AdxQJndu_yQCm_pbmbE2BRfVwSsJ2qBQ8u_FAtm00QuS_uT0-Y1TzN7Lk5mb_SvJaXL52WYyJmWnbqWS",
       "client_secret": ""
     }

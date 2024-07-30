@@ -48,6 +48,9 @@ router.use("/withdraw", withdrawRoute);
 const depositRoute = require("./payment/Deposit");
 router.use("/deposit", depositRoute);
 
+const paypalRoute = require("./payment/PayPal");
+router.use("/paypal", paypalRoute);
+
 const transferRoute = require("./payment/Transfer");
 const Balance = require("../models/payment/Balance");
 const { sendMailOTP } = require("../helper/sendmail");
