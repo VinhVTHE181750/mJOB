@@ -15,6 +15,7 @@ const RequirementStorage = require("../job/RequirementStorage");
 const Application = require("../job/Application");
 const JobHistory = require("../job/JobHistory");
 const JobPreference = require("./JobPreference");
+const EmployerProfile = require("./EmployerProfile");
 
 class User extends Model {}
 
@@ -141,6 +142,9 @@ Balance.belongsTo(User);
 User.hasMany(PaymentHistory);
 PaymentHistory.belongsTo(User);
 
+User.hasOne(EmployerProfile);
+EmployerProfile.belongsTo(User);
+
 //// Profile
 // missing LinkedProfile
 
@@ -151,7 +155,6 @@ WorkExperience.belongsTo(User);
 
 // missing Skill
 
-// missing JobPreference
 User.hasOne(JobPreference);
 JobPreference.belongsTo(User);
 
