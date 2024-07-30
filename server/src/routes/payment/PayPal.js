@@ -1,6 +1,9 @@
 const express = require("express");
 const config = require("../../../config.json");
+const { log } = require("../../utils/Logger");
 const router = express.Router();
+const Balance = require("../../models/payment/Balance");
+const { logPayment } = require("../../utils/PaymentLogger");
 
 const PAYPAL_CLIENT_ID = config.payment.paypal.client_id;
 const PAYPAL_CLIENT_SECRET = config.payment.paypal.client_secret;
@@ -27,7 +30,7 @@ const generateAccessToken = async () => {
     const data = await response.json();
     return data.access_token;
   } catch (error) {
-    console.error("Failed to generate Access Token:", error);
+    log(error, "ERROR", "PayPal");
   }
 };
 
@@ -50,18 +53,19 @@ async function handleResponse(response) {
  */
 const createOrder = async (cart) => {
   // use the cart information passed from the front-end to calculate the purchase unit details
-  console.log("shopping cart information passed from the frontend createOrder() callback:", cart);
+  // console.log("shopping cart information passed from the frontend createOrder() callback:", cart);
 
   const accessToken = await generateAccessToken();
   const url = `${base}/v2/checkout/orders`;
 
+  console.log(JSON.stringify(cart));
   const payload = {
     intent: "CAPTURE",
     purchase_units: [
       {
         amount: {
           currency_code: "USD",
-          value: 100, // Use the amount from the cart
+          value: cart[0].amount.value, // Use the amount from the cart
         },
       },
     ],
@@ -86,6 +90,11 @@ const createOrder = async (cart) => {
 
 // createOrder route
 router.post("/orders", async (req, res) => {
+  const userId = req.userId;
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   try {
     // use the cart information passed from the front-end to calculate the order amount detals
     const { cart } = req.body;
@@ -98,7 +107,7 @@ router.post("/orders", async (req, res) => {
     const { jsonResponse, httpStatusCode } = await createOrder(cart);
     res.status(httpStatusCode).json(jsonResponse);
   } catch (error) {
-    console.error("Failed to create order:", error);
+    log(error, "ERROR", "PayPal");
     res.status(500).json({ error: "Failed to create order." });
   }
 });
@@ -121,15 +130,34 @@ const captureOrder = async (orderID) => {
 
 // Create the capture route
 router.post("/orders/:orderID/capture", async (req, res) => {
+  const userId = req.userId;
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
   try {
     const { orderID } = req.params;
     const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
+
+    if (httpStatusCode === 201) {
+      // Assuming 201 is the success status code
+      const amount = jsonResponse.purchase_units[0].payments.captures[0].amount.value;
+      const userId = req.userId; // Assuming req.userId contains the user's ID
+
+      const userBalance = await Balance.findOne({ where: { UserId: userId } });
+      if (userBalance) {
+        await userBalance.update({ balance: userBalance.balance + parseFloat(amount) });
+      } else {
+        await Balance.create({ UserId: userId, balance: parseFloat(amount) });
+      }
+      await logPayment(userId, "DEPOSIT", amount, null, userId, "SUCCESS");
+    }
+
     res.status(httpStatusCode).json(jsonResponse);
   } catch (error) {
-    console.error("Failed to capture order:", error);
+    log(error, "ERROR", "PayPal");
+    await logPayment(req.userId, "DEPOSIT", amount, null, req.userId, "FAILED");
     res.status(500).json({ error: "Failed to capture order." });
   }
 });
-
 
 module.exports = router;

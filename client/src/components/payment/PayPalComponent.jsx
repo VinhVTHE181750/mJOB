@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import http from "../../functions/httpService";
 
@@ -9,6 +9,7 @@ function Message({ content }) {
 }
 
 function PayPalComponent({ amount }) {
+  const amountRef = useRef(amount);
   const initialOptions = {
     "client-id": "AdxQJndu_yQCm_pbmbE2BRfVwSsJ2qBQ8u_FAtm00QuS_uT0-Y1TzN7Lk5mb_SvJaXL52WYyJmWnbqWS",
     // "enable-funding": "venmo",
@@ -21,9 +22,12 @@ function PayPalComponent({ amount }) {
   };
 
   const [message, setMessage] = useState("");
+  useEffect(() => {
+    console.log("Amount in Deposit component:", amount);
+  }, [amount]);
 
   return (
-    <div className="App">
+    <div>
       <PayPalScriptProvider options={initialOptions}>
         <PayPalButtons
           style={{
@@ -33,12 +37,18 @@ function PayPalComponent({ amount }) {
             label: "pay",
           }}
           createOrder={async () => {
+            console.log(`Deposit amount: ${amountRef.current}`);
             try {
               const response = await http.post("/payment/paypal/orders", {
                 cart: [
                   {
-                    id: "123",
+                    id: "mJOB_DEPOSIT",
                     quantity: "1",
+                    amount: {
+                      currency_code: "USD",
+                      value: amountRef.current,
+                    },
+                    // amount: amount,
                   },
                 ],
               });
