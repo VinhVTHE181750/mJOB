@@ -151,7 +151,7 @@ function App() {
                 {/* PAYMENT ROUTES */}
                 <Route exact path="/payment" element={<PaymentPortal />} />
 
-                <Route exact path="/deposit" element={<Deposit />} />
+                <Route exact path="/payment/deposit" element={<Deposit />} />
 
                 <Route
                   exact
