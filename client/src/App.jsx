@@ -23,12 +23,12 @@ import ActiveJob from "./pages/jobs/ActiveJob";
 import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 import ApplyJob from "./pages/jobs/ApplyJob";
 import ConfirmJob from "./pages/jobs/ConfirmJob";
-import CreatedJobDetail from "./pages/jobs/CreatedJobDetail";
 import EditJob from "./pages/jobs/EditJob";
 import EnlistJob from "./pages/jobs/EnlistJob";
 import JobDetail from "./pages/jobs/JobDetail";
 import Market from "./pages/jobs/Market";
 import MyJobs from "./pages/jobs/MyJobs";
+import ApplicationList from "./components/job/ApplicationList";
 
 // Technical
 import Dashboard from "./pages/home/Dashboard";
@@ -142,19 +142,19 @@ function App() {
                 <Route exact path="/active-job" element={<ActiveJob />} />
                 <Route
                   exact
-                  path="/created-job-details/:job_id"
-                  element={<CreatedJobDetail />}
+                  path="/applied-job-details/:job_id"
+                  element={<AppliedJobDetail />}
                 />
                 <Route
                   exact
-                  path="/applied-job-details/:job_id"
-                  element={<AppliedJobDetail />}
+                  path="/myjobs/appliedlist"
+                  element={<ApplicationList />}
                 />
 
                 {/* PAYMENT ROUTES */}
                 <Route exact path="/payment" element={<PaymentPortal />} />
 
-                <Route exact path="/payment/deposit" element={<Deposit />} />
+                <Route exact path="/deposit" element={<Deposit />} />
 
                 <Route
                   exact

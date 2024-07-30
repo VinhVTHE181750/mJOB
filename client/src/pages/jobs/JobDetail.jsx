@@ -3,6 +3,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import http from "../../functions/httpService";
+import useWhoAmI from "../../hooks/user/useWhoAmI";
 
 const BackgroundContainer = styled.div`
   background: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
@@ -124,6 +125,7 @@ const JobDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { userId } = useWhoAmI(); // Get current user ID
   const requirementId = reqs.map((req) => req.id);
 
   useEffect(() => {
@@ -131,7 +133,6 @@ const JobDetail = () => {
       try {
         const response = await http.get(`/jobs/${id}`);
         setJob(response.data.job);
-
         setReqs(response.data.requirements);
         setLoading(false);
       } catch (error) {
@@ -195,7 +196,7 @@ const JobDetail = () => {
           <Label>Requirements:</Label>
           <ul>
             {reqs && reqs.map((req) => (
-            <Text><li key={req.id}> Type: {req.type}, Require: {req.name}</li></Text>
+              <Text key={req.id}><li> Type: {req.type}, Require: {req.name}</li></Text>
             ))}
           </ul>
         </Section>
@@ -214,7 +215,10 @@ const JobDetail = () => {
           <Label>Contact Info:</Label>
           <Text>{job.contact}</Text>
         </Section>
-        <ApplyButton onClick={() => navigate("/confirm-job", { state: { job, requirementId} })}>Apply</ApplyButton>
+        {/* Conditionally render ApplyButton */}
+        {job.UserId !== userId && (
+          <ApplyButton onClick={() => navigate("/confirm-job", { state: { job, requirementId } })}>Apply</ApplyButton>
+        )}
       </JobDetailContainer>
     </BackgroundContainer>
   );

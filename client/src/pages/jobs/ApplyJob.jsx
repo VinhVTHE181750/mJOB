@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import backgroundImg from '../../assets/img/apply.jpg';
-import http from '../../functions/httpService';
+import http from '../../functions/httpService';  // Sử dụng http service của bạn
 
 const PageContainer = styled.div`
   background-image: url(${backgroundImg});
@@ -107,61 +107,47 @@ const ApplyButton = styled.button`
 `;
 
 const ApplyJob = () => {
+  const { job_id } = useParams();
   const [requirements, setRequirements] = useState([]);
-  const { id } = useParams();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRequirements = async () => {
       try {
-        const response = await http.get(`/jobs/job-requirements/${id}`);
+        const response = await http.get(`/job-requirements/${job_id}`);
         setRequirements(response.data);
       } catch (error) {
-        console.error('Error fetching job requirements:', error);
+        console.error("Error fetching requirements:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchRequirements();
-  }, [id]);
-
-  const handleApply = async () => {
-    try {
-      const job_requirement_data = JSON.stringify(requirements);
-      await http.post('/jobs/apply-job', {
-        job_id,
-        user_id, // Make sure `user_id` is defined or fetched from a proper source
-        job_requirement_data,
-      });
-      alert('Applied to job successfully!');
-    } catch (error) {
-      console.error('Error applying to job:', error);
-      alert('Failed to apply for the job.');
-    }
-  };
+  }, [job_id]);
 
   return (
     <PageContainer>
       <Overlay />
       <RequirementsContainer>
-        <RequirementTitle>Job Requirements</RequirementTitle>
-        {requirements.length > 0 ? (
+        <RequirementTitle>Pending Applications</RequirementTitle>
+        {loading ? (
+          <NoRequirements>Loading...</NoRequirements>
+        ) : requirements.length > 0 ? (
           <RequirementList>
-            {requirements.map((req) => {
-              const fileDetails = JSON.parse(req.data); // Assuming `req.data` contains the JSON string
-              const downloadUrl = `/download/${fileDetails.file_name}`;
-              return (
-                <RequirementItem key={req.RequirementId}>
-                  <FileName>{fileDetails.file_name}</FileName>
-                  <DownloadLink href={downloadUrl} download={fileDetails.file_name}>
-                    Download
-                  </DownloadLink>
-                </RequirementItem>
-              );
-            })}
+            {requirements.map((app) => (
+              <RequirementItem key={app.id}>
+                <FileName>{app.CV}</FileName>
+                <DownloadLink href={`/files/${app.CV}`} download>
+                  Download
+                </DownloadLink>
+              </RequirementItem>
+            ))}
           </RequirementList>
         ) : (
-          <NoRequirements>No requirements found for this job.</NoRequirements>
+          <NoRequirements>No pending applications.</NoRequirements>
         )}
-        <ApplyButton onClick={handleApply}>Apply for Job</ApplyButton>
+        <ApplyButton>Apply for this Job</ApplyButton>
       </RequirementsContainer>
     </PageContainer>
   );

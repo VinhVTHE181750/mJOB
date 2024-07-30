@@ -20,6 +20,10 @@ Application.init(
       ),
       allowNull: false,
     },
+    CV: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     sequelize,
