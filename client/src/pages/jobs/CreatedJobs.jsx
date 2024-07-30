@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import http from "../../functions/httpService";
 
 const Container = styled.div`
   max-width: 1200px;
@@ -19,6 +19,7 @@ const Th = styled.th`
   padding: 10px;
   background-color: #f4f4f4;
   border: 1px solid #ddd;
+  background-color: lavender;
 `;
 
 const Td = styled.td`
@@ -53,13 +54,39 @@ const PayButton = styled.button`
   }
 `;
 
+const EditButton = styled.button`
+  padding: 10px 20px;
+  color: #007bff;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const ApplyButton = styled.button`
+  padding: 10px 20px;
+  color: #007bff;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
 const CreatedJobs = ({ searchQuery }) => {
   const [createdJobs, setCreatedJobs] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCreatedJobs = async () => {
       try {
-        const response = await http.get('/created-jobs');
+        const response = await http.get('/jobs/created-jobs');
         setCreatedJobs(response.data);
       } catch (error) {
         console.error('Error fetching created jobs:', error);
@@ -69,26 +96,42 @@ const CreatedJobs = ({ searchQuery }) => {
     fetchCreatedJobs();
   }, []);
 
-  const navigate = useNavigate();
-
-  const handlePayClick = (job_id) => {
-    // console.log(`Payment for job_id ${job_id}`);
+  const handlePayClick = (jobId) => {
+    // Payment handling logic
   };
 
-  const handleViewClick = (job_id) => {
-    navigate(`/created-job-details/${job_id}`);
+  const handleViewClick = (id) => {
+    navigate(`/jobs/${id}`); // Navigate to the job detail page
   };
 
-  const filteredJobs = createdJobs.filter(job =>
-    job.job_title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-  
+  const getStatusStyle = (status) => {
+    switch (formatStatus(status)) {
+      case 'Ongoing':
+        return { color: 'orange' };
+      case 'Completed':
+        return { color: 'green' };
+      case 'Rejected':
+        return { color: 'red' };
+      case 'Pending':
+        return { color: 'blue' };
+      case 'Accepted':
+        return { color: 'darkgreen' };  
+      default:
+        return {};
+    }
+  };
+
+  const formatStatus = (status) => {
+    if (!status) return '';
+    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+};
+
   const renderCurrency = (currency, amount) => {
     switch (currency) {
       case 'USD':
         return `$${amount}`;
       case 'VND':
-        return `${Math.floor(amount)} VND`; 
+        return `${Math.floor(amount)} VND`;
       case 'EUR':
         return `€${amount}`;
       case 'POUND':
@@ -96,6 +139,14 @@ const CreatedJobs = ({ searchQuery }) => {
       default:
         return `${amount} ${currency}`;
     }
+  };
+  
+  const formatJobType = (type) => {
+    if (!type) return '';
+    return type
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
   };
 
   return (
@@ -105,24 +156,40 @@ const CreatedJobs = ({ searchQuery }) => {
           <tr>
             <Th>#</Th>
             <Th>Job</Th>
+            <Th>Type</Th>
             <Th>Next Payment</Th>
-            <Th>Next Payment Date</Th>
+            <Th>Status</Th>
             <Th>Action</Th>
           </tr>
         </thead>
         <tbody>
-        {filteredJobs.map((job, index) => (
-            <tr key={job.job_id}>
-              <Td>{index + 1}</Td>
-              <Td>{job.job_title}</Td>
-              <Td>{renderCurrency(job.job_compensation_currency, job.job_compensation_amount)}</Td>
-              <Td>{job.job_compensation_period}</Td>
-              <Td>
-                <ViewButton onClick={() => handleViewClick(job.job_id)}>View</ViewButton>
-                <PayButton onClick={() => handlePayClick(job.job_id)}>Pay</PayButton>
-              </Td>
-            </tr>
-          ))}
+          {createdJobs
+            .filter(job => job.title && searchQuery ? job.title.toLowerCase().includes(searchQuery.toLowerCase()) : true)
+            .map((job, index) => (
+              <tr key={job.id}>
+                <Td>{index + 1}</Td>
+                <Td>{job.title}</Td>
+                <Td>{formatJobType(job.type)}</Td>
+                <Td>{renderCurrency(job.salaryCurrency, job.salary)}</Td>
+                <Td>
+                  {job.Applications.length > 0 ? (
+                    job.Applications.map((application, appIndex) => (
+                      <div key={appIndex} style={getStatusStyle(application.status)}>
+                        {application.status}
+                      </div>
+                    ))
+                  ) : (
+                    <div>No applications</div>
+                  )}
+                </Td> 
+                <Td>
+                  <ViewButton onClick={() => handleViewClick(job.id)}>View</ViewButton>
+                  <PayButton onClick={() => handlePayClick(job.id)}>Pay</PayButton>
+                  <EditButton onClick={() => navigate(`/jobs/edit/${job.id}`)}>Edit</EditButton>
+                  <ApplyButton onClick={() => navigate(`/apply/${job.id}`)}>Apply</ApplyButton>
+                </Td>
+              </tr>
+            ))}
         </tbody>
       </Table>
     </Container>

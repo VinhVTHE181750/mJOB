@@ -221,43 +221,29 @@ router.get("/jobhistory/status/:userId", async (req, res) => {
 });
 
 //Get applicant current apply list
-router.get("/applylist/", async (req, res) => {
+router.get("/applylist/:userId", async (req, res) => {
   try {
+    // const userId = 3;
+    const { userId } = req.params; // Get userId from request body
+    const jobStatus = 'pending'; // Set the status to "pending"
+
+    if (!userId) {
+      return res.status(400).json({ message: `User ID is required ${userId}` });
+    }
+
     const jobHistory = await Application.findAll({
+      where: { UserId: userId, status: jobStatus },
       include: [
         {
-          model: Job,
-          attributes: [
-            'id',
-            'title',
-            'description',
-            'location',
-            'tags',
-            'maxApplicants',
-            'recruitments',
-            'approvalMethod',
-            'contact',
-            'startDate',
-            'endDate',
-            'salary',
-            'salaryType',
-            'salaryCurrency',
-          ],
-          include: [
-            {
-              model: User, // Assuming User model is imported and associated with Job
-              attributes: ['username'] // Adjust attributes as per your User model
-            }
-          ]
-        }
-      ],
-      where: { status: 'PENDING' },
-
+          model: User,
+          attributes: ['username'],
+        },
+      ]
     });
     res.status(200).json(jobHistory);
   } catch (err) {
-    // console.log(err);
-    res.status(500).json({ message: "Error occurred", error: err });
+    console.error(err); // Log the error for debugging purposes
+    res.status(500).json({ message: "Error occurred", error: err.message });
   }
 });
 
