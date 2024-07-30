@@ -35,18 +35,18 @@ const Sidebar = ({ onMenuClick }) => {
           Job History
         </a>
         <a
-          href="#"
+          href="/myjobs/applied"
           className={`menu-item ${selectedMenu === 'jobApplied' ? 'selected' : ''}`}
           onClick={() => handleMenuClick('jobApplied')}
         >
           Job Applied
         </a>
         <a
-          href="#"
+          href="/myjobs/created"
           className={`menu-item ${selectedMenu === 'jobCompleted' ? 'selected' : ''}`}
           onClick={() => handleMenuClick('jobCompleted')}
         >
-          Job Completed
+          Job Created
         </a>
       </div>
     </div>
