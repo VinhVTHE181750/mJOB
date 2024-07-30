@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Nav, Button, Card } from 'react-bootstrap';
+import { Container, Row, Col, Nav, Button, Table } from 'react-bootstrap';
 import { FaChartBar, FaBriefcase, FaComments, FaUsers, FaSignOutAlt } from 'react-icons/fa';
 
 const Posts = () => {
@@ -42,24 +42,44 @@ const Posts = () => {
                         </Nav>
                     </Col>
                     <Col md={10} className="p-4">
-                        {[1, 2, 3].map((_, idx) => (
-                            <Card key={idx} className="mb-4 shadow-sm card-horizontal">
-                                <Row noGutters>
-                                    <Col md={8}>
-                                        <Card.Body>
-                                            <Card.Title>Title Here</Card.Title>
-                                            <Card.Text className="text-muted">Author: ...</Card.Text>
-                                            <Card.Text className="text-muted">Compapy: ...</Card.Text>
-                                            <Card.Text className="text-muted">Posted: ...</Card.Text>
-                                        </Card.Body>
-                                    </Col>
-                                    <Col md={4} className="d-flex align-items-center justify-content-end pr-3">
-                                        <Button variant="primary" className="mr-2" onClick={handleEditPost}>Detail</Button>
-                                        <Button variant="danger" onClick={handleDeletePost}>Delete</Button>
-                                    </Col>
-                                </Row>
-                            </Card>
-                        ))}
+                        <Table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Content</th>
+                                    <th>Company</th>
+                                    <th>Posted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[1, 2, 3].map((_, idx) => (
+                                    <tr key={idx}>
+                                        <td>{idx + 1}</td>
+                                        <td>Title Here</td>
+                                        <td>Author Name</td>
+                                        <td>Company Name</td>
+                                        <td>Posted Date</td>
+                                        <td>
+                                            <Button
+                                                variant="primary"
+                                                className="mr-2"
+                                                onClick={handleEditPost}
+                                            >
+                                                Detail
+                                            </Button>
+                                            <Button
+                                                variant="danger"
+                                                onClick={handleDeletePost}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
                     </Col>
                 </Row>
             </Container>

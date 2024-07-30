@@ -40,6 +40,8 @@ import Users from "./pages/home/Users";
 import Posts from "./pages/home/Posts";
 import EditProfile from "./pages/profile/EditProfile";
 import Profile from "./pages/profile/Profile";
+import Employer from "./pages/profile/Employer";
+import EditEmployer from "./pages/profile/EditEmployer";
 import WorkExperience from "./pages/profile/WorkExperience";
 import Settings from "./pages/technical/Settings";
 
@@ -249,6 +251,16 @@ function App() {
                   exact
                   path="/workexperience/:userId"
                   element={<WorkExperience />}
+                />
+                <Route
+                  exact
+                  path="/employer"
+                  element={<Employer />}
+                />
+                <Route
+                  exact
+                  path="/editemployer"
+                  element={<EditEmployer />}
                 />
 
                 <Route
