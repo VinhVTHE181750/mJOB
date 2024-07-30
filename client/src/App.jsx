@@ -23,7 +23,6 @@ import ActiveJob from "./pages/jobs/ActiveJob";
 import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 import ApplyJob from "./pages/jobs/ApplyJob";
 import ConfirmJob from "./pages/jobs/ConfirmJob";
-import CreatedJobDetail from "./pages/jobs/CreatedJobDetail";
 import EditJob from "./pages/jobs/EditJob";
 import EnlistJob from "./pages/jobs/EnlistJob";
 import JobDetail from "./pages/jobs/JobDetail";
@@ -138,11 +137,6 @@ function App() {
                 <Route exact path="/confirm-job" element={<ConfirmJob />} />
                 <Route exact path="/apply/:job_id" element={<ApplyJob />} />
                 <Route exact path="/active-job" element={<ActiveJob />} />
-                <Route
-                  exact
-                  path="/created-job-details/:job_id"
-                  element={<CreatedJobDetail />}
-                />
                 <Route
                   exact
                   path="/applied-job-details/:job_id"
