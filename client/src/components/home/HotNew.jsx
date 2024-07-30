@@ -10,7 +10,6 @@ function HotNew() {
   if (loading) {
     return <div>Loading...</div>;
   }
-  console.log(contents);
   if (error) {
     return  <Card className="post-card mb-5">
     <Card.Body>

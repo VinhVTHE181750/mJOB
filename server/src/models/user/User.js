@@ -14,6 +14,7 @@ const Job = require("../job/Job");
 const RequirementStorage = require("../job/RequirementStorage");
 const Application = require("../job/Application");
 const JobHistory = require("../job/JobHistory");
+const JobPreference = require("./JobPreference");
 
 class User extends Model {}
 
@@ -26,32 +27,49 @@ User.init(
     },
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     phone: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     citizenId: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
 
     // personal info
     firstName: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     lastName: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     dob: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    securityQuestion: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    answerQuestionSecurityQuestion: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     address: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     avatar: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     bio: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
 
     // actor info
@@ -69,6 +87,11 @@ User.init(
   {
     sequelize,
     getterMethods: {
+      /**
+       * 
+       * @param {string} locale Country code. Currently support "vi-VN" only. Without this parameter, the default is "en-US"
+       * @returns 
+       */
       _fullName(locale) {
         if (locale === "vi-VN") {
           return this.lastName + " " + this.firstName;
@@ -118,7 +141,6 @@ Balance.belongsTo(User);
 User.hasMany(PaymentHistory);
 PaymentHistory.belongsTo(User);
 
-
 //// Profile
 // missing LinkedProfile
 
@@ -130,6 +152,8 @@ WorkExperience.belongsTo(User);
 // missing Skill
 
 // missing JobPreference
+User.hasOne(JobPreference);
+JobPreference.belongsTo(User);
 
 // missing ProfileLog
 

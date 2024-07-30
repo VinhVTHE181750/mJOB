@@ -1,18 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
-  Card,
-  FormGroup,
-  Nav,
-} from "react-bootstrap";
-import axios from "axios";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Row, Col, Form, Button, Card, FormGroup } from 'react-bootstrap';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import useWhoAmI from "../../hooks/user/useWhoAmI";
-import { FaUserEdit, FaBriefcase, FaSignOutAlt, FaCog } from "react-icons/fa";
 
 // Regular expressions for validation
 const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
@@ -56,10 +46,7 @@ const Settings = () => {
       const response = await axios.post(
         `http://localhost:8000/api/profile/change-password`,
         JSON.stringify({ userId, currentPassword, newPassword }),
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
       alert("Password changed successfully!");
       setCurrentPassword("");
@@ -78,7 +65,13 @@ const Settings = () => {
   };
 
   return (
-    <Container fluid className="mt-3">
+    <Container>
+      <header>
+        <div className="text-center">
+          <h1 className="text-black">Settings</h1>
+        </div>
+      </header>
+      <br />
       <Row>
         <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
           <h2 className="text-center">Navigation</h2>

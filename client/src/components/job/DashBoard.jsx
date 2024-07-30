@@ -5,25 +5,33 @@ import useUserTotalCurrentAppliedJob from '../../hooks/useUserTotalCurrentApplie
 import useUserTotalCreatedJob from '../../hooks/useUserTotalCreatedJob';
 import useUserCompletedJobList from '../../hooks/useUserCompletedJobList';
 import useUserAppliedJobList from '../../hooks/useUserAppliedJobList';
-// import useTotalCompletedJob from '../../hooks/job/dashboard/useTotalCompletedJob';
-// import useTotalCreatedJob from '../../hooks/job/dashboard/useTotalCreatedJob';
-// import useTotalCurrentAppliedJob from '../../hooks/job/dashboard/useTotalCurrentAppliedJob';
-import useWhoAmI from '../../hooks/user/useWhoAmI';
 import {Button, Table} from 'react-bootstrap';
 
 
-const Dashboard = () => {
-  const { userId} = useWhoAmI();
-  console.log(userId);
+const Dashboard = (user) => {
+  const userId = user.user.id;
   const { count: completedCount, loading: completedLoading, error: completedError } = useUserTotalCompletedJob(userId);
   const { count: appliedCount, loading: appliedLoading, error: appliedError } = useUserTotalCurrentAppliedJob(userId);
   const { count: createdCount, loading: createdLoading, error: createdError } = useUserTotalCreatedJob(userId);
 
   const { jobs: completedJobs, loading: jobsLoading, error: jobsError } = useUserCompletedJobList(userId);
-  const { jobList: appliedJobs, loading: appliedJobsLoading, error: appliedJobsError } = useUserAppliedJobList(userId);
+  const { jobList: appliedJobs, loading: appliedJobsLoading, error: appliedJobsError, fetchJobList } = useUserAppliedJobList(userId);
   const [completedJobList, setCompletedJobList] = useState([]);
   const [appliedJobList, setAppliedJobList] = useState([]);
+  const [allLoaded, setAllLoaded] = useState(false);
 
+  useEffect(() => {
+    fetchJobList(userId);
+    console.log("Data effect: ", appliedJobs);
+  }, [userId]);
+
+  useEffect(() => {
+    if (!completedLoading && !appliedLoading && !createdLoading && !jobsLoading  && !appliedJobsLoading) {
+      setAllLoaded(true);
+    }
+  }, [completedLoading, appliedLoading, createdLoading, jobsLoading, appliedJobsLoading]);
+
+  // console.log('Data: ', appliedJobs);
   useEffect(() => {
     setCompletedJobList(completedJobs);
   }, [completedJobs]);
@@ -55,7 +63,13 @@ const getStatusStyle = (status) => {
   // console.log('Data applied: ', appliedJobs);
 
 
+  if (!allLoaded) {
+    return <h3>Loading...</h3>;
+  }
 
+  if (completedError || appliedError || createdError || jobsError || appliedJobsError) {
+    return <h3>Error loading data.</h3>;
+  }
   // // console.log(completedJobList);
   // useEffect(() => {
   //   console.table(completedJobs);
@@ -103,7 +117,7 @@ const getStatusStyle = (status) => {
       <div className="job-section">
         <h4>Job Applied</h4>
         <div className="job-list">
-        {appliedJobs.length == 0 ? <h1 style={{color: 'darkgrey', textAlign: 'center'}}>No Jobs Currently Applied</h1> : (<Table striped bordered hover variant="white">
+        {appliedJobList.length == 0 ? <h1 style={{color: 'darkgrey', textAlign: 'center'}}>No Jobs Currently Applied</h1> : (<Table striped bordered hover variant="white">
           <thead>
                   <tr>
                     <th>Job ID</th>
@@ -116,7 +130,7 @@ const getStatusStyle = (status) => {
                   </tr>
                 </thead>
                 <tbody>
-                {appliedJobs.map(job => (
+                {appliedJobList.map(job => (
                   <tr key={job.id}> 
                   <td>{job.Job.id}</td>            
                   <td>{job.Job.title}</td>
@@ -134,7 +148,7 @@ const getStatusStyle = (status) => {
       <div className="job-section">
         <h4>Job Completed</h4>
         <div className="job-list">
-          {completedJobs.length == 0 ? <h1 style={{color: 'darkgrey', textAlign: 'center'}}>No Jobs Completed</h1> : (<Table striped bordered hover variant="white">
+          {completedJobList.length == 0 ? <h1 style={{color: 'darkgrey', textAlign: 'center'}}>No Jobs Completed</h1> : (<Table striped bordered hover variant="white">
                 <thead>
                   <tr>
                     <th>Job ID</th>
@@ -148,7 +162,7 @@ const getStatusStyle = (status) => {
                   </tr>
                 </thead>
                 <tbody>
-                {completedJobs.map(job => (
+                {completedJobList.map(job => (
                   <tr key={job.id}> 
                   <td>{job.Job.id}</td>            
                   <td>{job.Job.title}</td>
@@ -156,7 +170,7 @@ const getStatusStyle = (status) => {
                   <td>{job.Job.location}</td>
                   <td>{job.Job.User.username}</td>
                   <td style={getStatusStyle(job.status)}>{formatStatus(job.status)}</td>
-                  <td><Button variant="primary" size="sm" href={`/job/${job.Job.id}`}>Detail</Button></td>
+                  <td><Button variant="primary" size="sm" href={`/jobs/${job.Job.id}`}>Detail</Button></td>
                 </tr>
                 ))}
                 </tbody>

@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router";
 import { FaUserEdit, FaBriefcase, FaSignOutAlt, FaCog } from "react-icons/fa";
-import { useAuth } from "../../context/UserContext";
 
 const EditProfile = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -17,11 +16,9 @@ const EditProfile = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [bio, setBio] = useState("");
-  const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
   const { userId } = useParams();
   const navigate = useNavigate();
-  const { userInformation } = useAuth();
 
   useEffect(() => {
     axios
@@ -54,38 +51,8 @@ const EditProfile = () => {
     fileInputRef.current.click();
   };
 
-  const validate = () => {
-    const newErrors = {};
-    const phoneRegex = /^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})$/;
-    const today = new Date().toISOString().split("T")[0];
-
-    if (!userName.trim()) newErrors.userName = "Username is required";
-    if (!firstName.trim()) newErrors.firstName = "First name is required";
-    if (!lastName.trim()) newErrors.lastName = "Last name is required";
-    if (!dob) newErrors.dob = "Date of birth is required";
-    else if (dob >= today) newErrors.dob = "Date of birth must be before today";
-    if (!address.trim()) newErrors.address = "Address is required";
-    if (!citizenId.trim()) newErrors.citizenId = "Citizen ID is required";
-    if (!email.trim()) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "Email is invalid";
-    if (!phone.trim()) newErrors.phone = "Contact number is required";
-    else if (!phoneRegex.test(phone))
-      newErrors.phone = "Phone number is invalid";
-    if (!bio.trim()) newErrors.bio = "Bio is required";
-    else if (bio.length > 150)
-      newErrors.bio = "Bio must be less than 150 characters";
-
-    return newErrors;
-  };
-
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const newErrors = validate();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-    setErrors({});
 
     const userData = {
       username: userName,
@@ -100,7 +67,7 @@ const EditProfile = () => {
     };
 
     try {
-      await axios.put(
+      const response = await axios.put(
         `http://localhost:8000/api/profile/edit-profile/${userId}`,
         userData
       );
@@ -116,35 +83,22 @@ const EditProfile = () => {
       <h1 className="text-center my-4">Edit Profile</h1>
       <Container fluid className="mt-3">
         <Row>
-          <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
+        <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
             <h2 className="text-center">Navigation</h2>
             <Nav className="flex-column">
-              <Nav.Link
-                href={`/editprofile/${userId}`}
-                className="text-dark mb-2 d-flex align-items-center"
-              >
+              <Nav.Link href={`/editprofile/${userId}`} className="text-dark mb-2 d-flex align-items-center">
                 <FaUserEdit className="me-2" />
                 Profile
               </Nav.Link>
-              <Nav.Link
-                href={`/workexperience/${userId}`}
-                className="text-dark mb-2 d-flex align-items-center"
-              >
+              <Nav.Link href={`/workexperience/${userId}`} className="text-dark mb-2 d-flex align-items-center">
                 <FaBriefcase className="me-2" />
                 Work Experience
               </Nav.Link>
-              <Nav.Link
-                href={`/settings`}
-                className="text-dark mb-2 d-flex align-items-center"
-              >
+              <Nav.Link href={`/settings`} className="text-dark mb-2 d-flex align-items-center">
                 <FaCog className="me-2" />
                 Settings
               </Nav.Link>
-              <Button
-                variant="danger"
-                href="/logout"
-                className="mt-3 d-flex align-items-center"
-              >
+              <Button variant="danger" href="/logout" className="mt-3 d-flex align-items-center">
                 <FaSignOutAlt className="me-2" />
                 Logout
               </Button>
@@ -191,9 +145,6 @@ const EditProfile = () => {
                         isInvalid={!!errors.userName}
                         aria-label="Username"
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.userName}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
@@ -209,9 +160,6 @@ const EditProfile = () => {
                         isInvalid={!!errors.firstName}
                         aria-label="First Name"
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.firstName}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
@@ -227,9 +175,6 @@ const EditProfile = () => {
                         isInvalid={!!errors.lastName}
                         aria-label="Last Name"
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.lastName}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
@@ -244,9 +189,6 @@ const EditProfile = () => {
                         isInvalid={!!errors.dob}
                         aria-label="Date of Birth"
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.dob}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
@@ -262,9 +204,6 @@ const EditProfile = () => {
                         isInvalid={!!errors.address}
                         aria-label="Address"
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.address}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
@@ -280,9 +219,6 @@ const EditProfile = () => {
                         isInvalid={!!errors.citizenId}
                         aria-label="Citizen ID"
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.citizenId}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
@@ -298,9 +234,6 @@ const EditProfile = () => {
                         isInvalid={!!errors.email}
                         aria-label="Email"
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.email}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
@@ -316,9 +249,6 @@ const EditProfile = () => {
                         isInvalid={!!errors.phone}
                         aria-label="Contact Number"
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.phone}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
@@ -334,9 +264,6 @@ const EditProfile = () => {
                         isInvalid={!!errors.bio}
                         aria-label="Bio"
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.bio}
-                      </Form.Control.Feedback>
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>

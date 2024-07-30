@@ -4,12 +4,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./ViewProfile.css";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import useWhoAmI from "../../hooks/user/useWhoAmI";
 
 const Profile = () => {
   const [profile, setProfile] = useState({});
+  const whoAmI = useWhoAmI();
   const params = useParams();
-  const userId = params.userId;
+  const userId = whoAmI?.userId ?? params;
+  console.log("userId:", params);
+
   const navigate = useNavigate();
+
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [company, setCompany] = useState("");
@@ -135,10 +140,6 @@ const Profile = () => {
                   <p>
                     <strong>Address:</strong>{" "}
                     <span id="address">{profile.address}</span>
-                  </p>
-                  <p>
-                    <strong>Bio:</strong>{" "}
-                    <span id="bio">{profile.bio}</span>
                   </p>
                 </Col>
               </Row>

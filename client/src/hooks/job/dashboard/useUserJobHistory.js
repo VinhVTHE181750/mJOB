@@ -6,19 +6,19 @@ const useUserJobHistory = (userId) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  useEffect(() => {
-    const fetchJobList = async () => {
+  
+  const fetchJobList = async (userId) => {
       try {
         const url = `/myjobs/jobhistory/${userId}`;
         const response = await http.get(url);
         setJobList(response.data);
         setLoading(false);
       } catch (error) {
-        navigate("/error", {
-          state: {
-            message: error.response ? error.response.data.message : "An error occurred",
-          },
-        });
+        // navigate("/error", {
+        //   state: {
+        //     message: error.response ? error.response.data.message : "An error occurred",
+        //   },
+        // });
         setError(error);
         setLoading(false);
       }
@@ -27,9 +27,9 @@ const useUserJobHistory = (userId) => {
     if (userId) {
       fetchJobList();
     }
-  }, []);
+
   //   // console.log('Hook data: ', jobList);
-  return { jobList, loading, error };
+  return { jobList, loading, error, fetchJobList };
 };
 
 export default useUserJobHistory;

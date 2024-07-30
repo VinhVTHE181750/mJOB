@@ -6,6 +6,7 @@ import useJobUpdate from "../../hooks/useJobUpdate.js";
 
 const compensationTypes = ["Agreement", "Onetime", "Hourly", "Daily", "Weekly", "Monthly", "Percentage"];
 const currencies = ["USD", "EUR", "POUND", "VND"];
+const jobTypes = ["FULL_TIME", "PART_TIME", "INTERNSHIP", "COMMISSION", "FREELANCE", "CONTRACT"];
 
 const EditJob = () => {
   const { id } = useParams();
@@ -42,6 +43,21 @@ const EditJob = () => {
               value={job.title}
               onChange={handleInputChange}
             />
+          </div>
+          <div className="section">
+            <h2 className="label">Job Type:</h2>
+            <select
+              className="input"
+              name="type"
+              value={job.type}
+              onChange={handleInputChange}
+            >
+              {jobTypes.map((types) => (
+                <option key={types} value={types}>
+                  {types}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="section">
             <h2 className="label">Location:</h2>
@@ -125,8 +141,8 @@ const EditJob = () => {
             <h2 className="label">Compensation Amount:</h2>
             <input
               className="input"
-              name="salaryAmount"
-              value={job.salaryAmount}
+              name="salary"
+              value={job.salary}
               onChange={handleInputChange}
             />
           </div>

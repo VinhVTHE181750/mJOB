@@ -35,6 +35,7 @@ router.post("/", async (req, res) => {
 
   const {
     job_title, // str
+    job_type, // FULL_TIME, PART_TIME, INTERNSHIP, COMMISION, FREELANCE, CONTRACT
     job_work_location, // str
     job_tags, // str,str,str
     job_max_applications, // int
@@ -59,6 +60,21 @@ router.post("/", async (req, res) => {
   if (job_title === undefined || job_title === null || job_title === "") {
     return res.status(400).json({ message: "Job title is required" });
   }
+  
+  if (job_type === undefined || job_type === null || job_type === "") {
+    return res.status(400).json({ message: "Job type is required" });
+  } else {
+    if (
+      job_type !== "FULL_TIME" &&
+      job_type !== "PART_TIME" &&
+      job_type !== "INTERNSHIP" &&
+      job_type !== "COMMISSION" &&
+      job_type !== "FREELANCE" &&
+      job_type !== "CONTRACT" 
+    ) {
+      return res.status(400).json({ message: "Invalid job type" });
+    }
+  }
 
   if (job_work_location === undefined || job_work_location === null || job_work_location === "") {
     return res.status(400).json({ message: "Job work location is required" });
@@ -78,6 +94,7 @@ router.post("/", async (req, res) => {
   } else {
     if (
       job_compensation_type !== "AGREEMENT" &&
+      job_compensation_type !== "NONE" &&
       job_compensation_type !== "ONETIME" &&
       job_compensation_type !== "HOURLY" &&
       job_compensation_type !== "DAILY" &&
@@ -145,6 +162,7 @@ router.post("/", async (req, res) => {
 
   const newJob = new Job({
     title: job_title,
+    type: job_type,
     description: job_description,
     location: job_work_location,
     tags: job_tags,
@@ -154,10 +172,11 @@ router.post("/", async (req, res) => {
     contact: job_contact_info,
     startDate: job_start_date,
     endDate: job_end_date,
-    salaryAmount: job_compensation_amounts,
+    salary: job_compensation_amounts,
     salaryType: job_compensation_type,
     salaryCurrency: currency,
     status: status || "ACTIVE",
+    UserId: req.userId,
   });
   try {
     const job = await newJob.save();
@@ -208,6 +227,7 @@ router.put("/update", async (req, res) => {
   const {
     id,
     title,
+    type,
     location,
     tags,
     maxApplicants,
@@ -233,6 +253,7 @@ router.put("/update", async (req, res) => {
 
   // Lưu data mới vào model
   job.title = title;
+  job.type = type;
   job.description = description;
   job.location = location;
   job.tags = tags;
@@ -455,6 +476,28 @@ router.post("apply-job", async (req, res) => {
   });
   return res.status(200).json(application);
 });
+
+router.get('/job-requirements/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const requirements = await Requirement.findAll({
+      include: [{
+        model: RequirementStorage,
+        as: 'RequirementStorages', // Ensure this alias matches your association
+        where: { JobId: id }, // Assuming you have a JobId in your RequirementStorage model
+      }],
+    });
+
+    const requirementStorages = requirements.flatMap(req => req.RequirementStorages);
+
+    res.status(200).json(requirementStorages);
+  } catch (error) {
+    console.error('Error fetching requirement storages:', error);
+    res.status(500).json({ message: 'Failed to fetch requirement storages' });
+  }
+});
+
 
 router.get("/applied-jobs", async (req, res) => {
   // log(JSON.stringify(req.body), "INFO", "JOB");

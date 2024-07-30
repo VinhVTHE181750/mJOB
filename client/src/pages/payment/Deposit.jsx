@@ -1,11 +1,48 @@
-import { Button, Col, Container, FloatingLabel, Form, Row } from "react-bootstrap";
-import EmbedCard from "./micro/EmbedCard";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { Button, Col, Container, Form, Modal, Row, Spinner } from "react-bootstrap";
+import { BsArrowLeft, BsArrowUp } from "react-icons/bs";
+import NavigateButton from "../../components/ui/buttons/NavigateButton";
+import { useBalance } from "../../hooks/payment/useBalance";
 import Balance from "./micro/Balance";
+import EmbedCard from "./micro/EmbedCard";
+const PayPalComponent = lazy(() => import("../../components/payment/PayPalComponent"));
+// import PayPalComponent from "../../components/payment/PayPalComponent";
 
 const Deposit = () => {
-  const amount = 1234.567;
+  const [amount, setAmount] = useState(0);
+  const { balance, loading, error } = useBalance();
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (amount <= 0) {
+      setMessage("Invalid amount");
+      return;
+    }
+    if (isNaN(amount)) {
+      setMessage("Invalid amount");
+      return;
+    }
+    setMessage("");
+  }, [amount]);
+
+  const handleDepositClick = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <Container>
+      <NavigateButton
+        path="/payment"
+        variant="primary"
+        className="mb-2"
+      >
+        <BsArrowLeft /> Back
+      </NavigateButton>
       <h1>Deposit</h1>
       <Row className="">
         {/* <Col className="d-flex justify-content-end">
@@ -17,52 +54,84 @@ const Deposit = () => {
           <EmbedCard
             title={<h1 style={{ fontSize: 60, fontWeight: "bold" }}>Current Balance</h1>}
             content={
-              <div style={{ fontSize: 40 }}>
-                <Balance
-                  amount={amount}
-                  currency="VND"
-                  locale="vi-VN"
-                />
+              <div className="fs-1">
+                {loading && <Spinner animation="border" />}
+                {!loading && !error && (
+                  <Balance
+                    amount={balance}
+                    currency="USD"
+                    locale="en-US"
+                  />
+                )}
+                {error && <p>Error: {error.message}</p>}
               </div>
             }
           />
         </Col>
       </Row>
-      <Row className="border mt-5">
+      <Row className="border mt-5 d-flex justify-content-center align-items-center">
         <Col
-          className="px-0 mx-0"
+          className="text-end"
           sm={3}
         >
-          <FloatingLabel
-            className="m-2 p-0"
-            controlId="floatingInput"
-            label="Amount"
-          >
-            <Form.Control
-              type="number"
-              placeholder="Amount"
-            />
-          </FloatingLabel>
+          Enter your deposit amount:
         </Col>
-        <Col
-          className="d-flex align-items-center"
-          sm={3}
-        >
+        <Col>
+          <Form.Control
+            type="number"
+            value={amount}
+            min={0}
+            step={0.01}
+            onChange={(e) => {
+              setAmount(e.target.value);
+            }}
+          />
+
+          {/* <div className="d-flex justify-content-center"> */}
+        </Col>
+        <Col>
           <Button
+            // size="lg"
             variant="primary"
-            size="lg"
-            className=""
+            onClick={handleDepositClick}
           >
-            Deposit
+            <BsArrowUp /> Deposit
           </Button>
-        </Col>
-        <Col
-          sm={6}
-          className="d-flex align-items-center text-left"
-        >
-          You will be redirected to ...
+          {/* </div> */}
         </Col>
       </Row>
+      <Row>{message && <p className="text-danger fs-4 text-center">{message}</p>}</Row>
+
+      <Modal
+        show={showModal}
+        onHide={handleCloseModal}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Choose a payment method</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Suspense
+            fallback={
+              <Spinner
+                animation="border"
+                role="status"
+              >
+                <span className="visually-hidden">Loading payment methods...</span>
+              </Spinner>
+            }
+          >
+            <PayPalComponent amount={amount} />
+          </Suspense>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={handleCloseModal}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

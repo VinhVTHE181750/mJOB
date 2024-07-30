@@ -1,20 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Container, Form, FormGroup } from "react-bootstrap";
+import { Button, Container, Form, FormGroup } from "react-bootstrap";
 import axios from "axios";
+import { useAuth } from "../../context/UserContext";
 
 // Regular expressions for validation
-const REGEX_USERNAME = /^[A-Za-z][A-Za-z0-9_]{8,29}$/;
+const REGEX_USERNAME = /^[A-Za-z][A-Za-z0-9_]{7,29}$/;
 const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const REGISTER_API = "http://localhost:8000/api/auth/register";
 const REGEX_PHONE = /^\d{9,11}$/;
 
 const Register = () => {
+  const { handleRedirectError } = useAuth();
   const [user, setUser] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [pwd, setPwd] = useState("");
   const [matchPwd, setMatchPwd] = useState("");
+  const [securityQuestion, setSecurityQuestion] = useState(
+    "Where do you live?"
+  );
+  const [securityAnswer, setSecurityAnswer] = useState("");
+  const [address, setAddress] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
   const [validName, setValidName] = useState(false);
   const [validEmail, setValidEmail] = useState(false);
   const [validPhone, setValidPhone] = useState(false);
@@ -63,12 +71,22 @@ const Register = () => {
         JSON.stringify({ username: user, password: pwd, email, phone }),
         { headers: { "Content-Type": "application/json" } }
       );
-      setSuccess(true);
-      setUser("");
-      setPwd("");
-      setMatchPwd("");
-      setEmail("");
-      setPhone("");
+      if (response.status === 201) {
+       
+        setSuccess(true);
+        alert("You need confirm email to active account");
+          alert("You need confirm email to active account");
+        setUser("");
+          setPwd("");
+          setMatchPwd("");
+          setEmail("");
+          setPhone("");
+        setSecurityQuestion("Where do you live?");
+        setSecurityAnswer("");
+        setAddress("");
+        setDateOfBirth("");
+      
+      }
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No Server Response");
@@ -77,6 +95,7 @@ const Register = () => {
       } else {
         setErrMsg("Registration Failed");
       }
+      handleRedirectError("server error");
       errRef.current.focus();
     }
   };
@@ -86,10 +105,9 @@ const Register = () => {
       <Container>
         {success ? (
           <section>
-            <h1>Registration Successful!</h1>
-            <p>
-              <a href="/login">Sign In</a>
-            </p>
+            <h1>
+              Registration Successful! Check your email for active the account
+            </h1>
           </section>
         ) : (
           <section>
@@ -130,7 +148,7 @@ const Register = () => {
                 <Form.Control.Feedback type="invalid">
                   Invalid password. Must be at least 8 characters long, contain
                   at least one uppercase letter, one lowercase letter, and one
-                  number.
+                  number. (Special characters are currently not allowed)
                 </Form.Control.Feedback>
               </FormGroup>
               <FormGroup>
@@ -147,7 +165,6 @@ const Register = () => {
                   Passwords do not match.
                 </Form.Control.Feedback>
               </FormGroup>
-
               <FormGroup>
                 <Form.Label>Email</Form.Label>
                 <Form.Control
@@ -162,7 +179,6 @@ const Register = () => {
                   Invalid Email
                 </Form.Control.Feedback>
               </FormGroup>
-
               <FormGroup>
                 <Form.Label>Phone</Form.Label>
                 <Form.Control
@@ -177,7 +193,55 @@ const Register = () => {
                   Invalid Phone
                 </Form.Control.Feedback>
               </FormGroup>
-              <button
+              <FormGroup>
+                <Form.Label>Security Question</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="securityQuestion"
+                  value={securityQuestion}
+                  onChange={(e) => setSecurityQuestion(e.target.value)}
+                  required
+                >
+                  <option value="Where do you live?">
+                    Where do you live?
+                  </option>
+                  <option value="What is your pet name?">
+                    What is your pet name?
+                  </option>
+                </Form.Control>
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Security Answer</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="securityAnswer"
+                  value={securityAnswer}
+                  onChange={(e) => setSecurityAnswer(e.target.value)}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Address</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Date of Birth</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="dateOfBirth"
+                  value={dateOfBirth}
+                  onChange={(e) => setDateOfBirth(e.target.value)}
+                  required
+                />
+              </FormGroup>
+              <Button
+                className="mt-3"
                 type="submit"
                 disabled={
                   !validName ||
@@ -188,7 +252,7 @@ const Register = () => {
                 }
               >
                 Register
-              </button>
+              </Button>
             </Form>
           </section>
         )}
