@@ -465,41 +465,6 @@ router.get("/created-jobs", async (req, res) => {
   }
 });
 
-router.get("/created-job-detail/:id", async (req, res) => {
-  if (!req.userId) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  const userId = req.userId;
-  if (isNaN(userId)) {
-    return res.status(400).json({ message: "Invalid user ID" });
-  }
-
-  const user = await User.findByPk(userId);
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  try {
-    const jobId = parseInt(req.params.id); // Use req.params.id instead of req.params.job_id
-
-    if (isNaN(jobId)) {
-      return res.status(400).json({ message: "Invalid job ID" });
-    }
-
-    const job = await Job.findOne({ where: { id: jobId, UserId: userId } });
-
-    if (!job) {
-      return res.status(404).json({ message: "Job not found" });
-    }
-
-    return res.status(200).json(job);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Unknown error while fetching job" });
-  }
-});
-
 router.get("/applied-job-detail/:job_id", async (req, res) => {
   // log(JSON.stringify(req.body), "INFO", "JOB");
   let userId;
