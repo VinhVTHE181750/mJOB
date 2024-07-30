@@ -301,13 +301,11 @@ router.put("/update", async (req, res) => {
 
 router.post('/upload', (req, res) => {
   const form = new formidable.IncomingForm();
-  form.uploadDir = path.join(__dirname, 'uploads'); // Set the upload directory
-  form.keepExtensions = true; // Keep the file extensions
+  form.uploadDir = path.join(__dirname, 'uploads');
+  form.keepExtensions = true;
 
-  // Ensure the uploads directory exists
-  const uploadDir = path.join(__dirname, 'uploads');
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
+  if (!fs.existsSync(form.uploadDir)) {
+    fs.mkdirSync(form.uploadDir, { recursive: true });
   }
 
   form.parse(req, async (err, fields, files) => {
@@ -322,53 +320,37 @@ router.post('/upload', (req, res) => {
         return res.status(401).json({ message: 'Unauthorized or invalid user ID' });
       }
 
-      const requirementId = parseInt(fields.requirementId, 10);
-      if (!requirementId || isNaN(requirementId)) {
-        return res.status(400).json({ message: 'Invalid requirement ID' });
+      const jobId = parseInt(fields.jobId, 10);
+      if (!jobId || isNaN(jobId)) {
+        return res.status(400).json({ message: 'Invalid job ID' });
       }
 
-      const requirement = await Requirement.findByPk(requirementId);
-      if (!requirement) {
-        return res.status(404).json({ message: 'Requirement not found' });
+      let uploadedFileName = '';
+
+      if (files.files) {
+        const file = Array.isArray(files.files) ? files.files[0] : files.files;
+        const newFilePath = path.join(form.uploadDir, file.originalFilename);
+        fs.renameSync(file.filepath, newFilePath);
+        uploadedFileName = file.originalFilename;
       }
 
-      // Check if old files exist and delete them
-      const oldFiles = await RequirementStorage.findAll({
-        where: { RequirementId: requirement.id, UserId: userId },
+      // Update the Applications table with the uploaded file name in the CV column
+      await Application.create({
+        UserId: userId,
+        JobId: jobId,
+        status: 'PENDING',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        CV: uploadedFileName,
       });
 
-      if (oldFiles.length > 0) {
-        for (const file of oldFiles) {
-          const filePath = JSON.parse(file.data).file_path;
-          if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-          }
-          await file.destroy(); // Delete from database
-        }
-      }
-
-      // Save new files
-      const fileArray = Array.isArray(files.files) ? files.files : [files.files];
-      for (const file of fileArray) {
-        const newFilePath = path.join(uploadDir, file.originalFilename);
-        fs.renameSync(file.filepath, newFilePath); // Rename file from temp path to target path
-        const jobRequirement = {
-          RequirementId: requirement.id,
-          data: JSON.stringify({ file_name: file.originalFilename, file_path: newFilePath }),
-        };
-
-        await RequirementStorage.create(jobRequirement);
-      }
-
-      res.status(200).json({ message: 'Files uploaded successfully!' });
+      res.status(200).json({ message: 'File uploaded and application recorded successfully!' });
     } catch (error) {
       console.error('Error in upload:', error);
       res.status(500).json({ message: 'An error occurred' });
     }
   });
 });
-
-
 
 router.get("/download/:fname", async (req, res) => {
   const fname = req.params.fname;
@@ -392,111 +374,29 @@ router.get("/download/:fname", async (req, res) => {
   }
 });
 
-router.post("apply-job", async (req, res) => {
-  // log(JSON.stringify(req.body), "INFO", "JOB");
-  let userId;
-  if (!req.userId) {
-    return res.status(401).json({ message: "Unauthorized" });
-  } else userId = req.userId;
-  if (isNaN(req.userId)) {
-    return res.status(400).json({ message: "Invalid user ID" });
-  }
-  // uncomment để truyền userId từ request
 
-  // test
-  // userId = 1;
-  const user = await User.findByPk(userId);
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  // ở code cũ, truyền từ body là job_id, user_id, job_requirement_data
-  // tuy nhiên, chỉ cần check xem user đã nộp req hay chưa
-
-  const { job_id } = req.body; // bỏ 2 tham số user_id và rqm_data
-  if (!job_id) {
-    return res.status(400).json({ message: "Invalid job ID" });
-  }
-  if (isNaN(job_id)) {
-    return res.status(400).json({ message: "Invalid job ID" });
-  }
-  const job = await Job.findByPk(job_id);
-  if (!job) {
-    return res.status(404).json({ message: "Job not found" });
-  }
-
-  let eligible = false;
-  const rqmId = await Requirement.findOne({
-    where: { JobId: job_id },
-  });
-
-  // nếu job k có req, k cần check
-  if (!rqmId) {
-    eligible = true;
-  } else {
-    // ngược lại, check xem user đã nộp req chưa
-    const submittedReq = await RequirementStorage.findOne({
-      where: { UserId: userId, RequirementId: rqmId },
-    });
-    if (submittedReq) {
-      eligible = true;
-    }
-  }
-
-  if (!eligible) {
-    return res.status(400).json({ message: "You must submit the requirements first" });
-  }
-
-  // Tạo application, trạng thái chờ duyệt
-  const application = await Application.create({
-    JobId: jobId,
-    UserId: userId,
-    status: "PENDING",
-  });
-
-  // Nếu job là xét duyệt tự động, chuyển trạng thái thành ACCEPTED sau khi xử lí
-  if (job.approvalMethod === true) {
-    // true, 1: AUTO và 0: MANUAL
-    // Thêm logic xét duyệt ở đây
-    // Nếu đã đủ số lượng ứng viên, chuyển trạng thái thành REJECTED
-    // Nếu không đủ điều kiện, chuyển trạng thái thành REJECTED
-    // ...
-
-    // Cuối cùng
-    application.status = "ACCEPTED";
-    await application.save();
-  }
-
-  // Tạo job history, action là APPLY
-  const jobHistory = await JobHistory.create({
-    JobId: jobId,
-    UserId: userId,
-    status: "PENDING",
-    action: "APPLY",
-  });
-  return res.status(200).json(application);
-});
-
-router.get('/job-requirements/:id', async (req, res) => {
-  const { id } = req.params;
+router.get("/job-requirements/:job_id", async (req, res) => {
+  const { job_id } = req.params;
 
   try {
-    const requirements = await Requirement.findAll({
-      include: [{
-        model: RequirementStorage,
-        as: 'RequirementStorages', // Ensure this alias matches your association
-        where: { JobId: id }, // Assuming you have a JobId in your RequirementStorage model
-      }],
+    const applications = await Application.findAll({
+      where: {
+        JobId: job_id,
+        status: "PENDING"
+      }
     });
 
-    const requirementStorages = requirements.flatMap(req => req.RequirementStorages);
+    if (applications.length === 0) {
+      return res.status(404).json({ message: "No pending applications found." });
+    }
 
-    res.status(200).json(requirementStorages);
+    res.json(applications);
   } catch (error) {
-    console.error('Error fetching requirement storages:', error);
-    res.status(500).json({ message: 'Failed to fetch requirement storages' });
+    console.error("Error fetching applications:", error);
+    res.status(500).json({ message: "Internal server error." });
   }
 });
+
 
 
 router.get("/applied-jobs", async (req, res) => {
@@ -527,71 +427,75 @@ router.get("/applied-jobs", async (req, res) => {
 });
 
 router.get("/created-jobs", async (req, res) => {
-  // log(JSON.stringify(req.body), "INFO", "JOB");
-  let userId;
-  if (!req.userId) {
-    return res.status(401).json({ message: "Unauthorized" });
-  } else userId = req.userId;
-  if (isNaN(req.userId)) {
-    return res.status(400).json({ message: "Invalid user ID" });
-  }
-  // uncomment để truyền userId từ request
+  try {
+    // Ensure that userId is provided and valid
+    const userId = req.userId; // This assumes userId is set in middleware (e.g., authentication middleware)
+    
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    if (isNaN(userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
 
-  // test
-  // userId = 1;
-  const user = await User.findByPk(userId);
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
+    // Find the user by ID
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-  const jobs = await Job.findAll({
-    where: { UserId: userId },
-  });
-  if (jobs.length === 0) {
-    return res.status(404).json({ message: "No job found" });
+    // Find all jobs created by the user
+    const jobs = await Job.findAll({
+      where: { UserId: userId },
+      include: [{
+        model: Application,
+        attributes: ['status'], // Include the status of applications
+        required: false // Include jobs even if they have no associated applications
+      }]
+    });
+
+    if (jobs.length === 0) {
+      return res.status(404).json({ message: "No jobs found" });
+    }
+
+    return res.status(200).json(jobs);
+  } catch (error) {
+    console.error('Error fetching created jobs:', error);
+    return res.status(500).json({ message: 'Server error' });
   }
-  return res.status(200).json(jobs);
 });
 
-router.get("/created-job-detail/:job_id", async (req, res) => {
-  // log(JSON.stringify(req.body), "INFO", "JOB");
-  let userId;
+router.get("/created-job-detail/:id", async (req, res) => {
   if (!req.userId) {
     return res.status(401).json({ message: "Unauthorized" });
-  } else userId = req.userId;
-  if (isNaN(req.userId)) {
+  }
+
+  const userId = req.userId;
+  if (isNaN(userId)) {
     return res.status(400).json({ message: "Invalid user ID" });
   }
-  // uncomment để truyền userId từ request
 
-  // test
-  // userId = 1;
   const user = await User.findByPk(userId);
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
-  try {
-    const jobId = parseInt(req.params.job_id);
 
-    if (!jobId) {
-      return res.status(400).json({ message: "Invalid job ID" });
-    }
+  try {
+    const jobId = parseInt(req.params.id); // Use req.params.id instead of req.params.job_id
+
     if (isNaN(jobId)) {
       return res.status(400).json({ message: "Invalid job ID" });
     }
 
-    const job = await Job.findByPk(jobId);
+    const job = await Job.findOne({ where: { id: jobId, UserId: userId } });
 
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
     }
-    // nếu k phải là người tạo job, k cho xem
-    if (job.UserId !== userId) {
-      return res.status(404).json({ message: "Job not found" });
-    }
+
     return res.status(200).json(job);
   } catch (err) {
-    log(err, "ERROR", "JOB");
+    console.error(err);
     return res.status(500).json({ message: "Unknown error while fetching job" });
   }
 });
