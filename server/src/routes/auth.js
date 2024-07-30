@@ -59,15 +59,16 @@ router.post("/reset-password", async (req, res) => {
     const {
       email,
       password,
-      answerQuestionSecurityQuestion,
-      securityQuestion,
+      // answerQuestionSecurityQuestion,
+      // securityQuestion,
     } = req.body;
     const user = await User.findOne({ where: { email } });
     const auth = await Auth.findOne({ where: { UserId: user.id } });
     const hash = await Hasher.getHash(password, auth.salt);
     if (
-      user.securityQuestion !== securityQuestion ||
-      user.answerQuestionSecurityQuestion !== answerQuestionSecurityQuestion
+      // user.securityQuestion !== securityQuestion 
+      // user.answerQuestionSecurityQuestion !== answerQuestionSecurityQuestion
+      false
     ) {
       return res
         .status(203)

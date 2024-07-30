@@ -52,14 +52,14 @@ User.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    securityQuestion: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    answerQuestionSecurityQuestion: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
+    // securityQuestion: {
+    //   type: DataTypes.STRING,
+    //   allowNull: true,
+    // },
+    // answerQuestionSecurityQuestion: {
+    //   type: DataTypes.STRING,
+    //   allowNull: true,
+    // },
     address: {
       type: DataTypes.STRING,
       allowNull: true,
