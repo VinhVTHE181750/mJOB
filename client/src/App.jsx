@@ -37,8 +37,11 @@ import PageNotFound from "./pages/technical/PageNotFound";
 // Users
 
 import Users from "./pages/home/Users";
+import Posts from "./pages/home/Posts";
 import EditProfile from "./pages/profile/EditProfile";
 import Profile from "./pages/profile/Profile";
+import Employer from "./pages/profile/Employer";
+import EditEmployer from "./pages/profile/EditEmployer";
 import WorkExperience from "./pages/profile/WorkExperience";
 import Settings from "./pages/technical/Settings";
 
@@ -178,10 +181,37 @@ function App() {
                   path="/workexperience/:userId"
                   element={<WorkExperience />}
                 />
+                <Route
+                  exact
+                  path="/employer"
+                  element={<Employer />}
+                />
+                <Route
+                  exact
+                  path="/editemployer"
+                  element={<EditEmployer />}
+                />
 
-                <Route exact path="/users" element={<Users />} />
-                <Route exact path="/settings" element={<Settings />} />
-                <Route exact path="/ticket" element={<CreateTicketPage />} />
+                <Route
+                  exact
+                  path="/users"
+                  element={<Users />}
+                />
+                <Route
+                  exact
+                  path="/settings"
+                  element={<Settings />}
+                />
+                <Route
+                  exact
+                  path="/ticket"
+                  element={<CreateTicketPage />}
+                />
+                <Route
+                  exact
+                  path="/posts"
+                  element={<Posts />}
+                />
 
                 {/* TECHNICAL ROUTES */}
                 <Route exact path="/to-login" element={<ToLogin />} />

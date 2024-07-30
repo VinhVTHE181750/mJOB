@@ -69,4 +69,29 @@ body {
     height: 20px;
     margin-bottom: 10px;
   }
+  .profile-card {
+    border: none;
+  }
+  
+  .edit-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+  }
+  
+  .profile-header img {
+    border: 3px solid #007bff;
+  }
+  
+  .profile-card h4 {
+    color: #007bff;
+  }
+  
+  .project-status {
+    background-color: #ffffff;
+  }
+  
+  .shadow-lg {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
   
