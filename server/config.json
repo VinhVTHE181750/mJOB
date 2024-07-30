@@ -20,8 +20,8 @@
 
   "database": {
     "dialect": "mssql",
-    "user": "sa",
-    "password": "123",
+    "user": "remote",
+    "password": "rmpass",
     "server": "localhost",
     "database": "mJob",
     "schema": "dbo",
@@ -39,5 +39,26 @@
     "refreshSecret": "notFreshSecret",
     "refreshExpiresIn": 2592000
   },
-  "sessionSecret": "notSoSecret"
+
+  "sessionSecret": "notSoSecret",
+  "mail": {
+    "host": "smtp.gmail.com",
+    "port": 465,
+    "secure": true,
+    "auth": {
+      "user": "abc",
+      "pass": "xyz",
+      "clientId": "123"
+    }
+  },
+  "payment": {
+    "paypal": {
+      "mode": "sandbox",
+      "client_id": "AdxQJndu_yQCm_pbmbE2BRfVwSsJ2qBQ8u_FAtm00QuS_uT0-Y1TzN7Lk5mb_SvJaXL52WYyJmWnbqWS",
+      "client_secret": ""
+    }
+  },
+  "openai": {
+    "api_key": "sk-proj-"
+  }
 }
