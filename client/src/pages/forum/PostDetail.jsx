@@ -1,7 +1,6 @@
 import { Container } from "react-bootstrap";
 import { BsArrowLeft } from "react-icons/bs";
 import { useParams } from "react-router-dom";
-import "../../assets/css/Forum.css";
 import Post from "../../components/forum/Post.jsx";
 import NavigateButton from "../../components/ui/buttons/NavigateButton.jsx";
 

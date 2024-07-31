@@ -5,58 +5,43 @@ class Ticket extends Model {}
 
 Ticket.init(
   {
-    /**
-     * Do not use **by** directly unless neccessary.
-     * Use **getAuthor()** instead.
-     *
-     */
-    by: {
-      type: DataTypes.STRING,
+    
+    // use object and objectId on reports to specify what the report is about
+    object: {
+      type: DataTypes.ENUM("USER", "POST", "COMMENT", "JOB", "OTHER"),
       allowNull: true,
     },
-
-    type: {
-      type: DataTypes.ENUM("REPORT", "SUPPORT", "OTHER"),
-      allowNull: false,
-      defaultValue: "SUPPORT",
+    objectId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
+    
+    // use title, content on support and feedback tickets
     title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    category: {
+    content: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    description: {
-      type: DataTypes.TEXT,
+
+    // for all tickets, can be anonymous
+    from: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: "Anonymous",
+    },
+
+    type: {
+      type: DataTypes.ENUM("SUPPORT", "REPORT", "FEEDBACK", "OTHER"),
       allowNull: false,
-    },
-    status: {
-      // true = OPEN, false = CLOSED
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
-    username: {
-      type: DataTypes.STRING,
-    },
-    email: {
-      type: DataTypes.STRING,
-    },
-    phone: {
-      type: DataTypes.STRING,
-    },
-    priority: {
-      type: DataTypes.INTEGER,
+      defaultValue: "OTHER",
     },
   },
   {
     sequelize,
-    getterMethods: {
-      getAuthor() {
-        return this.by ? this.by : "Anonymous";
-      },
-    },
+    paranoid: true,
   }
 );
 
