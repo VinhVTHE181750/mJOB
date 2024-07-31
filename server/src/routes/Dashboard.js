@@ -247,6 +247,26 @@ router.get("/applylist/:userId", async (req, res) => {
   }
 });
 
+
+//Select application list of a jobs
+router.get("/applicationlist/:jobId", async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const applicationList = await Application.findAll({
+      where: { JobId: jobId, status: 'PENDING' },
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ]
+    });
+    res.status(200).json(applicationList);
+  } catch (err) {
+    // console.log(err);
+    res.status(500).json({ message: "Error occurred", error: err });
+  }
+});
 //Select user job history list w status available
 router.get("/jobhistory/jobstatus/:userId/:jobStatus", async (req, res) => {
   try {
