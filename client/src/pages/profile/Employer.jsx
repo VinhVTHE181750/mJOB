@@ -7,12 +7,6 @@ const Employer = () => {
     <Container>
       <Card className="text-center profile-header bg-primary text-white">
         <Card.Body>
-          <Card.Img 
-            src="profile-picture.jpg" 
-            alt="Profile Picture" 
-            className="profile-picture mb-3"
-            style={{ width: '150px', height: '150px', borderRadius: '50%' }} 
-          />
           <Card.Title as="h1">Company Name</Card.Title>
           <Card.Text>Industry: Tech</Card.Text>
         </Card.Body>
@@ -43,6 +37,7 @@ const Employer = () => {
               <Card.Text><strong>Address:</strong> 1234 Street Name, City, State, ZIP</Card.Text>
               <Card.Text><strong>Phone:</strong> (123) 456-7890</Card.Text>
               <Card.Text><strong>Email:</strong> contact@company.com</Card.Text>
+              <Card.Text><strong>Website:</strong> contact@website.com</Card.Text>
               <Card.Title as="h2">Follow Us</Card.Title>
               <Button href="#" variant="primary" className="mr-2">Facebook</Button>
               <Button href="#" variant="info" className="mr-2">Twitter</Button>

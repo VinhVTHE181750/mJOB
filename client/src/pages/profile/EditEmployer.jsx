@@ -151,7 +151,7 @@ const EditEmployer = () => {
               <Button variant="primary" type="submit">
                 Save Changes
               </Button>
-              <Button variant="secondary" href="/profile" className="ml-2">
+              <Button variant="secondary" href="/employer" className="ml-2">
                 Cancel
               </Button>
             </Form>

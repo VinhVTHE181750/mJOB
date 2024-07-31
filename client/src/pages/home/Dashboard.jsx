@@ -29,8 +29,8 @@ const AdminDashboard = () => {
   const { count: countUsers } = useCountUser();
   const { count: countJob } = useCountJob();
 
-  const activeUsers = 0;
-  const guests = 0;
+  
+  
 
   const data = {
     labels: ["Total Users", "Active Users", "Guests"],
@@ -112,9 +112,9 @@ const AdminDashboard = () => {
                 <Card className="text-white bg-success text-center p-4">
                   <Card.Body>
                     <Card.Title>
-                      <FaUser className="me-2" /> 0
+                      <FaComments className="me-2" /> 0
                     </Card.Title>
-                    <Card.Text>Active Users</Card.Text>
+                    <Card.Text>Posts</Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
