@@ -5,7 +5,8 @@ import { getMoment } from "../../functions/Converter";
 import useCommentDelete from "../../hooks/forum/comments/useCommentDelete";
 import useWhoAmI from "../../hooks/user/useWhoAmI";
 import LikeButton from "./micro/LikeButton";
-import { BsTrash3 } from "react-icons/bs";
+import { BsExclamationTriangleFill, BsTrash3 } from "react-icons/bs";
+import NavigateButton from "../ui/buttons/NavigateButton";
 
 const Comment = ({ comment }) => {
   const { username } = useWhoAmI();
@@ -67,7 +68,14 @@ const Comment = ({ comment }) => {
               <BsTrash3 /> Delete
             </Button>
           </>
-        ) : null}
+        ) : (
+          <NavigateButton
+            path="/report"
+            variant="danger"
+          >
+            <BsExclamationTriangleFill /> Report
+          </NavigateButton>
+        )}
       </div>
     </div>
   );

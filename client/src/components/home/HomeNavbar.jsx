@@ -108,7 +108,7 @@ const HomeNavbar = ({ user }) => {
                 Profile
               </Nav.Link>
               <Nav className="container container-navbar d-flex justify-content-end">
-                <NavDropdown title={`${username}`} id="basic-nav-dropdown">
+                <NavDropdown title={`${username}`} id="basic-nav-dropdown" align={"end"}>
                   <NavDropdown.Item href="/profile">
                     User Profile
                   </NavDropdown.Item>

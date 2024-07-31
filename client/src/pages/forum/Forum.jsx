@@ -1,19 +1,18 @@
-import { Container, Row, Spinner } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
 import ListPost from "../../components/forum/ListPost";
 import PostSearch from "../../components/forum/PostSearch";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 // import ChatBox from "../../components/forum/ChatBox";
 import { useState } from "react";
+import { BsGraphUp } from "react-icons/bs";
 import { FaPlusCircle } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 import useWhoAmI from "../../hooks/user/useWhoAmI";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchPosts } from "../../store/reducers/forum/postsReducer";
 
 const Forum = () => {
   const { role, loading } = useWhoAmI();
   const [tags, setTags] = useState([]);
-  const dispatch = useDispatch();
   const error = useSelector((state) => state.posts.error);
   const addSearchTag = (tag) => {
     if (!tags.includes(tag)) {
@@ -46,14 +45,24 @@ const Forum = () => {
         <div className="d-flex justify-content-center align-items-center mt-2">
           <div className="d-flex flex-row-reverse gap-2">
             {role === "GUEST" ? null : (
-              <NavigateButton
-                path="/forum/add"
-                variant="success"
-              >
-                <div className="d-flex align-items-center justify-content-center gap-1">
-                  <FaPlusCircle /> <span className="d-none d-sm-block">Add Post</span>
-                </div>
-              </NavigateButton>
+              <>
+                <NavigateButton
+                  path="/forum/add"
+                  variant="success"
+                >
+                  <div className="d-flex align-items-center justify-content-center gap-1">
+                    <FaPlusCircle /> <span className="d-none d-sm-block">Add Post</span>
+                  </div>
+                </NavigateButton>
+                <NavigateButton
+                  path="/forum/insights"
+                  variant="primary"
+                >
+                  <div className="d-flex align-items-center justify-content-center gap-1">
+                    <BsGraphUp /> <span className="d-none d-sm-block">Insights</span>
+                  </div>
+                </NavigateButton>
+              </>
             )}
 
             {role === "ADMIN" && (
