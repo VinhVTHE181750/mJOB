@@ -1,5 +1,6 @@
 -- Delete all data from the table
 DELETE FROM [mJOB].[dbo].[Users];
+DELETE FROM [mJOB].[dbo].[Auths];
 DELETE FROM [mJOB].[dbo].[Jobs];
 DELETE FROM [mJOB].[dbo].[Applications];
 DELETE FROM [mJOB].[dbo].[JobMetrics];
@@ -10,6 +11,7 @@ DELETE FROM [mJOB].[dbo].[PostMetrics];
 DELETE FROM [mJOB].[dbo].[Balances];
 DELETE FROM [mJOB].[dbo].[Requirements];
 DELETE FROM [mJOB].[dbo].[JobPreferences];
+DELETE FROM [mJOB].[dbo].[JobCategories];
 
 
 
@@ -18,6 +20,7 @@ DELETE FROM [mJOB].[dbo].[JobPreferences];
 
 -- Reset identity seed to 1
 DBCC CHECKIDENT ('[mJOB].[dbo].[Users]', RESEED, 0);
+DBCC CHECKIDENT ('[mJOB].[dbo].[Auths]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Jobs]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Applications]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[JobMetrics]', RESEED, 0);
@@ -27,6 +30,8 @@ DBCC CHECKIDENT ('[mJOB].[dbo].[PostCategories]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Balances]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Requirements]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[JobPreferences]', RESEED, 0);
+DBCC CHECKIDENT ('[mJOB].[dbo].[JobCategories]', RESEED, 0);
+
 
 
 
@@ -49,7 +54,7 @@ VALUES
 ('jack_lopez', 'jack.lopez@example.com', '555-0110', 'CIT000010', 'Jack', 'Lopez', '1994-10-20', '110 Tenth Blvd', 'jack_avatar.png', 'Jack is a content creator.', 1, 0, GETDATE(), GETDATE());
 GO
 
-INSERT INTO [Auths] (UserId, role, hash, salt, createdAt, updatedAt)
+INSERT INTO [mJOB].[dbo].[Auths] (UserId, role, hash, salt, createdAt, updatedAt)
 VALUES 
 (1, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
 (2, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
@@ -61,6 +66,29 @@ VALUES
 (8, 'MOD', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
 (9, 'MOD', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
 (10, 'ADMIN', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE());
+GO
+
+INSERT INTO [mJOB].[dbo].[JobCategories] ([name], [description], [image], [createdAt], [updatedAt]) VALUES
+('Administration', 'Jobs related to administrative tasks and office management', 'https://images.pexels.com/photos/3184325/pexels-photo-3184325.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Arts and Design', 'Jobs in graphic design, interior design, photography, and other arts', 'https://images.pexels.com/photos/1145199/pexels-photo-1145199.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Business and Finance', 'Jobs in accounting, financial analysis, and business management', 'https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Construction and Trades', 'Jobs in carpentry, plumbing, and other skilled trades', 'https://images.pexels.com/photos/7615467/pexels-photo-7615467.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Customer Service', 'Jobs in customer support, call centers, and technical support', 'https://images.pexels.com/photos/3184307/pexels-photo-3184307.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Education', 'Jobs in teaching, school administration, and educational support', 'https://images.pexels.com/photos/256395/pexels-photo-256395.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Engineering', 'Jobs in civil, mechanical, electrical, and other engineering fields', 'https://images.pexels.com/photos/2897385/pexels-photo-2897385.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Healthcare', 'Jobs in nursing, medicine, pharmacy, and other healthcare fields', 'https://images.pexels.com/photos/3845129/pexels-photo-3845129.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Hospitality and Travel', 'Jobs in hotel management, travel agencies, and culinary arts', 'https://images.pexels.com/photos/388799/pexels-photo-388799.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Human Resources', 'Jobs in HR management, recruitment, and employee training', 'https://images.pexels.com/photos/3184300/pexels-photo-3184300.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Information Technology', 'Jobs in software development, IT support, and network administration', 'https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Legal', 'Jobs in law practice, paralegal support, and legal assistance', 'https://images.pexels.com/photos/5668477/pexels-photo-5668477.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Marketing and Advertising', 'Jobs in marketing strategy, content creation, and SEO', 'https://images.pexels.com/photos/5716016/pexels-photo-5716016.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Sales', 'Jobs in sales representation, account management, and sales leadership', 'https://images.pexels.com/photos/3184306/pexels-photo-3184306.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Science and Research', 'Jobs in scientific research, lab work, and biological studies', 'https://images.pexels.com/photos/3735769/pexels-photo-3735769.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Skilled Trades', 'Jobs in welding, machining, and HVAC technology', 'https://images.pexels.com/photos/159220/pexels-photo-159220.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Transportation and Logistics', 'Jobs in trucking, supply chain management, and logistics coordination', 'https://images.pexels.com/photos/4177974/pexels-photo-4177974.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Real Estate', 'Jobs in real estate sales, property management, and brokerage', 'https://images.pexels.com/photos/4466467/pexels-photo-4466467.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Media and Communications', 'Jobs in journalism, public relations, and social media management', 'https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()),
+('Retail', 'Jobs in store management, sales associate roles, and merchandising', 'https://images.pexels.com/photos/3965542/pexels-photo-3965542.jpeg', SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET());
 GO
 
 INSERT INTO [mJOB].[dbo].[Jobs]
@@ -328,7 +356,7 @@ VALUES
            ('Understanding Mental Health', 'An insightful look into mental health issues and how to manage them.', 'mental health,well-being,self-care', 'PUBLISHED', '2024-07-25 20:00:00 +00:00', '2024-07-25 20:00:00 +00:00', NULL, 2, 9),  -- Health & Wellness
            ('The Art of Photography', 'Tips and techniques for capturing stunning photographs.', 'photography,art,techniques', 'PUBLISHED', '2024-07-25 21:00:00 +00:00', '2024-07-25 21:00:00 +00:00', NULL, 5, 10)  -- Lifestyle
 GO
-select * from Posts
+select * from [mJOB].[dbo].[Posts]
 
 INSERT INTO [mJOB].[dbo].[PostMetrics]
            ([PostId]
@@ -458,4 +486,4 @@ INSERT INTO [mJOB].[dbo].[JobPreferences]
            ('Systems Analyst', 'FREELANCE', 'Atlanta', 60000, 80000, 1, SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 9),
            ('Software Engineer', 'FULL_TIME', 'San Diego', 80000, 100000, 1, SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 10);
 
-select * from JobPreferences
+select * from [mJOB].[dbo].JobPreferences

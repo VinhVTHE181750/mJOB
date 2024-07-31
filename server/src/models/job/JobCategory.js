@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require("sequelize");
 const { sequelize } = require("../SQLize");
+const Job = require("./Job"); // Ensure this import is correct
 
-const Job = require("./Job");
 class JobCategory extends Model {}
 
 JobCategory.init(
@@ -10,7 +10,6 @@ JobCategory.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-
     description: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -22,11 +21,8 @@ JobCategory.init(
   },
   {
     sequelize,
-    paranoid: true,
+    modelName: 'JobCategory'
   }
 );
-
-JobCategory.hasMany(Job, {
-  as: "CategoryID"});
 
 module.exports = JobCategory;
