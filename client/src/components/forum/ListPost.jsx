@@ -57,7 +57,7 @@ const ListPost = () => {
         <PostCard
           key={post.id}
           post={post}
-          onClick={() => navigate(`/posts/${post.id}`)}
+          onClick={() => navigate(`/forum/posts/${post.id}`)}
           category={categoryOf(post.id)}
         />
       ))}
