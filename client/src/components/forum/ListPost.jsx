@@ -2,7 +2,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Pagination } from "react-bootstrap";
 import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { useNavigate } from "react-router-dom";
 import "../../assets/css/Forum.css";
 import { ForumContext } from "../../context/ForumContext";

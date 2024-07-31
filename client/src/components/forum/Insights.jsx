@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { lazy, useState } from "react";
 import { Container, Dropdown, Row, Spinner } from "react-bootstrap";
 import useWhoAmI from "../../hooks/user/useWhoAmI";
-import BalanceChart from "../../pages/payment/micro/BalanceChart";
+const BalanceChart = lazy(import("../../pages/payment/micro/BalanceChart"));
 
 const Insights = () => {
   const { userId, loading: userLoading, error: userError } = useWhoAmI();
