@@ -47,8 +47,7 @@ const Posts = () => {
                                 <tr>
                                     <th>ID</th>
                                     <th>Title</th>
-                                    <th>Content</th>
-                                    <th>Company</th>
+                                    <th>Author</th>                              
                                     <th>Posted</th>
                                     <th>Actions</th>
                                 </tr>
@@ -59,7 +58,6 @@ const Posts = () => {
                                         <td>{idx + 1}</td>
                                         <td>Title Here</td>
                                         <td>Author Name</td>
-                                        <td>Company Name</td>
                                         <td>Posted Date</td>
                                         <td>
                                             <Button

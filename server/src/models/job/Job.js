@@ -15,7 +15,7 @@ Job.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    type: {
+    salaryType: {
       type: DataTypes.ENUM("FULL_TIME", "PART_TIME", "INTERNSHIP", "COMMISSION", "FREELANCE", "CONTRACT"),
       allowNull: false,
     },
