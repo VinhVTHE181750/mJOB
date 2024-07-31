@@ -10,9 +10,7 @@ const Profile = () => {
   const [profile, setProfile] = useState({});
   const whoAmI = useWhoAmI();
   const params = useParams();
-  const userId = whoAmI?.userId ?? params;
-  console.log("userId:", params);
-
+  const userId = params.userId;
   const navigate = useNavigate();
 
   const [jobTitle, setJobTitle] = useState("");

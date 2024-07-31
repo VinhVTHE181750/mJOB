@@ -1,8 +1,7 @@
-import React from "react";
-import useMarketContent from "../hooks/useMarketContent.js";
+import { Card } from "react-bootstrap";
 import "../assets/css/Forum.css";
-import {getMoment} from "../functions/Converter";
-import {Card} from "react-bootstrap";
+import { getMoment } from "../functions/Converter";
+import useMarketContent from "../hooks/useMarketContent.js";
 
 const ListContent = () => {
   const {contents, loading, error } = useMarketContent();

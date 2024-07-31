@@ -1,25 +1,24 @@
 import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, FloatingLabel, Form, Row } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import avatar from "../../assets/img/default_avatar.webp";
 import { getMoment } from "../../functions/Converter";
 import NavigateButton from "../ui/buttons/NavigateButton";
 // import { useDispatch, useSelector } from "react-redux";
 // import { deletePost, fetchPost } from "../../store/reducers/forum/postReducer";
-import { BsExclamation, BsPencilFill, BsTrash3 } from "react-icons/bs";
+import { BsExclamation, BsExclamationTriangleFill, BsPencilFill, BsTrash3 } from "react-icons/bs";
 import Skeleton from "react-loading-skeleton";
+import { ForumContext } from "../../context/ForumContext";
+import useCommentInsert from "../../hooks/forum/comments/useCommentInsert";
 import useLikesUpdate from "../../hooks/forum/likes/useLikesUpdate";
 import usePostDelete from "../../hooks/forum/posts/usePostDelete";
 import usePostDetail from "../../hooks/forum/posts/usePostDetail";
 import useWhoAmI from "../../hooks/user/useWhoAmI";
 import socket from "../../socket";
-import LikeButton from "./micro/LikeButton";
-import Tag from "./micro/Tag";
-import Category from "./micro/Category";
-import { ForumContext } from "../../context/ForumContext";
-import useCommentInsert from "../../hooks/forum/comments/useCommentInsert";
 import ListComment from "./ListComment";
+import Category from "./micro/Category";
+import LikeButton from "./micro/LikeButton";
 
 const Post = ({ id }) => {
   // post related data
@@ -29,7 +28,6 @@ const Post = ({ id }) => {
 
   // const post = useSelector((state) => state.post.post);
   // const { post, loading, error } = usePostDetail(id);
-  const { updateLikes } = useLikesUpdate();
   const { username } = useWhoAmI();
   const { deletePost } = usePostDelete();
   const { categoryOf } = useContext(ForumContext);
@@ -206,13 +204,11 @@ const Post = ({ id }) => {
                 height={100}
               />
             </div>
-            <h5 className="text-center text-primary pointer">{post.author}</h5>
+            <h5 className="text-center text-primary">{post.author}</h5>
           </div>
           <p className="text-center">Last update: {getMoment(post.updatedAt)}</p>
         </Col>
-        <Col>
-          {/* <Tag tag="tag1" /> */}
-        </Col>
+        <Col>{/* <Tag tag="tag1" /> */}</Col>
         <Col sm="auto pe-0">
           <LikeButton
             id={Number(id)}
@@ -228,7 +224,7 @@ const Post = ({ id }) => {
             count="{post.dislikes}"
             className="me-2"
           />
-          {username === post.author && (
+          {username === post.author ? (
             <>
               <NavigateButton
                 path={`/forum/edit/${id}`}
@@ -244,6 +240,13 @@ const Post = ({ id }) => {
                 <BsTrash3 /> Delete
               </Button>
             </>
+          ) : (
+            <NavigateButton
+              path="/report"
+              variant="danger"
+            >
+              <BsExclamationTriangleFill /> Report
+            </NavigateButton>
           )}
         </Col>
       </Row>

@@ -6,6 +6,7 @@ const PostCategory = require("./PostCategory");
 const PostTag = require("./PostTag");
 const PostMetric = require("../metric/PostMetric");
 const PostHistory = require("./PostHistory");
+const User = require("../../user/User");
 
 class Post extends Model {
 }

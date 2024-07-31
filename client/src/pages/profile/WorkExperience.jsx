@@ -27,9 +27,9 @@ const WorkExperience = () => {
         const response = await axios.get(
           `http://localhost:8000/api/workexp/user/${userId}`
         );
-        const workExperience = response.data;
+        const workExperiences = response.data;
         setWorkExperiences(
-          workExperience.map((exp) => ({
+          workExperiences.map((exp) => ({
             jobTitle: exp.title || "",
             jobDescription: exp.description || "",
             company: exp.company || "",

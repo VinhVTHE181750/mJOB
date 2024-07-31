@@ -1,6 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { Button, Col, Container, Nav, Row, Table, Pagination } from "react-bootstrap";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  Button,
+  Col,
+  Container,
+  Nav,
+  Row,
+  Table,
+  Pagination,
+} from "react-bootstrap";
 import http from "../../functions/httpService";
+import { useNavigate } from "react-router";
+
 import {
   FaBriefcase,
   FaChartBar,
@@ -13,6 +23,7 @@ const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [jobsPerPage] = useState(10);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchJobs();
@@ -20,7 +31,9 @@ const Jobs = () => {
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/job-manage/job-list");
+      const response = await fetch(
+        "http://localhost:8000/api/job-manage/job-list"
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch jobs");
       }
@@ -31,13 +44,16 @@ const Jobs = () => {
     }
   };
 
-  const handleEditJob = () => {
-    alert("Edit Job function not implemented!");
-  };
+  const handleEditJob = useCallback(
+    (id) => {
+      navigate(`/jobs/${id}`);
+    },
+    [navigate]
+  );
 
   const handleDeleteJob = async (id) => {
     try {
-      await http.delete(`/delete-job/${id}`);
+      await http.delete(`/job-manage/delete-job/${id}`);
       alert("Job deleted successfully!");
       fetchJobs(); // Refresh the job list
     } catch (err) {
@@ -110,7 +126,7 @@ const Jobs = () => {
                       <Button
                         variant="primary"
                         className="mr-2"
-                        onClick={handleEditJob}
+                        onClick={() => handleEditJob(job.id)}
                       >
                         Detail
                       </Button>
@@ -126,8 +142,12 @@ const Jobs = () => {
               </tbody>
             </Table>
             <Pagination className="justify-content-center">
-              {[...Array(totalPages).keys()].map(number => (
-                <Pagination.Item key={number + 1} active={number + 1 === currentPage} onClick={() => paginate(number + 1)}>
+              {[...Array(totalPages).keys()].map((number) => (
+                <Pagination.Item
+                  key={number + 1}
+                  active={number + 1 === currentPage}
+                  onClick={() => paginate(number + 1)}
+                >
                   {number + 1}
                 </Pagination.Item>
               ))}

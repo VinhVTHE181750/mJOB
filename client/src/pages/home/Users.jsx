@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Button, Col, Container, Nav, Row, Table } from "react-bootstrap";
 import { FaBriefcase, FaChartBar, FaSignOutAlt, FaUsers, FaComments } from "react-icons/fa";
 import { useNavigate } from "react-router";
@@ -21,14 +21,18 @@ const Users = () => {
   };
 
   const navigate = useNavigate();
-  const handleEditUser = (id) => {
-     console.log("id:", id);
-    navigate(`/profile/${id}`);
-  };
+
+  const handleEditUser = useCallback(
+    (id) => {
+      navigate(`/profile/${id}`);
+    },
+    [navigate]
+  );
+
 
   const handleDeleteUser = async (id) => {
     try {
-      await http.delete(`/job-manage/delete-job/${id}`);
+      await http.delete(`/delete-user/${id}`);
       alert("User deleted successfully!");
       fetchUsers(); // Refresh the user list
     } catch (err) {
