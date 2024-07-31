@@ -33,7 +33,7 @@ const AdminDashboard = () => {
   
 
   const data = {
-    labels: ["Total Users", "Active Users", "Guests"],
+    labels: ["Total Users", "Posts", "Jobs"],
     datasets: [
       {
         label: "User Statistics",
