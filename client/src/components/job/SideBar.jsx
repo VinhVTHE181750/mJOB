@@ -42,7 +42,7 @@ const Sidebar = ({ onMenuClick }) => {
           Job Applied
         </a>
         <a
-          href="/myjobs/created"
+          href="/myjobs/created-jobs"
           className={`menu-item ${selectedMenu === 'jobCompleted' ? 'selected' : ''}`}
           onClick={() => handleMenuClick('jobCompleted')}
         >

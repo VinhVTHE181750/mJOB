@@ -44,10 +44,8 @@ const Profile = () => {
         const response = await axios.get(
           `http://localhost:8000/api/workexp/user/${userId}`
         );
-        // console.log("Response:", response);
         const workExperience = response.data;
 
-        // Update state with fetched data
         setJobTitle(workExperience.title || "");
         setJobDescription(workExperience.description || "");
         setCompany(workExperience.company || "");
@@ -62,7 +60,7 @@ const Profile = () => {
             ? new Date(workExperience.endDate).toLocaleDateString()
             : ""
         );
-        setOtherInformation(workExperience.otherInformation || ""); // Ensure otherInformation is set or empty string
+        setOtherInformation(workExperience.otherInformation || "");
       } catch (error) {
         console.error("Error fetching work experience data:", error);
       }
@@ -81,10 +79,10 @@ const Profile = () => {
 
   return (
     <Container fluid className="mt-5">
-      <Row key={profile.id}>
-        <Col md={3}>
-          <Card className="profile-card text-center">
-            <Card.Body>
+      <Row className="justify-content-center">
+        <Col md={8}>
+          <Card   className="profile-card text-center mb-4 shadow-lg" style={{ borderRadius: "10px", backgroundColor: "#f8f9fa" }}>
+            <Card.Body >
               <div className="profile-header mb-4">
                 <img
                   id="profileImage"
@@ -94,7 +92,7 @@ const Profile = () => {
                   style={{
                     width: "150px",
                     height: "150px",
-                    border: "3px solid #343a40",
+                    border: "3px solid #007bff",
                   }}
                 />
                 <h2
@@ -110,11 +108,9 @@ const Profile = () => {
               </div>
             </Card.Body>
           </Card>
-        </Col>
-        <Col md={9}>
-          <Card className="profile-card mb-4">
+          <Card className="profile-card mb-4 shadow-lg" style={{ borderRadius: "10px", backgroundColor: "#ffffff" }}>
             <Card.Body>
-              <h4>Profile Details</h4>
+              <h4 className="mb-4" style={{ color: "#007bff" }}>Profile Details</h4>
               <Row>
                 <Col md={6}>
                   <p>
@@ -151,14 +147,15 @@ const Profile = () => {
                 onClick={handleEditClick}
                 variant="primary"
                 className="edit-btn"
+                style={{ borderRadius: "5px" }}
               >
                 Edit
               </Button>
             </Card.Body>
           </Card>
-          <Card className="profile-card project-status">
+          <Card className="profile-card project-status shadow-lg" style={{ borderRadius: "10px", backgroundColor: "#ffffff" }}>
             <Card.Body>
-              <h4>Work Experience</h4>
+              <h4 className="mb-4" style={{ color: "#007bff" }}>Work Experience</h4>
               <p>
                 <strong>Job Title:</strong>{" "}
                 <span id="jobTitle">{jobTitle}</span>
@@ -180,14 +177,11 @@ const Profile = () => {
               <p>
                 <strong>End Date:</strong> <span id="endDate">{endDate}</span>
               </p>
-              <p>
-                <strong>Other Information:</strong>{" "}
-                <span id="otherInformation">{otherInformation}</span>
-              </p>
               <Button
                 onClick={handleWorkEdit}
                 variant="primary"
                 className="edit-btn"
+                style={{ borderRadius: "5px" }}
               >
                 Edit
               </Button>

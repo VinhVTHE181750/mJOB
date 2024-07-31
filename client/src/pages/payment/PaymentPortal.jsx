@@ -1,12 +1,12 @@
 import { lazy, Suspense, useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import Balance from "./micro/Balance";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
-import EmbedCard from "./micro/EmbedCard";
-import { useBalance } from "../../hooks/payment/useBalance";
+import { BsArrowDown, BsArrowUp, BsCurrencyExchange, BsLink45Deg } from "react-icons/bs";
 import Skeleton from "react-loading-skeleton";
-import { GoArrowDown, GoArrowSwitch, GoArrowUp, GoLinkExternal } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import { useBalance } from "../../hooks/payment/useBalance";
+import Balance from "./micro/Balance";
+import EmbedCard from "./micro/EmbedCard";
 
 const BalanceChart = lazy(() => import("./micro/BalanceChart"));
 
@@ -69,27 +69,27 @@ const PaymentPortal = () => {
               <div style={{ fontSize: 40 }}>
                 <Balance
                   amount={amount}
-                  currency="VND"
-                  locale="vi-VN"
+                  currency="USD"
+                  locale="en-US"
                 />
                 <Col className="d-flex gap-2 gap-sm-2">
                   <Button
                     variant="primary"
                     onClick={() => navigate("/payment/deposit")}
                   >
-                    <GoArrowUp /> Deposit
+                    <BsArrowUp /> Deposit
                   </Button>
                   <Button
                     variant="success"
                     onClick={() => navigate("/payment/withdraw")}
                   >
-                    <GoArrowDown /> Withdraw
+                    <BsArrowDown /> Withdraw
                   </Button>
                   <Button
                     variant="warning"
                     onClick={() => navigate("/payment/transfer")}
                   >
-                    <GoArrowSwitch /> Transfer
+                    <BsCurrencyExchange /> Transfer
                   </Button>
                 </Col>
               </div>
@@ -111,8 +111,8 @@ const PaymentPortal = () => {
             content={
               <Balance
                 amount={amount}
-                currency="VND"
-                locale="vi-VN"
+                currency="USD"
+                locale="en-US"
               />
             }
             borderColor={"lightgreen"}
@@ -128,8 +128,8 @@ const PaymentPortal = () => {
             content={
               <Balance
                 amount={amount}
-                currency="VND"
-                locale="vi-VN"
+                currency="USD"
+                locale="en-US"
               />
             }
             borderColor={"orange"}
@@ -172,7 +172,7 @@ const PaymentPortal = () => {
               variant="outline-info"
               onClick={() => navigate("/payment-history")}
             >
-              <GoLinkExternal />
+              <BsLink45Deg />
             </Button>
           </h2>
           <div>{transactions}</div>

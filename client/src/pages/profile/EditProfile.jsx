@@ -80,7 +80,7 @@ const EditProfile = () => {
 
   return (
     <>
-      <h1 className="text-center my-4">Profile Edit</h1>
+      <h1 className="text-center my-4">Edit Profile</h1>
       <Container fluid className="mt-3">
         <Row>
         <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
@@ -105,19 +105,21 @@ const EditProfile = () => {
             </Nav>
           </Col>
           <Col md={10} className="p-4">
-            <Card className="mb-4">
+            <Card className="mb-4 shadow-lg" style={{ borderRadius: "10px" }}>
               <Card.Body>
                 <div className="profile-header text-center mb-4">
                   <img
                     src={selectedImage || "https://via.placeholder.com/150"}
-                    alt="Profile Image"
+                    alt="Profile"
                     className="rounded-circle"
                     style={{
                       width: "150px",
                       height: "150px",
                       cursor: "pointer",
+                      border: "2px solid #007bff",
                     }}
                     onClick={handleImageClick}
+                    aria-label="Click to change profile picture"
                   />
                   <input
                     type="file"
@@ -125,52 +127,57 @@ const EditProfile = () => {
                     ref={fileInputRef}
                     onChange={handleImageChange}
                     style={{ display: "none" }}
+                    aria-label="Upload profile picture"
                   />
                   <h2>{userName}</h2>
                 </div>
                 <Form onSubmit={handleFormSubmit}>
-                  <Form.Group as={Row} controlId="userName">
+                  <Form.Group as={Row}>
                     <Form.Label column sm={2}>
-                      UserName
+                      Username
                     </Form.Label>
                     <Col sm={10}>
                       <Form.Control
                         type="text"
-                        placeholder="UserName"
+                        placeholder="Username"
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
+                        isInvalid={!!errors.userName}
+                        aria-label="Username"
                       />
                     </Col>
                   </Form.Group>
-                  <Form.Group as={Row} controlId="firstName">
+                  <Form.Group as={Row}>
                     <Form.Label column sm={2}>
-                      FirstName
+                      First Name
                     </Form.Label>
                     <Col sm={10}>
                       <Form.Control
                         type="text"
-                        placeholder="FirstName"
+                        placeholder="First Name"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
+                        isInvalid={!!errors.firstName}
+                        aria-label="First Name"
                       />
                     </Col>
                   </Form.Group>
-
-                  <Form.Group as={Row} controlId="lastName">
+                  <Form.Group as={Row}>
                     <Form.Label column sm={2}>
-                      LastName
+                      Last Name
                     </Form.Label>
                     <Col sm={10}>
                       <Form.Control
                         type="text"
-                        placeholder="LastName"
+                        placeholder="Last Name"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
+                        isInvalid={!!errors.lastName}
+                        aria-label="Last Name"
                       />
                     </Col>
                   </Form.Group>
-
-                  <Form.Group as={Row} controlId="dob">
+                  <Form.Group as={Row}>
                     <Form.Label column sm={2}>
                       Date of Birth
                     </Form.Label>
@@ -179,11 +186,12 @@ const EditProfile = () => {
                         type="date"
                         value={dob}
                         onChange={(e) => setDob(e.target.value)}
+                        isInvalid={!!errors.dob}
+                        aria-label="Date of Birth"
                       />
                     </Col>
                   </Form.Group>
-
-                  <Form.Group as={Row} controlId="address">
+                  <Form.Group as={Row}>
                     <Form.Label column sm={2}>
                       Address
                     </Form.Label>
@@ -193,11 +201,12 @@ const EditProfile = () => {
                         placeholder="Address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
+                        isInvalid={!!errors.address}
+                        aria-label="Address"
                       />
                     </Col>
                   </Form.Group>
-
-                  <Form.Group as={Row} controlId="citizenid">
+                  <Form.Group as={Row}>
                     <Form.Label column sm={2}>
                       Citizen ID
                     </Form.Label>
@@ -207,11 +216,12 @@ const EditProfile = () => {
                         placeholder="Citizen ID"
                         value={citizenId}
                         onChange={(e) => setCitizenId(e.target.value)}
+                        isInvalid={!!errors.citizenId}
+                        aria-label="Citizen ID"
                       />
                     </Col>
                   </Form.Group>
-
-                  <Form.Group as={Row} controlId="email">
+                  <Form.Group as={Row}>
                     <Form.Label column sm={2}>
                       Email
                     </Form.Label>
@@ -221,11 +231,12 @@ const EditProfile = () => {
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        isInvalid={!!errors.email}
+                        aria-label="Email"
                       />
                     </Col>
                   </Form.Group>
-
-                  <Form.Group as={Row} controlId="phone">
+                  <Form.Group as={Row}>
                     <Form.Label column sm={2}>
                       Contact Number
                     </Form.Label>
@@ -235,11 +246,12 @@ const EditProfile = () => {
                         placeholder="Contact Number"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
+                        isInvalid={!!errors.phone}
+                        aria-label="Contact Number"
                       />
                     </Col>
                   </Form.Group>
-
-                  <Form.Group as={Row} controlId="bio">
+                  <Form.Group as={Row}>
                     <Form.Label column sm={2}>
                       Bio
                     </Form.Label>
@@ -249,13 +261,14 @@ const EditProfile = () => {
                         placeholder="Bio"
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
+                        isInvalid={!!errors.bio}
+                        aria-label="Bio"
                       />
                     </Col>
                   </Form.Group>
-
                   <Form.Group as={Row}>
                     <Col sm={{ span: 10, offset: 2 }}>
-                      <Button type="submit">Save</Button>
+                      <Button type="submit" variant="primary">Save</Button>
                     </Col>
                   </Form.Group>
                 </Form>

@@ -3,15 +3,23 @@ import { Container, Row, Col, Form, Button, Card, Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router";
+import { FaUserEdit, FaBriefcase, FaSignOutAlt, FaCog, FaPlus, FaTrash } from "react-icons/fa";
 
 const WorkExperience = () => {
-  const [jobTitle, setJobTitle] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
-  const [company, setCompany] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [otherInformation, setOtherInformation] = useState("");
+  const [workExperiences, setWorkExperiences] = useState([
+    {
+      jobTitle: "",
+      jobDescription: "",
+      company: "",
+      startDate: "",
+      endDate: "",
+      otherInformation: "",
+      errors: {},
+    },
+  ]);
+
   const { userId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchWorkExperience = async () => {
@@ -19,16 +27,18 @@ const WorkExperience = () => {
         const response = await axios.get(
           `http://localhost:8000/api/workexp/user/${userId}`
         );
-        console.log("Response:", response);
         const workExperience = response.data;
-
-        // Update state with fetched data
-        setJobTitle(workExperience.title || "");
-        setJobDescription(workExperience.description || "");
-        setCompany(workExperience.company || "");
-        setStartDate(workExperience.startDate || "");
-        setEndDate(workExperience.endDate || "");
-        setOtherInformation(workExperience.location || ""); // Ensure otherInformation is set or empty string
+        setWorkExperiences(
+          workExperience.map((exp) => ({
+            jobTitle: exp.title || "",
+            jobDescription: exp.description || "",
+            company: exp.company || "",
+            startDate: exp.startDate || "",
+            endDate: exp.endDate || "",
+            otherInformation: exp.location || "",
+            errors: {},
+          }))
+        );
       } catch (error) {
         console.error("Error fetching work experience data:", error);
       }
@@ -37,24 +47,50 @@ const WorkExperience = () => {
     fetchWorkExperience();
   }, [userId]);
 
-  const navigate = useNavigate();
+  const validate = (index) => {
+    const newErrors = {};
+    const exp = workExperiences[index];
+    if (!exp.jobTitle.trim()) newErrors.jobTitle = "Job Title is required";
+    if (!exp.jobDescription.trim())
+      newErrors.jobDescription = "Job Description is required";
+    else if (exp.jobDescription.length > 150)
+      newErrors.jobDescription = "Job Description must be less than 150 characters";
+    if (!exp.company.trim()) newErrors.company = "Company is required";
+    if (!exp.startDate) newErrors.startDate = "Start Date is required";
+    if (!exp.endDate) newErrors.endDate = "End Date is required";
+    else if (exp.startDate && exp.endDate && exp.startDate >= exp.endDate)
+      newErrors.endDate = "End Date must be after Start Date";
+    return newErrors;
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    let hasErrors = false;
+    const updatedWorkExperiences = workExperiences.map((exp, index) => {
+      const newErrors = validate(index);
+      if (Object.keys(newErrors).length > 0) {
+        hasErrors = true;
+      }
+      return { ...exp, errors: newErrors };
+    });
 
-    const userData = {
-      userId: userId,
-      title: jobTitle,
-      description: jobDescription,
-      company: company,
-      startDate: startDate,
-      endDate: endDate,
-      location: otherInformation,
-    };
+    setWorkExperiences(updatedWorkExperiences);
+    if (hasErrors) return;
 
     try {
-      const response = await axios.put(
-        `http://localhost:8000/api/workexp/${userId}`,
-        userData
+      await Promise.all(
+        updatedWorkExperiences.map((exp) => {
+          const userData = {
+            userId: userId,
+            title: exp.jobTitle,
+            description: exp.jobDescription,
+            company: exp.company,
+            startDate: exp.startDate,
+            endDate: exp.endDate,
+            location: exp.otherInformation,
+          };
+          return axios.put(`http://localhost:8000/api/workexp/${userId}`, userData);
+        })
       );
       alert("Work experience updated successfully");
       navigate(`/profile/${userId}`);
@@ -62,6 +98,31 @@ const WorkExperience = () => {
       console.error("Error updating work experience:", err);
       alert("Error updating work experience");
     }
+  };
+
+  const handleAddExperience = () => {
+    setWorkExperiences([
+      ...workExperiences,
+      {
+        jobTitle: "",
+        jobDescription: "",
+        company: "",
+        startDate: "",
+        endDate: "",
+        otherInformation: "",
+        errors: {},
+      },
+    ]);
+  };
+
+  const handleDeleteExperience = (index) => {
+    setWorkExperiences(workExperiences.filter((_, i) => i !== index));
+  };
+
+  const handleInputChange = (index, field, value) => {
+    const updatedWorkExperiences = [...workExperiences];
+    updatedWorkExperiences[index][field] = value;
+    setWorkExperiences(updatedWorkExperiences);
   };
 
   return (
@@ -91,99 +152,150 @@ const WorkExperience = () => {
             </Nav>
           </Col>
           <Col md={10} className="p-4">
-            <Card className="mb-4">
-              <Card.Body>
-                <Form onSubmit={handleFormSubmit}>
-                  <Form.Group as={Row} controlId="jobTitle">
-                    <Form.Label column sm={2}>
-                      Job Title
-                    </Form.Label>
-                    <Col sm={10}>
-                      <Form.Control
-                        type="text"
-                        placeholder="Job Title"
-                        value={jobTitle}
-                        onChange={(e) => setJobTitle(e.target.value)}
-                      />
-                    </Col>
-                  </Form.Group>
+            <div className="d-flex justify-content-end mb-3">
+              <Button onClick={handleAddExperience} className="d-flex align-items-center">
+                <FaPlus className="me-2" /> Add
+              </Button>
+            </div>
+            {workExperiences.map((exp, index) => (
+              <Card className="mb-4" key={index}>
+                <Card.Body>
+                  <Form>
+                    <Form.Group as={Row} controlId={`jobTitle-${index}`}>
+                      <Form.Label column sm={2}>
+                        Job Title
+                      </Form.Label>
+                      <Col sm={10}>
+                        <Form.Control
+                          type="text"
+                          placeholder="Job Title"
+                          value={exp.jobTitle}
+                          onChange={(e) =>
+                            handleInputChange(index, "jobTitle", e.target.value)
+                          }
+                          isInvalid={!!exp.errors.jobTitle}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {exp.errors.jobTitle}
+                        </Form.Control.Feedback>
+                      </Col>
+                    </Form.Group>
 
-                  <Form.Group as={Row} controlId="jobDescription">
-                    <Form.Label column sm={2}>
-                      Job Description
-                    </Form.Label>
-                    <Col sm={10}>
-                      <Form.Control
-                        type="text"
-                        placeholder="Job Description"
-                        value={jobDescription}
-                        onChange={(e) => setJobDescription(e.target.value)}
-                      />
-                    </Col>
-                  </Form.Group>
+                    <Form.Group as={Row} controlId={`jobDescription-${index}`}>
+                      <Form.Label column sm={2}>
+                        Job Description
+                      </Form.Label>
+                      <Col sm={10}>
+                        <Form.Control
+                          type="text"
+                          placeholder="Job Description"
+                          value={exp.jobDescription}
+                          onChange={(e) =>
+                            handleInputChange(index, "jobDescription", e.target.value)
+                          }
+                          isInvalid={!!exp.errors.jobDescription}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {exp.errors.jobDescription}
+                        </Form.Control.Feedback>
+                      </Col>
+                    </Form.Group>
 
-                  <Form.Group as={Row} controlId="company">
-                    <Form.Label column sm={2}>
-                      Company
-                    </Form.Label>
-                    <Col sm={10}>
-                      <Form.Control
-                        type="text"
-                        placeholder="Company"
-                        value={company}
-                        onChange={(e) => setCompany(e.target.value)}
-                      />
-                    </Col>
-                  </Form.Group>
+                    <Form.Group as={Row} controlId={`company-${index}`}>
+                      <Form.Label column sm={2}>
+                        Company
+                      </Form.Label>
+                      <Col sm={10}>
+                        <Form.Control
+                          type="text"
+                          placeholder="Company"
+                          value={exp.company}
+                          onChange={(e) =>
+                            handleInputChange(index, "company", e.target.value)
+                          }
+                          isInvalid={!!exp.errors.company}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {exp.errors.company}
+                        </Form.Control.Feedback>
+                      </Col>
+                    </Form.Group>
 
-                  <Form.Group as={Row} controlId="startDate">
-                    <Form.Label column sm={2}>
-                      Start Date
-                    </Form.Label>
-                    <Col sm={10}>
-                      <Form.Control
-                        type="date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                      />
-                    </Col>
-                  </Form.Group>
+                    <Form.Group as={Row} controlId={`startDate-${index}`}>
+                      <Form.Label column sm={2}>
+                        Start Date
+                      </Form.Label>
+                      <Col sm={10}>
+                        <Form.Control
+                          type="date"
+                          value={exp.startDate}
+                          onChange={(e) =>
+                            handleInputChange(index, "startDate", e.target.value)
+                          }
+                          isInvalid={!!exp.errors.startDate}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {exp.errors.startDate}
+                        </Form.Control.Feedback>
+                      </Col>
+                    </Form.Group>
 
-                  <Form.Group as={Row} controlId="endDate">
-                    <Form.Label column sm={2}>
-                      End Date
-                    </Form.Label>
-                    <Col sm={10}>
-                      <Form.Control
-                        type="date"
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                      />
-                    </Col>
-                  </Form.Group>
+                    <Form.Group as={Row} controlId={`endDate-${index}`}>
+                      <Form.Label column sm={2}>
+                        End Date
+                      </Form.Label>
+                      <Col sm={10}>
+                        <Form.Control
+                          type="date"
+                          value={exp.endDate}
+                          onChange={(e) =>
+                            handleInputChange(index, "endDate", e.target.value)
+                          }
+                          isInvalid={!!exp.errors.endDate}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {exp.errors.endDate}
+                        </Form.Control.Feedback>
+                      </Col>
+                    </Form.Group>
 
-                  <Form.Group as={Row} controlId="otherInformation">
-                    <Form.Label column sm={2}>
-                      Other Information
-                    </Form.Label>
-                    <Col sm={10}>
-                      <Form.Control
-                        as="textarea"
-                        placeholder="Other Information"
-                        value={otherInformation}
-                        onChange={(e) => setOtherInformation(e.target.value)}
-                      />
-                    </Col>
-                  </Form.Group>
+                    <Form.Group as={Row} controlId={`otherInformation-${index}`}>
+                      <Form.Label column sm={2}>
+                        Location
+                      </Form.Label>
+                      <Col sm={10}>
+                        <Form.Control
+                          type="text"
+                          placeholder="Location"
+                          value={exp.otherInformation}
+                          onChange={(e) =>
+                            handleInputChange(index, "otherInformation", e.target.value)
+                          }
+                        />
+                      </Col>
+                    </Form.Group>
 
-                  <Form.Group as={Row}>
-                    <Col sm={{ span: 10, offset: 2 }}>
-                      <Button type="submit">Save</Button>
-                    </Col>
-                  </Form.Group>
-                </Form>
-              </Card.Body>
-            </Card>
+                    {index > 0 && (
+                      <Form.Group as={Row}>
+                        <Col sm={{ span: 10, offset: 2 }}>
+                          <Button
+                            variant="danger"
+                            onClick={() => handleDeleteExperience(index)}
+                            className="d-flex align-items-center"
+                          >
+                          
+                            <FaTrash className="me-2" /> Delete
+                          </Button>
+                        </Col>
+                      </Form.Group>
+                    )}
+                  </Form>
+                </Card.Body>
+              </Card>
+            ))}
+            <Button onClick={handleFormSubmit} className="mt-3">
+              Save
+            </Button>
           </Col>
         </Row>
       </Container>
@@ -192,3 +304,4 @@ const WorkExperience = () => {
 };
 
 export default WorkExperience;
+

@@ -3,6 +3,7 @@ import { BsCircleFill } from "react-icons/bs";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import { useEffect, useState } from "react";
 import http from "../../functions/httpService";
+import Balance from "./micro/Balance";
 
 const PaymentHistory = () => {
   // data: id, amount, status, action, from, to,
@@ -60,12 +61,14 @@ const PaymentHistory = () => {
             <tr key={d.id}>
               <td>{d.id}</td>
               <td>{new Date().toLocaleDateString()}</td>
-              <td>{d.amount}</td>
+              <td>
+                <Balance amount={d.amount} />
+              </td>
               <td>{d.action}</td>
-              <td>{d.status === "success" ? success : d.status === "failed" ? failed : pending}</td>
+              <td>{d.status === "SUCCESS" ? success : d.status === "FAILED" ? failed : pending}</td>
               <td>{d.from}</td>
               <td>{d.to}</td>
-              <td>Lorem ipsum donos aset tis domia</td>
+              <td>{d.content}</td>
             </tr>
           ))}
         </tbody>

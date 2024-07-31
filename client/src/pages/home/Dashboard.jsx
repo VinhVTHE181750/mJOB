@@ -11,7 +11,14 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { FaUser, FaUsers, FaBriefcase, FaSignOutAlt, FaChartBar } from "react-icons/fa";
+import {
+  FaUser,
+  FaUsers,
+  FaBriefcase,
+  FaSignOutAlt,
+  FaChartBar,
+  FaComments
+} from "react-icons/fa";
 import useCountUser from "../../hooks/useCountUser.js";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -70,6 +77,9 @@ const AdminDashboard = () => {
               <Nav.Link href="/jobs" className="text-dark">
                 <FaBriefcase className="me-2" /> Jobs
               </Nav.Link>
+              <Nav.Link href="/posts" className="text-dark">
+                                <FaComments className="me-2" /> Posts
+                            </Nav.Link>
               <Nav.Link href="/users" className="text-dark">
                 <FaUsers className="me-2" /> Users
               </Nav.Link>
