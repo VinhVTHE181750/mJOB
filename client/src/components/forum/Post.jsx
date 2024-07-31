@@ -204,7 +204,7 @@ const Post = ({ id }) => {
                 height={100}
               />
             </div>
-            <h5 className="text-center text-primary pointer">{post.author}</h5>
+            <h5 className="text-center text-primary">{post.author}</h5>
           </div>
           <p className="text-center">Last update: {getMoment(post.updatedAt)}</p>
         </Col>
