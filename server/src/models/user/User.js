@@ -17,7 +17,7 @@ const JobHistory = require("../job/JobHistory");
 const JobPreference = require("./JobPreference");
 const CV = require("./CV");
 const EmployerProfile = require("./EmployerProfile");
-const CV = require("./CV");
+
 
 class User extends Model {}
 
