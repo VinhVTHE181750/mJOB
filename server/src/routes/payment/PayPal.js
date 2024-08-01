@@ -5,6 +5,7 @@ const router = express.Router();
 const Balance = require("../../models/payment/Balance");
 const { logPayment } = require("../../utils/PaymentLogger");
 const User = require("../../models/user/User");
+const { isEmail } = require("../../validators/StringValidator");
 
 const PAYPAL_CLIENT_ID = config.payment.paypal.client_id;
 const PAYPAL_CLIENT_SECRET = config.payment.paypal.client_secret;
@@ -54,12 +55,10 @@ async function handleResponse(response) {
  */
 const createOrder = async (cart) => {
   // use the cart information passed from the front-end to calculate the purchase unit details
-  // console.log("shopping cart information passed from the frontend createOrder() callback:", cart);
+  // log("shopping cart information passed from the frontend createOrder() callback:", cart);
 
   const accessToken = await generateAccessToken();
   const url = `${base}/v2/checkout/orders`;
-
-  console.log(JSON.stringify(cart));
   const payload = {
     intent: "CAPTURE",
     purchase_units: [
@@ -161,21 +160,10 @@ router.post("/orders/:orderID/capture", async (req, res) => {
   }
 });
 
-async function withdrawMoney(userId, amount) {
-  try {
+async function withdrawMoney(amount, email) {
+ try {
     const accessToken = await generateAccessToken();
     const url = `${base}/v1/payments/payouts`;
-
-    const user = await User.findByPk(userId);
-    if (!user) {
-      throw new Error("User not found.");
-    }
-
-    const email = user.email;
-
-    if (!email) {
-      throw new Error("User email not found.");
-    }
 
     const payload = {
       sender_batch_header: {
@@ -207,17 +195,12 @@ async function withdrawMoney(userId, amount) {
     });
 
     const { jsonResponse, httpStatusCode } = await handleResponse(response);
-
     if (httpStatusCode === 201) {
-      await logPayment(userId, "WITHDRAW", amount, userId, null, "PENDING");
-    } else {
-      await logPayment(userId, "WITHDRAW", amount, userId, null, "FAILED");
-    }
-    return jsonResponse;
+      return jsonResponse;
+    } else return null;
   } catch (error) {
     log(error, "ERROR", "PayPal");
-    await logPayment(userId, "WITHDRAW", amount, null, userId, "FAILED");
-    throw new Error("Failed to withdraw money.");
+    return null;
   }
 }
 
@@ -235,9 +218,34 @@ router.post("/payout", async (req, res) => {
     if (isNaN(amount) || amount <= 0) {
       return res.status(400).json({ error: "Invalid amount" });
     }
-    const response = await withdrawMoney(userId, amount);
-    if(response) res.json({ message: "Withdrawal queued successfully." });
-    else res.status(500).json({ error: "Failed to withdraw money." });
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    const balance = await Balance.findOne({ where: { UserId: userId } });
+    if (!balance || balance.balance < amount) {
+      return res.status(400).json({ error: "Insufficient balance." });
+    }
+
+    const email = user.email;
+
+    if (!email) {
+      return res.status(400).json({ error: "User email not found." });
+    }
+
+    const response = await withdrawMoney(amount, email);
+    if (response) {
+      balance.balance -= amount;
+      await balance.save();
+      // may need to change SUCCESS -> PENDING
+      await logPayment(userId, "WITHDRAW", amount, userId, null, "SUCCESS");
+      res.status(201).json({ message: "Withdrawal queued successfully." });
+    } else {
+      await logPayment(userId, "WITHDRAW", amount, userId, null, "FAILED");
+      res.status(500).json({ error: "Failed to withdraw money due to our PayPal integration issue." });
+    }
   } catch (error) {
     log(error, "ERROR", "PayPal");
     res.status(500).json({ error: "Failed to withdraw money." });
