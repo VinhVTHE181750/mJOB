@@ -171,10 +171,6 @@ const JobDetail = () => {
       <JobDetailContainer>
         <Title>{job.title}</Title>
         <Section>
-          <Label>Type:</Label>
-          <Text>{job.type}</Text>
-        </Section>
-        <Section>
           <Label>Location:</Label>
           <Text>{job.location}</Text>
         </Section>
