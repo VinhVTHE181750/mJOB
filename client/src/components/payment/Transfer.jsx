@@ -11,6 +11,7 @@ const Transfer = () => {
   const { balance, loading, error } = useBalance();
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [inputted, setInputted] = useState(false);
   const [amount, setAmount] = useState(0);
   const [username, setUsername] = useState("");
@@ -20,17 +21,17 @@ const Transfer = () => {
 
   useEffect(() => {
     if (isNaN(amount)) {
-      setMessage("Invalid amount");
+      setErrorMessage("Must be a decimal number");
       return;
     } else if (amount <= 0) {
       if (!inputted) return;
-      setMessage("Invalid amount");
+      setErrorMessage("Must be positive");
       return;
     } else if (amount > 10000) {
-      setMessage("Amount larger than 10000 may be subject to PayPal limit due to regulations.");
+      setErrorMessage("Amount larger than $10000 is subjected to PayPal's transaction limit.");
       return;
     }
-    setMessage("");
+    setErrorMessage("");
   }, [amount, inputted]);
 
   const handleTransfer = useCallback(async () => {
@@ -38,8 +39,8 @@ const Transfer = () => {
     setInitiating(true);
     setSuccess(false);
     try {
-      const response = await http.post("/payment/transfer", { to: username, amount });
-      if (response.status === 200) {
+      const response = await http.post("/payment/transfer", { to: username, amount, message });
+      if (response.status === 201) {
         setSuccess(true);
       } else {
         setSuccess(false);
@@ -68,7 +69,6 @@ const Transfer = () => {
     setConfirmed(false);
     setInitiating(false);
     setSuccess(false);
-
   }, []);
 
   return (
@@ -81,7 +81,7 @@ const Transfer = () => {
         <BsArrowLeft /> Back
       </NavigateButton>
       <h1>Transfer</h1>
-      <Row className="border mt-5">
+      <Row className="mt-5">
         <Col className="px-0 mx-0">
           <EmbedCard
             title={<h1 style={{ fontSize: 60, fontWeight: "bold" }}>Current Balance</h1>}
@@ -101,25 +101,27 @@ const Transfer = () => {
           />
         </Col>
       </Row>
-      <Row className="border mt-5 mb-2">
-        <Form.Label>To: </Form.Label>
+      <Row className="mt-5 mb-2 fs-4">Recipient username:</Row>
+      <Row className="mb-2">
         <Form.Control
-          type="email"
+          type="text"
           value={username}
           placeholder="Enter a username..."
           onChange={(e) => {
-            setInputted(true);
             setUsername(e.target.value);
           }}
         />
       </Row>
-      <Row className="border mb-2">
-        <Form.Label>Amount: </Form.Label>
+
+      <Row className="mb-2 fs-4">Amount to transfer:</Row>
+      <Row className="mb-2 fs-4 text-danger">{errorMessage && <p>{errorMessage}</p>}</Row>
+      <Row>
         <Form.Control
           type="number"
           value={amount}
           min={0}
           step={0.01}
+          isInvalid={!!errorMessage}
           onChange={(e) => {
             setInputted(true);
             setAmount(e.target.value);
@@ -130,16 +132,24 @@ const Transfer = () => {
           }}
         />
       </Row>
+      <Row className="mb-2 fs-4">Message:</Row>
+      <Row className="mb-2">
+        <Form.Control
+          type="text"
+          value={message}
+          placeholder="Enter a message..."
+          onChange={(e) => {
+            setMessage(e.target.value);
+          }}
+        />
+      </Row>
       <Row>
-        <div>
-          <Button
-            variant="warning"
-            onClick={handleTransferClick}
-          >
-            <BsCurrencyExchange /> Transfer
-          </Button>
-          {message && <span className="text-danger fs-4 text-center ms-5">{message}</span>}
-        </div>
+        <Button
+          variant="warning"
+          onClick={handleTransferClick}
+        >
+          <BsCurrencyExchange /> Transfer
+        </Button>
       </Row>
       <Modal
         show={showModal}

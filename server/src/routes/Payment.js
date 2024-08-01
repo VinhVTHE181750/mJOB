@@ -12,7 +12,7 @@ const balanceRoute = require("./payment/Balance");
 router.use("/balance", balanceRoute);
 const paypalRoute = require("./payment/PayPal");
 router.use("/paypal", paypalRoute);
-const transferRoute = require("./payment/Transfer");
+const { router: transferRoute } = require("./payment/Transfer");
 router.use("/transfer", transferRoute);
 
 module.exports = router;
