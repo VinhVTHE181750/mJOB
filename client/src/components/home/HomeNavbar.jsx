@@ -54,6 +54,7 @@ const HomeNavbar = () => {
             >
               Forum
             </Nav.Link>
+
             <Nav.Link
               href="/dashboard"
               className={location.pathname === '/dashboard' ? 'active nav-fixed' : 'nav-fixed'}
@@ -66,33 +67,50 @@ const HomeNavbar = () => {
             >
               Profile
             </Nav.Link>
+            {/* </div> */}
           </Nav>
           {isLogin ? (
             <>
               <Nav.Link
                 href="/reports"
-                className={location.pathname === '/reports' ? 'active nav-fixed' : 'nav-fixed'}
+                className={
+                  location.pathname === "/reports"
+                    ? "active nav-fixed"
+                    : "nav-fixed"
+                }
               >
                 Report
               </Nav.Link>
               <Nav.Link
                 href="/draw-balance"
-                className={location.pathname === '/draw-balance' ? 'active nav-fixed' : 'nav-fixed'}
+                className={
+                  location.pathname === "/draw-balance"
+                    ? "active nav-fixed"
+                    : "nav-fixed"
+                }
               >
                 Balance
               </Nav.Link>
               <Nav.Link
-                href={`/profile/${userId}`}
-                className={location.pathname === '/profile' ? 'active nav-fixed' : 'nav-fixed'}
+                href="/profile"
+                className={
+                  location.pathname === "/profile"
+                    ? "active nav-fixed"
+                    : "nav-fixed"
+                }
               >
                 Profile
               </Nav.Link>
               <Nav className="container container-navbar d-flex justify-content-end">
-                <NavDropdown title={`${username}`} id="basic-nav-dropdown" align="end">
-                  <NavDropdown.Item href="/profile">User Profile</NavDropdown.Item>
+                <NavDropdown title={`${username}`} id="basic-nav-dropdown" align={"end"}>
+                  <NavDropdown.Item href="/profile">
+                    User Profile
+                  </NavDropdown.Item>
                   <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
                   <NavDropdown.Item href="/myjobs">My Jobs</NavDropdown.Item>
-                  <NavDropdown.Item href="/payment">Payment Portal</NavDropdown.Item>
+                  <NavDropdown.Item href="/payment">
+                    Payment Portal
+                  </NavDropdown.Item>
                   <NavDropdown.Item onClick={handleToggleMode}>{isEmployerMode ? 'User Mode' : 'Employer Mode'}</NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
@@ -100,7 +118,11 @@ const HomeNavbar = () => {
               </Nav>
             </>
           ) : (
-            <Nav className="container container-navbar right" style={{ justifyContent: 'flex-end' }}>
+            <Nav
+              className="container container-navbar right"
+              style={{ justifyContent: "flex-end" }}
+            >
+              {/* //<div style={{ display: 'flex', justifyContent: 'space-evenly',color: 'black'}}> */}
               <Button
                 variant="outline-secondary"
                 onClick={() => navigate('/login')}

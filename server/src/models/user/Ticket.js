@@ -37,10 +37,10 @@ Ticket.init(
       allowNull: false,
       defaultValue: "OTHER",
     },
+    
   },
   {
     sequelize,
-    timestamps: false,
   }
 );
 
