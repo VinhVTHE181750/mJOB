@@ -12,7 +12,8 @@ const Requirement = require("../../models/job/Requirement");
 const RequirementStorage = require("../../models/job/RequirementStorage");
 const Application = require("../../models/job/Application");
 const formidable = require('formidable');
-
+const { calcRelevance } = require("../../utils/OpenAI");
+const CVs = require("../../models/user/CV"); // Import your CVs model
 app.use(fileUpload());
 
 router.post("/", async (req, res) => {
@@ -35,7 +36,6 @@ router.post("/", async (req, res) => {
 
   const {
     job_title, // str
-    job_type, // FULL_TIME, PART_TIME, INTERNSHIP, COMMISION, FREELANCE, CONTRACT
     job_work_location, // str
     job_tags, // str,str,str
     job_max_applications, // int
@@ -59,21 +59,6 @@ router.post("/", async (req, res) => {
 
   if (job_title === undefined || job_title === null || job_title === "") {
     return res.status(400).json({ message: "Job title is required" });
-  }
-  
-  if (job_type === undefined || job_type === null || job_type === "") {
-    return res.status(400).json({ message: "Job type is required" });
-  } else {
-    if (
-      job_type !== "FULL_TIME" &&
-      job_type !== "PART_TIME" &&
-      job_type !== "INTERNSHIP" &&
-      job_type !== "COMMISSION" &&
-      job_type !== "FREELANCE" &&
-      job_type !== "CONTRACT" 
-    ) {
-      return res.status(400).json({ message: "Invalid job type" });
-    }
   }
 
   if (job_work_location === undefined || job_work_location === null || job_work_location === "") {
@@ -162,7 +147,6 @@ router.post("/", async (req, res) => {
 
   const newJob = new Job({
     title: job_title,
-    type: job_type,
     description: job_description,
     location: job_work_location,
     tags: job_tags,
@@ -178,6 +162,15 @@ router.post("/", async (req, res) => {
     status: status || "ACTIVE",
     UserId: req.userId,
   });
+  
+  if(newJob.approvalMethod){
+    const description = `Description: ${job_description} \nTags: ${job_tags}`;
+    const result = await calcRelevance("job",job_title,description);
+    console.log(result);
+    return result.relevanceScore > 50 && result.harmfulnessScore<20 ? res.status(201).json(newJob) : res.status(400).json({ message: "Job not suited " });
+  }
+
+
   try {
     const job = await newJob.save();
     // requirements is an array of {type, name}
@@ -227,7 +220,6 @@ router.put("/update", async (req, res) => {
   const {
     id,
     title,
-    type,
     location,
     tags,
     maxApplicants,
@@ -253,7 +245,6 @@ router.put("/update", async (req, res) => {
 
   // Lưu data mới vào model
   job.title = title;
-  job.type = type;
   job.description = description;
   job.location = location;
   job.tags = tags;
@@ -325,26 +316,24 @@ router.post('/upload', (req, res) => {
         return res.status(400).json({ message: 'Invalid job ID' });
       }
 
-      let uploadedFileName = '';
+      let uploadedFilePath = '';
 
       if (files.files) {
         const file = Array.isArray(files.files) ? files.files[0] : files.files;
         const newFilePath = path.join(form.uploadDir, file.originalFilename);
         fs.renameSync(file.filepath, newFilePath);
-        uploadedFileName = file.originalFilename;
+        uploadedFilePath = newFilePath; // Store the full path
       }
 
-      // Update the Applications table with the uploaded file name in the CV column
-      await Application.create({
+      // Store the file information in the CVs table
+      await CVs.create({
         UserId: userId,
-        JobId: jobId,
-        status: 'PENDING',
+        path: uploadedFilePath,
         createdAt: new Date(),
         updatedAt: new Date(),
-        CV: uploadedFileName,
       });
 
-      res.status(200).json({ message: 'File uploaded and application recorded successfully!' });
+      res.status(200).json({ message: 'File uploaded and CV recorded successfully!' });
     } catch (error) {
       console.error('Error in upload:', error);
       res.status(500).json({ message: 'An error occurred' });
@@ -352,51 +341,66 @@ router.post('/upload', (req, res) => {
   });
 });
 
-router.get("/download/:fname", async (req, res) => {
-  const fname = req.params.fname;
-
-  // Validate the filename
-  if (!/^[\w,\s-]+\.[A-Za-z]{3}$/.test(fname)) {
-    return res.status(400).json({ message: "Invalid file name" });
-  }
-
-  const filePath = path.join(__dirname, "uploads", fname);
-
-  if (!fs.existsSync(filePath)) {
-    return res.status(404).json({ message: "File not found" });
-  }
-
-  try {
-    return res.download(filePath);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Unknown error while downloading file" });
-  }
-});
-
-
 router.get("/job-requirements/:job_id", async (req, res) => {
-  const { job_id } = req.params;
-
   try {
-    const applications = await Application.findAll({
-      where: {
-        JobId: job_id,
-        status: "PENDING"
-      }
-    });
+    // Fetch all CVs in the database
+    const cvs = await CV.findAll();
 
-    if (applications.length === 0) {
-      return res.status(404).json({ message: "No pending applications found." });
+    if (cvs.length === 0) {
+      return res.status(404).json({ message: "No CVs found." });
     }
 
-    res.json(applications);
+    res.json(cvs);
   } catch (error) {
-    console.error("Error fetching applications:", error);
+    console.error("Error fetching CVs:", error);
     res.status(500).json({ message: "Internal server error." });
   }
 });
 
+router.post("/apply/:applicationId", async (req, res) => {
+  const { applicationId } = req.params;
+
+  try {
+    // Find the application by ID
+    const application = await Application.findByPk(applicationId);
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found." });
+    }
+
+    // Update the status to 'ACCEPTED'
+    application.status = "ACCEPTED";
+    await application.save();
+
+    res.json({ message: "Application accepted successfully." });
+  } catch (error) {
+    console.error("Error accepting application:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+// Reject an application
+router.post("/reject/:applicationId", async (req, res) => {
+  const { applicationId } = req.params;
+
+  try {
+    // Find the application by ID
+    const application = await Application.findByPk(applicationId);
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found." });
+    }
+
+    // Update the status to 'REJECTED'
+    application.status = "REJECTED";
+    await application.save();
+
+    res.json({ message: "Application rejected successfully." });
+  } catch (error) {
+    console.error("Error rejecting application:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
 
 
 router.get("/applied-jobs", async (req, res) => {
@@ -428,9 +432,7 @@ router.get("/applied-jobs", async (req, res) => {
 
 router.get("/created-jobs", async (req, res) => {
   try {
-    // Ensure that userId is provided and valid
-    const userId = req.userId; // This assumes userId is set in middleware (e.g., authentication middleware)
-    
+    const userId = req.userId;
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -438,20 +440,14 @@ router.get("/created-jobs", async (req, res) => {
       return res.status(400).json({ message: "Invalid user ID" });
     }
 
-    // Find the user by ID
     const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Find all jobs created by the user
     const jobs = await Job.findAll({
       where: { UserId: userId },
-      include: [{
-        model: Application,
-        attributes: ['status'], // Include the status of applications
-        required: false // Include jobs even if they have no associated applications
-      }]
+      attributes: ['id', 'title', 'salary', 'salaryCurrency', 'status'], // Include the necessary fields
     });
 
     if (jobs.length === 0) {
@@ -538,5 +534,27 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// DELETE /jobs/:id
+router.delete("/:id", async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const job = await Job.findByPk(jobId);
+    
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+    
+    // Check if the user is authorized to delete the job (if necessary)
+    if (job.UserId !== req.userId) {
+      return res.status(403).json({ message: "Not authorized to delete this job" });
+    }
+    
+    await job.destroy();
+    return res.status(200).json({ message: "Job deleted successfully" });
+  } catch (error) {
+    console.error('Error deleting job:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
 
 module.exports = router;

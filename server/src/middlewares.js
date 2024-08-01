@@ -8,6 +8,7 @@ const config = require("../config.json");
 const { log } = require("./utils/Logger");
 const { JwtMiddleware } = require("./utils/JWT");
 const interceptor = require("./utils/Interceptor");
+const initializeCronJobs = require("./services/cron");
 // const csurf = require("csurf");
 // const csrfProtection = csurf({ cookie: true });
 
@@ -28,17 +29,9 @@ module.exports = function applyMiddlewares(app) {
     })
   );
   app.use(cookieParser());
-  // const csrfExclude = ["/api/auth/login", "/api/auth/register"]; // Paths to exclude
-  // app.use((req, res, next) => {
-  //   if (csrfExclude.indexOf(req.path) !== -1) {
-  //     next();
-  //   } else {
-  //     csrfProtection(req, res, next);
-  //   }
-  // });
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(JwtMiddleware);
-  // app.use(interceptor)
-  // Log middleware initialization here
+  initializeCronJobs();
+  // app.use(interceptor);
 };

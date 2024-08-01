@@ -12,7 +12,7 @@ const useJobStatus = (userId) => {
         const url = `/myjobs/jobhistory/status/${userId}`;
         const response = await http.get(url);
         setStatuses(response.data);
-useJobStatus      } catch (error) {
+      } catch (error) {
         setError(error);
       } finally {
         setLoading(false);

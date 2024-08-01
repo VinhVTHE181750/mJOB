@@ -1,5 +1,6 @@
 -- Delete all data from the table
 DELETE FROM [mJOB].[dbo].[Users];
+DELETE FROM [mJOB].[dbo].[Auths];
 DELETE FROM [mJOB].[dbo].[Jobs];
 DELETE FROM [mJOB].[dbo].[Applications];
 DELETE FROM [mJOB].[dbo].[JobMetrics];
@@ -10,7 +11,7 @@ DELETE FROM [mJOB].[dbo].[PostMetrics];
 DELETE FROM [mJOB].[dbo].[Balances];
 DELETE FROM [mJOB].[dbo].[Requirements];
 DELETE FROM [mJOB].[dbo].[JobPreferences];
-
+DELETE FROM [mJOB].[dbo].[EmployerProfiles];
 
 
 
@@ -18,6 +19,7 @@ DELETE FROM [mJOB].[dbo].[JobPreferences];
 
 -- Reset identity seed to 1
 DBCC CHECKIDENT ('[mJOB].[dbo].[Users]', RESEED, 0);
+DBCC CHECKIDENT ('[mJOB].[dbo].[Auths]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Jobs]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Applications]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[JobMetrics]', RESEED, 0);
@@ -27,6 +29,9 @@ DBCC CHECKIDENT ('[mJOB].[dbo].[PostCategories]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Balances]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Requirements]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[JobPreferences]', RESEED, 0);
+DBCC CHECKIDENT ('[mJOB].[dbo].[EmployerProfiles]', RESEED, 0);
+
+
 
 
 
@@ -49,7 +54,7 @@ VALUES
 ('jack_lopez', 'jack.lopez@example.com', '555-0110', 'CIT000010', 'Jack', 'Lopez', '1994-10-20', '110 Tenth Blvd', 'jack_avatar.png', 'Jack is a content creator.', 1, 0, GETDATE(), GETDATE());
 GO
 
-INSERT INTO [Auths] (UserId, role, hash, salt, createdAt, updatedAt)
+INSERT INTO [mJOB].[dbo].[Auths] (UserId, role, hash, salt, createdAt, updatedAt)
 VALUES 
 (1, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
 (2, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
@@ -62,7 +67,6 @@ VALUES
 (9, 'MOD', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
 (10, 'ADMIN', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE());
 GO
-
 INSERT INTO [mJOB].[dbo].[Jobs]
            ([title]
            ,[description]
@@ -70,7 +74,7 @@ INSERT INTO [mJOB].[dbo].[Jobs]
            ,[tags]
            ,[maxApplicants]
            ,[recruitments]
-           ,[approvalMethod]
+           ,[isAutoSelected] -- auto select applicants
            ,[contact]
            ,[startDate]
            ,[endDate]
@@ -328,7 +332,7 @@ VALUES
            ('Understanding Mental Health', 'An insightful look into mental health issues and how to manage them.', 'mental health,well-being,self-care', 'PUBLISHED', '2024-07-25 20:00:00 +00:00', '2024-07-25 20:00:00 +00:00', NULL, 2, 9),  -- Health & Wellness
            ('The Art of Photography', 'Tips and techniques for capturing stunning photographs.', 'photography,art,techniques', 'PUBLISHED', '2024-07-25 21:00:00 +00:00', '2024-07-25 21:00:00 +00:00', NULL, 5, 10)  -- Lifestyle
 GO
-select * from Posts
+select * from [mJOB].[dbo].[Posts]
 
 INSERT INTO [mJOB].[dbo].[PostMetrics]
            ([PostId]
@@ -458,4 +462,37 @@ INSERT INTO [mJOB].[dbo].[JobPreferences]
            ('Systems Analyst', 'FREELANCE', 'Atlanta', 60000, 80000, 1, SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 9),
            ('Software Engineer', 'FULL_TIME', 'San Diego', 80000, 100000, 1, SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET(), 10);
 
-select * from JobPreferences
+select * from [mJOB].[dbo].JobPreferences
+
+INSERT INTO [mJOB].[dbo].[EmployerProfiles]
+           ([name]
+           ,[description]
+           ,[avatar]
+           ,[organization]
+           ,[industry]
+           ,[taxId]
+           ,[founded]
+           ,[size]
+           ,[email]
+           ,[phone]
+           ,[address]
+           ,[website]
+           ,[status]
+           ,[isVerified]
+           ,[isMuted]
+           ,[isLocked]
+           ,[createdAt]
+           ,[updatedAt]
+           ,[UserId])
+     VALUES
+           ('Tech Innovators Inc.', 'A leading technology company.', 'tech_innovators_avatar.png', 'Tech Innovators', 'Technology', 'TAX000001', '2000-01-01', 500, 'alice.smith@example.com', '555-0101', '101 First Ave', 'http://www.techinnovators.com', 'Active', 1, 0, 0, GETDATE(), GETDATE(), 1),
+           ('Creative Design Studio', 'Creative solutions for modern businesses.', 'creative_design_avatar.png', 'Creative Design', 'Design', 'TAX000002', '2005-02-20', 200, 'bob.johnson@example.com', '555-0102', '102 Second Blvd', 'http://www.creativedesign.com', 'Active', 1, 0, 0, GETDATE(), GETDATE(), 2),
+           ('Management Experts', 'Project management experts.', 'management_experts_avatar.png', 'Management Experts', 'Consulting', 'TAX000003', '2010-03-25', 150, 'carol.williams@example.com', '555-0103', '103 Third St', 'http://www.managementexperts.com', 'Active', 1, 1, 0, GETDATE(), GETDATE(), 3),
+           ('Data Insights', 'Data analysis and business intelligence.', 'data_insights_avatar.png', 'Data Insights', 'Analytics', 'TAX000004', '2015-04-30', 100, 'david.brown@example.com', '555-0104', '104 Fourth Rd', 'http://www.datainsights.com', 'Active', 1, 0, 0, GETDATE(), GETDATE(), 4),
+           ('Marketing Pros', 'Specialists in digital marketing.', 'marketing_pros_avatar.png', 'Marketing Pros', 'Marketing', 'TAX000005', '2020-05-15', 300, 'emma.jones@example.com', '555-0105', '105 Fifth Ave', 'http://www.marketingpros.com', 'Active', 1, 0, 0, GETDATE(), GETDATE(), 5),
+           ('UX Innovators', 'User experience design services.', 'ux_innovators_avatar.png', 'UX Innovators', 'Design', 'TAX000006', '2021-06-20', 80, 'frank.garcia@example.com', '555-0106', '106 Sixth Blvd', 'http://www.uxinnovators.com', 'Active', 1, 1, 0, GETDATE(), GETDATE(), 6),
+           ('Web Dev Solutions', 'Web development and solutions.', 'web_dev_solutions_avatar.png', 'Web Dev Solutions', 'IT', 'TAX000007', '2022-07-25', 250, 'grace.martinez@example.com', '555-0107', '107 Seventh St', 'http://www.webdevsolutions.com', 'Active', 1, 0, 0, GETDATE(), GETDATE(), 7),
+           ('System Admin Corp', 'System administration services.', 'system_admin_avatar.png', 'System Admin Corp', 'IT', 'TAX000008', '2023-08-30', 120, 'henry.rodriguez@example.com', '555-0108', '108 Eighth Ave', 'http://www.systemadmincorp.com', 'Active', 1, 1, 0, GETDATE(), GETDATE(), 8),
+           ('HR Solutions', 'Human resources management.', 'hr_solutions_avatar.png', 'HR Solutions', 'HR', 'TAX000009', '2024-09-15', 220, 'isabel.hernandez@example.com', '555-0109', '109 Ninth Rd', 'http://www.hrsolutions.com', 'Active', 1, 0, 0, GETDATE(), GETDATE(), 9),
+           ('Content Creators Inc.', 'Content creation and marketing.', 'content_creators_avatar.png', 'Content Creators', 'Media', 'TAX000010', '2025-10-20', 90, 'jack.lopez@example.com', '555-0110', '110 Tenth Blvd', 'http://www.contentcreators.com', 'Active', 1, 0, 0, GETDATE(), GETDATE(), 10);
+GO

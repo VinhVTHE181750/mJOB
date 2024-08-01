@@ -17,17 +17,12 @@ PaymentHistory.init(
       type: DataTypes.FLOAT,
       allowNull: true,
     },
-    onPlatform: {
-      type: DataTypes.BOOLEAN, // 1: internal, 0: external
-      defaultValue: true,
-      allowNull: true,
-    },
     action: {
-      type: DataTypes.ENUM("DEPOSIT", "WITHDRAW", "TRANSFER", "OPEN", "CLOSE"),
+      type: DataTypes.ENUM("DEPOSIT", "WITHDRAW", "SEND", "RECEIVE", "OPEN", "CLOSE"),
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM("SUCCESS", "FAILED", "PAUSED"),
+      type: DataTypes.ENUM("SUCCESS", "FAILED", "PAUSED", "PENDING"),
       allowNull: false,
     },
     reason: {

@@ -15,6 +15,7 @@ const RequirementStorage = require("../job/RequirementStorage");
 const Application = require("../job/Application");
 const JobHistory = require("../job/JobHistory");
 const JobPreference = require("./JobPreference");
+const CV = require("./CV");
 const EmployerProfile = require("./EmployerProfile");
 const CV = require("./CV");
 
