@@ -6,6 +6,7 @@ import axios from "axios";
 
 const WelcomePage = () => {
   const { userInformation } = useAuth();
+  console.log(userInformation);
   const navigate = useNavigate();
 
   const handleChoice = async (choice) => {
@@ -33,7 +34,8 @@ const WelcomePage = () => {
             `/auth/user-auth?id=${userInformation.id}`
           );
           if (request.status === 200) {
-            if (request.data.data.isFirstTime) {
+            console.log(request.data.data.isFirstTime);
+            if (!request.data.data.isFirstTime) {
               navigate("/home");
             }
           }
@@ -44,6 +46,12 @@ const WelcomePage = () => {
       handleFetchData();
     }
   }, [userInformation]);
+
+  // console.log(
+  //   !userInformation,
+  //   userInformation.role !== "USER",
+  //   !userInformation.id
+  // );
 
   if (
     !userInformation ||

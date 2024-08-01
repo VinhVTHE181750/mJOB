@@ -66,7 +66,7 @@ router.post("/reset-password", async (req, res) => {
     const auth = await Auth.findOne({ where: { UserId: user.id } });
     const hash = await Hasher.getHash(password, auth.salt);
     if (
-      // user.securityQuestion !== securityQuestion 
+      // user.securityQuestion !== securityQuestion
       // user.answerQuestionSecurityQuestion !== answerQuestionSecurityQuestion
       false
     ) {
@@ -99,6 +99,9 @@ router.post("/login", async (req, res) => {
     const isValidPassword = hash === auth.hash;
     if (!isValidPassword) {
       return res.status(400).json({ error: "Invalid username or password" });
+    }
+    if (auth.isLocked || !auth.isActivated) {
+      return res.status(400).json({ error: "Account is not active or locked" });
     }
     const token = createToken({ id: user.id, role: auth.role });
     res.cookie("token", token, {
