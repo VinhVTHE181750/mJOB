@@ -19,7 +19,6 @@ import PostDetail from "./pages/forum/PostDetail";
 
 // Jobs
 import Jobs from "./pages/home/Jobs";
-import ActiveJob from "./pages/jobs/ActiveJob";
 import ApplicantList from "./pages/jobs/ApplicantList";
 import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 import ApplyJob from "./pages/jobs/ApplyJob";
@@ -154,7 +153,6 @@ function App() {
                 <Route exact path="/jobs/edit/:id" element={<EditJob />} />
                 <Route exact path="/confirm-job" element={<ConfirmJob />} />
                 <Route exact path="/apply/:job_id" element={<ApplyJob />} />
-                <Route exact path="/active-job" element={<ActiveJob />} />
                 <Route
                   exact
                   path="/applied-job-details/:job_id"
