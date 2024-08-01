@@ -1,6 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, Form, Button, Card, FormGroup } from 'react-bootstrap';
 import React, { useState, useEffect, useRef } from 'react';
+import {Nav} from 'react-bootstrap';
+import { FaBriefcase, FaUserEdit, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import axios from 'axios';
 import useWhoAmI from "../../hooks/user/useWhoAmI";
 
