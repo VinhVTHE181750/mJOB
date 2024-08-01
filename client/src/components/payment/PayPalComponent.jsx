@@ -1,12 +1,20 @@
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import PropTypes from "prop-types";
-import { useEffect, useRef, useState } from "react";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { useRef, useState } from "react";
 import http from "../../functions/httpService";
+import { BsCheck } from "react-icons/bs";
 
 // Renders errors or successfull transactions on the screen.
 function Message({ content }) {
-  return <p>{content}</p>;
+  if (content === "COMPLETED") {
+    return <h3 className="text-center text-success"><BsCheck/> Deposited successfully.</h3>;
+  }
+  return <h3 className="text-center">{content}</h3>;
 }
+
+Message.propTypes = {
+  content: PropTypes.string.isRequired,
+};
 
 function PayPalComponent({ amount }) {
   const amountRef = useRef(amount);
@@ -22,9 +30,6 @@ function PayPalComponent({ amount }) {
   };
 
   const [message, setMessage] = useState("");
-  useEffect(() => {
-    console.log("Amount in Deposit component:", amount);
-  }, [amount]);
 
   return (
     <div>
@@ -37,7 +42,6 @@ function PayPalComponent({ amount }) {
             label: "pay",
           }}
           createOrder={async () => {
-            console.log(`Deposit amount: ${amountRef.current}`);
             try {
               const response = await http.post("/payment/paypal/orders", {
                 cart: [
@@ -64,8 +68,7 @@ function PayPalComponent({ amount }) {
                 throw new Error(errorMessage);
               }
             } catch (error) {
-              console.error(error);
-              setMessage(`Could not initiate PayPal Checkout...${error}`);
+              setMessage(`Could not initiate PayPal Checkout...`);
             }
           }}
           onApprove={async (data, actions) => {
@@ -91,12 +94,11 @@ function PayPalComponent({ amount }) {
                 // (3) Successful transaction -> Show confirmation or thank you message
                 // Or go to another URL:  actions.redirect('thank_you.html');
                 const transaction = orderData.purchase_units[0].payments.captures[0];
-                setMessage(`Transaction ${transaction.status}: ${transaction.id}. See console for all available details`);
-                console.log("Capture result", orderData, JSON.stringify(orderData, null, 2));
+                setMessage(transaction.status);
+                // console.log("Capture result", orderData, JSON.stringify(orderData, null, 2));
               }
             } catch (error) {
-              console.error(error);
-              setMessage(`Sorry, your transaction could not be processed...${error}`);
+              setMessage(`Sorry, your transaction could not be processed...`);
             }
           }}
         />

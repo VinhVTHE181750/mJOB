@@ -15,6 +15,8 @@ const RequirementStorage = require("../job/RequirementStorage");
 const Application = require("../job/Application");
 const JobHistory = require("../job/JobHistory");
 const JobPreference = require("./JobPreference");
+const CV = require("./CV");
+const EmployerProfile = require("./EmployerProfile");
 
 class User extends Model {}
 
@@ -51,14 +53,14 @@ User.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    securityQuestion: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    answerQuestionSecurityQuestion: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
+    // securityQuestion: {
+    //   type: DataTypes.STRING,
+    //   allowNull: true,
+    // },
+    // answerQuestionSecurityQuestion: {
+    //   type: DataTypes.STRING,
+    //   allowNull: true,
+    // },
     address: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -141,17 +143,22 @@ Balance.belongsTo(User);
 User.hasMany(PaymentHistory);
 PaymentHistory.belongsTo(User);
 
+User.hasOne(EmployerProfile);
+EmployerProfile.belongsTo(User);
+
 //// Profile
 // missing LinkedProfile
 
 User.hasMany(WorkExperience);
 WorkExperience.belongsTo(User);
 
+User.hasMany(CV);
+CV.belongsTo(User);
+
 // missing Education
 
 // missing Skill
 
-// missing JobPreference
 User.hasOne(JobPreference);
 JobPreference.belongsTo(User);
 

@@ -37,7 +37,7 @@ module.exports = function applyRoutes(app) {
   app.use("/api/workexp", workExperienceRoute);
   app.use("/api/whoami", whoami);
   app.use("/api/", profileRole);
-  app.use("/api/", jobManage);
+  app.use("/api/job-manage", jobManage);
   app.use("/api/homeuser", homeuserRoute);
   app.use("/api/homeguest", homeguestRoute);
   app.use("/api/ticket", ticketRoute);

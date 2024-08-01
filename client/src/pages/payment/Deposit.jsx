@@ -13,14 +13,18 @@ const Deposit = () => {
   const { balance, loading, error } = useBalance();
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
+  const [inputted, setInputted] = useState(false);
 
   useEffect(() => {
-    if (amount <= 0) {
-      setMessage("Invalid amount");
-      return;
-    }
     if (isNaN(amount)) {
       setMessage("Invalid amount");
+      return;
+    } else if (amount <= 0) {
+      if (!inputted) return;
+      setMessage("Invalid amount");
+      return;
+    } else if (amount > 10000) {
+      setMessage("Amount larger than 10000 may be subject to PayPal limit due to regulations.");
       return;
     }
     setMessage("");
@@ -83,7 +87,12 @@ const Deposit = () => {
             min={0}
             step={0.01}
             onChange={(e) => {
+              setInputted(true);
               setAmount(e.target.value);
+            }}
+            onBlur={(e) => {
+              const value = parseFloat(e.target.value).toFixed(2);
+              setAmount(value);
             }}
           />
 
@@ -120,7 +129,7 @@ const Deposit = () => {
               </Spinner>
             }
           >
-            <PayPalComponent amount={amount} />
+            <PayPalComponent amount={Number(amount)} />
           </Suspense>
         </Modal.Body>
         <Modal.Footer>

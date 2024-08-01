@@ -7,7 +7,9 @@ const Job = require("../../models/job/Job");
 const Application = require("../../models/job/Application");
 const { Op } = require('sequelize');
 const PostMetric = require("../../models/forum/metric/PostMetric");
-
+const { relatedJobs } = require("../../utils/algorithms/RelativeSearch");
+const { Result } = require("tedious/lib/token/helpers");
+const JobPreference = require("../../models/user/JobPreference");
 const getAppliedJob = async (req, res) => {
     try {
         const userId = 1;
@@ -49,20 +51,15 @@ const getOngoingJob = async (req, res) => {
 const getRelatedJob = async (req, res) => {
     try {
         // const userId = req.userId;
+        const userId = 1;
         // if (!req.userId) return res.status(401).json({ message: "Unauthorized" });        
         const jobHistory = await Job.findAll({
-            where: {
-                tags: {
-                    [Op.like]: '%HR%'
-                }
-            },
             include: [
                 {
                     model: User,
                     attributes: ['username']
                 }
             ],
-            limit: 3
         });
         const currentTime = new Date();
         jobHistory.forEach(job => {
@@ -71,7 +68,14 @@ const getRelatedJob = async (req, res) => {
           const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24)); // Convert milliseconds to days
           job.dataValues.timeleft = daysLeft;
         });
-        res.status(200).json(jobHistory);
+
+        const job = await JobPreference.findOne({
+            where: { UserId: userId }
+        });
+
+        const result= relatedJobs(job,jobHistory);
+        // return result;
+        res.status(200).json(result);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -120,11 +124,12 @@ const getHotPosts = async (req, res) => {
     }        
 }
 
+
+
 module.exports = {
     getAppliedJob,
     getOngoingJob,
     getRelatedJob,
-    // getRelatedPost,
     getNewPost,
     getHotPosts
 };
