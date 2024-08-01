@@ -18,19 +18,18 @@ import ManageCategories from "./pages/forum/ManageCategories";
 import PostDetail from "./pages/forum/PostDetail";
 
 // Jobs
-import ApplicationList from "./components/job/ApplicationList";
 import Jobs from "./pages/home/Jobs";
 import ActiveJob from "./pages/jobs/ActiveJob";
+import ApplicantList from "./pages/jobs/ApplicantList";
 import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 import ApplyJob from "./pages/jobs/ApplyJob";
 import ConfirmJob from "./pages/jobs/ConfirmJob";
+import CreatedJobs from "./pages/jobs/CreatedJobs";
 import EditJob from "./pages/jobs/EditJob";
 import EnlistJob from "./pages/jobs/EnlistJob";
 import JobDetail from "./pages/jobs/JobDetail";
 import Market from "./pages/jobs/Market";
 import MyJobs from "./pages/jobs/MyJobs";
-import ApplicantList from "./pages/jobs/ApplicantList";
-import CreatedJobs from "./pages/jobs/CreatedJobs";
 import EmployerHistory from "./pages/jobs/EmployerHistory";
 import EmployerHome from "./pages/home/EmployerHome";
 
@@ -69,7 +68,7 @@ import ToLogin from "./pages/error/ToLogin";
 import AdminFAQsPage from "./pages/faq/Adminfaqs";
 import FaqPage from "./pages/faq/Faq";
 import ForumInsights from "./pages/forum/Insights";
-// import ManagePosts from "./pages/forum/ManagePosts";
+import ManagePosts from "./pages/forum/ManagePosts";
 import JobHistory from "./pages/jobs/JobHistory";
 import Deposit from "./pages/payment/Deposit";
 import PaymentHistory from "./pages/payment/PaymentHistory";
@@ -185,11 +184,11 @@ function App() {
                   path="/forum/insights"
                   element={<ForumInsights />}
                 />
-                {/* <Route
+                <Route
                   exact
                   path="/forum/manage"
                   element={<ManagePosts />}
-                /> */}
+                />
 
                 {/* JOBS ROUTES */}
                 <Route
