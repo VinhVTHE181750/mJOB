@@ -125,24 +125,24 @@ const FeedbackMessage = styled.p`
 
 const ApplyJob = () => {
   const { job_id } = useParams();
-  const [requirements, setRequirements] = useState([]);
+  const [cvs, setCvs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
 
   useEffect(() => {
-    const fetchRequirements = async () => {
+    const fetchCvs = async () => {
       try {
         const response = await http.get(`/jobs/job-requirements/${job_id}`);
-        setRequirements(response.data);
+        setCvs(response.data);
       } catch (error) {
-        console.error("Error fetching requirements:", error);
+        console.error("Error fetching CVs:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRequirements();
+    fetchCvs();
   }, [job_id]);
 
   const handleApply = async (applicationId) => {
@@ -172,22 +172,20 @@ const ApplyJob = () => {
         <RequirementTitle>Pending Applications</RequirementTitle>
         {loading ? (
           <NoRequirements>Loading...</NoRequirements>
-        ) : requirements.length > 0 ? (
+        ) : cvs.length > 0 ? (
           <RequirementList>
-            {requirements.map((app) => (
-              <RequirementItem key={app.id}>
-                <FileName>{app.CV}</FileName>
-                <DownloadLink href={`/files/${app.CV}`} download>
+            {cvs.map((cv) => (
+              <RequirementItem key={cv.id}>
+                <FileName>{cv.path.split('/').pop()}</FileName> {/* Display file name */}
+                <DownloadLink href={`/files/${cv.path}`} download>
                   Download
                 </DownloadLink>
-                  
-                    <ApplyButton onClick={() => handleApply(app.id)}>
-                      Apply
-                    </ApplyButton>
-                    <RejectButton onClick={() => handleReject(app.id)}>
-                      Reject
-                    </RejectButton>
-                  
+                <ApplyButton onClick={() => handleApply(cv.Application.id)}>
+                  Apply
+                </ApplyButton>
+                <RejectButton onClick={() => handleReject(cv.Application.id)}>
+                  Reject
+                </RejectButton>
               </RequirementItem>
             ))}
           </RequirementList>

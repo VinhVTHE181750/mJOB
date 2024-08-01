@@ -13,6 +13,7 @@ const RequirementStorage = require("../../models/job/RequirementStorage");
 const Application = require("../../models/job/Application");
 const formidable = require('formidable');
 const { calcRelevance } = require("../../utils/OpenAI");
+const CVs = require("../../models/user/CV"); // Import your CVs model
 app.use(fileUpload());
 
 router.post("/", async (req, res) => {
@@ -315,26 +316,24 @@ router.post('/upload', (req, res) => {
         return res.status(400).json({ message: 'Invalid job ID' });
       }
 
-      let uploadedFileName = '';
+      let uploadedFilePath = '';
 
       if (files.files) {
         const file = Array.isArray(files.files) ? files.files[0] : files.files;
         const newFilePath = path.join(form.uploadDir, file.originalFilename);
         fs.renameSync(file.filepath, newFilePath);
-        uploadedFileName = file.originalFilename;
+        uploadedFilePath = newFilePath; // Store the full path
       }
 
-      // Update the Applications table with the uploaded file name in the CV column
-      await Application.create({
+      // Store the file information in the CVs table
+      await CVs.create({
         UserId: userId,
-        JobId: jobId,
-        status: 'PENDING',
+        path: uploadedFilePath,
         createdAt: new Date(),
         updatedAt: new Date(),
-        CV: uploadedFileName,
       });
 
-      res.status(200).json({ message: 'File uploaded and application recorded successfully!' });
+      res.status(200).json({ message: 'File uploaded and CV recorded successfully!' });
     } catch (error) {
       console.error('Error in upload:', error);
       res.status(500).json({ message: 'An error occurred' });
@@ -343,23 +342,17 @@ router.post('/upload', (req, res) => {
 });
 
 router.get("/job-requirements/:job_id", async (req, res) => {
-  const { job_id } = req.params;
-
   try {
-    const applications = await Application.findAll({
-      where: {
-        JobId: job_id,
-        status: "PENDING"
-      }
-    });
+    // Fetch all CVs in the database
+    const cvs = await CV.findAll();
 
-    if (applications.length === 0) {
-      return res.status(404).json({ message: "No pending applications found." });
+    if (cvs.length === 0) {
+      return res.status(404).json({ message: "No CVs found." });
     }
 
-    res.json(applications);
+    res.json(cvs);
   } catch (error) {
-    console.error("Error fetching applications:", error);
+    console.error("Error fetching CVs:", error);
     res.status(500).json({ message: "Internal server error." });
   }
 });
@@ -439,9 +432,7 @@ router.get("/applied-jobs", async (req, res) => {
 
 router.get("/created-jobs", async (req, res) => {
   try {
-    // Ensure that userId is provided and valid
-    const userId = req.userId; // This assumes userId is set in middleware (e.g., authentication middleware)
-    
+    const userId = req.userId;
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -449,20 +440,14 @@ router.get("/created-jobs", async (req, res) => {
       return res.status(400).json({ message: "Invalid user ID" });
     }
 
-    // Find the user by ID
     const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Find all jobs created by the user
     const jobs = await Job.findAll({
       where: { UserId: userId },
-      include: [{
-        model: Application,
-        attributes: ['status'], // Include the status of applications
-        required: false // Include jobs even if they have no associated applications
-      }]
+      attributes: ['id', 'title', 'salary', 'salaryCurrency', 'status'], // Include the necessary fields
     });
 
     if (jobs.length === 0) {

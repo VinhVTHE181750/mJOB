@@ -41,19 +41,6 @@ const ViewButton = styled.button`
   }
 `;
 
-const PayButton = styled.button`
-  padding: 10px 20px;
-  color: #007bff;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
 const EditButton = styled.button`
   padding: 10px 20px;
   color: #007bff;
@@ -68,7 +55,7 @@ const EditButton = styled.button`
 `;
 
 const ApplyButton = styled.button`
-  padding: 10px 20px;
+ padding: 10px 20px;
   color: #007bff;
   border: none;
   border-radius: 30px;
@@ -110,10 +97,6 @@ const CreatedJobs = ({ searchQuery }) => {
     fetchCreatedJobs();
   }, []);
 
-  const handlePayClick = (jobId) => {
-    // Payment handling logic
-  };
-
   const handleViewClick = (id) => {
     navigate(`/jobs/${id}`);
   };
@@ -135,7 +118,7 @@ const CreatedJobs = ({ searchQuery }) => {
         return { color: 'green' };
       case 'Rejected':
         return { color: 'red' };
-      case 'Pending':
+      case 'Active':
         return { color: 'blue' };
       case 'Accepted':
         return { color: 'darkgreen' };
@@ -172,7 +155,6 @@ const CreatedJobs = ({ searchQuery }) => {
             <Th>#</Th>
             <Th>Job</Th>
             <Th>Next Payment</Th>
-            <Th>Next Payment Date</Th>
             <Th>Status</Th>
             <Th>Action</Th>
           </tr>
@@ -185,22 +167,12 @@ const CreatedJobs = ({ searchQuery }) => {
                 <Td>{index + 1}</Td>
                 <Td>{job.title}</Td>
                 <Td>{renderCurrency(job.salaryCurrency, job.salary)}</Td>
-                <Td>{job.nextPaymentDate}</Td>
-                <Td>
-                  {job.Applications.length > 0 ? (
-                    job.Applications.map((application, appIndex) => (
-                      <div key={appIndex} style={getStatusStyle(application.status)}>
-                        {application.status}
-                      </div>
-                    ))
-                  ) : (
-                    <div>No applications</div>
-                  )}
+                <Td style={getStatusStyle(job.status)}>
+                  {formatStatus(job.status)}
                 </Td>
                 <Td>
                   <ViewButton onClick={() => handleViewClick(job.id)}>View</ViewButton>
                   <EditButton onClick={() => navigate(`/jobs/edit/${job.id}`)}>Edit</EditButton>
-                  <PayButton onClick={() => handlePayClick(job.id)}>Pay</PayButton>
                   <ApplyButton onClick={() => navigate(`/apply/${job.id}`)}>Apply</ApplyButton>
                   <DeleteButton onClick={() => handleDeleteClick(job.id)}>Delete</DeleteButton>
                 </Td>
