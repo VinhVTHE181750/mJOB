@@ -1,4 +1,5 @@
 const express = require("express");
+const { getIo } = require("../../../io");
 const config = require("../../../config.json");
 const { log } = require("../../utils/Logger");
 const router = express.Router();
@@ -138,30 +139,35 @@ router.post("/orders/:orderID/capture", async (req, res) => {
     const { orderID } = req.params;
     const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
 
+    const amount = jsonResponse.purchase_units[0].payments.captures[0].amount.value;
     if (httpStatusCode === 201) {
       // Assuming 201 is the success status code
-      const amount = jsonResponse.purchase_units[0].payments.captures[0].amount.value;
       const userId = req.userId; // Assuming req.userId contains the user's ID
 
       const userBalance = await Balance.findOne({ where: { UserId: userId } });
       if (userBalance) {
         await userBalance.update({ balance: userBalance.balance + parseFloat(amount) });
+        getIo().emit(`payment/${userId}`, { balance: userBalance.balance });
       } else {
         await Balance.create({ UserId: userId, balance: parseFloat(amount) });
       }
       await logPayment(userId, "DEPOSIT", amount, null, userId, "SUCCESS");
+      return res.status(httpStatusCode).json(jsonResponse);
+    } else {
+      await logPayment(req.userId, "DEPOSIT", amount, null, req.userId, "FAILED");
+      return res.status(httpStatusCode).json(jsonResponse);
     }
 
-    res.status(httpStatusCode).json(jsonResponse);
   } catch (error) {
     log(error, "ERROR", "PayPal");
-    await logPayment(req.userId, "DEPOSIT", amount, null, req.userId, "FAILED");
+    // need to change 0 to actual amount
+    await logPayment(req.userId, "DEPOSIT", 0, null, req.userId, "FAILED", "Failed to record transaction.");
     res.status(500).json({ error: "Failed to capture order." });
   }
 });
 
 async function withdrawMoney(amount, email) {
- try {
+  try {
     const accessToken = await generateAccessToken();
     const url = `${base}/v1/payments/payouts`;
 
@@ -175,7 +181,7 @@ async function withdrawMoney(amount, email) {
       items: [
         {
           amount: {
-            value: amount.toFixed(2),
+            value: amount,
             currency: "USD",
           },
           sender_item_id: Date.now(),
@@ -241,6 +247,7 @@ router.post("/payout", async (req, res) => {
       await balance.save();
       // may need to change SUCCESS -> PENDING
       await logPayment(userId, "WITHDRAW", amount, userId, null, "SUCCESS");
+      getIo().emit(`payment/${userId}`, { balance: balance.balance });
       res.status(201).json({ message: "Withdrawal queued successfully." });
     } else {
       await logPayment(userId, "WITHDRAW", amount, userId, null, "FAILED");
