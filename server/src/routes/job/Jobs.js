@@ -39,7 +39,6 @@ router.post("/", async (req, res) => {
     job_work_location, // str
     job_tags, // str,str,str
     job_max_applications, // int
-    job_approval_method, // boolean
     job_description, // str
     job_contact_info, // str
     job_start_date, // date
@@ -119,11 +118,6 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ message: "Invalid job max applications" });
   }
 
-  if (!job_approval_method) {
-    job_approval_method = true;
-    // true = auto; false = manual
-  }
-
   if (job_description === undefined || job_description === null || job_description === "") {
     return res.status(400).json({ message: "Job description is required" });
   }
@@ -152,7 +146,6 @@ router.post("/", async (req, res) => {
     tags: job_tags,
     maxApplicants: job_max_applications,
     recruitments: job_number_of_recruits,
-    approvalMethod: job_approval_method,
     contact: job_contact_info,
     startDate: job_start_date,
     endDate: job_end_date,
