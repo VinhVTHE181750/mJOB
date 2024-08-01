@@ -112,14 +112,16 @@ const AdminDashboard = () => {
                 </Nav.Link>
               </Col>
               <Col md={4}>
+              <Nav.Link href="/posts" className="p-0">
                 <Card className="text-white bg-success text-center p-4">
                   <Card.Body>
                     <Card.Title>
                       <FaComments className="me-2" /> {countPost}
                     </Card.Title>
-                    <Card.Text>Posts</Card.Text>
+                    <Card.Text>Total Posts</Card.Text>
                   </Card.Body>
                 </Card>
+                </Nav.Link>
               </Col>
               <Col md={4}>
                 <Nav.Link href="/jobs" className="p-0">

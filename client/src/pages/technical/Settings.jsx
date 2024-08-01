@@ -5,7 +5,7 @@ import {Nav} from 'react-bootstrap';
 import { FaBriefcase, FaUserEdit, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import axios from 'axios';
 import useWhoAmI from "../../hooks/user/useWhoAmI";
-
+import { FaUserEdit, FaBriefcase, FaSignOutAlt, FaCog, FaPlus, FaTrash } from "react-icons/fa";
 // Regular expressions for validation
 const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
@@ -75,40 +75,40 @@ const Settings = () => {
       </header>
       <br />
       <Row>
-        <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
-          <h2 className="text-center">Navigation</h2>
-          <Nav className="flex-column">
-            <Nav.Link
-              href={`/editprofile/${userId}`}
-              className="text-dark mb-2 d-flex align-items-center"
-            >
-              <FaUserEdit className="me-2" />
-              Profile
-            </Nav.Link>
-            <Nav.Link
-              href={`/workexperience/${userId}`}
-              className="text-dark mb-2 d-flex align-items-center"
-            >
-              <FaBriefcase className="me-2" />
-              Work Experience
-            </Nav.Link>
-            <Nav.Link
-              href={`/settings`}
-              className="text-dark mb-2 d-flex align-items-center"
-            >
-              <FaCog className="me-2" />
-              Settings
-            </Nav.Link>
-            <Button
-              variant="danger"
-              href="/logout"
-              className="mt-3 d-flex align-items-center"
-            >
-              <FaSignOutAlt className="me-2" />
-              Logout
-            </Button>
-          </Nav>
-        </Col>
+      <Col md={2} className="bg-light p-3" style={{ minHeight: "100vh" }}>
+            <h2 className="text-center">Navigation</h2>
+            <Nav className="flex-column">
+              <Nav.Link
+                href={`/editprofile/${userId}`}
+                className="text-dark mb-2 d-flex align-items-center"
+              >
+                <FaUserEdit className="me-2" />
+                Profile
+              </Nav.Link>
+              <Nav.Link
+                href={`/workexperience/${userId}`}
+                className="text-dark mb-2 d-flex align-items-center"
+              >
+                <FaBriefcase className="me-2" />
+                Work Experience
+              </Nav.Link>
+              <Nav.Link
+                href={`/settings`}
+                className="text-dark mb-2 d-flex align-items-center"
+              >
+                <FaCog className="me-2" />
+                Settings
+              </Nav.Link>
+              <Button
+                variant="danger"
+                href="/logout"
+                className="mt-3 d-flex align-items-center"
+              >
+                <FaSignOutAlt className="me-2" />
+                Logout
+              </Button>
+            </Nav>
+          </Col>
         <Col md={10} className="p-4">
           <header>
             <div className="text-center">
