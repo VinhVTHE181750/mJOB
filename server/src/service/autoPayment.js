@@ -1,5 +1,7 @@
 const cron = require('node-cron');
-const { Job } = require('../models/job/Job');
+const { sequelize } = require('../models/SQLize');
+
+const Job = require('../models/job/Job');
 
 // Function to calculate time left for each job
 const calculateTimeLeft = (endDate) => {
