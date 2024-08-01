@@ -547,5 +547,27 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// DELETE /jobs/:id
+router.delete("/:id", async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const job = await Job.findByPk(jobId);
+    
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+    
+    // Check if the user is authorized to delete the job (if necessary)
+    if (job.UserId !== req.userId) {
+      return res.status(403).json({ message: "Not authorized to delete this job" });
+    }
+    
+    await job.destroy();
+    return res.status(200).json({ message: "Job deleted successfully" });
+  } catch (error) {
+    console.error('Error deleting job:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
 
 module.exports = router;

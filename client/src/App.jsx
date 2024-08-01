@@ -20,7 +20,6 @@ import PostDetail from "./pages/forum/PostDetail";
 // Jobs
 import ApplicationList from "./components/job/ApplicationList";
 import Jobs from "./pages/home/Jobs";
-import ActiveJob from "./pages/jobs/ActiveJob";
 import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 import ApplyJob from "./pages/jobs/ApplyJob";
 import ConfirmJob from "./pages/jobs/ConfirmJob";
@@ -233,11 +232,6 @@ function App() {
                   exact
                   path="/apply/:job_id"
                   element={<ApplyJob />}
-                />
-                <Route
-                  exact
-                  path="/active-job"
-                  element={<ActiveJob />}
                 />
                 <Route
                   exact
