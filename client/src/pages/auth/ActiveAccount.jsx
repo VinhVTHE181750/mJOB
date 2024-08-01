@@ -16,7 +16,7 @@ function ActiveAccountPage() {
           const request = await axios.post("/auth/active-account", { email });
           if (request.status === 200) {
             alert("Active Account successfully");
-            navigate("/");
+            navigate("/login");
           } else {
             alert("Error");
           }
