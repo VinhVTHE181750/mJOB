@@ -67,7 +67,7 @@ import ToLogin from "./pages/error/ToLogin";
 import AdminFAQsPage from "./pages/faq/Adminfaqs";
 import FaqPage from "./pages/faq/Faq";
 import ForumInsights from "./pages/forum/Insights";
-import ManagePosts from "./pages/forum/ManagePosts";
+// import ManagePosts from "./pages/forum/ManagePosts";
 import JobHistory from "./pages/jobs/JobHistory";
 import Deposit from "./pages/payment/Deposit";
 import PaymentHistory from "./pages/payment/PaymentHistory";
@@ -183,11 +183,11 @@ function App() {
                   path="/forum/insights"
                   element={<ForumInsights />}
                 />
-                <Route
+                {/* <Route
                   exact
                   path="/forum/manage"
                   element={<ManagePosts />}
-                />
+                /> */}
 
                 {/* JOBS ROUTES */}
                 <Route
