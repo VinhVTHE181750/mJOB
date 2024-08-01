@@ -66,7 +66,7 @@ const PaymentHistory = () => {
             <th>Status</th>
             <th>From</th>
             <th>To</th>
-            <th>Content</th>
+            <th>Message</th>
           </tr>
         </thead>
         <tbody>
@@ -81,7 +81,7 @@ const PaymentHistory = () => {
               <td>{d.status === "SUCCESS" ? success : d.status === "FAILED" ? failed : pending}</td>
               <td>{d.from}</td>
               <td>{d.to}</td>
-              <td>{d.content}</td>
+              <td>{d.reason}</td>
             </tr>
           ))}
         </tbody>

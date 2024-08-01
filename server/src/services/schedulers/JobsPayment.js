@@ -3,22 +3,91 @@ const { log } = require("../../utils/Logger"); // Adjust the path as necessary
 const Job = require("../../models/job/Job");
 const { Op } = require("sequelize");
 const { sequelize } = require("../../models/SQLize");
+const Compensation = require("../../models/job/Compensation");
+const { transfer } = require("../../routes/payment/Transfer");
 
-// if table Jobs does not exist, try running after is has been created
+const getNextPaymentDate = (date, period) => {
+  const currentDate = new Date(date);
+  let nextDate;
 
-sequelize.sync().then(async () => {
-  const { count, rows } = await Job.findAndCountAll({
-    where: {
-      salaryType: {
-        [Op.in]: ["HOURLY", "DAILY", "WEEKLY", "MONTHLY"],
-      },
-    },
+  switch (period) {
+    case "MONTHLY":
+      nextDate = new Date(currentDate.setMonth(currentDate.getMonth() + 1));
+      break;
+    case "WEEKLY":
+      nextDate = new Date(currentDate.setDate(currentDate.getDate() + 7));
+      break;
+    case "DAILY":
+      nextDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
+      break;
+    case "HOURLY":
+      nextDate = new Date(currentDate.setHours(currentDate.getHours() + 1));
+      break;
+    default:
+      throw new Error("Unsupported period type");
+  }
+  return nextDate.toISOString();
+};
+
+const schedulePayment = (c) => {
+  cron.schedule(c.nextPayment, async () => {
+    log(`Processing compensation ${c.id}`, "DEBUG", "node-cron");
+    try {
+      // Check if the status is PAID, this case should not happen normally
+      if (c.status === "PAID") {
+        log(`Compensation ${c.id} is already paid`, "DEBUG", "node-cron");
+        return;
+      }
+
+      // Check if the status is OVERDUE, this case should not happen normally
+      if (c.status === "OVERDUE") {
+        log(`Compensation ${c.id} is overdue`, "DEBUG", "node-cron");
+        return;
+      }
+
+      // Check if the status is PENDING, this is the normal case
+      if (c.status === "PENDING") {
+        // Make the payment
+        transfer(c.from, c.to, c.amount, `Payment for job ${c.jobId}`);
+        // For now, just log the payment
+        log(`Paying ${c.amount} from ${c.from} to ${c.to}`, "DEBUG", "node-cron");
+
+        // Update the status to PAID if nextPayment > endDate
+        const j = await Job.findOne({
+          where: {
+            id: c.jobId,
+          },
+        });
+        if (j.endDate < c.nextPayment) {
+          await c.update({ status: "PAID" });
+        } else {
+          // Update the status to PENDING and reschedule
+          const nextPaymentDate = getNextPaymentDate(c.nextPayment, j.salaryType);
+          await c.update({
+            status: "PENDING",
+            nextPayment: nextPaymentDate,
+          });
+          schedulePayment(c); // Reschedule the payment
+        }
+      }
+    } catch (err) {
+      log(`Error in scheduled task: JobsPayment - ${err.message}`, "ERROR", "node-cron");
+    }
   });
-  
-  if (!rows) {
-      log("No jobs found", "INFO", "JobsPayment");
-    } else {
-      log(`Found ${count} jobs`, "INFO", "JobsPayment");
-      // create a schedule for each job: incur payment based on salaryType
+};
+
+// if table Jobs does not exist, try running after it has been created
+sequelize.sync().then(async () => {
+  const { count, rows } = await Compensation.findAndCountAll();
+
+  log(`Found ${count} compensations`, "INFO", "node-cron");
+
+  if (count === 0) {
+    return;
+  } else {
+    log("Scheduling payments", "INFO", "node-cron");
+    rows.map((c) => {
+      schedulePayment(c);
+    });
   }
 });

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Modal, Row, Spinner } from "react-bootstrap";
-import { BsArrowLeft, BsArrowUp, BsCheck2Circle, BsXCircle } from "react-icons/bs";
+import { BsArrowLeft, BsArrowUp, BsCheck2Circle, BsLightbulbFill, BsXCircle } from "react-icons/bs";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import { useBalance } from "../../hooks/payment/useBalance";
 import Balance from "./micro/Balance";
@@ -11,6 +11,7 @@ const Withdraw = () => {
   const [amount, setAmount] = useState(0);
   const { balance, loading, error } = useBalance();
   const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [inputted, setInputted] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -19,18 +20,18 @@ const Withdraw = () => {
 
   useEffect(() => {
     if (isNaN(amount)) {
-      setErrorMsg("Invalid amount");
+      setErrorMessage("Must be a decimal number");
       return;
     } else if (amount <= 0) {
       if (!inputted) return;
-      setErrorMsg("Invalid amount");
+      setErrorMessage("Must be positive");
       return;
     } else if (amount > 10000) {
-      setErrorMsg("Amount larger than 10000 may be subject to PayPal limit due to regulations.");
+      setErrorMessage("Amount larger than $10000 is subjected to PayPal's transaction limit.");
       return;
     }
-    setErrorMsg("");
-  }, [amount]);
+    setErrorMessage("");
+  }, [amount, inputted]);
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -91,39 +92,45 @@ const Withdraw = () => {
           />
         </Col>
       </Row>
-      <Row className="border mt-5 d-flex justify-content-center align-items-center">
-        <Col
-          className="text-end"
-          sm={3}
-        >
-          Enter your withdraw amount:
-        </Col>
-        <Col>
-          <Form.Control
-            type="number"
-            value={amount}
-            min={0}
-            step={0.01}
-            onChange={(e) => {
-              setInputted(true);
-              setAmount(e.target.value);
-            }}
-            onBlur={(e) => {
-              const value = parseFloat(e.target.value).toFixed(2);
-              setAmount(value);
-            }}
-          />
-        </Col>
-        <Col>
-          <Button
-            variant="primary"
-            onClick={handleWithdrawClick}
-          >
-            <BsArrowUp /> Withdraw
-          </Button>
-        </Col>
+      <Row className="fs-4 mt-5">
+        <div className="d-flex align-items-center">
+          <BsLightbulbFill
+            color="gold"
+            className="me-2"
+          />{" "}
+          The payment will be processed through PayPal to your linked email.
+        </div>
       </Row>
-      <Row>{message && <p className="text-danger fs-4 text-center">{errorMsg}</p>}</Row>
+      <Row className="mt-5 fs-4 mb-2">
+        Enter the amount to withdraw:
+        {errorMessage && <p className="text-danger">{errorMessage}</p>}
+      </Row>
+      <Row className="mb-2">
+        <Form.Control
+          type="number"
+          value={amount}
+          min={0}
+          step={0.01}
+          onChange={(e) => {
+            setInputted(true);
+            setAmount(e.target.value);
+          }}
+          onBlur={(e) => {
+            const value = parseFloat(e.target.value).toFixed(2);
+            setAmount(value);
+          }}
+          isInvalid={!!errorMessage}
+        />
+      </Row>
+      <Row className="mb-2">
+        <Button
+          variant="primary"
+          onClick={handleWithdrawClick}
+        >
+          <BsArrowUp /> Withdraw
+        </Button>
+      </Row>
+
       <Modal
         show={showModal}
         onHide={handleCloseModal}
