@@ -12,7 +12,7 @@ const { log } = require("./Logger");
  * @param {string} status The status of the action (e.g., "SUCCESS", "FAILED").
  * @returns {Promise<void>}
  */
-async function logPayment(userId, action, amount, from, to, status) {
+async function logPayment(userId, action, amount = 0, from, to, status = "PENDING", reason = null) {
   try {
     await PaymentHistory.create({
       UserId: userId,
@@ -21,6 +21,7 @@ async function logPayment(userId, action, amount, from, to, status) {
       from,
       to,
       status,
+      reason
     });
   } catch (error) {
     log(error, "ERROR", "PaymentLogger");

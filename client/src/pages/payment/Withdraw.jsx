@@ -1,41 +1,59 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Modal, Row, Spinner } from "react-bootstrap";
-import { BsArrowLeft, BsArrowUp } from "react-icons/bs";
+import { BsArrowLeft, BsArrowUp, BsCheck2Circle, BsXCircle } from "react-icons/bs";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import { useBalance } from "../../hooks/payment/useBalance";
 import Balance from "./micro/Balance";
 import EmbedCard from "./micro/EmbedCard";
-const PayPalComponent = lazy(() => import("../../components/payment/PayPalComponent"));
-// import PayPalComponent from "../../components/payment/PayPalComponent";
+import http from "../../functions/httpService";
 
-const Deposit = () => {
+const Withdraw = () => {
   const [amount, setAmount] = useState(0);
   const { balance, loading, error } = useBalance();
-  const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [inputted, setInputted] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [initiating, setInitiating] = useState(false);
 
   useEffect(() => {
     if (isNaN(amount)) {
-      setMessage("Invalid amount");
+      setErrorMsg("Invalid amount");
       return;
     } else if (amount <= 0) {
       if (!inputted) return;
-      setMessage("Invalid amount");
+      setErrorMsg("Invalid amount");
       return;
     } else if (amount > 10000) {
-      setMessage("Amount larger than 10000 may be subject to PayPal limit due to regulations.");
+      setErrorMsg("Amount larger than 10000 may be subject to PayPal limit due to regulations.");
       return;
     }
-    setMessage("");
+    setErrorMsg("");
   }, [amount]);
-
-  const handleDepositClick = () => {
-    setShowModal(true);
-  };
 
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleWithdrawClick = async () => {
+    setInitiating(true);
+    setShowModal(true);
+    setSuccess(false);
+    // api call to withdraw: /payment/paypal/payout
+    // body: amount
+    try {
+      const response = await http.post("/payment/paypal/payout", { amount });
+      if (response.status === 201) {
+        setSuccess(true);
+        setInitiating(false);
+      } else {
+        setSuccess(false);
+        setErrorMsg("Failed to withdraw money due to our PayPal integration issue.");
+      }
+    } catch (error) {
+      setErrorMsg("Failed to withdraw money due to our PayPal integration issue.");
+    }
   };
 
   return (
@@ -47,7 +65,7 @@ const Deposit = () => {
       >
         <BsArrowLeft /> Back
       </NavigateButton>
-      <h1>Deposit</h1>
+      <h1>Withdraw</h1>
       <Row className="">
         {/* <Col className="d-flex justify-content-end">
           <Button variant="success">Export</Button>
@@ -78,7 +96,7 @@ const Deposit = () => {
           className="text-end"
           sm={3}
         >
-          Enter your deposit amount:
+          Enter your withdraw amount:
         </Col>
         <Col>
           <Form.Control
@@ -95,42 +113,31 @@ const Deposit = () => {
               setAmount(value);
             }}
           />
-
-          {/* <div className="d-flex justify-content-center"> */}
         </Col>
         <Col>
           <Button
-            // size="lg"
             variant="primary"
-            onClick={handleDepositClick}
+            onClick={handleWithdrawClick}
           >
-            <BsArrowUp /> Deposit
+            <BsArrowUp /> Withdraw
           </Button>
-          {/* </div> */}
         </Col>
       </Row>
-      <Row>{message && <p className="text-danger fs-4 text-center">{message}</p>}</Row>
-
+      <Row>{message && <p className="text-danger fs-4 text-center">{errorMsg}</p>}</Row>
       <Modal
         show={showModal}
         onHide={handleCloseModal}
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Choose a payment method</Modal.Title>
-        </Modal.Header>
+        <Modal.Header closeButton></Modal.Header>
         <Modal.Body>
-          <Suspense
-            fallback={
-              <Spinner
-                animation="border"
-                role="status"
-              >
-                <span className="visually-hidden">Loading payment methods...</span>
-              </Spinner>
-            }
-          >
-            <PayPalComponent amount={Number(amount)} />
-          </Suspense>
+          <Row className="d-flex justify-content-center align-items-center">
+            {initiating && <Spinner animation="border" />}
+            {success && <BsCheck2Circle className="fs-1 text-center text-success" />}
+            {!success && !initiating && <BsXCircle className="fs-1 text-center text-danger" />}
+          </Row>
+          {initiating && <p className="text-center">Initiating withdraw...</p>}
+          {success && <p className="text-center text-success">Withdraw successful!</p>}
+          {!success && !initiating && <p className="text-center text-danger">{errorMsg}</p>}
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -145,4 +152,4 @@ const Deposit = () => {
   );
 };
 
-export default Deposit;
+export default Withdraw;
