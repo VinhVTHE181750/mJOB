@@ -6,7 +6,6 @@ const router = express.Router();
 
 const withdraw = async (req, res) => {
   if (!req.userId) return res.status(401).json({ error: "Unauthorized" });
-  if (!req.role !== "ADMIN") return res.status(403).json({ error: "Forbidden" });
 
   try {
     const amount = parseFloat(req.body.amount);
@@ -29,7 +28,6 @@ const withdraw = async (req, res) => {
           balance: balance.balance,
         });
       }
-      const tx = await withdrawBal
       balance.balance -= amount;
       await logPayment(req.userId, "WITHDRAW", amount, null, null, "SUCCESS");
       await balance.save();

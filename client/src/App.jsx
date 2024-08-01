@@ -20,18 +20,15 @@ import PostDetail from "./pages/forum/PostDetail";
 // Jobs
 import ApplicationList from "./components/job/ApplicationList";
 import Jobs from "./pages/home/Jobs";
-import ApplicantList from "./pages/jobs/ApplicantList";
+import ActiveJob from "./pages/jobs/ActiveJob";
 import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
 import ApplyJob from "./pages/jobs/ApplyJob";
 import ConfirmJob from "./pages/jobs/ConfirmJob";
-import CreatedJobs from "./pages/jobs/CreatedJobs";
 import EditJob from "./pages/jobs/EditJob";
 import EnlistJob from "./pages/jobs/EnlistJob";
 import JobDetail from "./pages/jobs/JobDetail";
 import Market from "./pages/jobs/Market";
 import MyJobs from "./pages/jobs/MyJobs";
-import EmployerHistory from "./pages/jobs/EmployerHistory";
-import EmployerHome from "./pages/home/EmployerHome";
 
 // Technical
 import Dashboard from "./pages/home/Dashboard";
@@ -53,31 +50,28 @@ import HomeNavbar from "./components/home/HomeNavbar";
 import HomeFooter from "./components/HomeFooter";
 
 //Payment
+import TransferMoney from "./pages/payment/TranferBalance";
 
 // Misc
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 
 // import ErrorPage from "./pages/error/ErrorPage";
-import Transfer from "./components/payment/Transfer";
 import { AuthProvider } from "./context/AuthContext";
 import { ForumProvider } from "./context/ForumContext";
 import UserInformationProvider from "./context/UserContext";
 import ActiveAccountPage from "./pages/auth/ActiveAccount";
 import DrawBalacePage from "./pages/balance/drawBalance";
 import ToLogin from "./pages/error/ToLogin";
+import AdminFAQsPage from "./pages/faq/Adminfaqs";
 import FaqPage from "./pages/faq/Faq";
 import ForumInsights from "./pages/forum/Insights";
-import ManagePosts from "./pages/forum/ManagePosts";
 import JobHistory from "./pages/jobs/JobHistory";
+import ContinuePayment from "./pages/payment/ContinuePayment";
 import Deposit from "./pages/payment/Deposit";
 import PaymentHistory from "./pages/payment/PaymentHistory";
 import PaymentPortal from "./pages/payment/PaymentPortal";
-import Withdraw from "./pages/payment/Withdraw";
 import ReportPage from "./pages/report/report";
-import AdminFAQsPage from "./pages/faq/Adminfaqs";
-import ActiveAccountPage from "./pages/auth/ActiveAccount";
-import WelcomePage from "./pages/home/Welcome";
 import CreateTicketPage from "./pages/user/CreateTicket";
 function App() {
   return (
@@ -127,35 +121,17 @@ function App() {
                   path="/admin-faqs"
                   element={<AdminFAQsPage />}
                 />
-                <Route
-                  exact
-                  path="/welcome"
-                  element={<WelcomePage />}
-                />
-
-                <Route
-                  exact
-                  path="/tickets"
-                  element={<ReportPage />}
-                />
-                <Route
-                  exact
-                  path="/faq"
-                  element={<FaqPage />}
-                />
-
-                <Route
-                  exact
-                  path="/admin-faqs"
-                  element={<AdminFAQsPage />}
-                />
 
                 <Route
                   exact
                   path="/reports"
                   element={<ReportPage />}
                 />
-
+                <Route
+                  exact
+                  path="/draw-balance"
+                  element={<DrawBalacePage />}
+                />
                 {/* HOME ROUTES */}
                 <Route
                   exact
@@ -209,11 +185,6 @@ function App() {
                   path="/forum/insights"
                   element={<ForumInsights />}
                 />
-                <Route
-                  exact
-                  path="/forum/manage"
-                  element={<ManagePosts />}
-                />
 
                 {/* JOBS ROUTES */}
                 <Route
@@ -263,35 +234,18 @@ function App() {
                 />
                 <Route
                   exact
+                  path="/active-job"
+                  element={<ActiveJob />}
+                />
+                <Route
+                  exact
                   path="/applied-job-details/:job_id"
                   element={<AppliedJobDetail />}
                 />
-                {/* <Route
+                <Route
                   exact
                   path="/myjobs/appliedlist"
                   element={<ApplicationList />}
-                /> */}
-
-                <Route
-                  exact
-                  path="/myjobs/applied"
-                  element={<ApplicantList />}
-                />
-
-                <Route
-                  exact
-                  path="/myjobs/created-jobs"
-                  element={<CreatedJobs />}
-                />
-                <Route
-                  exact
-                  path="/employer/history"
-                  element={<EmployerHistory />}
-                />
-                <Route
-                  exact
-                  path="/employer/home"
-                  element={<EmployerHome />}
                 />
 
                 {/* PAYMENT ROUTES */}
@@ -303,25 +257,25 @@ function App() {
 
                 <Route
                   exact
-                  path="/payment/deposit"
+                  path="/deposit"
                   element={<Deposit />}
                 />
 
                 <Route
                   exact
-                  path="/payment/withdraw"
-                  element={<Withdraw />}
+                  path="/continue-payment"
+                  element={<ContinuePayment />}
                 />
 
                 <Route
                   exact
-                  path="/payment/history"
+                  path="/payment-history"
                   element={<PaymentHistory />}
                 />
                 <Route
                   exact
-                  path="/payment/transfer"
-                  element={<Transfer />}
+                  path="/transfer"
+                  element={<TransferMoney />}
                 />
 
                 {/* USERS ROUTES */}

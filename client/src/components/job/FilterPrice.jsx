@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import '../../assets/css/PriceBar.css';
-import { Row, Col } from 'react-bootstrap';
 
 const FilterPrice = ({ onStartPrice, onEndPrice }) => {
   const [priceStart, setPriceStart] = useState('');
@@ -17,16 +16,11 @@ const FilterPrice = ({ onStartPrice, onEndPrice }) => {
   };
 
   return (
-    <>
-      <Row className="align-items-center">
-
-          From:
-          <input className="price-bar" type="number" value={priceStart} onChange={handlePriceStartChange} />
-        
-          To:
-          <input className="price-bar" type="number" value={priceEnd} onChange={handlePriceEndChange} />
-        
-      </Row>
+    <>   
+      Salary From:
+      <input className="price-bar" type="number" value={priceStart} onChange={handlePriceStartChange} />
+      To:
+      <input className="price-bar" type="number" value={priceEnd} onChange={handlePriceEndChange} />
     </>
   );
 };

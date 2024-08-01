@@ -17,8 +17,9 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const [pwd, setPwd] = useState("");
   const [matchPwd, setMatchPwd] = useState("");
-  const [securityQuestion, setSecurityQuestion] =
-    useState("Where do you live?");
+  const [securityQuestion, setSecurityQuestion] = useState(
+    "Where do you live?"
+  );
   const [securityAnswer, setSecurityAnswer] = useState("");
   const [address, setAddress] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
@@ -32,15 +33,15 @@ const Register = () => {
   const errRef = useRef();
 
   // Effect to validate username
-
+  
   useEffect(() => {
     setValidEmail(REGEX_EMAIL.test(email));
   }, [email]);
-
+  
   useEffect(() => {
     setValidPhone(REGEX_PHONE.test(phone));
   }, [phone]);
-
+  
   useEffect(() => {
     setValidName(REGEX_USERNAME.test(user));
   }, [user]);
@@ -71,17 +72,20 @@ const Register = () => {
         { headers: { "Content-Type": "application/json" } }
       );
       if (response.status === 201) {
+       
         setSuccess(true);
         alert("You need confirm email to active account");
+          alert("You need confirm email to active account");
         setUser("");
-        setPwd("");
-        setMatchPwd("");
-        setEmail("");
-        setPhone("");
+          setPwd("");
+          setMatchPwd("");
+          setEmail("");
+          setPhone("");
         setSecurityQuestion("Where do you live?");
         setSecurityAnswer("");
         setAddress("");
         setDateOfBirth("");
+      
       }
     } catch (err) {
       if (!err?.response) {
@@ -198,7 +202,9 @@ const Register = () => {
                   onChange={(e) => setSecurityQuestion(e.target.value)}
                   required
                 >
-                  <option value="Where do you live?">Where do you live?</option>
+                  <option value="Where do you live?">
+                    Where do you live?
+                  </option>
                   <option value="What is your pet name?">
                     What is your pet name?
                   </option>

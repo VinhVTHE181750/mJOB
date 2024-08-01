@@ -10,6 +10,7 @@ const { init } = require("./io");
 const app = express();
 applyMiddlewares(app);
 applyRoutes(app);
+
 app.use(notFoundHandler);
 app.use(errorHandler);
 

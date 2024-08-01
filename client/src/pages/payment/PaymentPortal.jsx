@@ -1,23 +1,55 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useContext } from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
-import { BsArrowDown, BsArrowUp, BsClockHistory, BsCurrencyExchange, BsLink45Deg } from "react-icons/bs";
+import { BsArrowDown, BsArrowUp, BsCurrencyExchange, BsLink45Deg } from "react-icons/bs";
 import Skeleton from "react-loading-skeleton";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 import { useBalance } from "../../hooks/payment/useBalance";
 import Balance from "./micro/Balance";
 import EmbedCard from "./micro/EmbedCard";
-import useStats from "../../hooks/payment/useStats";
-import NavigateButton from "../../components/ui/buttons/NavigateButton";
 
 const BalanceChart = lazy(() => import("./micro/BalanceChart"));
 
 const PaymentPortal = () => {
   const navigate = useNavigate();
-  const { stats, loading, error } = useStats();
+  const { userId } = useContext(AuthContext);
+  const sampleTransactions = [
+    {
+      date: "2024/07/01",
+      amount: "### ### ###",
+      from: "XXXXXX",
+      type: "Received",
+    },
+    {
+      date: "2024/06/30",
+      amount: "### ### ###",
+      from: "XXXXXX",
+      type: "Sent",
+    },
+    {
+      date: "2024/06/30",
+      amount: "### ### ###",
+      from: "XXXXXX",
+      type: "Withdrawn",
+    },
+    {
+      date: "2024/06/30",
+      amount: "### ### ###",
+      from: "XXXXXX",
+      type: "Deposited",
+    },
+  ];
 
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-  };
+  const transactions = sampleTransactions.map((transaction, index) => (
+    <ListGroup.Item
+      key={index}
+      className="border"
+    >
+      <h3>#{index + 1}</h3>
+      {transaction.type} {transaction.amount} {transaction.type === "Deposited" || transaction.type === "Sent" ? "to" : "from"} {transaction.from}{" "}
+      {transaction.date}
+    </ListGroup.Item>
+  ));
 
   const amount = useBalance().balance;
 
@@ -134,35 +166,16 @@ const PaymentPortal = () => {
           sm={12}
           lg={5}
         >
-          <h2 className="mt-2">Recent Transactions</h2>
-          <div>
-            {loading ? (
-              <Skeleton count={5} />
-            ) : error ? (
-              <p>Error: {error.message}</p>
-            ) : (
-              <ListGroup>
-                {stats.recent.map((t, index) => (
-                  <ListGroup.Item key={index}>
-                    <span className="fs-5 me-3 border bg-warning bg-opacity-10 border-warning p-1">📜 {capitalizeFirstLetter(t.action)}</span>
-                    <span className="fs-5 me-3 border bg-primary bg-opacity-10 border-info rounded p-1">
-                      <Balance amount={t.amount} />
-                    </span>
-                    <span className="fs-5 border bg-secondary border-secondary bg-opacity-10 rounded p-1">
-                      {t.createdAt.split("T")[0]} {t.createdAt.split("T")[1].split(".")[0]}
-                    </span>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-            )}
-          </div>
-          <NavigateButton
-            path="/payment/history"
-            variant="outline-info"
-            className="mt-2"
-          >
-            <BsClockHistory /> View All Transactions
-          </NavigateButton>
+          <h2 className="mt-2">
+            <span className="me-2">Recent Transactions</span>
+            <Button
+              variant="outline-info"
+              onClick={() => navigate("/payment-history")}
+            >
+              <BsLink45Deg />
+            </Button>
+          </h2>
+          <div>{transactions}</div>
         </Col>
       </Row>
     </Container>

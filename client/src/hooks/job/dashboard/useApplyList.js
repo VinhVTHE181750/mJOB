@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import http from "../../../functions/httpService";
 
-const useApplyList = (  ) => {
+const useApplyList = ( userId ) => {
   const [applyList, setApplyList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-    const fetchApplyList = async (userId) => {
+  useEffect(() => {
+    const fetchApplyList = async () => {
       try {
         const url = `/myjobs/applylist/${userId}`;
         const response = await http.get( url);
@@ -18,8 +19,10 @@ const useApplyList = (  ) => {
       }
     };
 
+    fetchApplyList();
+  }, []);
 
-  return { applyList, loading, error, fetchApplyList };
+  return { applyList, loading, error };
 };
 
 export default useApplyList;

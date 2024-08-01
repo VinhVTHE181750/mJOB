@@ -108,7 +108,7 @@ const FileItem = styled.li`
 const ConfirmJob = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { job } = location.state || {};
+  const { job} = location.state || {};  // Replace requirementId with jobId as needed
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   const createFormData = (selectedFiles, jobId) => {
@@ -116,7 +116,8 @@ const ConfirmJob = () => {
     selectedFiles.forEach((file) => {
       formData.append('files', file);
     });
-    formData.append('jobId', jobId);
+    formData.append('jobId', jobId);  // Use jobId here
+
     return formData;
   };
 
@@ -164,6 +165,7 @@ const ConfirmJob = () => {
     <BackgroundContainer>
       <ConfirmationContainer>
         <Title>Confirm Your Application</Title>
+        <h2>Requirements</h2>
         <Label>Upload File</Label>
         <UploadButton>
           +

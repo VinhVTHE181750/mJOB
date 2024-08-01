@@ -545,5 +545,4 @@ async function autoApproval(job) {
 module.exports = {
   relevantJobSearch,
   relevantPostSearch,
-  relatedJobs
 };

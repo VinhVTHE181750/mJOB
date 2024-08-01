@@ -1,330 +1,310 @@
-import React, { useEffect, useState } from "react";
-import {
-  Form,
-  Button,
-  Container,
-  FormGroup,
-  FormControl,
-  FormLabel,
-  FormSelect,
-  Card,
-  CardBody,
-  CardHeader,
-  Accordion,
-  FormCheck,
-} from "react-bootstrap";
-import { useAuth } from "../../context/UserContext";
-import { useNavigate } from "react-router";
-import { useSearchParams } from "react-router-dom";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { Container, Table, Button, Modal, Form } from "react-bootstrap";
+import { useAuth } from "../../context/UserContext";
 
-const ReportForm = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const { userInformation, isLogin } = useAuth();
-  const userId = userInformation.id;
-  const [categoryId, setCategoryId] = useState("");
-  const [objectId, setObjectId] = useState("");
-  const [reason, setReason] = useState("");
-  const [customReason, setCustomReason] = useState("");
-  const [contactInfo, setContactInfo] = useState("");
-  const [type, setType] = useState("REPORT");
-  const [step, setStep] = useState(0);
+const ModalReport = ({
+  show,
+  handleClose,
+  userId,
+  setReload,
+  dataSelected,
+}) => {
+  const [ticket, setTicket] = useState({
+    type: "REPORT",
+    title: "",
+    category: "",
+    description: "",
+    username: "",
+    email: "",
+    phone: "",
+    priority: 0,
+  });
 
-  const handleReportSubmit = async (event) => {
-    event.preventDefault();
-    const data = {
-      object: categoryId,
-      objectId: parseInt(objectId),
-      reason: reason === "other" ? customReason : reason,
-      from: isLogin
-        ? userId.toString()
-        : contactInfo
-        ? contactInfo
-        : "Anonymous",
-      type,
-    };
-    // Send data to the server
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setTicket((prevTicket) => ({
+      ...prevTicket,
+      [name]: value,
+    }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post("/ticket/create", {
-        ...data,
-        title: "",
-        content: "",
-      });
-      if (response.status === 201) {
-        alert("Report successfully");
-        navigate("/home");
+      if (!dataSelected) {
+        const response = await axios.post("/ticket/create", {
+          ...ticket,
+          priority: parseInt(ticket.priority),
+          by: userId,
+        });
+        if (response.status === 201) {
+          alert(response.data.message);
+          setReload(true);
+          setTicket({
+            type: "REPORT",
+            title: "",
+            category: "",
+            description: "",
+            username: "",
+            email: "",
+            phone: "",
+            priority: 0,
+          });
+          handleClose();
+        }
+      } else {
+        const response = await axios.put(
+          `/ticket/update?ticketId=${ticket.id}`,
+          {
+            ...ticket,
+            priority: parseInt(ticket.priority),
+          }
+        );
+        if (response.status === 200) {
+          alert(response.data.message);
+          setReload(true);
+          handleClose();
+        }
       }
     } catch (error) {
       console.error("There was an error creating the ticket!", error);
     }
   };
-
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [allowRecordIdentity, setAllowRecordIdentity] = useState(false);
-
-  const handleOtherSubmit = async (event) => {
-    event.preventDefault();
-    if (!allowRecordIdentity) {
-      alert("Comfirm rules of mjob");
-      return;
-    }
-
-    event.preventDefault();
-    const data = {
-      title,
-      content,
-      from: isLogin
-        ? userId.toString()
-        : contactInfo
-        ? contactInfo
-        : "Anonymous",
-      type,
-    };
-    // Send data to the server
-    try {
-      const response = await axios.post("/ticket/create", {
-        ...data,
-      });
-      if (response.status === 201) {
-        alert(`${type} successfully`);
-        navigate("/home");
-      }
-    } catch (error) {
-      console.error("There was an error creating the ticket!", error);
-    }
-  };
-
   useEffect(() => {
-    const queryType = searchParams.get("type");
-    const queryObject = searchParams.get("object");
-    const queryObjectId = searchParams.get("objectId");
-    const queryContent = searchParams.get("content");
-    const queryTitle = searchParams.get("title");
-    if (queryType) {
-      setStep(1);
-      setType(queryType);
+    if (dataSelected)
+      setTicket({
+        type: "REPORT",
+        title: dataSelected.title,
+        category: dataSelected.category,
+        description: dataSelected.description,
+        username: dataSelected.username,
+        email: dataSelected.email,
+        phone: dataSelected.phone,
+        priority: dataSelected.priority,
+        id: dataSelected.id,
+      });
+    else {
+      setTicket({
+        type: "REPORT",
+        title: "",
+        category: "",
+        description: "",
+        username: "",
+        email: "",
+        phone: "",
+        priority: 0,
+      });
     }
-    if (queryObjectId) {
-      setObjectId(queryObjectId);
-    }
-    if (queryObject) {
-      setCategoryId(queryObject.toLocaleUpperCase());
-    }
-
-    if (queryTitle) {
-      setTitle(queryTitle);
-    }
-    if (queryContent) {
-      setContent(queryContent);
-    }
-  }, [searchParams]);
-
+  }, [dataSelected]);
   return (
-    <Container>
-      {step === 0 ? (
-        <>
-          <h2>Welcome! What do you want to do?</h2>
-          <Accordion defaultActiveKey="0">
-            <Accordion.Item eventKey="0">
-              <Accordion.Header>I want create a ticket report</Accordion.Header>
-              <Accordion.Body>
-                <p>
-                  Creating a report involves gathering data, analyzing trends,
-                  and synthesizing information to support decision-making. It's
-                  a structured way to communicate insights, highlight issues,
-                  and recommend actions that can drive strategic improvements
-                  and accountability.
-                </p>
-                <Button
-                  onClick={() => {
-                    setType("REPORT");
-                    setStep(1);
-                  }}
-                >
-                  Proceed
-                </Button>
-              </Accordion.Body>
-            </Accordion.Item>
-            <Accordion.Item eventKey="1">
-              <Accordion.Header>
-                I want create a ticket support
-              </Accordion.Header>
-              <Accordion.Body>
-                <p>
-                  Creating a support system is essential for ensuring customer
-                  satisfaction and operational efficiency. It involves setting
-                  up reliable channels, training responsive teams, and
-                  implementing technologies that facilitate quick resolutions to
-                  problems, enhancing overall user experience.
-                </p>
-                <Button
-                  onClick={() => {
-                    setType("SUPPORT");
-                    setStep(1);
-                  }}
-                >
-                  Proceed
-                </Button>
-              </Accordion.Body>
-            </Accordion.Item>
-            <Accordion.Item eventKey="2">
-              <Accordion.Header>
-                I want create a ticket feedback
-              </Accordion.Header>
-              <Accordion.Body>
-                <p>
-                  Creating a feedback mechanism is crucial for continuous
-                  improvement. It encourages open communication, allows insights
-                  into user experiences, and helps tailor services or products
-                  to better meet customer needs, fostering a culture of
-                  transparency and responsiveness.
-                </p>
-                <Button
-                  onClick={() => {
-                    setType("FEEDBACK");
-                    setStep(1);
-                  }}
-                >
-                  Proceed
-                </Button>
-              </Accordion.Body>
-            </Accordion.Item>
-          </Accordion>
-        </>
-      ) : step === 1 && type === "REPORT" ? (
-        <Card>
-          <CardHeader>
-            <h3 style={{ textTransform: "capitalize" }}>Create {type}</h3>
-          </CardHeader>
-          <CardBody>
-            <Form onSubmit={handleReportSubmit}>
-              <FormGroup className="mb-3">
-                <FormLabel>Category</FormLabel>
-                <FormSelect
-                  value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
-                  required
-                >
-                  <option value="">Select Category</option>
-                  <option value="USER">User</option>
-                  <option value="JOB">Job</option>
-                  <option value="POST">Post</option>
-                </FormSelect>
-              </FormGroup>
-              <FormGroup className="mb-3">
-                <FormLabel>Object ID</FormLabel>
-                <FormControl
-                  type="text"
-                  value={objectId}
-                  onChange={(e) => setObjectId(e.target.value)}
-                  required
-                />
-              </FormGroup>
-              <FormGroup className="mb-3">
-                <FormLabel>Reason</FormLabel>
-                <FormSelect
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                  required
-                >
-                  <option value="">Select Reason</option>
-                  <option value="inappropriate username">
-                    Inappropriate Username
-                  </option>
-                  <option value="suspicious activities">
-                    Suspicious Activities
-                  </option>
-                  <option value="disrespectful behavior">
-                    Disrespectful Behavior
-                  </option>
-                  <option value="other">Other</option>
-                </FormSelect>
-                {reason === "other" && (
-                  <FormControl
-                    type="text"
-                    value={customReason}
-                    onChange={(e) => setCustomReason(e.target.value)}
-                    placeholder="Enter custom reason"
-                    required
-                  />
-                )}
-              </FormGroup>
-              {!isLogin && (
-                <FormGroup className="mb-3">
-                  <FormLabel>Contact Info</FormLabel>
-                  <FormControl
-                    type="text"
-                    value={contactInfo}
-                    onChange={(e) => setContactInfo(e.target.value)}
-                    placeholder="Enter contact info"
-                    required
-                  />
-                </FormGroup>
-              )}
-              <Button variant="primary" type="submit">
-                Submit Report
-              </Button>
-            </Form>
-          </CardBody>
-        </Card>
-      ) : step === 1 && (type === "FEEDBACK" || type === "SUPPORT") ? (
-        <>
-          <Card>
-            <CardHeader>
-              <h3 style={{ textTransform: "capitalize" }}>Create {type}</h3>
-            </CardHeader>
-            <CardBody>
-              <Form onSubmit={handleOtherSubmit}>
-                <FormGroup className="mb-3">
-                  <FormLabel>Title</FormLabel>
-                  <FormControl
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                  />
-                </FormGroup>
-                <FormGroup className="mb-3">
-                  <FormLabel>Content</FormLabel>
-                  <FormControl
-                    as="textarea"
-                    rows={3}
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    required
-                  />
-                </FormGroup>
-                <FormGroup className="mb-3">
-                  <FormCheck
-                    type="checkbox"
-                    label="Allow mJOB to record your identity (which allows faster response from our staff)"
-                    checked={allowRecordIdentity}
-                    onChange={(e) => setAllowRecordIdentity(e.target.checked)}
-                  />
-                </FormGroup>
-                {allowRecordIdentity && !isLogin && (
-                  <FormGroup className="mb-3">
-                    <FormLabel>Contact Info</FormLabel>
-                    <FormControl
-                      type="text"
-                      value={contactInfo}
-                      onChange={(e) => setContactInfo(e.target.value)}
-                      required
-                    />
-                  </FormGroup>
-                )}
-                <Button variant="primary" type="submit">
-                  Submit
-                </Button>
-              </Form>
-            </CardBody>
-          </Card>
-        </>
-      ) : null}
-    </Container>
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>
+          {dataSelected ? "Update new Report" : "Create new Report"}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Title</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter title"
+              name="title"
+              value={ticket.title}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Priority</Form.Label>
+            <Form.Select
+              placeholder="Enter priority"
+              name="priority"
+              value={ticket.priority}
+              onChange={handleChange}
+            >
+              <option value={0}>Low</option>
+              <option value={1}>Medium</option>
+              <option value={2}>High</option>
+            </Form.Select>
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter username"
+              name="username"
+              value={ticket.username}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter email"
+              name="email"
+              value={ticket.email}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Phone</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter phone"
+              name="phone"
+              value={ticket.phone}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="formCategory">
+            <Form.Label>Category</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter category"
+              name="category"
+              value={ticket.category}
+              onChange={handleChange}
+            />
+          </Form.Group>
+
+          <Form.Group controlId="formDescription">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              placeholder="Enter description"
+              name="description"
+              value={ticket.description}
+              onChange={handleChange}
+            />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={handleSubmit}>
+          Save
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 
-export default ReportForm;
+function ReportPage() {
+  const { userInformation } = useAuth();
+  const [show, setShow] = useState(false);
+  const [data, setData] = useState([]);
+  const [reload, setReload] = useState(true);
+  const [dataSelected, setDataSelected] = useState(null);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handelDeleteReport = async (id) => {
+    try {
+      const request = await axios.delete(`/ticket/delete?ticketId=${id}`);
+      if (request.status === 200) {
+        alert(request.data.message);
+        setReload(true);
+      } else {
+        alert(request.data.message);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const TableBodyComponent = data.map((item, index) => {
+    return (
+      <tr key={index}>
+        <td>{item.id}</td>
+        <td>{item.title}</td>
+        <td>{item.category}</td>
+        <td>{item.description}</td>
+        <td>
+          <div style={{ display: "flex", color: "blue" }}>
+            <span
+              style={{ textDecoration: "underline", cursor: "pointer" }}
+              onClick={() => {
+                setDataSelected(item);
+                handleShow();
+              }}
+            >
+              Edit
+            </span>
+            &ensp;
+            <span
+              style={{ textDecoration: "underline", cursor: "pointer" }}
+              onClick={() => {
+                handelDeleteReport(item.id);
+              }}
+            >
+              Delete
+            </span>
+          </div>
+        </td>
+      </tr>
+    );
+  });
+
+  useEffect(() => {
+    const handleFetchData = async () => {
+      try {
+        const request = await axios.get(`/ticket?userId=${userInformation.id}`);
+        if (request.status === 200) {
+          setData(request.data.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    if (reload && userInformation.id) {
+      handleFetchData();
+      setReload(false);
+    }
+  }, [reload, userInformation.id]);
+  return (
+    <>
+      <Container>
+        <Button
+          className="mb-4"
+          onClick={() => {
+            handleShow();
+            setDataSelected(null);
+          }}
+        >
+          Create new report
+        </Button>
+        {data.length ? (
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Issue</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>{TableBodyComponent}</tbody>
+          </Table>
+        ) : (
+          <h2>No have report from you</h2>
+        )}
+      </Container>
+      <ModalReport
+        show={show}
+        handleClose={handleClose}
+        userId={userInformation.id}
+        setReload={setReload}
+        dataSelected={dataSelected}
+      />
+    </>
+  );
+}
+
+export default ReportPage;

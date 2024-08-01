@@ -13,23 +13,18 @@ const Deposit = () => {
   const { balance, loading, error } = useBalance();
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [inputted, setInputted] = useState(false);
 
   useEffect(() => {
-    if (isNaN(amount)) {
-      setErrorMessage("Must be a decimal number");
-      return;
-    } else if (amount <= 0) {
-      if (!inputted) return;
-      setErrorMessage("Must be positive");
-      return;
-    } else if (amount > 10000) {
-      setErrorMessage("Amount larger than $10000 is subjected to PayPal's transaction limit.");
+    if (amount <= 0) {
+      setMessage("Invalid amount");
       return;
     }
-    setErrorMessage("");
-  }, [amount, inputted]);
+    if (isNaN(amount)) {
+      setMessage("Invalid amount");
+      return;
+    }
+    setMessage("");
+  }, [amount]);
 
   const handleDepositClick = () => {
     setShowModal(true);
@@ -74,37 +69,38 @@ const Deposit = () => {
           />
         </Col>
       </Row>
-      <Row className="mt-5 fs-4 mb-2">Enter your deposit amount:</Row>
-      <Row className="mb-2">{errorMessage && <p className="text-danger fs-4">{errorMessage}</p>}</Row>
-      <Row className="mb-2">
-        <Form.Control
-          type="number"
-          value={amount}
-          min={0}
-          step={0.01}
-          onChange={(e) => {
-            setInputted(true);
-            setAmount(e.target.value);
-          }}
-          onBlur={(e) => {
-            const value = parseFloat(e.target.value).toFixed(2);
-            setAmount(value);
-          }}
-          isInvalid={!!errorMessage}
-        />
-
-        {/* <div className="d-flex justify-content-center"> */}
-      </Row>
-      <Row>
-        <Button
-          // size="lg"
-          variant="primary"
-          onClick={handleDepositClick}
+      <Row className="border mt-5 d-flex justify-content-center align-items-center">
+        <Col
+          className="text-end"
+          sm={3}
         >
-          <BsArrowUp /> Deposit
-        </Button>
-        {/* </div> */}
+          Enter your deposit amount:
+        </Col>
+        <Col>
+          <Form.Control
+            type="number"
+            value={amount}
+            min={0}
+            step={0.01}
+            onChange={(e) => {
+              setAmount(e.target.value);
+            }}
+          />
+
+          {/* <div className="d-flex justify-content-center"> */}
+        </Col>
+        <Col>
+          <Button
+            // size="lg"
+            variant="primary"
+            onClick={handleDepositClick}
+          >
+            <BsArrowUp /> Deposit
+          </Button>
+          {/* </div> */}
+        </Col>
       </Row>
+      <Row>{message && <p className="text-danger fs-4 text-center">{message}</p>}</Row>
 
       <Modal
         show={showModal}
@@ -124,7 +120,7 @@ const Deposit = () => {
               </Spinner>
             }
           >
-            <PayPalComponent amount={Number(amount)} />
+            <PayPalComponent amount={amount} />
           </Suspense>
         </Modal.Body>
         <Modal.Footer>

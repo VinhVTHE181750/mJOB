@@ -14,7 +14,6 @@ function JobsStatistic() {
   const { jobs: relatedJobs, loading: relatedLoading, error: relatedError } = useRelatedJobs();
 
   const [selectedJobs, setSelectedJobs] = useState('ongoing'); // 'ongoing' or 'pending'
-  const defaultAvatarUrl = 'https://www.topcv.vn/v4/image/normal-company/logo_default.png';
 
   const handleOngoingClick = () => {
     setSelectedJobs('ongoing');
@@ -143,11 +142,7 @@ const getStatusStyle = (status) => {
 
         {relatedJobs.map(job => (
           <div className="job-card" style={{ marginLeft: '10px' }} key={job.job_id}>
-            <div className="job-card-img"><img
-                      src={defaultAvatarUrl}
-                      alt={job.User.username}
-                      style={{ width: '100%', height: 'auto' }}
-                    /></div>
+            <div className="job-card-img">IMG Background</div>
             <div className="job-card-content">
               <div className="job-card-header">
                 <h2 className="job-title">{job.title}</h2>

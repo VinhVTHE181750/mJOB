@@ -1,12 +1,9 @@
 const express = require("express");
-const { getIo } = require("../../../io");
 const config = require("../../../config.json");
 const { log } = require("../../utils/Logger");
 const router = express.Router();
 const Balance = require("../../models/payment/Balance");
 const { logPayment } = require("../../utils/PaymentLogger");
-const User = require("../../models/user/User");
-const { isEmail } = require("../../validators/StringValidator");
 
 const PAYPAL_CLIENT_ID = config.payment.paypal.client_id;
 const PAYPAL_CLIENT_SECRET = config.payment.paypal.client_secret;
@@ -56,10 +53,12 @@ async function handleResponse(response) {
  */
 const createOrder = async (cart) => {
   // use the cart information passed from the front-end to calculate the purchase unit details
-  // log("shopping cart information passed from the frontend createOrder() callback:", cart);
+  // console.log("shopping cart information passed from the frontend createOrder() callback:", cart);
 
   const accessToken = await generateAccessToken();
   const url = `${base}/v2/checkout/orders`;
+
+  console.log(JSON.stringify(cart));
   const payload = {
     intent: "CAPTURE",
     purchase_units: [
@@ -139,123 +138,25 @@ router.post("/orders/:orderID/capture", async (req, res) => {
     const { orderID } = req.params;
     const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
 
-    const amount = jsonResponse.purchase_units[0].payments.captures[0].amount.value;
     if (httpStatusCode === 201) {
       // Assuming 201 is the success status code
+      const amount = jsonResponse.purchase_units[0].payments.captures[0].amount.value;
       const userId = req.userId; // Assuming req.userId contains the user's ID
 
       const userBalance = await Balance.findOne({ where: { UserId: userId } });
       if (userBalance) {
         await userBalance.update({ balance: userBalance.balance + parseFloat(amount) });
-        getIo().emit(`payment/${userId}`, { balance: userBalance.balance });
       } else {
         await Balance.create({ UserId: userId, balance: parseFloat(amount) });
       }
       await logPayment(userId, "DEPOSIT", amount, null, userId, "SUCCESS");
-      return res.status(httpStatusCode).json(jsonResponse);
-    } else {
-      await logPayment(req.userId, "DEPOSIT", amount, null, req.userId, "FAILED");
-      return res.status(httpStatusCode).json(jsonResponse);
     }
 
+    res.status(httpStatusCode).json(jsonResponse);
   } catch (error) {
     log(error, "ERROR", "PayPal");
-    // need to change 0 to actual amount
-    await logPayment(req.userId, "DEPOSIT", 0, null, req.userId, "FAILED", "Failed to record transaction.");
+    await logPayment(req.userId, "DEPOSIT", amount, null, req.userId, "FAILED");
     res.status(500).json({ error: "Failed to capture order." });
-  }
-});
-
-async function withdrawMoney(amount, email) {
-  try {
-    const accessToken = await generateAccessToken();
-    const url = `${base}/v1/payments/payouts`;
-
-    const payload = {
-      sender_batch_header: {
-        sender_batch_id: Date.now(),
-        recipient_type: "EMAIL",
-        email_subject: "You have money!",
-        email_message: "You received a payment. Thanks for using our service!",
-      },
-      items: [
-        {
-          amount: {
-            value: amount,
-            currency: "USD",
-          },
-          sender_item_id: Date.now(),
-          recipient_wallet: "PAYPAL",
-          receiver: email, // Replace with actual receiver email
-        },
-      ],
-    };
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const { jsonResponse, httpStatusCode } = await handleResponse(response);
-    if (httpStatusCode === 201) {
-      return jsonResponse;
-    } else return null;
-  } catch (error) {
-    log(error, "ERROR", "PayPal");
-    return null;
-  }
-}
-
-router.post("/payout", async (req, res) => {
-  const userId = req.userId;
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  try {
-    const { amount } = req.body;
-    if (!amount) {
-      return res.status(400).json({ error: "Amount is required" });
-    }
-    if (isNaN(amount) || amount <= 0) {
-      return res.status(400).json({ error: "Invalid amount" });
-    }
-
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found." });
-    }
-
-    const balance = await Balance.findOne({ where: { UserId: userId } });
-    if (!balance || balance.balance < amount) {
-      return res.status(400).json({ error: "Insufficient balance." });
-    }
-
-    const email = user.email;
-
-    if (!email) {
-      return res.status(400).json({ error: "User email not found." });
-    }
-
-    const response = await withdrawMoney(amount, email);
-    if (response) {
-      balance.balance -= amount;
-      await balance.save();
-      // may need to change SUCCESS -> PENDING
-      await logPayment(userId, "WITHDRAW", amount, userId, null, "SUCCESS");
-      getIo().emit(`payment/${userId}`, { balance: balance.balance });
-      res.status(201).json({ message: "Withdrawal queued successfully." });
-    } else {
-      await logPayment(userId, "WITHDRAW", amount, userId, null, "FAILED");
-      res.status(500).json({ error: "Failed to withdraw money due to our PayPal integration issue." });
-    }
-  } catch (error) {
-    log(error, "ERROR", "PayPal");
-    res.status(500).json({ error: "Failed to withdraw money." });
   }
 });
 

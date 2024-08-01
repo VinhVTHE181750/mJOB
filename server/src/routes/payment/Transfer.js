@@ -3,54 +3,9 @@ const Balance = require("../../models/payment/Balance");
 const User = require("../../models/user/User");
 const { log } = require("../../utils/Logger");
 const { logPayment } = require("../../utils/PaymentLogger"); // Adjust the path as necessary
-const { getIo } = require("../../../io");
 const router = express.Router();
 
-const transfer = async (from, to, amount, message = null) => {
-  const userFrom = await User.findOne({
-    where: { id: from },
-  });
-
-  const userTo = await User.findOne({
-    where: { id: to },
-  });
-
-  const balanceFrom = await Balance.findOne({
-    where: { UserId: from },
-  });
-
-  const balanceTo = await Balance.findOne({
-    where: { UserId: to },
-  });
-
-  if (!balanceFrom) {
-    logPayment(from, "OPEN", 0, null, null, "SUCCESS");
-    logPayment(from, "SEND", amount, from, to, "FAILED", "Insufficient balance");
-    return false;
-  }
-
-  if (!balanceTo) {
-    balanceTo = await Balance.create({ UserId: to, balance: amount });
-    logPayment(to, "OPEN", amount, null, null, "SUCCESS");
-  } else if (balanceFrom.balance < amount) {
-    logPayment(from, "SEND", amount, from, to, "FAILED", "Insufficient balance");
-    return false;
-  }
-
-  balanceFrom.balance -= amount;
-  await balanceFrom.save();
-  balanceTo.balance += amount;
-  await balanceTo.save();
-
-  logPayment(from, "SEND", amount, from, to, "SUCCESS", message);
-  logPayment(to, "RECEIVE", amount, from, to, "SUCCESS", message);
-
-  getIo().emit(`payment/${from}`, { balance: balanceFrom.balance });
-
-  return true;
-};
-
-const transferRoute = async (req, res) => {
+const transfer = async (req, res) => {
   if (!req.userId) return res.status(401).json({ error: "Unauthorized" });
 
   try {
@@ -61,23 +16,82 @@ const transferRoute = async (req, res) => {
     if (!userTo) return res.status(400).json({ message: "User not found" });
 
     const amount = parseFloat(req.body.amount);
-    const message = req.body.message;
-    if (isNaN(amount) || amount <= 0) return res.status(400).json({ message: "Invalid amount" });
+    if (isNaN(amount) || amount <= 0)
+      return res.status(400).json({ message: "Invalid amount" });
 
-    const transferResult = await transfer(req.userId, userTo.id, amount, message);
-    if (!transferResult) return res.status(400).json({ message: "Transfer failed." });
-    return res.status(201).json({
+    let balanceFrom = await Balance.findOne({
+      where: { UserId: req.userId },
+    });
+
+    if (!balanceFrom) {
+      balanceFrom = await Balance.create({ UserId: req.userId, balance: 0 });
+      await logPayment(req.userId, "OPEN", 0, null, null, "SUCCESS");
+      await logPayment(
+        req.userId,
+        "TRANSFER",
+        amount,
+        req.userId,
+        userTo.id,
+        "FAILED"
+      );
+      return res
+        .status(400)
+        .json({ message: "Insufficient balance", balance: 0 });
+    } else if (balanceFrom.balance < amount) {
+      await logPayment(
+        req.userId,
+        "TRANSFER",
+        amount,
+        req.userId,
+        userTo.id,
+        "FAILED"
+      );
+      return res.status(400).json({
+        message: "Insufficient balance",
+        balance: balanceFrom.balance,
+      });
+    }
+
+    let balanceTo = await Balance.findByPk(userTo.id);
+    if (!balanceTo) {
+      balanceTo = await Balance.create({ UserId: userTo.id, balance: amount });
+      await logPayment(userTo.id, "OPEN", amount, null, null, "SUCCESS");
+    } else {
+      balanceTo.balance += amount;
+    }
+
+    balanceFrom.balance -= amount;
+    await Promise.all([balanceTo.save(), balanceFrom.save()]);
+
+    await logPayment(
+      req.userId,
+      "TRANSFER",
+      amount,
+      req.userId,
+      userTo.id,
+      "SUCCESS"
+    );
+    await logPayment(
+      userTo.id,
+      "TRANSFER",
+      amount,
+      req.userId,
+      userTo.id,
+      "SUCCESS"
+    );
+
+    return res.json({
       message: "Transfer successful",
+      balance: balanceFrom.balance,
     });
   } catch (error) {
     log(error, "ERROR", "sequelize");
-    return res.status(500).json({ message: "Unexpected error while transferring" });
+    return res
+      .status(500)
+      .json({ message: "Unexpected error while transferring" });
   }
 };
 
-router.post("/", transferRoute);
+router.post("/", transfer);
 
-module.exports = {
-  router,
-  transfer,
-};
+module.exports = router;

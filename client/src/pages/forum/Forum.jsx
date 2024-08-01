@@ -4,7 +4,7 @@ import PostSearch from "../../components/forum/PostSearch";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 // import ChatBox from "../../components/forum/ChatBox";
 import { useState } from "react";
-import { BsDoorClosedFill, BsDoorOpen, BsGraphUp, BsKeyFill } from "react-icons/bs";
+import { BsGraphUp } from "react-icons/bs";
 import { FaPlusCircle } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
 import { useSelector } from "react-redux";
@@ -44,27 +44,8 @@ const Forum = () => {
         />
         <div className="d-flex justify-content-center align-items-center mt-2">
           <div className="d-flex flex-row-reverse gap-2">
-            {role === "GUEST" ? (
+            {role === "GUEST" ? null : (
               <>
-                <NavigateButton
-                  path="/login"
-                  variant="outline-secondary"
-                >
-                  <div className="d-flex align-items-center justify-content-center gap-1">
-                    <BsKeyFill /> Login to interact with contents
-                  </div>
-                </NavigateButton>
-              </>
-            ) : (
-              <>
-                <NavigateButton
-                  path="/forum/manage"
-                  variant="warning"
-                >
-                  <div className="d-flex align-items-center justify-content-center gap-1">
-                    <FaGear /> Your Posts
-                  </div>
-                </NavigateButton>
                 <NavigateButton
                   path="/forum/add"
                   variant="success"
@@ -75,7 +56,7 @@ const Forum = () => {
                 </NavigateButton>
                 <NavigateButton
                   path="/forum/insights"
-                  variant="info"
+                  variant="primary"
                 >
                   <div className="d-flex align-items-center justify-content-center gap-1">
                     <BsGraphUp /> <span className="d-none d-sm-block">Insights</span>

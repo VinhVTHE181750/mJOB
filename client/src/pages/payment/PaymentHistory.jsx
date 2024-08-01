@@ -1,16 +1,13 @@
 import { Container, Table } from "react-bootstrap";
-import { BsArrowLeft, BsCircleFill } from "react-icons/bs";
+import { BsCircleFill } from "react-icons/bs";
 import NavigateButton from "../../components/ui/buttons/NavigateButton";
 import { useEffect, useState } from "react";
 import http from "../../functions/httpService";
 import Balance from "./micro/Balance";
-import socket from "../../socket";
-import useWhoAmI from "../../hooks/user/useWhoAmI";
 
 const PaymentHistory = () => {
   // data: id, amount, status, action, from, to,
   const [data, setData] = useState([]);
-  const { userId } = useWhoAmI();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,18 +15,7 @@ const PaymentHistory = () => {
       setData(res.data);
     };
     fetchData();
-
-    const handleNewPayment = () => {
-      // setData((prevData) => [inserted, ...prevData]);
-      fetchData();
-    };
-
-    socket.on(`payment/${userId}`, handleNewPayment);
-
-    return () => {
-      socket.off(`payment/${userId}`, handleNewPayment);
-    };
-  }, [userId]);
+  }, []);
 
   const success = (
     <>
@@ -48,9 +34,10 @@ const PaymentHistory = () => {
   );
   return (
     <Container>
-      <NavigateButton path="/payment">
-        <BsArrowLeft /> Back
-      </NavigateButton>
+      <NavigateButton
+        path="/payment"
+        text="Back"
+      />
       <h1>Payment History</h1>
       <Table
         striped
@@ -66,7 +53,7 @@ const PaymentHistory = () => {
             <th>Status</th>
             <th>From</th>
             <th>To</th>
-            <th>Message</th>
+            <th>Content</th>
           </tr>
         </thead>
         <tbody>
@@ -81,7 +68,7 @@ const PaymentHistory = () => {
               <td>{d.status === "SUCCESS" ? success : d.status === "FAILED" ? failed : pending}</td>
               <td>{d.from}</td>
               <td>{d.to}</td>
-              <td>{d.reason}</td>
+              <td>{d.content}</td>
             </tr>
           ))}
         </tbody>
