@@ -20,7 +20,7 @@ const Jobs = () => {
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/job-list");
+      const response = await fetch("http://localhost:8000/api/job-manage/job-list");
       if (!response.ok) {
         throw new Error("Failed to fetch jobs");
       }

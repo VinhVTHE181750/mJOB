@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import http from "../../functions/httpService";
+import Sidebar from '../../components/job/SideBar';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -150,6 +151,9 @@ const CreatedJobs = ({ searchQuery }) => {
   };
 
   return (
+<div className="div">
+<div className="div-2">
+    <Sidebar className="ml-1"/>
     <Container>
       <Table>
         <thead>
@@ -193,6 +197,8 @@ const CreatedJobs = ({ searchQuery }) => {
         </tbody>
       </Table>
     </Container>
+    </div>
+    </div>
   );
 };
 

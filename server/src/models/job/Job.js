@@ -5,6 +5,7 @@ const Compensation = require("./Compensation");
 const JobHistory = require("./JobHistory");
 const Application = require("./Application");
 const JobMetric = require("./JobMetric");
+const JobCategory = require("./JobCategory");
 
 class Job extends Model {}
 
@@ -15,7 +16,7 @@ Job.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    type: {
+    salaryType: {
       type: DataTypes.ENUM("FULL_TIME", "PART_TIME", "INTERNSHIP", "COMMISSION", "FREELANCE", "CONTRACT"),
       allowNull: false,
     },
@@ -99,6 +100,14 @@ Job.init(
       type: DataTypes.ENUM("ACTIVE", "INACTIVE", "DELISTED", "ONGOING", "COMPLETED"),
       allowNull: false,
       defaultValue: "INACTIVE",
+    },
+    CategoryId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: JobCategory,
+        key: 'id',
+      },
     },
   },
   {
