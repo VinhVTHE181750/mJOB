@@ -20,8 +20,7 @@ client/node_modules
 /coverage
 
 # production
-/build
-/dist
+client/dist
 
 # misc
 .DS_Store
