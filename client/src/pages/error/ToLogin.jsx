@@ -14,10 +14,7 @@ const ToLogin = ({ path }) => {
   if (loading)
     return (
       <Container className="d-flex justify-content-center justify-items-center align-items-center">
-        <Spinner
-          animation="border"
-          role="status"
-        />
+        <Spinner animation="border" role="status" />
       </Container>
     );
 
@@ -32,7 +29,7 @@ const ToLogin = ({ path }) => {
             break;
           }
           default: {
-            navigate("/home");
+            navigate("/welcome");
           }
         }
       }
@@ -45,10 +42,7 @@ const ToLogin = ({ path }) => {
     <Container>
       <h1 className="text-center">Unauthorized</h1>
       <h5>You must login to do this.</h5>
-      <NavigateButton
-        path="/login"
-        text="Login"
-      />
+      <NavigateButton path="/login" text="Login" />
     </Container>
   );
 };
