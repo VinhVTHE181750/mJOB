@@ -79,6 +79,7 @@ Job.init(
       type: DataTypes.ENUM("HOURLY", "DAILY", "WEEKLY", "MONTHLY", "ONCE", "PERCENTAGE", "NONE"),
       allowNull: true,
     },
+    
     salaryCurrency: {
       type: DataTypes.STRING,
       allowNull: true,

@@ -143,8 +143,6 @@ router.get('/relatedjobs', async (req, res) => {
   }
 });
 
-//Employer
-router.get('/created', getJobCreatedRecently);
-router.get('/processed', getJobProcessedRecently);
+
 
 module.exports = router;

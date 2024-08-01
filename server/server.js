@@ -10,7 +10,7 @@ const { init } = require("./io");
 const app = express();
 applyMiddlewares(app);
 applyRoutes(app);
-
+require('./src/service/autoPayment.js');
 app.use(notFoundHandler);
 app.use(errorHandler);
 
