@@ -73,6 +73,7 @@ import ReportPage from "./pages/report/report";
 import DrawBalacePage from "./pages/balance/drawBalance";
 import AdminFAQsPage from "./pages/faq/Adminfaqs";
 import ActiveAccountPage from "./pages/auth/ActiveAccount";
+import WelcomePage from "./pages/home/Welcome";
 function App() {
   return (
     <BrowserRouter>
@@ -101,8 +102,9 @@ function App() {
                 <Route exact path="/faq" element={<FaqPage />} />
 
                 <Route exact path="/admin-faqs" element={<AdminFAQsPage />} />
+                <Route exact path="/welcome" element={<WelcomePage />} />
 
-                <Route exact path="/reports" element={<ReportPage />} />
+                <Route exact path="/tickets" element={<ReportPage />} />
                 <Route
                   exact
                   path="/draw-balance"
@@ -181,37 +183,13 @@ function App() {
                   path="/workexperience/:userId"
                   element={<WorkExperience />}
                 />
-                <Route
-                  exact
-                  path="/employer"
-                  element={<Employer />}
-                />
-                <Route
-                  exact
-                  path="/editemployer"
-                  element={<EditEmployer />}
-                />
+                <Route exact path="/employer" element={<Employer />} />
+                <Route exact path="/editemployer" element={<EditEmployer />} />
 
-                <Route
-                  exact
-                  path="/users"
-                  element={<Users />}
-                />
-                <Route
-                  exact
-                  path="/settings"
-                  element={<Settings />}
-                />
-                <Route
-                  exact
-                  path="/ticket"
-                  element={<CreateTicketPage />}
-                />
-                <Route
-                  exact
-                  path="/posts"
-                  element={<Posts />}
-                />
+                <Route exact path="/users" element={<Users />} />
+                <Route exact path="/settings" element={<Settings />} />
+                <Route exact path="/ticket" element={<CreateTicketPage />} />
+                <Route exact path="/posts" element={<Posts />} />
 
                 {/* TECHNICAL ROUTES */}
                 <Route exact path="/to-login" element={<ToLogin />} />

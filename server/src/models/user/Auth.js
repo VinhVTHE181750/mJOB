@@ -38,6 +38,11 @@ Auth.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    isFirstTime: {
+      // Online status, used for chat and other real-time features
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
     lastOnline: {
       // Last online time, used for chat and other real-time features
       type: DataTypes.DATE,

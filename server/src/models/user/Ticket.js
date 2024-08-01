@@ -5,7 +5,6 @@ class Ticket extends Model {}
 
 Ticket.init(
   {
-    
     // use object and objectId on reports to specify what the report is about
     object: {
       type: DataTypes.ENUM("USER", "POST", "COMMENT", "JOB", "OTHER"),
@@ -15,7 +14,7 @@ Ticket.init(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    
+
     // use title, content on support and feedback tickets
     title: {
       type: DataTypes.STRING,
@@ -38,10 +37,10 @@ Ticket.init(
       allowNull: false,
       defaultValue: "OTHER",
     },
+    
   },
   {
     sequelize,
-    paranoid: true,
   }
 );
 

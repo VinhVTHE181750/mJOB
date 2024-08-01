@@ -131,13 +131,13 @@ router.post("/active-account", async (req, res) => {
     }
     const auth = await Auth.findOne({ where: { UserId: user.id } });
     const token = createToken({ id: user.id, role: auth.role });
-    auth.isActivated = true;
-    await auth.save();
     res.cookie("token", token, {
       httpOnly: false,
       sameSite: "strict",
       secure: false,
     });
+    auth.isActivated = true;
+    await auth.save();
     return res
       .status(200)
       .json({ message: "Active account successful", token });
@@ -192,19 +192,43 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ error: "Authentication failed" });
     }
 
-    const token = createToken({ id: user.id, role: auth.role });
+    // const token = createToken({ id: user.id, role: auth.role });
 
-    // NOTE: httpOnly is set to false for development purposes
-    res.cookie("token", token, {
-      httpOnly: false,
-      sameSite: "strict",
-      secure: true,
-    });
+    // // NOTE: httpOnly is set to false for development purposes
+    // res.cookie("token", token, {
+    //   httpOnly: false,
+    //   sameSite: "strict",
+    //   secure: true,
+    // });
     await sendMailActivateAccount(
       email,
       `http://localhost:5173/active-account?email=${email}`
     );
-    return res.status(201).json({ message: "Registration successful", token });
+    return res.status(201).json({ message: "Registration successful" });
+  } catch (e) {
+    log(e.message, "ERROR", "AUTH");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/user-auth", async function (req, res) {
+  try {
+    const { id } = req.query;
+    const userAuth = await Auth.findOne({ where: { id } });
+    return res.status(200).json({ data: userAuth });
+  } catch (e) {
+    log(e.message, "ERROR", "AUTH");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.put("/user-auth", async function (req, res) {
+  try {
+    const { id } = req.query;
+    const userAuth = await Auth.findOne({ where: { id } });
+    userAuth.isFirstTime = true;
+    await userAuth.save();
+    return res.status(200).json({ message: "Update successful" });
   } catch (e) {
     log(e.message, "ERROR", "AUTH");
     return res.status(500).json({ error: "Internal server error" });
