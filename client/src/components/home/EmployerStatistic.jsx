@@ -183,8 +183,8 @@ const getStatusStyle = (status) => {
         )}
       </div>
 
-      <h2 className='mt-5'>{selectedJobs === 'ongoing' ? 'Processing Jobs' : 'Created Jobs'}</h2>
-      <Row>
+      {/* <h2 className='mt-5'>{selectedJobs === 'ongoing' ? 'Processing Jobs' : 'Created Jobs'}</h2> */}
+      {/* <Row>
         <Col>
           {(selectedJobs === 'ongoing' ? processedJobs : createdJobs).map(job => (
             <div className="job-card" style={{ marginLeft: '10px' }} key={job.id || job.job_id}>
@@ -215,7 +215,7 @@ const getStatusStyle = (status) => {
             </div>
           ))}
         </Col>
-      </Row>
+      </Row> */}
     </div>
   );
 }

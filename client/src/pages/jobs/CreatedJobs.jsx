@@ -2,11 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import http from "../../functions/httpService";
-<<<<<<< HEAD
 import Sidebar from '../../components/job/SideBar';
 import { useAuth } from '../../context/UserContext';
-=======
->>>>>>> main
 
 const Container = styled.div`
   max-width: 1200px;
@@ -88,10 +85,10 @@ const DeleteButton = styled.button`
 const CreatedJobs = ({ searchQuery }) => {
   const [createdJobs, setCreatedJobs] = useState([]);
   const navigate = useNavigate();
-  const {isEmployerMode} = useAuth();
+  const { isEmployerMode } = useAuth();
 
-  if(!isEmployerMode){
-    navigate('/myjobs/created-jobs');
+  if (!isEmployerMode) {
+    navigate('/myjobs/applied');
   }
 
   useEffect(() => {
@@ -158,45 +155,48 @@ const CreatedJobs = ({ searchQuery }) => {
   };
 
   return (
-    <Container>
-      <Table>
-        <thead>
-          <tr>
-            <Th>#</Th>
-            <Th>Job</Th>
-            <Th>Next Payment</Th>
-            <Th>Status</Th>
-            <Th>Action</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {createdJobs
-            .filter(job => job.title && searchQuery ? job.title.toLowerCase().includes(searchQuery.toLowerCase()) : true)
-            .map((job, index) => (
-              <tr key={job.id}>
-                <Td>{index + 1}</Td>
-                <Td>{job.title}</Td>
-                <Td>{renderCurrency(job.salaryCurrency, job.salary)}</Td>
-<<<<<<< HEAD
-                <Td>
-                  {formatStatus(job.status)}
-                </Td> 
-=======
-                <Td style={getStatusStyle(job.status)}>
-                  {formatStatus(job.status)}
-                </Td>
->>>>>>> main
-                <Td>
-                  <ViewButton onClick={() => handleViewClick(job.id)}>View</ViewButton>
-                  <EditButton onClick={() => navigate(`/jobs/edit/${job.id}`)}>Edit</EditButton>
-                  <ApplyButton onClick={() => navigate(`/apply/${job.id}`)}>Apply</ApplyButton>
-                  <DeleteButton onClick={() => handleDeleteClick(job.id)}>Delete</DeleteButton>
-                </Td>
-              </tr>
-            ))}
-        </tbody>
-      </Table>
-    </Container>
+    <>
+      <div className="div">
+        <div className="div-2">
+          <Sidebar />
+          <div className="column-2">
+            <Container>
+              <Table>
+                <thead>
+                  <tr>
+                    <Th>#</Th>
+                    <Th>Job</Th>
+                    <Th>Next Payment</Th>
+                    <Th>Status</Th>
+                    <Th>Action</Th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {createdJobs
+                    .filter(job => job.title && searchQuery ? job.title.toLowerCase().includes(searchQuery.toLowerCase()) : true)
+                    .map((job, index) => (
+                      <tr key={job.id}>
+                        <Td>{index + 1}</Td>
+                        <Td>{job.title}</Td>
+                        <Td>{renderCurrency(job.salaryCurrency, job.salary)}</Td>
+                        <Td style={getStatusStyle(job.status)}>
+                          {formatStatus(job.status)}
+                        </Td>
+                        <Td>
+                          <ViewButton onClick={() => handleViewClick(job.id)}>View</ViewButton>
+                          <EditButton onClick={() => navigate(`/jobs/edit/${job.id}`)}>Edit</EditButton>
+                          <ApplyButton onClick={() => navigate(`/apply/${job.id}`)}>Apply</ApplyButton>
+                          <DeleteButton onClick={() => handleDeleteClick(job.id)}>Delete</DeleteButton>
+                        </Td>
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+            </Container>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

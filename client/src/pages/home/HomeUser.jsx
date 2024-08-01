@@ -16,10 +16,10 @@ function HomeUser() {
     const { isEmployerMode} = useAuth(); // Access the employer mode context
     // console.log(isEmployerMode);
 
-    const navigate = useNavigate();
-    if (!username) {
-        navigate('/login');
-    }
+    // const navigate = useNavigate();
+    // if (!username) {
+    //     navigate('/login');
+    // }
     return (
         <>
         {isEmployerMode ? (
