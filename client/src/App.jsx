@@ -31,6 +31,8 @@ import Market from "./pages/jobs/Market";
 import MyJobs from "./pages/jobs/MyJobs";
 import ApplicantList from "./pages/jobs/ApplicantList";
 import CreatedJobs from "./pages/jobs/CreatedJobs";
+import EmployerHistory from "./pages/jobs/EmployerHistory";
+import EmployerHome from "./pages/home/EmployerHome";
 
 // Technical
 import Dashboard from "./pages/home/Dashboard";
@@ -262,6 +264,18 @@ function App() {
                   path="/myjobs/created-jobs"
                   element={<CreatedJobs />}
                 />
+                <Route
+                  exact
+                  path="/employer/history"
+                  element={<EmployerHistory />}
+                />
+                <Route
+                  exact
+                  path="/employer/home"
+                  element={<EmployerHome />}
+                />
+
+
 
                 {/* PAYMENT ROUTES */}
                 <Route

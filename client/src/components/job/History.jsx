@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Row, Col, Dropdown } from 'react-bootstrap';
+import { Container, Table, Button, Row, Col, Dropdown, Spinner, Card } from 'react-bootstrap';
 import useUserJobHistory from '../../hooks/job/dashboard/useUserJobHistory';
 import useJobStatus from '../../hooks/job/dashboard/useJobStatus';
 import useJobListByStatus from '../../hooks/job/dashboard/useJobListByStatus';
@@ -7,7 +7,7 @@ import '../../assets/css/JobHistory.css';
 import { Link } from 'react-router-dom';
 import { Doughnut } from 'react-chartjs-2';
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js';
-import useWhoAmI from '../../hooks/user/useWhoAmI';
+import useCreatorJobHistory from '../../hooks/job/jobhistory/useCreatorJobHistory';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -19,13 +19,40 @@ function History(user) {
   const { statuses: statusList, loading: statusLoading, error: statusError } = useJobStatus(userId);
   const [selectedStatus, setSelectedStatus] = useState('');
   const { jobs: jobListByStatus, loading: jobListLoading, error: jobListError } = useJobListByStatus(userId, selectedStatus || 'ongoing')
+  const { jobHistory, loading, error, fetchJobHistory } = useCreatorJobHistory();
 
-  
   const [filteredJobList, setFilteredJobList] = useState([]);
 
+  // if (loading) {
+  //   return (
+  //     <Container>
+  //       <Row className="justify-content-center">
+  //         <Col md={6} className="text-center">
+  //           <Spinner animation="border" role="status">
+  //             <span className="sr-only">Loading...</span>
+  //           </Spinner>
+  //           <p>Loading job history...</p>
+  //         </Col>
+  //       </Row>
+  //     </Container>
+  //   );
+  // }
+
+  // if (error) {
+  //   return (
+  //     <Container>
+  //       <Row className="justify-content-center">
+  //         <Col md={6} className="text-center">
+  //           <p>Error fetching job history: {error.message}</p>
+  //         </Col>
+  //       </Row>
+  //     </Container>
+  //   );
+  // }
   // console.log(userId);
   useEffect(() => {
     fetchJobList(userId);
+    fetchJobHistory(userId);
   }, [userId]);
 
   useEffect(() => {
@@ -42,7 +69,7 @@ function History(user) {
   const formatStatus = (status) => {
     if (!status) return '';
     return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
-};
+  };
   // const trimStatus = (status) => status.trim().toLowerCase();
 
   const countJobsByStatus = (status) => initialJobList.filter((job) => formatStatus(job.status) === status).length;
@@ -100,7 +127,7 @@ function History(user) {
   // console.log('data: ', jobListByStatus);
   // console.log('data filteredJobList: ', filteredJobList);
 
-  
+
 
   const getStatusStyle = (status) => {
     switch (formatStatus(status)) {
@@ -111,6 +138,8 @@ function History(user) {
       case 'Rejected':
         return { color: 'red' };
       case 'Pending':
+        return { color: 'blue' };
+      case 'Active':
         return { color: 'blue' };
       default:
         return {};
@@ -234,6 +263,37 @@ function History(user) {
 
         </Table>
       </div>
+      {jobHistory.length === 0 ? (
+        <p className="text-center">No job history available.</p>
+      ) : (
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {jobHistory.map((job, index) => (
+              <tr key={job.id}>
+                <td>{index + 1}</td>
+                <td>{job.title}</td>
+                <td style={getStatusStyle(job.status)}>{formatStatus(job.status)}</td>
+                <td>{new Date(job.createdAt).toLocaleDateString()}</td>
+                <td>{new Date(job.updatedAt).toLocaleDateString()}</td>
+                <td>
+                  <Button as={Link} to={`/jobs/${job.id}`} variant="primary" size="sm">Detail</Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
+
     </div>
   )
 }

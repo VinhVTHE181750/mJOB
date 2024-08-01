@@ -9,7 +9,7 @@ const useLocations = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const url = `/joblist/locations`;
+        const url = `/joblist/location`;
         const response = await http.get(url);
         setLocations(response.data);
       } catch (err) {
