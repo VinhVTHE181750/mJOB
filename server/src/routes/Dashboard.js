@@ -119,9 +119,7 @@ router.get("/completedlist/:userId", async (req, res) => {
 
 //Select user applied joblist
 router.get("/appliedlist/:userId", async (req, res) => {
-  console.log("After");
   try {
-    console.log("After 2");
     const { userId } = req.params;
     const jobHistory = await Application.findAll({
       where: {
