@@ -30,8 +30,6 @@ import EnlistJob from "./pages/jobs/EnlistJob";
 import JobDetail from "./pages/jobs/JobDetail";
 import Market from "./pages/jobs/Market";
 import MyJobs from "./pages/jobs/MyJobs";
-import ApplicantList from "./pages/jobs/ApplicantList";
-import CreatedJobs from "./pages/jobs/CreatedJobs";
 import EmployerHistory from "./pages/jobs/EmployerHistory";
 import EmployerHome from "./pages/home/EmployerHome";
 
