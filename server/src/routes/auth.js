@@ -7,6 +7,7 @@ const User = require("../models/user/User");
 const { createToken } = require("../utils/JWT");
 const cookieParser = require("cookie-parser");
 const { sendMailActivateAccount, sendMailOTP } = require("../helper/sendmail");
+const { log } = require("../utils/Logger");
 
 function generateRandomSixDigitNumber() {
   let randomNumber = Math.floor(Math.random() * 1000000);

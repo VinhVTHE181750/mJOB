@@ -18,6 +18,7 @@ const JobPreference = require("./JobPreference");
 const CV = require("./CV");
 const EmployerProfile = require("./EmployerProfile");
 
+
 class User extends Model {}
 
 User.init(
@@ -161,6 +162,9 @@ CV.belongsTo(User);
 
 User.hasOne(JobPreference);
 JobPreference.belongsTo(User);
+
+User.hasOne(Post);
+Post.belongsTo(User);
 
 // missing ProfileLog
 
