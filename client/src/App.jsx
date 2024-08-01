@@ -296,12 +296,12 @@ function App() {
                 />
                 <Route
                   exact
-                  path="/employer"
+                  path="/employer/:id"
                   element={<Employer />}
                 />
                 <Route
                   exact
-                  path="/editemployer"
+                  path="/editemployer/:id"
                   element={<EditEmployer />}
                 />
 

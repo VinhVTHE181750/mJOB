@@ -7,6 +7,7 @@ const { submitWorkExp } = require("./user/WorkExperience");
 const User = require("../models/user/User");
 const Auth = require("../models/user/Auth");
 const Hasher = require("../utils/Hasher");
+const EmployerProfile = require("../models/user/EmployerProfile");
 
 // router.get("/:id", getUser);
 router.post("/work-experience", submitWorkExp);
@@ -89,6 +90,46 @@ router.get('/:id', async (req, res) => {
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  router.get('/employer/:id', async (req, res) => {
+    try {
+      const post = await EmployerProfile.findByPk(req.params.id);
+      if (post) {
+        res.json(post);
+      } else {
+        res.status(404).json({ message: 'Employer not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching Employer', error });
+    }
+  });
+
+  router.put('/edit-employer/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, industry, description, address, phone, email, website } = req.body;
+  
+    try {
+      const employer = await EmployerProfile.findByPk(id);
+  
+      if (employer) {
+        employer.name = name;
+        employer.industry = industry;
+        employer.description = description;
+        employer.address = address;
+        employer.phone = phone;
+        employer.email = email;
+        employer.website = website;
+        
+        await employer.save();
+        res.status(200).json(employer);
+      } else {
+        res.status(404).json({ error: 'Employer not found' });
+      }
+    } catch (error) {
+      console.error('Error updating employer:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 
