@@ -78,6 +78,7 @@ import AdminFAQsPage from "./pages/faq/Adminfaqs";
 import ActiveAccountPage from "./pages/auth/ActiveAccount";
 import WelcomePage from "./pages/home/Welcome";
 import CreateTicketPage from "./pages/user/CreateTicket";
+//test
 function App() {
   return (
     <BrowserRouter>
