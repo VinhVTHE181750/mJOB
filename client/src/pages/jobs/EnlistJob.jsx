@@ -16,7 +16,6 @@ const EnlistJob = () => {
     job_work_location: "",
     job_tags: "",
     job_max_applications: "",
-    job_approval_method: true,
     job_requirements: [],
     job_number_of_recruits: "",
     job_start_date: "",
@@ -165,20 +164,6 @@ const EnlistJob = () => {
                 value={formValues.job_max_applications}
                 onChange={handleChange}
               />
-            </Form.Group>
-          </Col>
-          <Col md={4}>
-            <Form.Group controlId="approvalMethod">
-              <Form.Label>Approval method</Form.Label>
-              <Form.Control
-                as="select"
-                name="job_approval_method"
-                value={formValues.job_approval_method}
-                onChange={handleChange}
-              >
-                <option value={true}>Auto</option>
-                <option value={false}>Manual</option>
-              </Form.Control>
             </Form.Group>
           </Col>
           <Col md={4}>
