@@ -28,7 +28,7 @@ const Users = () => {
 
   const handleDeleteUser = async (id) => {
     try {
-      await http.delete(`/delete/${id}`);
+      await http.delete(`/job-manage/delete-job/${id}`);
       alert("User deleted successfully!");
       fetchUsers(); // Refresh the user list
     } catch (err) {

@@ -247,6 +247,27 @@ router.get("/applylist/:userId", async (req, res) => {
   }
 });
 
+
+//Select application list of a jobs
+router.get("/applicationlist/:jobId", async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const applicationList = await Application.findAll({
+      where: { JobId: jobId, status: 'PENDING' },
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ]
+    });
+    res.status(200).json(applicationList);
+  } catch (err) {
+    // console.log(err);
+    res.status(500).json({ message: "Error occurred", error: err });
+  }
+});
+
 //Select user job history list w status available
 router.get("/jobhistory/jobstatus/:userId/:jobStatus", async (req, res) => {
   try {
@@ -288,6 +309,165 @@ router.get("/jobhistory/jobstatus/:userId/:jobStatus", async (req, res) => {
     // console.log(err);
     res.status(500).json({ message: "Error occurred", error: err });
   }
+});
+
+
+//Delete an application
+router.delete("/deleteapplication", async (req, res) => {
+  // const jobId = 1;
+  // const userId = 3;
+    const { jobId, userId } = req.body;
+  if (!jobId || !userId) {
+    return res.status(400).json({ message: "jobId and userId are required" });
+  }
+  try {
+    const result = await Application.destroy({
+      where: {
+        jobId: jobId,
+        userId: userId,
+      },
+    });
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    res.status(200).json({ message: "Application deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting application:", error);
+    res.status(500).json({ message: "An error occurred while deleting the application" });
+  }
+});
+
+router.get("/jobapplication", async (req, res) => {
+  try {
+    const jobApplication = await Application.findAll({
+      include: [
+        {
+          model: Job,
+          attributes: [
+            'id',
+            'title',
+            'description',
+            'location',
+            'tags',
+            'maxApplicants',
+            'recruitments',
+            'approvalMethod',
+            'contact',
+            'startDate',
+            'endDate',
+            'salary',
+            'salaryType',
+            'salaryCurrency',
+            'status' // Assuming you want to include job status
+          ],
+          include: [
+            {
+              model: User,
+              attributes: ['username'],
+            }
+          ]
+        },
+      ]
+    });
+    res.status(200).json(jobApplication);
+  } catch (err) {
+    // console.log(err);
+    res.status(500).json({ message: "Error occurred", error: err });
+  }
+});
+
+
+
+//Employer
+
+//Get employer created job
+router.get("/employer/createdjob", async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const jobCreatedList = await Job.findAll({
+      where: { UserId: userId },
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+      order: [
+        ['updatedAt', 'DESC'],
+      ]
+    });
+    res.status(200).json(jobCreatedList);
+  } catch (err) {
+    console.error(err); // Log the error for debugging purposes
+    res.status(500).json({ message: "Error occurred", error: err.message });
+  }
+});
+
+//Get employer created done by order time
+router.get("/employer/jobcompleted", async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const jobDoneList = await Job.findAll({
+      where: { UserId: userId, status: 'COMPLETED' },
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+      order: [
+        ['updatedAt', 'DESC'],
+      ],
+    });
+
+  }catch (err) {
+    console.error(err); // Log the error for debugging purposes
+    res.status(500).json({ message: "Error occurred", error: err.message });
+  }
+});
+
+//Get all applications of a jobs
+router.get("/employer/jobapplication", async (req, res) => {
+  try {
+    const { jobId } = req.body;
+    const jobApplicationList = await Application.findAll({
+      where: { jobId: jobId },
+      include: [
+        {
+          model: Job,
+          attributes: [
+            'id',
+            'title',
+            'description',
+            'location',
+            'tags',
+            'maxApplicants',
+            'recruitments',
+            'approvalMethod',
+            'contact',
+            'startDate',
+            'endDate',
+            'salary',
+            'salaryType',
+            'salaryCurrency',
+            'status' // Assuming you want to include job status
+          ],
+          include: [
+            {
+              model: User,  
+              attributes: ['username'],
+            }
+          ]
+        },
+      ]
+    });
+    res.status(200).json(jobApplicationList);
+  } catch (err) {
+    console.error(err); // Log the error for debugging purposes
+    res.status(500).json({ message: "Error occurred", error: err.message });
+  }   
 });
 
 module.exports = router;

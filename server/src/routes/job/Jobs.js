@@ -12,7 +12,7 @@ const Requirement = require("../../models/job/Requirement");
 const RequirementStorage = require("../../models/job/RequirementStorage");
 const Application = require("../../models/job/Application");
 const formidable = require('formidable');
-
+const { calcRelevance } = require("../../utils/OpenAI");
 app.use(fileUpload());
 
 router.post("/", async (req, res) => {
@@ -178,6 +178,15 @@ router.post("/", async (req, res) => {
     status: status || "ACTIVE",
     UserId: req.userId,
   });
+  
+  if(newJob.approvalMethod){
+    const description = `Description: ${job_description} \nTags: ${job_tags}`;
+    const result = await calcRelevance("job",job_title,description);
+    console.log(result);
+    return result.relevanceScore > 50 && result.harmfulnessScore<20 ? res.status(201).json(newJob) : res.status(400).json({ message: "Job not suited " });
+  }
+
+
   try {
     const job = await newJob.save();
     // requirements is an array of {type, name}
