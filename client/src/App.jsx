@@ -50,27 +50,27 @@ import HomeNavbar from "./components/home/HomeNavbar";
 import HomeFooter from "./components/HomeFooter";
 
 //Payment
-import TransferMoney from "./pages/payment/TranferBalance";
 
 // Misc
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 
 // import ErrorPage from "./pages/error/ErrorPage";
+import Transfer from "./components/payment/Transfer";
 import { AuthProvider } from "./context/AuthContext";
 import { ForumProvider } from "./context/ForumContext";
 import UserInformationProvider from "./context/UserContext";
 import ActiveAccountPage from "./pages/auth/ActiveAccount";
-import DrawBalacePage from "./pages/balance/drawBalance";
 import ToLogin from "./pages/error/ToLogin";
 import AdminFAQsPage from "./pages/faq/Adminfaqs";
 import FaqPage from "./pages/faq/Faq";
 import ForumInsights from "./pages/forum/Insights";
+import ManagePosts from "./pages/forum/ManagePosts";
 import JobHistory from "./pages/jobs/JobHistory";
-import ContinuePayment from "./pages/payment/ContinuePayment";
 import Deposit from "./pages/payment/Deposit";
 import PaymentHistory from "./pages/payment/PaymentHistory";
 import PaymentPortal from "./pages/payment/PaymentPortal";
+import Withdraw from "./pages/payment/Withdraw";
 import ReportPage from "./pages/report/report";
 import CreateTicketPage from "./pages/user/CreateTicket";
 function App() {
@@ -127,11 +127,7 @@ function App() {
                   path="/reports"
                   element={<ReportPage />}
                 />
-                <Route
-                  exact
-                  path="/draw-balance"
-                  element={<DrawBalacePage />}
-                />
+
                 {/* HOME ROUTES */}
                 <Route
                   exact
@@ -184,6 +180,11 @@ function App() {
                   exact
                   path="/forum/insights"
                   element={<ForumInsights />}
+                />
+                <Route
+                  exact
+                  path="/forum/manage"
+                  element={<ManagePosts />}
                 />
 
                 {/* JOBS ROUTES */}
@@ -257,25 +258,25 @@ function App() {
 
                 <Route
                   exact
-                  path="/deposit"
+                  path="/payment/deposit"
                   element={<Deposit />}
                 />
 
                 <Route
                   exact
-                  path="/continue-payment"
-                  element={<ContinuePayment />}
+                  path="/payment/withdraw"
+                  element={<Withdraw />}
                 />
 
                 <Route
                   exact
-                  path="/payment-history"
+                  path="/payment/history"
                   element={<PaymentHistory />}
                 />
                 <Route
                   exact
-                  path="/transfer"
-                  element={<TransferMoney />}
+                  path="/payment/transfer"
+                  element={<Transfer />}
                 />
 
                 {/* USERS ROUTES */}
