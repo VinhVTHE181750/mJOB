@@ -18,7 +18,6 @@ import ManageCategories from "./pages/forum/ManageCategories";
 import PostDetail from "./pages/forum/PostDetail";
 
 // Jobs
-import ApplicationList from "./components/job/ApplicationList";
 import Jobs from "./pages/home/Jobs";
 import ApplicantList from "./pages/jobs/ApplicantList";
 import AppliedJobDetail from "./pages/jobs/AppliedJobDetail";
@@ -64,8 +63,6 @@ import Transfer from "./components/payment/Transfer";
 import { AuthProvider } from "./context/AuthContext";
 import { ForumProvider } from "./context/ForumContext";
 import UserInformationProvider from "./context/UserContext";
-import ActiveAccountPage from "./pages/auth/ActiveAccount";
-import DrawBalacePage from "./pages/balance/drawBalance";
 import ToLogin from "./pages/error/ToLogin";
 import FaqPage from "./pages/faq/Faq";
 import ForumInsights from "./pages/forum/Insights";
