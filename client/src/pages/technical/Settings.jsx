@@ -5,7 +5,6 @@ import {Nav} from 'react-bootstrap';
 import { FaBriefcase, FaUserEdit, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import axios from 'axios';
 import useWhoAmI from "../../hooks/user/useWhoAmI";
-import { FaUserEdit, FaBriefcase, FaSignOutAlt, FaCog, FaPlus, FaTrash } from "react-icons/fa";
 // Regular expressions for validation
 const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
