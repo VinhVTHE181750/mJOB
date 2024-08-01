@@ -504,7 +504,6 @@ const getJobProcessedRecently = async (req, res) => {
             }
         ],
         order: [['createdAt', 'DESC']],
-        limit: 4
     });
     res.status(200).json(jobs);
 } catch (error) {
@@ -524,7 +523,6 @@ const getJobCompletedRecently = async (req, res) => {
               }
           ],
           order: [['updatedAt', 'DESC']],
-          limit: 3
       });
       res.status(200).json(jobs);
   } catch (error) {

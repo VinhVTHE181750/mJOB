@@ -176,15 +176,7 @@ const CreatedJobs = ({ searchQuery }) => {
                 <Td>{formatJobType(job.type)}</Td>
                 <Td>{renderCurrency(job.salaryCurrency, job.salary)}</Td>
                 <Td>
-                  {job.Applications.length > 0 ? (
-                    job.Applications.map((application, appIndex) => (
-                      <div key={appIndex} style={getStatusStyle(application.status)}>
-                        {application.status}
-                      </div>
-                    ))
-                  ) : (
-                    <div>No applications</div>
-                  )}
+                  {formatStatus(job.status)}
                 </Td> 
                 <Td>
                   <ViewButton onClick={() => handleViewClick(job.id)}>View</ViewButton>
