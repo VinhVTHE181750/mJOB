@@ -378,4 +378,96 @@ router.get("/jobapplication", async (req, res) => {
   }
 });
 
+
+
+//Employer
+
+//Get employer created job
+router.get("/employer/createdjob", async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const jobCreatedList = await Job.findAll({
+      where: { UserId: userId },
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+      order: [
+        ['updatedAt', 'DESC'],
+      ]
+    });
+    res.status(200).json(jobCreatedList);
+  } catch (err) {
+    console.error(err); // Log the error for debugging purposes
+    res.status(500).json({ message: "Error occurred", error: err.message });
+  }
+});
+
+//Get employer created done by order time
+router.get("/employer/jobcompleted", async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const jobDoneList = await Job.findAll({
+      where: { UserId: userId, status: 'COMPLETED' },
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+      order: [
+        ['updatedAt', 'DESC'],
+      ],
+    });
+
+  }catch (err) {
+    console.error(err); // Log the error for debugging purposes
+    res.status(500).json({ message: "Error occurred", error: err.message });
+  }
+});
+
+//Get all applications of a jobs
+router.get("/employer/jobapplication", async (req, res) => {
+  try {
+    const { jobId } = req.body;
+    const jobApplicationList = await Application.findAll({
+      where: { jobId: jobId },
+      include: [
+        {
+          model: Job,
+          attributes: [
+            'id',
+            'title',
+            'description',
+            'location',
+            'tags',
+            'maxApplicants',
+            'recruitments',
+            'approvalMethod',
+            'contact',
+            'startDate',
+            'endDate',
+            'salary',
+            'salaryType',
+            'salaryCurrency',
+            'status' // Assuming you want to include job status
+          ],
+          include: [
+            {
+              model: User,  
+              attributes: ['username'],
+            }
+          ]
+        },
+      ]
+    });
+    res.status(200).json(jobApplicationList);
+  } catch (err) {
+    console.error(err); // Log the error for debugging purposes
+    res.status(500).json({ message: "Error occurred", error: err.message });
+  }   
+});
+
 module.exports = router;

@@ -5,6 +5,7 @@ const Job = require("../../models/job/Job");
 const JobMetric = require("../../models/job/JobMetric");
 const { log } = require("../../utils/Logger");
 const io = require("../../../io");
+const { sequelize } = require('../../models/SQLize'); // Import sequelize instance
 
 const getJobListbyDefaut = async (req, res) => {
     try {
@@ -91,10 +92,31 @@ const getJobListbyDate= async (req, res) => {
       }
 }
 
+
+const getLocationList = async (req, res) => {
+    try {
+      // Fetch all unique locations from the Job model
+      const locations = await Job.findAll({
+        attributes: [
+          [sequelize.fn('DISTINCT', sequelize.col('location')), 'location']
+        ]
+      });
+  
+      // Map the result to an array of locations
+      const locationList = locations.map(location => location.location);
+  
+      // Return the result
+      res.status(200).json(locationList);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+};
+
 module.exports = {
     getJobListbyDefaut,
     getJobListbyView,
-    getJobListbyDate
+    getJobListbyDate,
+    getLocationList
 };
 // module.exports = router;
 
