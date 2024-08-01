@@ -29,8 +29,25 @@ const getNextPaymentDate = (date, period) => {
   return nextDate.toISOString();
 };
 
+const parseCronExpression = (date) => {
+  // date is ISO string
+  const d = new Date(date);
+  const second = d.getSeconds();
+  const minute = d.getMinutes();
+  const hour = d.getHours();
+  const day = d.getDate();
+  const month = d.getMonth() + 1;
+  const year = d.getFullYear();
+  return `${second} ${minute} ${hour} ${day} ${month} ${year}`;
+};
+
 const schedulePayment = (c) => {
-  cron.schedule(c.nextPayment, async () => {
+  if (!c.nextPayment) {
+    log(`Compensation ${c.id} does not have nextPayment date`, "ERROR", "node-cron");
+    return;
+  }
+  const exp = parseCronExpression(c.nextPayment);
+  cron.schedule(exp, async () => {
     log(`Processing compensation ${c.id}`, "DEBUG", "node-cron");
     try {
       // Check if the status is PAID, this case should not happen normally

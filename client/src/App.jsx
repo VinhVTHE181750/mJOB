@@ -73,7 +73,6 @@ import PaymentHistory from "./pages/payment/PaymentHistory";
 import PaymentPortal from "./pages/payment/PaymentPortal";
 import Withdraw from "./pages/payment/Withdraw";
 import ReportPage from "./pages/report/report";
-import DrawBalacePage from "./pages/balance/drawBalance";
 import AdminFAQsPage from "./pages/faq/Adminfaqs";
 import ActiveAccountPage from "./pages/auth/ActiveAccount";
 import WelcomePage from "./pages/home/Welcome";
@@ -89,9 +88,21 @@ function App() {
             <div className="min-vh-100 mt-5">
               <Routes>
                 {/* AUTH ROUTES */}
-                <Route exact path="/login" element={<Login />} />
-                <Route exact path="/logout" element={<Logout />} />
-                <Route exact path="/register" element={<Register />} />
+                <Route
+                  exact
+                  path="/login"
+                  element={<Login />}
+                />
+                <Route
+                  exact
+                  path="/logout"
+                  element={<Logout />}
+                />
+                <Route
+                  exact
+                  path="/register"
+                  element={<Register />}
+                />
                 <Route
                   exact
                   path="/reset-password"
@@ -103,24 +114,62 @@ function App() {
                   element={<ActiveAccountPage />}
                 />
 
-                <Route exact path="/faq" element={<FaqPage />} />
+                <Route
+                  exact
+                  path="/faq"
+                  element={<FaqPage />}
+                />
 
-                <Route exact path="/admin-faqs" element={<AdminFAQsPage />} />
-                <Route exact path="/welcome" element={<WelcomePage />} />
+                <Route
+                  exact
+                  path="/admin-faqs"
+                  element={<AdminFAQsPage />}
+                />
+                <Route
+                  exact
+                  path="/welcome"
+                  element={<WelcomePage />}
+                />
 
-                <Route exact path="/tickets" element={<ReportPage />} />
-                <Route exact path="/faq" element={<FaqPage />} />
+                <Route
+                  exact
+                  path="/tickets"
+                  element={<ReportPage />}
+                />
+                <Route
+                  exact
+                  path="/faq"
+                  element={<FaqPage />}
+                />
 
-                <Route exact path="/draw-balance" element={<DrawBalacePage />} />
+                <Route
+                  exact
+                  path="/admin-faqs"
+                  element={<AdminFAQsPage />}
+                />
 
-                <Route exact path="/admin-faqs" element={<AdminFAQsPage />} />
-
-                <Route exact path="/reports" element={<ReportPage />} />
+                <Route
+                  exact
+                  path="/reports"
+                  element={<ReportPage />}
+                />
 
                 {/* HOME ROUTES */}
-                <Route exact path="/" element={<HomeGuest />} />
-                <Route exact path="/home" element={<HomePage />} />
-                <Route exact path="/homeuser" element={<HomeUser />} />
+                <Route
+                  exact
+                  path="/"
+                  element={<HomeGuest />}
+                />
+                <Route
+                  exact
+                  path="/home"
+                  element={<HomePage />}
+                />
+                <Route
+                  exact
+                  path="/homeuser"
+                  element={<HomeUser />}
+                />
                 {/* <Route
                   exact
                   path="/homeuser"
@@ -128,10 +177,26 @@ function App() {
                 /> */}
 
                 {/* FORUM ROUTES */}
-                <Route exact path="/forum" element={<Forum />} />
-                <Route exact path="/forum/posts/:id" element={<PostDetail />} />
-                <Route exact path="/forum/add" element={<AddPost />} />
-                <Route exact path="/forum/edit/:id" element={<EditPost />} />
+                <Route
+                  exact
+                  path="/forum"
+                  element={<Forum />}
+                />
+                <Route
+                  exact
+                  path="/forum/posts/:id"
+                  element={<PostDetail />}
+                />
+                <Route
+                  exact
+                  path="/forum/add"
+                  element={<AddPost />}
+                />
+                <Route
+                  exact
+                  path="/forum/edit/:id"
+                  element={<EditPost />}
+                />
                 <Route
                   exact
                   path="/forum/categories"
@@ -142,18 +207,58 @@ function App() {
                   path="/forum/insights"
                   element={<ForumInsights />}
                 />
-                <Route exact path="/forum/manage" element={<ManagePosts />} />
+                <Route
+                  exact
+                  path="/forum/manage"
+                  element={<ManagePosts />}
+                />
 
                 {/* JOBS ROUTES */}
-                <Route exact path="/market" element={<Market />} />
-                <Route exact path="/jobs" element={<Jobs />} />
-                <Route exact path="/jobs/:id" element={<JobDetail />} />
-                <Route exact path="/jobs/add" element={<EnlistJob />} />
-                <Route exact path="/myjobs" element={<MyJobs />} />
-                <Route exact path="/myjobs/history" element={<JobHistory />} />
-                <Route exact path="/jobs/edit/:id" element={<EditJob />} />
-                <Route exact path="/confirm-job" element={<ConfirmJob />} />
-                <Route exact path="/apply/:job_id" element={<ApplyJob />} />
+                <Route
+                  exact
+                  path="/market"
+                  element={<Market />}
+                />
+                <Route
+                  exact
+                  path="/jobs"
+                  element={<Jobs />}
+                />
+                <Route
+                  exact
+                  path="/jobs/:id"
+                  element={<JobDetail />}
+                />
+                <Route
+                  exact
+                  path="/jobs/add"
+                  element={<EnlistJob />}
+                />
+                <Route
+                  exact
+                  path="/myjobs"
+                  element={<MyJobs />}
+                />
+                <Route
+                  exact
+                  path="/myjobs/history"
+                  element={<JobHistory />}
+                />
+                <Route
+                  exact
+                  path="/jobs/edit/:id"
+                  element={<EditJob />}
+                />
+                <Route
+                  exact
+                  path="/confirm-job"
+                  element={<ConfirmJob />}
+                />
+                <Route
+                  exact
+                  path="/apply/:job_id"
+                  element={<ApplyJob />}
+                />
                 <Route
                   exact
                   path="/applied-job-details/:job_id"
@@ -194,18 +299,34 @@ function App() {
 
 
                 {/* PAYMENT ROUTES */}
-                <Route exact path="/payment" element={<PaymentPortal />} />
+                <Route
+                  exact
+                  path="/payment"
+                  element={<PaymentPortal />}
+                />
 
-                <Route exact path="/payment/deposit" element={<Deposit />} />
+                <Route
+                  exact
+                  path="/payment/deposit"
+                  element={<Deposit />}
+                />
 
-                <Route exact path="/payment/withdraw" element={<Withdraw />} />
+                <Route
+                  exact
+                  path="/payment/withdraw"
+                  element={<Withdraw />}
+                />
 
                 <Route
                   exact
                   path="/payment/history"
                   element={<PaymentHistory />}
                 />
-                <Route exact path="/payment/transfer" element={<Transfer />} />
+                <Route
+                  exact
+                  path="/payment/transfer"
+                  element={<Transfer />}
+                />
 
                 {/* USERS ROUTES */}
                 <Route
@@ -213,24 +334,64 @@ function App() {
                   path="/editprofile/:userId"
                   element={<EditProfile />}
                 />
-                <Route exact path="/profile/:userId" element={<Profile />} />
+                <Route
+                  exact
+                  path="/profile/:userId"
+                  element={<Profile />}
+                />
                 <Route
                   exact
                   path="/workexperience/:userId"
                   element={<WorkExperience />}
                 />
-                <Route exact path="/employer" element={<Employer />} />
-                <Route exact path="/editemployer" element={<EditEmployer />} />
+                <Route
+                  exact
+                  path="/employer"
+                  element={<Employer />}
+                />
+                <Route
+                  exact
+                  path="/editemployer"
+                  element={<EditEmployer />}
+                />
 
-                <Route exact path="/users" element={<Users />} />
-                <Route exact path="/settings" element={<Settings />} />
-                <Route exact path="/ticket" element={<CreateTicketPage />} />
-                <Route exact path="/posts" element={<Posts />} />
+                <Route
+                  exact
+                  path="/users"
+                  element={<Users />}
+                />
+                <Route
+                  exact
+                  path="/settings"
+                  element={<Settings />}
+                />
+                <Route
+                  exact
+                  path="/ticket"
+                  element={<CreateTicketPage />}
+                />
+                <Route
+                  exact
+                  path="/posts"
+                  element={<Posts />}
+                />
 
                 {/* TECHNICAL ROUTES */}
-                <Route exact path="/to-login" element={<ToLogin />} />
-                <Route exact path="*" element={<PageNotFound />} />
-                <Route exact path="/dashboard" element={<Dashboard />} />
+                <Route
+                  exact
+                  path="/to-login"
+                  element={<ToLogin />}
+                />
+                <Route
+                  exact
+                  path="*"
+                  element={<PageNotFound />}
+                />
+                <Route
+                  exact
+                  path="/dashboard"
+                  element={<Dashboard />}
+                />
               </Routes>
             </div>
             <HomeFooter />
