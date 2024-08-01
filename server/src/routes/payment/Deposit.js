@@ -6,11 +6,11 @@ const router = express.Router();
 
 const deposit = async (req, res) => {
   if (!req.userId) return res.status(401).json({ error: "Unauthorized" });
+  if (!req.role !== "ADMIN") return res.status(403).json({ error: "Forbidden" });
 
   try {
     const amount = parseFloat(req.body.amount);
-    if (isNaN(amount) || amount <= 0)
-      return res.status(400).json({ message: "Invalid amount" });
+    if (isNaN(amount) || amount <= 0) return res.status(400).json({ message: "Invalid amount" });
 
     const balance = await Balance.findOne({
       where: { UserId: req.userId },
@@ -33,14 +33,7 @@ const deposit = async (req, res) => {
     } else {
       balance.balance += amount;
       // Use logPayment for logging "DEPOSIT" action
-      await logPayment(
-        req.userId,
-        "DEPOSIT",
-        amount,
-        req.userId,
-        req.userId,
-        "SUCCESS"
-      );
+      await logPayment(req.userId, "DEPOSIT", amount, req.userId, req.userId, "SUCCESS");
       await balance.save();
     }
 
@@ -50,9 +43,7 @@ const deposit = async (req, res) => {
     });
   } catch (error) {
     log(error, "ERROR", "sequelize");
-    return res
-      .status(500)
-      .json({ message: "Unexpected error while depositing" });
+    return res.status(500).json({ message: "Unexpected error while depositing" });
   }
 };
 
