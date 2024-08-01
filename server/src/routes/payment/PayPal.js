@@ -4,6 +4,7 @@ const { log } = require("../../utils/Logger");
 const router = express.Router();
 const Balance = require("../../models/payment/Balance");
 const { logPayment } = require("../../utils/PaymentLogger");
+const User = require("../../models/user/User");
 
 const PAYPAL_CLIENT_ID = config.payment.paypal.client_id;
 const PAYPAL_CLIENT_SECRET = config.payment.paypal.client_secret;
@@ -157,6 +158,89 @@ router.post("/orders/:orderID/capture", async (req, res) => {
     log(error, "ERROR", "PayPal");
     await logPayment(req.userId, "DEPOSIT", amount, null, req.userId, "FAILED");
     res.status(500).json({ error: "Failed to capture order." });
+  }
+});
+
+async function withdrawMoney(userId, amount) {
+  try {
+    const accessToken = await generateAccessToken();
+    const url = `${base}/v1/payments/payouts`;
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new Error("User not found.");
+    }
+
+    const email = user.email;
+
+    if (!email) {
+      throw new Error("User email not found.");
+    }
+
+    const payload = {
+      sender_batch_header: {
+        sender_batch_id: Date.now(),
+        recipient_type: "EMAIL",
+        email_subject: "You have money!",
+        email_message: "You received a payment. Thanks for using our service!",
+      },
+      items: [
+        {
+          amount: {
+            value: amount.toFixed(2),
+            currency: "USD",
+          },
+          sender_item_id: Date.now(),
+          recipient_wallet: "PAYPAL",
+          receiver: email, // Replace with actual receiver email
+        },
+      ],
+    };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const { jsonResponse, httpStatusCode } = await handleResponse(response);
+
+    if (httpStatusCode === 201) {
+      await logPayment(userId, "WITHDRAW", amount, userId, null, "PENDING");
+    } else {
+      await logPayment(userId, "WITHDRAW", amount, userId, null, "FAILED");
+    }
+    return jsonResponse;
+  } catch (error) {
+    log(error, "ERROR", "PayPal");
+    await logPayment(userId, "WITHDRAW", amount, null, userId, "FAILED");
+    throw new Error("Failed to withdraw money.");
+  }
+}
+
+router.post("/payout", async (req, res) => {
+  const userId = req.userId;
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const { amount } = req.body;
+    if (!amount) {
+      return res.status(400).json({ error: "Amount is required" });
+    }
+    if (isNaN(amount) || amount <= 0) {
+      return res.status(400).json({ error: "Invalid amount" });
+    }
+    const response = await withdrawMoney(userId, amount);
+    if(response) res.json({ message: "Withdrawal queued successfully." });
+    else res.status(500).json({ error: "Failed to withdraw money." });
+  } catch (error) {
+    log(error, "ERROR", "PayPal");
+    res.status(500).json({ error: "Failed to withdraw money." });
   }
 });
 
