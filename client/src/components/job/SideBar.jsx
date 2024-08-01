@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import '../../assets/css/SideBar.css';
+import { useAuth } from '../../context/UserContext';
 
 const Sidebar = ({ onMenuClick }) => {
 
   const [selectedMenu, setSelectedMenu] = useState('dashboard');
+  const {isEmployerMode} = useAuth();
 
   const handleMenuClick = (menu) => {
     setSelectedMenu(menu);
@@ -34,20 +36,29 @@ const Sidebar = ({ onMenuClick }) => {
         >
           Job History
         </a>
-        <a
-          href="/myjobs/applied"
-          className={`menu-item ${location.pathname === '/myjobs/applied' ? 'selected' : ''}`}
-          onClick={() => handleMenuClick('jobApplied')}
-        >
-          Job Applied
-        </a>
-        <a
+        {isEmployerMode ? (
+          <a
+            href="/myjobs/created-jobs"
+            className={`menu-item ${location.pathname === '/myjobs/created-jobs' ? 'selected' : ''}`}
+            onClick={() => handleMenuClick('jobCreated')}
+          >
+            Job Created
+          </a>
+        ) : <a
+        href="/myjobs/applied"
+        className={`menu-item ${location.pathname === '/myjobs/applied' ? 'selected' : ''}`}
+        onClick={() => handleMenuClick('jobApplied')}
+      >
+        Job Applied
+      </a>}
+        
+        {/* <a
           href="/myjobs/created-jobs"
           className={`menu-item ${location.pathname === '/myjobs/created-jobs' ? 'selected' : ''}`}
           onClick={() => handleMenuClick('jobCompleted')}
         >
           Job Created
-        </a>
+        </a> */}
       </div>
     </div>
   );

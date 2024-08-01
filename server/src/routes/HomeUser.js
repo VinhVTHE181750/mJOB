@@ -40,7 +40,7 @@ try {
           'tags',
           'maxApplicants',
           'recruitments',
-          'approvalMethod',
+          
           'contact',
           'startDate',
           'endDate',
@@ -83,7 +83,7 @@ try {
           'tags',
           'maxApplicants',
           'recruitments',
-          'approvalMethod',
+          
           'contact',
           'startDate',
           'endDate',
