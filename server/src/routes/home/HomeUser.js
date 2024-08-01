@@ -125,52 +125,11 @@ const getHotPosts = async (req, res) => {
 }
 
 
-const getJobCreatedRecently = async (req, res) => {
-    try {
-        // const { userId } = req.body;
-        const userId = 1;
-        const jobs = await Job.findAll({
-            where: { UserId: userId, status: 'ACTIVE' },
-            include: [
-                {
-                    model: User,
-                    attributes: ['username']
-                }
-            ],
-            order: [['createdAt', 'DESC']],
-            limit: 4
-        });
-        res.status(200).json(jobs);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-}
 
-const getJobProcessedRecently = async (req, res) => {
-    try {
-        const { userId } = req.body;
-        const jobs = await Job.findAll({
-            where: { UserId: userId, status: 'ONGOING' },
-            include: [
-                {
-                    model: User,
-                    attributes: ['username']
-                }
-            ],
-            order: [['updatedAt', 'DESC']],
-            limit: 4
-        });
-        res.status(200).json(jobs);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-}
 module.exports = {
     getAppliedJob,
     getOngoingJob,
     getRelatedJob,
-    getJobCreatedRecently,
-    getJobProcessedRecently,
     getNewPost,
     getHotPosts
 };

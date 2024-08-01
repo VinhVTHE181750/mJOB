@@ -5,19 +5,12 @@ const Job = require("../models/job/Job");
 const Application = require("../models/job/Application");
 const { Op } = require('sequelize');
 // const { get3JobCreatedRecent, get3JobAppliedRecent, getTotalCompletedJob, getTotalCurrentAppliedJob, getTotalCreatedJob, get3JobCompletedRecent } = require("./jobDashBoard/dashboard");
-const { getUserJobbyStatus, getUserJobHistory } = require("./jobDashBoard/jobhistory");
+const { getUserJobbyStatus, getUserJobHistory , getUserCreatedJob} = require("./jobDashBoard/jobhistory");
 const { route } = require("./Auth");
 const router = express.Router();
 
 router.get("/history", getUserJobHistory);
-// router.get("/applied",getUserAppliedJob);
-// router.get("/created",getUserCreatedJob);
-// router.get("/completed", getTotalCompletedJob);
-// router.get("/applied", getTotalCurrentAppliedJob);
-// router.get("/created", getTotalCreatedJob);
-// router.get("/RecentApplied", get3JobAppliedRecent);
-// router.get("/RecentCreated", get3JobCreatedRecent);
-// router.get("/RecentCompleted", get3JobCompletedRecent);
+
 
 //Select user total completed job
 router.get("/completed/:userId", async (req, res) => {
@@ -113,7 +106,7 @@ router.get("/completedlist/:userId", async (req, res) => {
       ]
 
     });
-    
+
     return res.status(200).json(jobHistory);
     // } else {
     //     res.status(200).json({ message: 'No job found' });
@@ -170,7 +163,7 @@ router.get("/appliedlist/:userId", async (req, res) => {
       ]
 
     });
-    console.log("3");    
+    console.log("3");
     return res.status(200).json(jobHistory);
   } catch (err) {
     return res.status(500).json({ message: err.message });
@@ -186,19 +179,19 @@ router.get("/jobhistory/:userId", async (req, res) => {
     const jobHistory = await Application.findAll({
       where: { UserId: userId },
       include: [
-          {
-              model: Job,
-              where: { status: 'ACTIVE' },
-              include: [
-                {
-                    model: User,
-                    attributes: ['username'],
-                }
-            ]
-          },
+        {
+          model: Job,
+          where: { status: 'ACTIVE' },
+          include: [
+            {
+              model: User,
+              attributes: ['username'],
+            }
+          ]
+        },
       ]
-  });
-  res.status(200).json(jobHistory);
+    });
+    res.status(200).json(jobHistory);
   } catch (err) {
     // console.log(err);
     res.status(500).json({ message: "Error occurred", error: err });
@@ -316,7 +309,7 @@ router.get("/jobhistory/jobstatus/:userId/:jobStatus", async (req, res) => {
 router.delete("/deleteapplication", async (req, res) => {
   // const jobId = 1;
   // const userId = 3;
-    const { jobId, userId } = req.body;
+  const { jobId, userId } = req.body;
   if (!jobId || !userId) {
     return res.status(400).json({ message: "jobId and userId are required" });
   }
@@ -422,7 +415,7 @@ router.get("/employer/jobcompleted", async (req, res) => {
       ],
     });
 
-  }catch (err) {
+  } catch (err) {
     console.error(err); // Log the error for debugging purposes
     res.status(500).json({ message: "Error occurred", error: err.message });
   }
@@ -456,7 +449,7 @@ router.get("/employer/jobapplication", async (req, res) => {
           ],
           include: [
             {
-              model: User,  
+              model: User,
               attributes: ['username'],
             }
           ]
@@ -467,7 +460,84 @@ router.get("/employer/jobapplication", async (req, res) => {
   } catch (err) {
     console.error(err); // Log the error for debugging purposes
     res.status(500).json({ message: "Error occurred", error: err.message });
-  }   
+  }
 });
+
+const getJobCreatedRecently = async (req, res) => {
+  try {
+      const {userId} = req.params;
+      const jobs = await Job.findAll({
+          where: { 
+            UserId: userId, 
+            status: 'ACTIVE' 
+          },
+          include: [
+              {
+                  model: User,
+                  attributes: ['username']
+              }
+          ],
+          order: [['createdAt', 'DESC']],
+      });
+      res.status(200).json(jobs);
+  } catch (error) {
+      res.status(500).send(error);
+  }
+}
+
+//Get jobs is in progress of user
+const getJobProcessedRecently = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const jobs = await Job.findAll({
+        where: { 
+          UserId: userId, 
+          status: {
+            // [Op.or]: ['ACTIVE', 'COMPLETED']
+            [Op.notIn]: ['ACTIVE', 'COMPLETED']
+          } 
+        },
+        include: [
+            {
+                model: User,
+                attributes: ['username']
+            }
+        ],
+        order: [['createdAt', 'DESC']],
+        limit: 4
+    });
+    res.status(200).json(jobs);
+} catch (error) {
+    res.status(500).send(error);
+}
+}
+
+const getJobCompletedRecently = async (req, res) => {
+  try {
+      const { userId } = req.body;
+      const jobs = await Job.findAll({
+          where: { UserId: userId, status: 'COMPLETED' },
+          include: [
+              {
+                  model: User,
+                  attributes: ['username']
+              }
+          ],
+          order: [['updatedAt', 'DESC']],
+          limit: 3
+      });
+      res.status(200).json(jobs);
+  } catch (error) {
+      res.status(500).send(error);
+  }
+}
+//Employer Dashboard
+router.get('/employer/jobcreated/:userId', getJobCreatedRecently);
+router.get('/employer/jobprogress/:userId', getJobProcessedRecently);
+router.get('/employer/jobcompleted/:userId', getJobCompletedRecently);
+
+
+//Employer History
+router.get('/employer/createdhistory/:userId', getUserCreatedJob);
 
 module.exports = router;

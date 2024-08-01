@@ -27,7 +27,7 @@ PaymentHistory.init(
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM("SUCCESS", "FAILED", "PAUSED"),
+      type: DataTypes.ENUM("SUCCESS", "FAILED", "PAUSED", "PENDING"),
       allowNull: false,
     },
     reason: {

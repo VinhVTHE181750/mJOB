@@ -60,64 +60,31 @@ const getUserJobbyStatus = async (req, res) => {
       }
 }
 
-// const getUserAppliedJob = async (req, res) => {
-//     try {
-//         const jobCreated = await Application.findAll({
-//             where: {
-//                 UserId: 2 // Change to your actual UserId condition
-//             },
-//             include: [
-//                 {
-//                     model: Job,
-//                     attributes: [
-//                         'id',
-//                         'title',
-//                         'description',
-//                         'location',
-//                         'tags',
-//                         'maxApplicants',
-//                         'recruitments',
-//                         'approvalMethod',
-//                         'contact',
-//                         'startDate',
-//                         'endDate',
-//                         'salary',
-//                         'salaryType',
-//                         'salaryCurrency',
-//                         'status' // Assuming you want to include job status
-//                     ],
-//                     include: [
-//                         {
-//                             model: User, // Assuming User model is imported and associated with Job
-//                             attributes: ['id', 'username'] // Adjust attributes as per your User model
-//                         }
-//                     ]
-//                 }
-//             ]
-//         });
-//         res.status(200).json(jobCreated);
-//     } catch (err) {
-//         res.status(500).json({ message: err.message });
-//     }
-// }
 
-// const getUserCreatedJob = async (req, res) => {
-//     try {
-//         const userId = 1; // The UserId in Application we are interested in
-//         // if (!req.userId) return res.status(401).json({ message: "Unauthorized" });        
-//         const jobHistory = await Job.findAll({
-//             where: { UserId: userId },
-//         });
-//         res.status(200).json(jobHistory);
-//     } catch (err) {
-//         res.status(500).json({ message: err.message });
-//     }
-// }
-
+//Employer history
+const getUserCreatedJob = async (req, res) => {
+    try {
+        const { userId } = req.params;  
+        const jobHistory = await Job.findAll({
+            where: { UserId: userId },
+            include: [
+                {
+                    model: User,
+                    attributes: ['username'],
+                }
+            ],
+            order: [['updatedAt', 'DESC']],
+        });
+        res.status(200).json(jobHistory);
+    } catch (err) {
+        res.status(500).json({ message: req.param });;
+    }
+}
 
 
 module.exports = {
     getUserJobHistory,
-    getUserJobbyStatus
+    getUserJobbyStatus,
+    getUserCreatedJob
 };
 // module.exports = router;
