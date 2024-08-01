@@ -5,10 +5,10 @@ import { useOngoingJobs } from '../../hooks/home/useOngoingJobs';
 import { useRelatedJobs } from '../../hooks/home/useRelatedJobs';
 import { usePendingJobs } from '../../hooks/home/usePendingJobs';
 
-const userId = 1; // Replace with actual user ID
+// const userId = 1; // Replace with actual user ID
 
-function JobsStatistic() {
-
+function JobsStatistic({ user }) {
+  const userId = user.id;
   const { jobs: ongoingJobs, loading: ongoingLoading, error: ongoingError } = useOngoingJobs(userId);
   const { jobs: pendingJobs, loading: pendingLoading, error: pendingError } = usePendingJobs(userId);
   const { jobs: relatedJobs, loading: relatedLoading, error: relatedError } = useRelatedJobs();

@@ -22,9 +22,6 @@ function EmployerStatistic({ user }) {
     fetchRecentCreatedJobs(userid);
   }, [userid]);
 
-  console.log("createdJobs", createdJobs);
-  console.log("processedJobs", processedJobs);
-
   const handleOngoingClick = () => {
     setJobList(processedJobs.slice(0,4));
     setSelectedJobs('ongoing');

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import http from "../../functions/httpService";
 import Sidebar from '../../components/job/SideBar';
+import { useAuth } from '../../context/UserContext';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -83,6 +84,11 @@ const ApplyButton = styled.button`
 const CreatedJobs = ({ searchQuery }) => {
   const [createdJobs, setCreatedJobs] = useState([]);
   const navigate = useNavigate();
+  const {isEmployerMode} = useAuth();
+
+  if(!isEmployerMode){
+    navigate('/myjobs/created-jobs');
+  }
 
   useEffect(() => {
     const fetchCreatedJobs = async () => {
