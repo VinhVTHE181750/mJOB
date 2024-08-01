@@ -87,7 +87,6 @@ router.get("/completedlist/:userId", async (req, res) => {
             'tags',
             'maxApplicants',
             'recruitments',
-            'approvalMethod',
             'contact',
             'startDate',
             'endDate',
@@ -120,9 +119,7 @@ router.get("/completedlist/:userId", async (req, res) => {
 
 //Select user applied joblist
 router.get("/appliedlist/:userId", async (req, res) => {
-  console.log("After");
   try {
-    console.log("After 2");
     const { userId } = req.params;
     const jobHistory = await Application.findAll({
       where: {
@@ -144,7 +141,6 @@ router.get("/appliedlist/:userId", async (req, res) => {
             'tags',
             'maxApplicants',
             'recruitments',
-            'approvalMethod',
             'contact',
             'startDate',
             'endDate',
@@ -279,7 +275,6 @@ router.get("/jobhistory/jobstatus/:userId/:jobStatus", async (req, res) => {
             'tags',
             'maxApplicants',
             'recruitments',
-            'approvalMethod',
             'contact',
             'startDate',
             'endDate',
@@ -346,7 +341,6 @@ router.get("/jobapplication", async (req, res) => {
             'tags',
             'maxApplicants',
             'recruitments',
-            'approvalMethod',
             'contact',
             'startDate',
             'endDate',
@@ -438,7 +432,6 @@ router.get("/employer/jobapplication", async (req, res) => {
             'tags',
             'maxApplicants',
             'recruitments',
-            'approvalMethod',
             'contact',
             'startDate',
             'endDate',
@@ -504,7 +497,6 @@ const getJobProcessedRecently = async (req, res) => {
             }
         ],
         order: [['createdAt', 'DESC']],
-        limit: 4
     });
     res.status(200).json(jobs);
 } catch (error) {
@@ -524,7 +516,6 @@ const getJobCompletedRecently = async (req, res) => {
               }
           ],
           order: [['updatedAt', 'DESC']],
-          limit: 3
       });
       res.status(200).json(jobs);
   } catch (error) {

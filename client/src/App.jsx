@@ -32,6 +32,7 @@ import Market from "./pages/jobs/Market";
 import MyJobs from "./pages/jobs/MyJobs";
 import EmployerHistory from "./pages/jobs/EmployerHistory";
 import EmployerHome from "./pages/home/EmployerHome";
+import EmployerDashBoard from "./pages/jobs/EmployerDashBoard";
 
 // Technical
 import Dashboard from "./pages/home/Dashboard";
@@ -293,6 +294,12 @@ function App() {
                   path="/employer/home"
                   element={<EmployerHome />}
                 />
+                <Route
+                  exact
+                  path="/employer/dashboard"
+                  element={<EmployerDashBoard  />}
+                />
+
 
                 {/* PAYMENT ROUTES */}
                 <Route

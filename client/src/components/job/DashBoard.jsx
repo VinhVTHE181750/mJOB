@@ -80,7 +80,7 @@ const getStatusStyle = (status) => {
     <div className="dashboard">
       <div className="dashboard-header">
         <h2>Dashboard</h2>
-        <button className="create-job-button" onClick={() => window.location.href = '/jobs/add'}>Create Job</button>
+        {/* <button className="create-job-button" onClick={() => window.location.href = '/jobs/add'}>Create Job</button> */}
       </div>
       <div className="stats-container">
         <div className="stat-box">
