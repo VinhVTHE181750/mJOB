@@ -35,7 +35,6 @@ router.post("/", async (req, res) => {
 
   const {
     job_title, // str
-    job_type, // FULL_TIME, PART_TIME, INTERNSHIP, COMMISION, FREELANCE, CONTRACT
     job_work_location, // str
     job_tags, // str,str,str
     job_max_applications, // int
@@ -59,21 +58,6 @@ router.post("/", async (req, res) => {
 
   if (job_title === undefined || job_title === null || job_title === "") {
     return res.status(400).json({ message: "Job title is required" });
-  }
-  
-  if (job_type === undefined || job_type === null || job_type === "") {
-    return res.status(400).json({ message: "Job type is required" });
-  } else {
-    if (
-      job_type !== "FULL_TIME" &&
-      job_type !== "PART_TIME" &&
-      job_type !== "INTERNSHIP" &&
-      job_type !== "COMMISSION" &&
-      job_type !== "FREELANCE" &&
-      job_type !== "CONTRACT" 
-    ) {
-      return res.status(400).json({ message: "Invalid job type" });
-    }
   }
 
   if (job_work_location === undefined || job_work_location === null || job_work_location === "") {
@@ -162,7 +146,6 @@ router.post("/", async (req, res) => {
 
   const newJob = new Job({
     title: job_title,
-    type: job_type,
     description: job_description,
     location: job_work_location,
     tags: job_tags,
@@ -236,7 +219,6 @@ router.put("/update", async (req, res) => {
   const {
     id,
     title,
-    type,
     location,
     tags,
     maxApplicants,
@@ -262,7 +244,6 @@ router.put("/update", async (req, res) => {
 
   // Lưu data mới vào model
   job.title = title;
-  job.type = type;
   job.description = description;
   job.location = location;
   job.tags = tags;
@@ -361,29 +342,6 @@ router.post('/upload', (req, res) => {
   });
 });
 
-router.get("/download/:fname", async (req, res) => {
-  const fname = req.params.fname;
-
-  // Validate the filename
-  if (!/^[\w,\s-]+\.[A-Za-z]{3}$/.test(fname)) {
-    return res.status(400).json({ message: "Invalid file name" });
-  }
-
-  const filePath = path.join(__dirname, "uploads", fname);
-
-  if (!fs.existsSync(filePath)) {
-    return res.status(404).json({ message: "File not found" });
-  }
-
-  try {
-    return res.download(filePath);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Unknown error while downloading file" });
-  }
-});
-
-
 router.get("/job-requirements/:job_id", async (req, res) => {
   const { job_id } = req.params;
 
@@ -406,6 +364,50 @@ router.get("/job-requirements/:job_id", async (req, res) => {
   }
 });
 
+router.post("/apply/:applicationId", async (req, res) => {
+  const { applicationId } = req.params;
+
+  try {
+    // Find the application by ID
+    const application = await Application.findByPk(applicationId);
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found." });
+    }
+
+    // Update the status to 'ACCEPTED'
+    application.status = "ACCEPTED";
+    await application.save();
+
+    res.json({ message: "Application accepted successfully." });
+  } catch (error) {
+    console.error("Error accepting application:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+// Reject an application
+router.post("/reject/:applicationId", async (req, res) => {
+  const { applicationId } = req.params;
+
+  try {
+    // Find the application by ID
+    const application = await Application.findByPk(applicationId);
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found." });
+    }
+
+    // Update the status to 'REJECTED'
+    application.status = "REJECTED";
+    await application.save();
+
+    res.json({ message: "Application rejected successfully." });
+  } catch (error) {
+    console.error("Error rejecting application:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
 
 
 router.get("/applied-jobs", async (req, res) => {

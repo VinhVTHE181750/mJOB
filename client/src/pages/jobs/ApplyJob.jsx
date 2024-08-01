@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import backgroundImg from '../../assets/img/apply.jpg';
-import http from '../../functions/httpService';  // Sử dụng http service của bạn
+import http from '../../functions/httpService';  // Your custom HTTP service
 
 const PageContainer = styled.div`
   background-image: url(${backgroundImg});
@@ -91,30 +91,49 @@ const NoRequirements = styled.p`
 `;
 
 const ApplyButton = styled.button`
-  display: block;
-  margin: 20px auto;
   padding: 10px 20px;
   background-color: #28a745;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
-
   &:hover {
     background-color: #218838;
   }
+`;
+
+const RejectButton = styled.button`
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  &:hover {
+    background-color: #c82333;
+  }
+`;
+
+const FeedbackMessage = styled.p`
+  color: ${({ type }) => (type === 'reject' ? '#dc3545' : '#28a745')};
+  text-align: center;
+  margin-top: 20px;
+  font-size: 18px;
 `;
 
 const ApplyJob = () => {
   const { job_id } = useParams();
   const [requirements, setRequirements] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   useEffect(() => {
     const fetchRequirements = async () => {
       try {
-        const response = await http.get(`/job-requirements/${job_id}`);
+        const response = await http.get(`/jobs/job-requirements/${job_id}`);
         setRequirements(response.data);
       } catch (error) {
         console.error("Error fetching requirements:", error);
@@ -125,6 +144,26 @@ const ApplyJob = () => {
 
     fetchRequirements();
   }, [job_id]);
+
+  const handleApply = async (applicationId) => {
+    try {
+      await http.post(`/jobs/apply/${applicationId}`);
+      setMessage('You have applied for this job.');
+      setMessageType('apply');
+    } catch (error) {
+      console.error("Error applying for the job:", error);
+    }
+  };
+
+  const handleReject = async (applicationId) => {
+    try {
+      await http.post(`/jobs/reject/${applicationId}`);
+      setMessage('You have rejected this job.');
+      setMessageType('reject');
+    } catch (error) {
+      console.error("Error rejecting the application:", error);
+    }
+  };
 
   return (
     <PageContainer>
@@ -141,13 +180,21 @@ const ApplyJob = () => {
                 <DownloadLink href={`/files/${app.CV}`} download>
                   Download
                 </DownloadLink>
+                  
+                    <ApplyButton onClick={() => handleApply(app.id)}>
+                      Apply
+                    </ApplyButton>
+                    <RejectButton onClick={() => handleReject(app.id)}>
+                      Reject
+                    </RejectButton>
+                  
               </RequirementItem>
             ))}
           </RequirementList>
         ) : (
           <NoRequirements>No pending applications.</NoRequirements>
         )}
-        <ApplyButton>Apply for this Job</ApplyButton>
+        {message && <FeedbackMessage type={messageType}>{message}</FeedbackMessage>}
       </RequirementsContainer>
     </PageContainer>
   );

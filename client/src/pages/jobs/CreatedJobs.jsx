@@ -164,14 +164,6 @@ const CreatedJobs = ({ searchQuery }) => {
     }
   };
 
-  const formatJobType = (type) => {
-    if (!type) return '';
-    return type
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
-  };
-
   return (
     <Container>
       <Table>
@@ -179,8 +171,8 @@ const CreatedJobs = ({ searchQuery }) => {
           <tr>
             <Th>#</Th>
             <Th>Job</Th>
-            <Th>Type</Th>
             <Th>Next Payment</Th>
+            <Th>Next Payment Date</Th>
             <Th>Status</Th>
             <Th>Action</Th>
           </tr>
@@ -192,8 +184,8 @@ const CreatedJobs = ({ searchQuery }) => {
               <tr key={job.id}>
                 <Td>{index + 1}</Td>
                 <Td>{job.title}</Td>
-                <Td>{formatJobType(job.type)}</Td>
                 <Td>{renderCurrency(job.salaryCurrency, job.salary)}</Td>
+                <Td>{job.nextPaymentDate}</Td>
                 <Td>
                   {job.Applications.length > 0 ? (
                     job.Applications.map((application, appIndex) => (
@@ -207,8 +199,8 @@ const CreatedJobs = ({ searchQuery }) => {
                 </Td>
                 <Td>
                   <ViewButton onClick={() => handleViewClick(job.id)}>View</ViewButton>
-                  <PayButton onClick={() => handlePayClick(job.id)}>Pay</PayButton>
                   <EditButton onClick={() => navigate(`/jobs/edit/${job.id}`)}>Edit</EditButton>
+                  <PayButton onClick={() => handlePayClick(job.id)}>Pay</PayButton>
                   <ApplyButton onClick={() => navigate(`/apply/${job.id}`)}>Apply</ApplyButton>
                   <DeleteButton onClick={() => handleDeleteClick(job.id)}>Delete</DeleteButton>
                 </Td>
