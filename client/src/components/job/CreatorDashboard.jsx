@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react';
 import '../../assets/css/Dashboard.css';
 import { Button, Table } from 'react-bootstrap';
 import useCreatorJobHistory from '../../hooks/job/jobhistory/useCreatorJobHistory';
+import useUserJobHistory from '../../hooks/job/dashboard/useUserJobHistory';
+
 
 const CreatorDashboard = (user) => {
   const userId = user.user.id;
   const { jobHistory, loading, error, fetchJobHistory } = useCreatorJobHistory();
+  const { jobList: initialJobList, loading: initialLoading, error: initialError, fetchJobList } = useUserJobHistory();
+
   const formatStatus = (status) => {
     if (!status) return '';
     return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
@@ -20,7 +24,6 @@ const CreatorDashboard = (user) => {
   const processedJobs = jobHistory.filter((job) => formatStatus(job.status) !== 'Completed');
   const totalCompletedJobs = completedJobs.length;
   const totalProcessedJobs = processedJobs.length;
-  const totalCreatedJobs = jobHistory.filter((job) => formatStatus(job.status) === 'Active').length;
 
   const getStatusStyle = (status) => {
     switch (formatStatus(status)) {
@@ -55,7 +58,7 @@ const CreatorDashboard = (user) => {
       
       <div className="stats-container">
       <div className="stat-box">
-          <h3 className='created'>{totalCreatedJobs}</h3>
+          <h3 className='created'>{totalJobs}</h3>
           <p>Total Job Created</p>
         </div>
         <div className="stat-box">

@@ -1,12 +1,11 @@
 /* Carousel.css */
 .carousel-container {
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
 }
 
 .Carousel .carousel-item {
-  height: 500px;
+  height: 400px;
 }
 
 .carousel-content {
@@ -44,4 +43,8 @@
 .carousel-description {
   font-size: 1.2em;
   margin-bottom: 20px;
+}
+
+.carousel-control-prev, .carousel-control-next {
+  display: none;
 }

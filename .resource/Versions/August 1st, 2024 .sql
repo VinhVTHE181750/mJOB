@@ -25,6 +25,7 @@ DBCC CHECKIDENT ('[mJOB].[dbo].[Applications]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[JobMetrics]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Marketings]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Posts]', RESEED, 0);
+DBCC CHECKIDENT ('[mJOB].[dbo].[PostMetrics]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[PostCategories]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Balances]', RESEED, 0);
 DBCC CHECKIDENT ('[mJOB].[dbo].[Requirements]', RESEED, 0);
@@ -67,6 +68,7 @@ VALUES
 (9, 1, 'MOD', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
 (10, 1, 'ADMIN', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE());
 GO
+
 INSERT INTO [mJOB].[dbo].[Jobs]
            ([title]
            ,[description]
