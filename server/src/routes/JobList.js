@@ -4,7 +4,7 @@ const {getJobListbyDefaut, getJobListbyView, getJobListbyDate, getLocationList} 
 
 const router = express.Router();
 
-router.get("/default",getJobListbyDefaut);
+router.get("/default/:userId",getJobListbyDefaut);
 
 router.get("/view",getJobListbyView);
 

@@ -7,9 +7,12 @@ const { log } = require("../../utils/Logger");
 const io = require("../../../io");
 const { sequelize } = require('../../models/SQLize'); // Import sequelize instance
 const EmployerProfile = require("../../models/user/EmployerProfile");
-
+const {relevantJobSearch} = require("../../utils/algorithms/RelativeSearch");
+const { Result } = require("tedious/lib/token/helpers");
+const JobPreference = require("../../models/user/JobPreference");
 const getJobListbyDefaut = async (req, res) => {
   try {
+    const { userId } = req.params;
     const jobs = await Job.findAll({
       where: {
         status: "ACTIVE",
@@ -32,7 +35,9 @@ const getJobListbyDefaut = async (req, res) => {
       const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24)); // Convert milliseconds to days
       job.dataValues.timeleft = daysLeft;
     });
-    res.status(200).json(jobs);
+    // const jobpre = await JobPreference.findAll({where:{UserId: req.userId}});
+    const result = await relevantJobSearch( req.userId, jobs);
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -59,7 +64,7 @@ const getJobListbyView = async (req, res) => {
       }
       ],
       order: [[{ model: JobMetric }, 'view', 'DESC']],
-
+      
     });
     const currentTime = new Date();
     jobs.forEach(job => {
@@ -68,6 +73,7 @@ const getJobListbyView = async (req, res) => {
       const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24)); // Convert milliseconds to days
       job.dataValues.timeleft = daysLeft;
     });
+    
     res.json(jobs);
   } catch (error) {
     console.error('Error fetching jobs ordered by view count:', error);
