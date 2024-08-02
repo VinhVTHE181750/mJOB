@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Container, Row, Col, Form, Button, Card, Nav } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Card, Nav, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router";
@@ -18,8 +18,11 @@ const EditProfile = () => {
   const [phone, setPhone] = useState("");
   const [bio, setBio] = useState("");
   const [errors, setErrors] = useState({});
+  const [avatar, setAvatar] = useState("");
+
   const fileInputRef = useRef(null);
   const { userId } = useParams();
+  const [showImageInput, setShowImageInput] = useState(false);
   const navigate = useNavigate();
   const { userInformation } = useAuth();
 
@@ -45,13 +48,11 @@ const EditProfile = () => {
   }, [userId]);
 
   const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedImage(URL.createObjectURL(e.target.files[0]));
-    }
+    setAvatar(e.target.value);
   };
 
   const handleImageClick = () => {
-    fileInputRef.current.click();
+    setShowImageInput(true);
   };
 
   const validate = () => {
@@ -97,6 +98,7 @@ const EditProfile = () => {
       email: email,
       phone: phone,
       bio: bio,
+      avatar: avatar,
     };
 
     try {
@@ -155,8 +157,8 @@ const EditProfile = () => {
               <Card.Body>
                 <div className="profile-header text-center mb-4">
                   <img
-                    src={selectedImage || "https://via.placeholder.com/150"}
-                    alt="Profile Image"
+                    src={avatar || "https://via.placeholder.com/150"}
+                    alt="Profile"
                     className="rounded-circle"
                     style={{
                       width: "150px",
@@ -185,7 +187,8 @@ const EditProfile = () => {
                         placeholder="UserName"
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
-                        isInvalid={!!errors.userName}
+                        // isInvalid={!!errors.userName}
+                        aria-label="Username"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.userName}
@@ -202,7 +205,8 @@ const EditProfile = () => {
                         placeholder="FirstName"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
-                        isInvalid={!!errors.firstName}
+                        // isInvalid={!!errors.firstName}
+                        aria-label="First Name"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.firstName}
@@ -220,7 +224,8 @@ const EditProfile = () => {
                         placeholder="LastName"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
-                        isInvalid={!!errors.lastName}
+                        // isInvalid={!!errors.lastName}
+                        aria-label="Last Name"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.lastName}
@@ -237,7 +242,8 @@ const EditProfile = () => {
                         type="date"
                         value={dob}
                         onChange={(e) => setDob(e.target.value)}
-                        isInvalid={!!errors.dob}
+                        // isInvalid={!!errors.dob}
+                        aria-label="Date of Birth"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.dob}
@@ -255,7 +261,8 @@ const EditProfile = () => {
                         placeholder="Address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
-                        isInvalid={!!errors.address}
+                        // isInvalid={!!errors.address}
+                        aria-label="Address"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.address}
@@ -272,7 +279,8 @@ const EditProfile = () => {
                         placeholder="Citizen ID"
                         value={citizenId}
                         onChange={(e) => setCitizenId(e.target.value)}
-                        isInvalid={!!errors.citizenId}
+                        // isInvalid={!!errors.citizenId}
+                        aria-label="Citizen ID"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.citizenId}
@@ -290,7 +298,8 @@ const EditProfile = () => {
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        isInvalid={!!errors.email}
+                        // isInvalid={!!errors.email}
+                        aria-label="Email"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.email}
@@ -308,7 +317,8 @@ const EditProfile = () => {
                         placeholder="Contact Number"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        isInvalid={!!errors.phone}
+                        // isInvalid={!!errors.phone}
+                        aria-label="Contact Number"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.phone}
@@ -326,7 +336,8 @@ const EditProfile = () => {
                         placeholder="Bio"
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
-                        isInvalid={!!errors.bio}
+                        // isInvalid={!!errors.bio}
+                        aria-label="Bio"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.bio}
@@ -344,6 +355,25 @@ const EditProfile = () => {
             </Card>
           </Col>
         </Row>
+        <Modal show={showImageInput} onHide={() => setShowImageInput(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Change Profile Picture</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Group className="mb-2">
+              <Form.Label>Enter image URL:</Form.Label>
+              <Form.Control type="text" onChange={handleImageChange} />
+            </Form.Group>
+            <Form.Group className="d-flex justify-content-center align-items-center">
+              <img src={avatar || "https://via.placeholder.com/150"} alt="Profile" style={{ width: "150px", height: "150px" }} />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowImageInput(false)}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </Container>
     </>
   );

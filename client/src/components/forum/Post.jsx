@@ -183,7 +183,7 @@ const Post = ({ id }) => {
       </Row>
       <Row className="mt-2 border rounded border-info bg-white">
         <Col>
-          <pre className="text-wrap">{post.content}</pre>
+          <div className="post-content p-3">{post.content}</div>
         </Col>
       </Row>
       <Row className="mt-2 mb-5">

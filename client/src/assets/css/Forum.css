@@ -39,12 +39,7 @@
 }
 
 .post-content {
-  padding: 10px;
-  text-wrap: pretty;
-  border: 1px solid #ccc;
-  border-radius: 30px;
-  width: 100%;
-  min-width: 75%vw;
+  white-space: pre-wrap;
 }
 
 

@@ -55,6 +55,7 @@ router.get('/:id', async (req, res) => {
       user.email = req.body.email;
       user.phone = req.body.phone;
       user.bio = req.body.bio;
+      user.avatar = req.body.avatar;
   
       await user.save();
       res.status(200).json(user); // Respond with updated user object
