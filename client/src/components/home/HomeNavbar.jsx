@@ -3,7 +3,7 @@ import { Button, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/UserContext';
 import useWhoAmI from '../../hooks/user/useWhoAmI';
-import logo from '../../../logo.png';
+import logo from '../../assets/img/logo.png';
 import '../../assets/css/Navbar.css';
 
 const HomeNavbar = () => {
