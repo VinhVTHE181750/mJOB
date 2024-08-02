@@ -52,6 +52,13 @@ const Employer = () => {
     <Container>
       <Card className="text-center profile-header bg-primary text-white my-4">
         <Card.Body>
+          <Card.Img
+            variant="top"
+            src={employer.avatar || 'https://via.placeholder.com/150'}
+            alt="Profile"
+            className="rounded-circle"
+            style={{ width: '150px', height: '150px', objectFit: 'cover', marginBottom: '10px' }}
+          />
           <Card.Title as="h1">{employer.name}</Card.Title>
           <Card.Text>Industry: {employer.industry}</Card.Text>
         </Card.Body>

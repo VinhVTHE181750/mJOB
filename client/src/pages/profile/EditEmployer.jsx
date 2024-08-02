@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Form, Button, Spinner, Alert } from 'react-bootstrap';
+import React, { useEffect, useState, useRef } from 'react';
+import { Container, Row, Col, Card, Form, Button, Spinner, Alert, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -11,11 +11,14 @@ const EditEmployer = () => {
     address: '',
     phone: '',
     email: '',
-    website: ''
+    website: '',
+    avatar: ''
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showImageInput, setShowImageInput] = useState(false);
+  const fileInputRef = useRef(null);
   const params = useParams();
   const navigate = useNavigate();
   const employerId = params.id;
@@ -74,6 +77,17 @@ const EditEmployer = () => {
     });
   };
 
+  const handleImageChange = (e) => {
+    setEmployer({
+      ...employer,
+      avatar: e.target.value
+    });
+  };
+
+  const handleImageClick = () => {
+    setShowImageInput(true);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -116,6 +130,22 @@ const EditEmployer = () => {
       <Card className="my-4">
         <Card.Body>
           <Card.Title as="h2">Edit Employer Profile</Card.Title>
+          <div className="profile-header text-center mb-4">
+            <img
+              src={employer.avatar || 'https://via.placeholder.com/150'}
+              alt="Profile"
+              className="rounded-circle"
+              style={{ width: '150px', height: '150px', cursor: 'pointer' }}
+              onClick={handleImageClick}
+            />
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              style={{ display: 'none' }}
+            />
+          </div>
           <Form onSubmit={handleSubmit}>
             {Object.keys(errors).length > 0 && (
               <Alert variant="danger">
@@ -207,6 +237,30 @@ const EditEmployer = () => {
           </Form>
         </Card.Body>
       </Card>
+
+      <Modal show={showImageInput} onHide={() => setShowImageInput(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Change Profile Picture</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group className="mb-2">
+            <Form.Label>Enter image URL:</Form.Label>
+            <Form.Control type="text" onChange={handleImageChange} />
+          </Form.Group>
+          <Form.Group className="d-flex justify-content-center align-items-center">
+            <img
+              src={employer.avatar || 'https://via.placeholder.com/150'}
+              alt="Profile"
+              style={{ width: '150px', height: '150px' }}
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowImageInput(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
