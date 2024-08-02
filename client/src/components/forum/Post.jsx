@@ -250,30 +250,44 @@ const Post = ({ id }) => {
           )}
         </Col>
       </Row>
-
-      <ListComment id={Number(post.id)} />
-
-      {/* Comment Form */}
-      <FloatingLabel
-        controlId="floatingTextarea"
-        label="Add a comment"
-      >
-        <Form.Control
-          as="textarea"
-          value={comment}
-          onChange={handleCommentChange}
-          placeholder="Leave a comment here"
-          className="border border-info"
-          size="lg"
-        />
-        <Button
-          variant="primary"
-          className="mt-2 mb-2"
-          onClick={handleCommentSubmit}
-        >
-          Submit
-        </Button>
-      </FloatingLabel>
+      <Row>
+        {post.status === "DRAFT" && (
+          <Col>
+            <h3 className="text-center">This post is a draft.</h3>
+          </Col>
+        )}
+      </Row>
+      {post.status === "DELISTED" ? (
+        <Row className="mt-2">
+          <Col>
+            <h3 className="text-center text-danger">This post has been delisted for being irrelevant or harmful.</h3>
+          </Col>
+        </Row>
+      ) : (
+        <>
+          <ListComment id={Number(post.id)} />
+          <FloatingLabel
+            controlId="floatingTextarea"
+            label="Add a comment"
+          >
+            <Form.Control
+              as="textarea"
+              value={comment}
+              onChange={handleCommentChange}
+              placeholder="Leave a comment here"
+              className="border border-info"
+              size="lg"
+            />
+            <Button
+              variant="primary"
+              className="mt-2 mb-2"
+              onClick={handleCommentSubmit}
+            >
+              Submit
+            </Button>
+          </FloatingLabel>
+        </>
+      )}
     </Container>
   );
 };

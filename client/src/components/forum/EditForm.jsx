@@ -52,7 +52,7 @@ const EditForm = ({ id }) => {
       tags
     );
     if (result) {
-      navigate(`/posts/${id}`);
+      navigate(`/forum/posts/${id}`);
     } else {
       setError(updateError || "Failed to update post");
     }

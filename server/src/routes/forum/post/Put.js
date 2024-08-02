@@ -5,6 +5,7 @@ const PostHistory = require("../../../models/forum/post/PostHistory");
 const { log } = require("../../../utils/Logger");
 const { getIo } = require("../../../../io");
 const PostMetric = require("../../../models/forum/metric/PostMetric");
+const { calcRelevance } = require("../../../utils/OpenAI");
 
 const put = async (req, res) => {
   if (!req.userId) {
@@ -106,7 +107,40 @@ const put = async (req, res) => {
     // io.emit("posts", { action: "UPDATE", post });
     getIo().emit("forum/posts");
     getIo().emit(`forum/post/${post.id}`);
-    return res.status(200).json(post);
+    res.status(200).json(post);
+    if (post.status === "PUBLISHED" && post.isAutoVerified) {
+      const { relevanceScore, harmfulnessScore } = await calcRelevance("post", title, content);
+      if (relevanceScore < 50) {
+        await post.update({ status: "DELISTED" });
+        await PostHistory.create({
+          title: post.title,
+          content: post.content,
+          tags: post.tags,
+          action: "DELIST",
+          status: post.status,
+          PostCategoryId: post.PostCategoryId,
+          UserId: post.UserId,
+          PostId: post.id,
+        });
+        getIo().emit("forum/posts");
+        getIo().emit(`forum/posts/${post.id}`);
+      }
+      if (harmfulnessScore > 50) {
+        await post.update({ status: "DELISTED" });
+        await PostHistory.create({
+          title: post.title,
+          content: post.content,
+          tags: post.tags,
+          action: "DELIST",
+          status: post.status,
+          PostCategoryId: post.PostCategoryId,
+          UserId: post.UserId,
+          PostId: post.id,
+        });
+        getIo().emit("forum/posts");
+        getIo().emit(`forum/posts/${post.id}`);
+      }
+    }
   } catch (err) {
     log(err, "ERROR", "FORUM");
     return res.status(500).json({ message: "Unexpected error while updating post." });

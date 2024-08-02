@@ -18,11 +18,12 @@ const AddForm = () => {
   const [tags, setTags] = useState("");
   const { insertPost, error: postError } = usePostInsert();
   const navigate = useNavigate();
+  const [isAutoVerified, setIsAutoVerified] = useState(false);
 
   const handleSubmit = async (event, eStatus) => {
     event.preventDefault();
     if (eStatus === undefined) eStatus = status;
-    const result = await insertPost(title, content, eStatus, category, tags);
+    const result = await insertPost(title, content, eStatus, category, tags, !isAutoVerified);
 
     if (result) {
       navigate("/forum");
@@ -159,6 +160,16 @@ const AddForm = () => {
               </span>
             )}
           </p>
+        </Row>
+        <Row>
+          <Form.Group controlId="status" className="mb-3">
+            <Form.Check
+              type="checkbox"
+              label="Request approval by moderators"
+              checked={isAutoVerified}
+              onChange={(e) => setIsAutoVerified(e.target.checked)}
+            />
+          </Form.Group>
         </Row>
         <Row className="row-submit">
           <div className="d-flex justify-content-center gap-2">

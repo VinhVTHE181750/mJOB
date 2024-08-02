@@ -54,18 +54,18 @@ VALUES
 ('jack_lopez', 'jack.lopez@example.com', '555-0110', 'CIT000010', 'Jack', 'Lopez', '1994-10-20', '110 Tenth Blvd', 'jack_avatar.png', 'Jack is a content creator.', 1, 0, GETDATE(), GETDATE());
 GO
 
-INSERT INTO [mJOB].[dbo].[Auths] (UserId, role, hash, salt, createdAt, updatedAt)
+INSERT INTO [mJOB].[dbo].[Auths] (UserId, isActivated, role, hash, salt, createdAt, updatedAt)
 VALUES 
-(1, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
-(2, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
-(3, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
-(4, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
-(5, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
-(6, 'SUPPORT', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
-(7, 'SUPPORT', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
-(8, 'MOD', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
-(9, 'MOD', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
-(10, 'ADMIN', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE());
+(1, 1, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(2, 1, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(3, 1, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(4, 1, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(5, 1, 'USER', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(6, 1, 'SUPPORT', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(7, 1, 'SUPPORT', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(8, 1, 'MOD', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(9, 1, 'MOD', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE()),
+(10, 1, 'ADMIN', 'de543027df074d21838b28a0920c4475081ac8c126bafd627abf771314b5e65cd18a467a3cd04a9a6af95784a00bae6b608958768c2154799ca2fdf4d3969b95', '85e12bdefc7b8902dcd27c69f24c9c49d62fc95977858f35ee44c17103b17f52', GETDATE(), GETDATE());
 GO
 INSERT INTO [mJOB].[dbo].[Jobs]
            ([title]
@@ -303,11 +303,16 @@ INSERT INTO [mJOB].[dbo].[PostCategories]
            ,[createdAt]
            ,[updatedAt])
      VALUES
-           ('Technology', 'FFFFFF', '0000FF', 1, '2024-07-25 12:00:00 +00:00', '2024-07-25 12:00:00 +00:00'),
+		   ('General', '000000', 'FFFFFF', 1, '2024-07-25 12:00:00 +00:00', '2024-07-25 12:00:00 +00:00'), --1
+		   ('Jobs', '000000', 'FFFFFF', 1, '2024-07-25 12:00:00 +00:00', '2024-07-25 12:00:00 +00:00'), 
+           ('Technology', '000000', 'FFFFFF', 1, '2024-07-25 12:00:00 +00:00', '2024-07-25 12:00:00 +00:00'), --3
            ('Health & Wellness', 'FFFFFF', '00FF00', 1, '2024-07-25 13:00:00 +00:00', '2024-07-25 13:00:00 +00:00'),
-           ('Travel', 'FFFFFF', 'FF00FF', 1, '2024-07-25 14:00:00 +00:00', '2024-07-25 14:00:00 +00:00'),
-           ('Finance', 'FFFFFF', 'FFFF00', 1, '2024-07-25 15:00:00 +00:00', '2024-07-25 15:00:00 +00:00'),
-           ('Lifestyle', 'FFFFFF', 'FFA500', 1, '2024-07-25 16:00:00 +00:00', '2024-07-25 16:00:00 +00:00')
+           ('Travel', '000000', 'FFFFFF', 1, '2024-07-25 14:00:00 +00:00', '2024-07-25 14:00:00 +00:00'), --5
+           ('Finance', '000000', 'FFFFFF', 1, '2024-07-25 15:00:00 +00:00', '2024-07-25 15:00:00 +00:00'),
+           ('Lifestyle', '000000', 'FFFFFF', 1, '2024-07-25 16:00:00 +00:00', '2024-07-25 16:00:00 +00:00'), --7
+		   ('Guide', '000000', 'FFFFFF', 1, '2024-07-25 16:00:00 +00:00', '2024-07-25 16:00:00 +00:00'),
+		   ('Broadcast', '000000', 'FFFFFF', 1, '2024-07-25 16:00:00 +00:00', '2024-07-25 16:00:00 +00:00'), --9
+		   ('Drama', '000000', 'FFFFFF', 1, '2024-07-25 16:00:00 +00:00', '2024-07-25 16:00:00 +00:00')
 GO
 
 INSERT INTO [mJOB].[dbo].[Posts]
@@ -321,16 +326,21 @@ INSERT INTO [mJOB].[dbo].[Posts]
            ,[PostCategoryId]
            ,[UserId])
 VALUES
-           ('The Future of AI', 'Exploring the advancements and implications of artificial intelligence in the modern world.', 'AI,technology,future', 'PUBLISHED', '2024-07-25 12:00:00 +00:00', '2024-07-25 12:00:00 +00:00', NULL, 1, 1),  -- Technology
-           ('Healthy Living Tips', 'A comprehensive guide to maintaining a healthy lifestyle through diet and exercise.', 'health,wellness,fitness', 'PUBLISHED', '2024-07-25 13:00:00 +00:00', '2024-07-25 13:00:00 +00:00', NULL, 2, 2),  -- Health & Wellness
+           ('The Future of AI', 'Exploring the advancements and implications of artificial intelligence in the modern world.', 'AI,technology,future', 'PUBLISHED', '2024-07-30 12:00:00 +00:00', '2024-07-25 12:00:00 +00:00', NULL, 1, 1),
+           ('How to Craft an Impressive Resume That Stands Out', 'In today’s competitive job market, your resume is your first impression. Start by using a clean, professional format and focus on quantifiable achievements rather than just duties. Tailor your resume for each job application by including relevant keywords from the job description. Don’t forget to include a compelling summary statement that highlights your key skills and career goals.', 'resume,2024,helpful', 'PUBLISHED', '2024-07-25 12:00:00 +00:00', '2024-07-29 12:00:00 +00:00', NULL, 8, 9),
+           ('Top 5 Common Interview Questions and How to Answer Them', 'Interviews can be nerve-wracking, but preparation can make a big difference. Here are five common questions and tips for answering them effectively', 'interview,question,popular', 'PUBLISHED', '2024-07-25 12:00:00 +00:00', '2024-07-28 12:00:00 +00:00', NULL, 8, 5),
+           ('How to Network Effectively in Your Industry', 'Networking is crucial for career advancement. Start by attending industry events and joining relevant professional groups. Don’t be afraid to reach out to people on LinkedIn and request informational interviews. Remember to follow up with your contacts, offer value in return, and maintain genuine relationships rather than just seeking immediate benefits.', '', 'PUBLISHED', '2024-07-25 12:00:00 +00:00', '2024-07-28 12:00:00 +00:00', NULL, 8, 2),
+           ('Leadership Shake-Up and Employee Fallout', 'In a surprising turn of events at ABC Company, the sudden departure of their long-time CEO has sent shockwaves through the organization. The announcement came without prior warning, leaving employees and stakeholders scrambling for answers. Speculation is rife about the reasons behind the abrupt exit, with some reports suggesting internal conflicts and dissatisfaction with recent company strategies.', 'ABC_Company,hot', 'PUBLISHED', '2024-07-25 12:00:00 +00:00', '2024-07-27 12:00:00 +00:00', NULL, 10, 3),
+           ('Updates on ABC Company incident', 'The company board has announced an interim CEO and is currently conducting a search for a permanent replacement. In the meantime, the organization is trying to maintain business as usual, but the atmosphere is tense. Employees are anxiously awaiting further communication and clarity on the future direction of the company.', 'ABC_Company', 'PUBLISHED', '2024-07-25 12:00:00 +00:00', '2024-07-27 12:00:00 +00:00', NULL, 10, 3),
+           ('Healthy Living Tips', 'A comprehensive guide to maintaining a healthy lifestyle through diet and exercise.', 'health,wellness,fitness', 'PUBLISHED', '2024-07-25 13:00:00 +00:00', '2024-07-25 13:00:00 +00:00', NULL, 1, 2),  -- Health & Wellness
            ('Travel Destinations 2024', 'Top travel destinations to explore in 2024 for an unforgettable experience.', 'travel,adventure,2024', 'PUBLISHED', '2024-07-25 14:00:00 +00:00', '2024-07-25 14:00:00 +00:00', NULL, 3, 3),  -- Travel
-           ('The Rise of Remote Work', 'Analyzing the shift towards remote work and its impact on productivity and work-life balance.', 'remote work,productivity,work-life balance', 'PUBLISHED', '2024-07-25 15:00:00 +00:00', '2024-07-25 15:00:00 +00:00', NULL, 1, 4),  -- Technology
-           ('Investing in Cryptocurrencies', 'A beginner�s guide to investing in cryptocurrencies and understanding the market trends.', 'cryptocurrency,investment,finance', 'PUBLISHED', '2024-07-25 16:00:00 +00:00', '2024-07-25 16:00:00 +00:00', NULL, 4, 5),  -- Finance
-           ('Sustainable Living', 'Tips and strategies for adopting a sustainable lifestyle and reducing your carbon footprint.', 'sustainability,environment,green living', 'PUBLISHED', '2024-07-25 17:00:00 +00:00', '2024-07-25 17:00:00 +00:00', NULL, 2, 6),  -- Health & Wellness
+           ('The Rise of Remote Work', 'Analyzing the shift towards remote work and its impact on productivity and work-life balance.', 'productivity,remote,balance', 'PUBLISHED', '2024-07-25 15:00:00 +00:00', '2024-07-25 15:00:00 +00:00', NULL, 1, 4),  -- Technology
+           ('Investing in Cryptocurrencies', 'A beginner�s guide to investing in cryptocurrencies and understanding the market trends.', 'cryptocurrency,investment,finance', 'PUBLISHED', '2024-07-25 16:00:00 +00:00', '2024-07-25 16:00:00 +00:00', NULL, 1, 5),  -- Finance
+           ('Sustainable Living', 'Tips and strategies for adopting a sustainable lifestyle and reducing your carbon footprint.', 'sustainability,environment,green living', 'PUBLISHED', '2024-07-25 17:00:00 +00:00', '2024-07-25 17:00:00 +00:00', NULL, 1, 6),  -- Health & Wellness
            ('Latest Tech Gadgets', 'A review of the latest tech gadgets that are making waves in the market.', 'technology,gadgets,review', 'PUBLISHED', '2024-07-25 18:00:00 +00:00', '2024-07-25 18:00:00 +00:00', NULL, 1, 7),  -- Technology
-           ('Cooking Recipes for Beginners', 'Simple and delicious recipes for those who are new to cooking.', 'cooking,recipes,beginner', 'PUBLISHED', '2024-07-25 19:00:00 +00:00', '2024-07-25 19:00:00 +00:00', NULL, 5, 8),  -- Lifestyle
-           ('Understanding Mental Health', 'An insightful look into mental health issues and how to manage them.', 'mental health,well-being,self-care', 'PUBLISHED', '2024-07-25 20:00:00 +00:00', '2024-07-25 20:00:00 +00:00', NULL, 2, 9),  -- Health & Wellness
-           ('The Art of Photography', 'Tips and techniques for capturing stunning photographs.', 'photography,art,techniques', 'PUBLISHED', '2024-07-25 21:00:00 +00:00', '2024-07-25 21:00:00 +00:00', NULL, 5, 10)  -- Lifestyle
+           ('Cooking Recipes for Beginners', 'Simple and delicious recipes for those who are new to cooking.', 'cooking,recipes,beginner', 'PUBLISHED', '2024-07-25 19:00:00 +00:00', '2024-07-25 19:00:00 +00:00', NULL, 1, 8),  -- Lifestyle
+           ('Understanding Mental Health', 'An insightful look into mental health issues and how to manage them.', 'mental_health,wellbeing,selfcare', 'PUBLISHED', '2024-07-25 20:00:00 +00:00', '2024-07-25 20:00:00 +00:00', NULL, 1, 9),  -- Health & Wellness
+           ('The Art of Photography', 'Tips and techniques for capturing stunning photographs.', 'photography,art,techniques', 'PUBLISHED', '2024-07-25 21:00:00 +00:00', '2024-07-25 21:00:00 +00:00', NULL, 1, 10)  -- Lifestyle
 GO
 select * from [mJOB].[dbo].[Posts]
 

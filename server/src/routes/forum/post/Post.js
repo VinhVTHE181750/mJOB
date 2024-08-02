@@ -8,13 +8,14 @@ const CategoryMetric = require("../../../models/forum/metric/CategoryMetric");
 const ForumMetric = require("../../../models/forum/metric/ForumMetric");
 const PostTag = require("../../../models/forum/post/PostTag");
 const TagMetric = require("../../../models/forum/metric/TagMetric");
+const { calcRelevance } = require("../../../utils/OpenAI");
 
 const post = async (req, res) => {
   const userId = req.userId;
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   try {
     // console.log(req.body);
-    let { title, content, status, category, tags } = req.body;
+    let { title, content, status, category, tags, isAutoVerified } = req.body;
     let msg;
     let PostCategoryId;
 
@@ -81,6 +82,7 @@ const post = async (req, res) => {
       content: content,
       UserId: userId,
       status: status,
+      isAutoVerified,
       PostCategoryId,
       tags: tags,
     });
@@ -172,9 +174,42 @@ const post = async (req, res) => {
         }
       }
     });
-
     getIo().emit("forum/posts");
-    return res.status(201).send({ post });
+    res.status(201).send({ post });
+    if (post.status === "PUBLISHED" && post.isAutoVerified) {
+      const { relevanceScore, harmfulnessScore } = await calcRelevance("post", title, content);
+      if (relevanceScore < 50) {
+        await post.update({ status: "DELISTED" });
+        await PostHistory.create({
+          title: post.title,
+          content: post.content,
+          tags: post.tags,
+          action: "DELIST",
+          status: post.status,
+          PostCategoryId: post.PostCategoryId,
+          UserId: post.UserId,
+          PostId: post.id,
+        });
+        getIo().emit("forum/posts");
+        getIo().emit(`forum/posts/${post.id}`);
+      }
+      if (harmfulnessScore > 50) {
+        await post.update({ status: "DELISTED" });
+        await PostHistory.create({
+          title: post.title,
+          content: post.content,
+          tags: post.tags,
+          action: "DELIST",
+          status: post.status,
+          PostCategoryId: post.PostCategoryId,
+          UserId: post.UserId,
+          PostId: post.id,
+        });
+        getIo().emit("forum/posts");
+        getIo().emit(`forum/posts/${post.id}`);
+      }
+      await post.update({ isVerified: true });
+    }
   } catch (err) {
     log(err, "ERROR", "FORUM");
     return res.status(500).json({ message: "Unexpected error while creating post" });
