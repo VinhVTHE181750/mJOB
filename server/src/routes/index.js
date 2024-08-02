@@ -15,6 +15,7 @@ const workExperienceRoute = require("./WorkExperience");
 const whoami = require("./WhoAmI");
 const profileRole = require("./dashboard/userManager");
 const jobManage = require("./dashboard/jobManager");
+const postManage = require("./dashboard/postManager");
 const homeuserRoute = require("./HomeUser");
 const homeguestRoute = require("./HomeGuest");
 const ticketRoute = require("./ticket");
@@ -38,6 +39,7 @@ module.exports = function applyRoutes(app) {
   app.use("/api/whoami", whoami);
   app.use("/api/", profileRole);
   app.use("/api/job-manage", jobManage);
+  app.use("/api/post-manage", postManage);
   app.use("/api/homeuser", homeuserRoute);
   app.use("/api/homeguest", homeguestRoute);
   app.use("/api/ticket", ticketRoute);

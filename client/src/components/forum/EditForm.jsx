@@ -42,6 +42,11 @@ const EditForm = ({ id }) => {
       return;
     }
 
+    if(post.status === "DELISTED") {
+      setError("You cannot edit a delisted post");
+      return;
+    }
+
     const result = await updatePost(
       Number(id),
       title,

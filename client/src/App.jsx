@@ -47,7 +47,7 @@ import Employer from "./pages/profile/Employer";
 import Profile from "./pages/profile/Profile";
 import WorkExperience from "./pages/profile/WorkExperience";
 import Settings from "./pages/technical/Settings";
-
+import ViewReport from "./pages/technical/ViewReport";
 // Components
 import HomeNavbar from "./components/home/HomeNavbar";
 import HomeFooter from "./components/HomeFooter";
@@ -346,12 +346,12 @@ function App() {
                 />
                 <Route
                   exact
-                  path="/employer"
+                  path="/employer/:id"
                   element={<Employer />}
                 />
                 <Route
                   exact
-                  path="/editemployer"
+                  path="/editemployer/:id"
                   element={<EditEmployer />}
                 />
 
@@ -364,6 +364,13 @@ function App() {
                   exact
                   path="/settings"
                   element={<Settings />}
+                  
+                />
+                <Route
+                  exact
+                  path="/viewreport"
+                  element={<ViewReport />}
+                  
                 />
                 <Route
                   exact

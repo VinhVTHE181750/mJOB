@@ -9,7 +9,7 @@ const EditPost = () => {
   return (
     <Container>
       <NavigateButton
-        path={`/posts/${id}`}
+        path={`/forum/posts/${id}`}
         variant="primary"
         className="mb-2"
       >

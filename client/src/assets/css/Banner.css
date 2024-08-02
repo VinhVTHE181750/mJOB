@@ -1,0 +1,23 @@
+/* Banner.css */
+.banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    background: linear-gradient(to right, rgba(0, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.8) 50%);
+    box-shadow: 0 4px 8px rgba(128, 128, 128, 0.7);
+    color: black;
+    font-size: 2em;
+    font-weight: bold;
+    /* margin: 20px; */
+    border-radius: 10px;
+  }
+  
+  .banner-text {
+    position: relative;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.8) 50%, rgba(0, 255, 255, 0.8) 50%);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 2px 2px 4px rgba(128, 128, 128, 0.7);
+  }
+  

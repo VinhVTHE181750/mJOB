@@ -13,7 +13,7 @@ const getComments = async (req, res) => {
         include: [
           {
             model: User,
-            attributes: ["username"],
+            attributes: ["username", "avatar"],
           },
         ],
       });
@@ -26,6 +26,7 @@ const getComments = async (req, res) => {
         return {
           ...restOfComment,
           username: User.username, // Flatten User.username to username
+          avatar: User.avatar, // Flatten User.avatar to avatar
         };
       });
 

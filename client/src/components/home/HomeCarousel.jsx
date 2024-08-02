@@ -1,38 +1,47 @@
 import React from 'react';
 import Carousel from 'react-bootstrap/Carousel';
-import useMarketingContent from '../../hooks/home/homeguest/useMarketingContent.js';
 import { Card } from 'react-bootstrap';
-import '../../assets/css/Carosel.css';
+import '../../assets/css/Carousel.css';
 
 function HomeCarousel() {
-  const { contents, loading, error } = useMarketingContent();
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  const staticContents = [
+    {
+      id: 1,
+      title: 'Let start with mJob',
+      description: 'A market place that help you find your job in the comunity easier than going to find is your self.',
+      imageUrl: 'https://images.pexels.com/photos/39284/macbook-apple-imac-computer-39284.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+    },
+    {
+      id: 2,
+      title: 'Market place that is helpful for students.',
+      description: 'We provide a market place that is helpful for students who are looking for job.',
+      imageUrl: 'https://images.pexels.com/photos/9588210/pexels-photo-9588210.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+    },
+    {
+      id: 3,
+      title: 'Employer recommendation',
+      description: 'Why don\'t you try to use our service to look for potential employee',
+      imageUrl: 'https://images.pexels.com/photos/5833848/pexels-photo-5833848.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+    }
+  ];
 
   return (
     <div className='carousel-container'>
       <Carousel data-bs-theme="dark" className='Carousel'>
-        {contents.map((marketcontent) => (
-          <Carousel.Item key={marketcontent.id} className='shadow-sm'>
-            <Card 
-              className="post-card shadow-sm"
-              style={{ backgroundImage: `url(https://images.pexels.com/photos/6476589/pexels-photo-6476589.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)` }}
-            >
-              <Card.Body style={{ height: '100%' }}>
-                <Card.Title as="h2">
-                  {marketcontent.title}
-                </Card.Title>
-                <Card.Text className="post-card-content">
-                  {marketcontent.description}
-                </Card.Text>
-              </Card.Body>
-            </Card>
+        {staticContents.map((content) => (
+          <Carousel.Item key={content.id} className='shadow-sm'>
+            <div className="carousel-content" style={{ backgroundImage: `url(${content.imageUrl})` }}>
+              <div className="overlay">
+                <div className="text-container">
+                  <h2 className="carousel-title">
+                    {content.title}
+                  </h2>
+                  <p className="carousel-description">
+                    {content.description}
+                  </p>
+                </div>
+              </div>
+            </div>
           </Carousel.Item>
         ))}
       </Carousel>

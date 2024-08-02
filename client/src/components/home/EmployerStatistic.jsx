@@ -27,7 +27,8 @@ function EmployerStatistic({ user }) {
     setSelectedJobs('ongoing');
   }
   const handlePendingClick = () => {
-    setJobList(createdJobs.slice(0,4));
+    const filteredJobs = createdJobs.filter(job => job.status === 'ACTIVE');
+    setJobList(filteredJobs.slice(0,4));
 
     setSelectedJobs('pending');
   }
@@ -80,7 +81,7 @@ const getStatusStyle = (status) => {
       return { color: 'green' };
     case 'Rejected':
       return { color: 'red' };
-    case 'Pending':
+    case 'Active':
       return { color: 'blue' };
     default:
       return {};

@@ -48,7 +48,24 @@
   
   .stat-box h3 {
     margin: 0;
-    font-size: 24px;
+    font-weight: bold;
+    font-size: 35px;
+  }
+  
+  .total {
+    color: darkgray;
+  }
+  
+  .completed {
+    color: green;
+  }
+  
+  .processing {
+    color: orange;
+  }
+  
+  .applied {
+    color: blue;
   }
   
   .stat-box p {
