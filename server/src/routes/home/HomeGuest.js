@@ -7,6 +7,7 @@ const Marketing = require("../../models/home/Marketing");
 const JobMetric = require("../../models/job/JobMetric");
 const PostMetric = require("../../models/forum/metric/PostMetric");
 const { sequelize } = require('../../models/SQLize');
+const EmployerProfile = require("../../models/user/EmployerProfile");
 const User = require("../../models/user/User");
 
 
@@ -30,8 +31,20 @@ const getHotJobs = async (req, res) => {
                 {
                     model: JobMetric,
                     attributes: ['view']
+                },
+                {
+                    model: User,
+                    attributes: ['username'],
+                    include: [
+                        {
+                            model: EmployerProfile,
+                            attributes: ['name']
+                        }
+                    ]
+                    
                 }
             ],
+
             order: [[{ model: JobMetric }, 'view', 'DESC']],
             limit: 3
         });
@@ -44,6 +57,7 @@ const getHotJobs = async (req, res) => {
 const getHotPosts = async (req, res) => {
     try {
         const posts = await Post.findAll({
+            where: { status: 'PUBLISHED', isVerified: true },
             include: [
                 {
                     model: PostMetric,
