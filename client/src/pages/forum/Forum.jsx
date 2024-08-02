@@ -57,14 +57,14 @@ const Forum = () => {
               </>
             ) : (
               <>
-                <NavigateButton
+                {/* <NavigateButton
                   path="/forum/manage"
                   variant="warning"
                 >
                   <div className="d-flex align-items-center justify-content-center gap-1">
                     <FaGear /> Your Posts
                   </div>
-                </NavigateButton>
+                </NavigateButton> */}
                 <NavigateButton
                   path="/forum/add"
                   variant="success"
@@ -73,14 +73,14 @@ const Forum = () => {
                     <FaPlusCircle /> <span className="d-none d-sm-block">Add Post</span>
                   </div>
                 </NavigateButton>
-                <NavigateButton
+                {/* <NavigateButton
                   path="/forum/insights"
                   variant="info"
                 >
                   <div className="d-flex align-items-center justify-content-center gap-1">
                     <BsGraphUp /> <span className="d-none d-sm-block">Insights</span>
                   </div>
-                </NavigateButton>
+                </NavigateButton> */}
               </>
             )}
 
