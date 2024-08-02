@@ -66,7 +66,7 @@ User.init(
       allowNull: true,
     },
     avatar: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     bio: {
