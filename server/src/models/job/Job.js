@@ -15,10 +15,10 @@ Job.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    type: {
-      type: DataTypes.ENUM("FULL_TIME", "PART_TIME", "INTERNSHIP", "COMMISSION", "FREELANCE", "CONTRACT"),
+    approvalMethod: {
+      type: DataTypes.ENUM("AUTO"),
       allowNull: false,
-      defaultValue: "FULL_TIME",
+      defaultValue: "AUTO",
     },
     // Description
     description: {
