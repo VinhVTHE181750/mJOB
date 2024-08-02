@@ -25,79 +25,50 @@ router.post("/", async (req, res) => {
   if (isNaN(req.userId)) {
     return res.status(400).json({ message: "Invalid user ID" });
   }
-  // uncomment để truyền userId từ request
 
-  // test
-  //userId = 1;
   const user = await User.findByPk(userId);
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
 
   const {
-    job_title, // str
-    job_work_location, // str
-    job_tags, // str,str,str
-    job_max_applications, // int
-    job_description, // str
-    job_contact_info, // str
-    job_start_date, // date
-    job_end_date, // date
-    job_number_of_recruits, // str
-    job_requirements, // str;str;str
-    // Nhớ xử lí requirements dưới dạng mảng
-    job_compensation_type, // ONCE, HOURLY, DAILY, WEEKLY, MONTHLY, PERCENTAGE
-    job_compensation_amounts, // int
+    job_title,
+    job_work_location,
+    job_tags,
+    job_max_applications,
+    job_description,
+    job_contact_info,
+    job_start_date,
+    job_end_date,
+    job_number_of_recruits,
+    job_requirements,
+    job_compensation_type,
+    job_compensation_amounts,
     job_compensation_currencies,
-    job_compensation_periods, // -> bỏ, dùng luôn compensation_type
-    // đã có ONCE, HOURLY, DAILY, WEEKLY, MONTHLY, PERCENTAGE
-    job_custom_iterations, // rườm rà -> bỏ
-    status, // Thêm dòng này vào client, hoặc để nó mặc định là ACTIVE
-    // Xem chi tiết tại file models/job/Job.js dòng 86 - 99
+    status,
+    job_approval_method, // thêm dòng này để xử lý phương pháp phê duyệt
   } = req.body;
 
-  if (job_title === undefined || job_title === null || job_title === "") {
+  if (!job_title) {
     return res.status(400).json({ message: "Job title is required" });
   }
-
-  if (job_work_location === undefined || job_work_location === null || job_work_location === "") {
+  if (!job_work_location) {
     return res.status(400).json({ message: "Job work location is required" });
   }
-
-  if (job_start_date === undefined || job_start_date === null || job_start_date === "") {
+  if (!job_start_date) {
     return res.status(400).json({ message: "Job start date is required" });
   }
-
-  if (job_end_date === undefined || job_end_date === null || job_end_date === "") {
+  if (!job_end_date) {
     return res.status(400).json({ message: "Job end date is required" });
   }
-
-  // salary types: ONETIME, HOURLY, DAILY, WEEKLY, MONTHLY, PERCENTAGE
-  if (job_compensation_type === undefined || job_compensation_type === null || job_compensation_type === "") {
+  if (!job_compensation_type) {
     return res.status(400).json({ message: "Job compensation type is required" });
-  } else {
-    if (
-      job_compensation_type !== "AGREEMENT" &&
-      job_compensation_type !== "NONE" &&
-      job_compensation_type !== "ONETIME" &&
-      job_compensation_type !== "HOURLY" &&
-      job_compensation_type !== "DAILY" &&
-      job_compensation_type !== "WEEKLY" &&
-      job_compensation_type !== "MONTHLY" &&
-      job_compensation_type !== "PERCENTAGE"
-    ) {
-      return res.status(400).json({ message: "Invalid job compensation type" });
-    }
+  } else if (!["AGREEMENT", "NONE", "ONETIME", "HOURLY", "DAILY", "WEEKLY", "MONTHLY", "PERCENTAGE"].includes(job_compensation_type)) {
+    return res.status(400).json({ message: "Invalid job compensation type" });
   }
-
-  if (isNaN(job_compensation_amounts)) {
+  if (isNaN(job_compensation_amounts) || job_compensation_amounts < 0) {
     return res.status(400).json({ message: "Invalid job compensation amount" });
-  } else {
-    if (job_compensation_amounts < 0) {
-      return res.status(400).json({ message: "Invalid job compensation amount" });
-    }
   }
-
   let currency;
   if (job_compensation_currencies === undefined || job_compensation_currencies === null || job_compensation_currencies === "") {
     // return res.status(400).json({ message: "Job compensation currency is required" });
@@ -117,25 +88,21 @@ router.post("/", async (req, res) => {
   if (isNaN(job_max_applications) || job_max_applications < 0) {
     return res.status(400).json({ message: "Invalid job max applications" });
   }
-
-  if (job_description === undefined || job_description === null || job_description === "") {
+  if (!job_description) {
     return res.status(400).json({ message: "Job description is required" });
   }
-
-  if (job_contact_info === undefined || job_contact_info === null || job_contact_info === "") {
+  if (!job_contact_info) {
     return res.status(400).json({ message: "Job contact info is required" });
   }
-
   if (isNaN(job_number_of_recruits) || job_number_of_recruits < 0) {
     return res.status(400).json({ message: "Invalid job number of recruits" });
   }
-
   let cStatus;
   if (status === undefined || status === null || status === "") {
-    cStatus = "ACTIVE";
+    cStatus = "INACTIVE";
   } else {
-    if (status !== "ACTIVE") {
-      return res.status(400).json({ message: "Job can only be created as ACTIVE " });
+    if (status !== "INACTIVE") {
+      return res.status(400).json({ message: "Job can only be created as INACTIVE " });
     }
   }
 
@@ -151,49 +118,71 @@ router.post("/", async (req, res) => {
     endDate: job_end_date,
     salary: job_compensation_amounts,
     salaryType: job_compensation_type,
-    salaryCurrency: currency,
-    status: status || "ACTIVE",
+    salaryCurrency: job_compensation_currencies,
+    status: status || "INACTIVE",
     UserId: req.userId,
   });
-  
-  if(newJob.approvalMethod){
-    const description = `Description: ${job_description} \nTags: ${job_tags}`;
-    const result = await calcRelevance("job",job_title,description);
-    console.log(result);
-    return result.relevanceScore > 50 && result.harmfulnessScore<20 ? res.status(201).json(newJob) : res.status(400).json({ message: "Job not suited " });
-  }
 
+  if (job_approval_method === "AUTO") {
+    try {
+      const description = `Description: ${job_description} \nTags: ${job_tags}`;
+      const result = await calcRelevance("job", job_title, description);
 
-  try {
-    const job = await newJob.save();
-    // requirements is an array of {type, name}
-    if (typeof job_requirements !== "string") {
-      return res.status(400).json({ message: "Invalid job requirements" });
+      if (result && result.relevanceScore > 50 && result.harmfulnessScore < 20) {
+        const job = await newJob.save();
+        // requirements is an array of {type, name}
+        if (typeof job_requirements !== "string") {
+          return res.status(400).json({ message: "Invalid job requirements" });
+        }
+        const requirements = job_requirements.split(";");
+        for (let i = 0; i < requirements.length; i++) {
+          const job_requirements = requirements[i].trim();
+          await Requirement.create({
+            JobId: job.id,
+            type: "TEXT",
+            name: job_requirements,
+          });
+        }
+        await JobHistory.create({
+          JobId: job.id,
+          UserId: req.userId,
+          status: status,
+          action: "CREATE",
+        });
+        return res.status(201).json(job);
+      } else {
+        return res.status(400).json({ message: "Job not suited for auto-approval" });
+      }
+    } catch (err) {
+      log(err, "ERROR", "JOB");
+      return res.status(500).json({ message: "Unknown error while enlisting job." });
     }
-
-    // for now, assume all requirements to be FILE
-    const requirements = job_requirements.split(";");
-    for (let i = 0; i < requirements.length; i++) {
-      const job_requirements = requirements[i].trim();
-      const requirement = await Requirement.create({
+  } else {
+    try {
+      const job = await newJob.save();
+      if (typeof job_requirements !== "string") {
+        return res.status(400).json({ message: "Invalid job requirements" });
+      }
+      const requirements = job_requirements.split(";");
+      for (let i = 0; i < requirements.length; i++) {
+        const job_requirements = requirements[i].trim();
+        await Requirement.create({
+          JobId: job.id,
+          type: "TEXT",
+          name: job_requirements,
+        });
+      }
+      await JobHistory.create({
         JobId: job.id,
-        type: "TEXT",
-        // type can be TEXT or FILE
-        name: job_requirements,
+        UserId: req.userId,
+        status: cStatus,
+        action: "CREATE",
       });
+      return res.status(201).json(job);
+    } catch (err) {
+      log(err, "ERROR", "JOB");
+      return res.status(500).json({ message: "Unknown error while enlisting job." });
     }
-
-    const jobHistory = await JobHistory.create({
-      JobId: job.id,
-      UserId: req.userId,
-      status: cStatus,
-      action: "CREATE",
-    });
-
-    return res.status(201).json(job);
-  } catch (err) {
-    log(err, "ERROR", "JOB");
-    return res.status(500).json({ message: "Unknown error while enlisting job." });
   }
 });
 
