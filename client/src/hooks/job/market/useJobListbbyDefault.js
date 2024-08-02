@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import http from "../../../functions/httpService";
 
-const useJobListbyDefault = () => {
+const useJobListbyDefault = (userId) => {
   const [contents, setContents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -9,7 +9,7 @@ const useJobListbyDefault = () => {
   useEffect(() => {
     const fetchContents = async () => {
       try {
-        const url = `/joblist/default`;
+        const url = `/joblist/default/${userId}`;
         const response = await http.get(url);
         setContents(response.data);
         setLoading(false);

@@ -106,7 +106,7 @@ const Dashboard = (user) => {
           <p>Total Processing Jobs</p>
         </div>
         <div className="stat-box">
-            <h3 className='applied'>{totalProcessedJobs}</h3>
+            <h3 className='applied'>{appliedCount}</h3>
           <p>Current Apply Job</p>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Container, Form, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SearchBar from '../../components/job/SearchBar.jsx';
@@ -10,7 +10,12 @@ import useJobListbyDate from '../../hooks/job/market/useJobListbyDate.js';
 import LocationDropdown from './LocationDropdown.jsx';
 import '../../assets/css/JobList.css';
 import { useNavigate } from 'react-router';
+import useWhoAmI  from '../../hooks/user/useWhoAmI';
 function JobList() {
+  const { fetchMe, userId} = useWhoAmI();
+  useEffect(() => {
+    fetchMe();
+  }, [userId]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('default');
   const [minSalary, setMinSalary] = useState('');
@@ -19,7 +24,7 @@ function JobList() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const jobsPerPage = 10;
   const navigate = useNavigate();
-  const { contents: defaultContents, loading: defaultLoading, error: defaultError } = useJobListbyDefault();
+  const { contents: defaultContents, loading: defaultLoading, error: defaultError } = useJobListbyDefault(userId);
   const { contents: viewContents, loading: viewLoading, error: viewError } = useJobListbyView();
   const { contents: timeContents, loading: timeLoading, error: timeError } = useJobListbyDate();
   const defaultAvatarUrl = 'https://www.topcv.vn/v4/image/normal-company/logo_default.png';

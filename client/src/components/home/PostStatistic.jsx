@@ -61,21 +61,23 @@ function PostStatistic() {
           )}
           {selectedPosts === 'hot' && (
             hotPosts.map(post => (
-              <Card key={post.post_id} className='post-card-statistic' style={{ width: '90%' }}>
-                {/* Replace with actual image source and content */}
-                <Card.Body>
-                  <Card.Title>{post.title}</Card.Title>
-                  <Card.Text>{post.content}</Card.Text>
-                  <div style={{ alignContent: "right", fontSize: "small" }}>{post.User.username}</div>
-                  <Card.Text
-                    className="post-card-content"
-                    style={{ textAlign: "right", fontSize: "small" }}
-                  >
-                    {getMoment(post.updatedAt)}
-                  </Card.Text>
-                  <Button variant="primary" onClick={() => handleDetailClick(post.post_id)}>Detail</Button>
-                </Card.Body>
-              </Card>
+              <Card key={post.id} className='post-card-statistic post-card' style={{ width: '90%' }}>
+              {/* Replace with actual image source and content */}
+              <Card.Body>
+                <Card.Title as="h2" style={{ color: "blue" }}>
+                  {post.title}
+                </Card.Title>
+                <Card.Text>{post.content}</Card.Text>
+                <div style={{ alignContent: "right", fontSize: "small" }}>{post.User.username}</div>
+                <Card.Text
+                  className="post-card-content"
+                  style={{ textAlign: "right", fontSize: "small" }}
+                >
+                  {getMoment(post.updatedAt)}
+                </Card.Text>
+                <Button variant="primary" onClick={() => handleDetailClick(post.id)}>Detail</Button>
+              </Card.Body>
+            </Card>
             ))
           )}
         </div>
