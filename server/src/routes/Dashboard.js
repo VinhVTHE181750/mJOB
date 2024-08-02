@@ -10,6 +10,7 @@ const { getUserJobbyStatus, getUserJobHistory, getUserCreatedJob } = require("./
 const { route } = require("./Auth");
 const router = express.Router();
 const getNextPaymentDate = require("../services/schedulers/JobsPayment");
+const EmployerProfile = require("../models/user/EmployerProfile");
 router.get("/history", getUserJobHistory);
 
 
@@ -183,6 +184,12 @@ router.get("/jobhistory/:userId", async (req, res) => {
             {
               model: User,
               attributes: ['username'],
+              include: [
+                {
+                  model: EmployerProfile,
+                  attributes: ['name']
+                }
+              ]
             }
           ]
         },
@@ -225,8 +232,20 @@ router.get("/applylist/:userId", async (req, res) => {
       where: { UserId: userId, status: jobStatus },
       include: [
         {
-          model: User,
-          attributes: ['username'],
+          model: Job,
+          attributes: ['title'],
+          include: [
+            {
+              model: User,
+              attributes: ['username'],
+              include: [
+                {
+                  model: EmployerProfile,
+                  attributes: ['name']
+                }
+              ]
+            }
+          ]
         },
       ]
     });
