@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import '../../assets/css/PostStatistic.css';
 
 import useNewPosts from '../../hooks/home/homeuser/useNewPost';
-import  useHotPosts  from '../../hooks/home/useHotPost';
-import {getMoment} from "../../functions/Converter.js";
-
+import useHotPosts from '../../hooks/home/useHotPost';
+import { getMoment } from '../../functions/Converter.js';
 
 function PostStatistic() {
-  // const { posts: newPosts, loading: newLoading, error: newError } = useNewPosts();
-  // const { posts: hotPosts, loading: hotLoading, error: hotError } = useHotPosts();
-
+  const navigate = useNavigate();
   const { posts: newPosts, loading: newLoading, error: newError } = useNewPosts();
   const { contents: hotPosts, loading: hotLoading, error: hotError } = useHotPosts();
   const [selectedPosts, setSelectedPosts] = useState('new'); // 'new' or 'hot'
@@ -21,6 +19,10 @@ function PostStatistic() {
 
   const handleHotPostsClick = () => {
     setSelectedPosts('hot');
+  };
+
+  const handleDetailClick = (id) => {
+    navigate(`/forum/posts/${id}`);
   };
 
   return (
@@ -38,20 +40,21 @@ function PostStatistic() {
         <div className='row align-items-float-end'>
           {selectedPosts === 'new' && (
             newPosts.map(post => (
-              <Card key={post.id} className='post-card-statistic' style={{ width: '90%' }}>
+              <Card key={post.id} className='post-card-statistic post-card' style={{ width: '90%' }}>
                 {/* Replace with actual image source and content */}
-                <Card.Img variant="top" src="holder.js/100px180" />
                 <Card.Body>
-                  <Card.Title>{post.title}</Card.Title>
+                  <Card.Title as="h2" style={{ color: "blue" }}>
+                    {post.title}
+                  </Card.Title>
                   <Card.Text>{post.content}</Card.Text>
-                  <div style={{ alignContent: "right", fontSize: "small" }} >{post.User.username} </div>
+                  <div style={{ alignContent: "right", fontSize: "small" }}>{post.User.username}</div>
                   <Card.Text
                     className="post-card-content"
                     style={{ textAlign: "right", fontSize: "small" }}
                   >
                     {getMoment(post.updatedAt)}
                   </Card.Text>
-                  <Button variant="primary">Detail</Button>
+                  <Button variant="primary" onClick={() => handleDetailClick(post.id)}>Detail</Button>
                 </Card.Body>
               </Card>
             ))
@@ -60,19 +63,17 @@ function PostStatistic() {
             hotPosts.map(post => (
               <Card key={post.post_id} className='post-card-statistic' style={{ width: '90%' }}>
                 {/* Replace with actual image source and content */}
-                <Card.Img variant="top" src="holder.js/100px180" />
                 <Card.Body>
                   <Card.Title>{post.title}</Card.Title>
                   <Card.Text>{post.content}</Card.Text>
-                  <div style={{ alignContent: "right", fontSize: "small" }} >{post.User.username} </div>
+                  <div style={{ alignContent: "right", fontSize: "small" }}>{post.User.username}</div>
                   <Card.Text
                     className="post-card-content"
                     style={{ textAlign: "right", fontSize: "small" }}
                   >
                     {getMoment(post.updatedAt)}
                   </Card.Text>
-                  <Button variant="primary">Detail</Button>
-                  
+                  <Button variant="primary" onClick={() => handleDetailClick(post.post_id)}>Detail</Button>
                 </Card.Body>
               </Card>
             ))
@@ -80,7 +81,7 @@ function PostStatistic() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default PostStatistic
+export default PostStatistic;

@@ -9,6 +9,7 @@ import useJobListbyView from '../../hooks/job/market/useJobListbyView.js';
 import useJobListbyDate from '../../hooks/job/market/useJobListbyDate.js';
 import LocationDropdown from './LocationDropdown.jsx';
 import '../../assets/css/JobList.css';
+import { useNavigate } from 'react-router';
 function JobList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('default');
@@ -17,7 +18,7 @@ function JobList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const jobsPerPage = 10;
-
+  const navigate = useNavigate();
   const { contents: defaultContents, loading: defaultLoading, error: defaultError } = useJobListbyDefault();
   const { contents: viewContents, loading: viewLoading, error: viewError } = useJobListbyView();
   const { contents: timeContents, loading: timeLoading, error: timeError } = useJobListbyDate();
@@ -97,6 +98,14 @@ function JobList() {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const handleJobTitleClick = (jobId) => {
+    navigate(`/jobs/${jobId}`);
+  };
+
+  const handleEmployerNameClick = (userId) => {
+    navigate(`/employer/${userId}`);
+  };
+
   return (
     <Container>
       <Row style={{ alignItems: 'center' }}>
@@ -133,24 +142,26 @@ function JobList() {
         <Col>
           <JobPagination jobsPerPage={jobsPerPage} totalJobs={filteredContents.length} paginate={paginate} currentPage={currentPage} />
           <div>
-            {currentJobs.length === 0 ? (
+          {currentJobs.length === 0 ? (
               <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '40px', fontWeight: 'bold', height: '200px' }}>Sorry, There is no job that fulfills your requirements.</p>
             ) : (
               currentJobs.map(content => (
                 <div className="job-card" key={content.id}>
-                  <div className="job-card-img"><img
+                  <div className="job-card-img">
+                    <img
                       src={defaultAvatarUrl}
                       alt={content.User.username}
                       style={{ width: '100%', height: 'auto' }}
-                    /></div>
+                    />
+                  </div>
                   <div className="job-card-content">
                     <div className="job-card-header">
-                      <h2 className="job-title">{content.title}</h2>
+                      <h2 className="job-title" onClick={() => handleJobTitleClick(content.id)}>{content.title}</h2>
                       <a href={`/jobs/${content.id}`} className="job-detail-link">Detail</a>
                     </div>
                     <div className="job-card-body">
                       <div className="job-info">
-                        <p style={{ fontWeight: 'bold', fontStyle: 'italic', color: 'darkgray' }}>Creator: {content.User.EmployerProfile.name}</p>
+                        <p style={{ fontWeight: 'bold', fontStyle: 'italic', color: 'darkgray' }} onClick={() => handleEmployerNameClick(content.UserId)}>Creator: {content.User.EmployerProfile.name}</p>
                         <p>Job Tag: {content.tags}</p>
                         <p>Location: {content.location}</p>
                       </div>

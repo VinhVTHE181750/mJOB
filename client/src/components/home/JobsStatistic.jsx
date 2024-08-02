@@ -40,9 +40,6 @@ function JobsStatistic({ user }) {
   
     // Format the amount
     let formatted = formatter.format(amount);
-    if (currencyCode === 'USD') {
-      formatted = formatted.replace('$', '').trim() + '$';
-    }
   
     // Remove any space between the amount and the currency symbol
     formatted = formatted.replace(/\s/g, '');
@@ -82,7 +79,6 @@ const getStatusStyle = (status) => {
       return {};
   }
 };
-
   
 
   return (
@@ -105,7 +101,6 @@ const getStatusStyle = (status) => {
             <h2 style={{color: 'darkgrey', textAlign: 'center', marginTop: '20px'}}>Currently, you don't have any ongoing jobs.</h2>
           ) : (ongoingJobs.map(job => (
             <Card className='job-card-statistic' key={job.Job.id} style={{ width: '18rem' }}>
-              <Card.Img variant="top" src="holder.js/100px180" />
               <Card.Body>
                 <Card.Title style={{ fontWeight: 'bold' }}>{job.Job.title}</Card.Title>
                 <Card.Text>Location: {job.Job.location}</Card.Text>

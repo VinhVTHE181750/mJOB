@@ -74,7 +74,7 @@ function HotJobs() {
         <Row className="justify-content-center">
           {contents.map(content => (
             <Col key={content.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
-              <Card style={{ height: '100%' }}>
+              <Card className="job-card" style={{ height: '100%' }} onClick={() => window.location.href = `/jobs/${content.id}`}>
                 <Card.Img variant="top" src={defaultAvatarUrl} alt={content.User.username} />
                 <Card.Body>
                   <Card.Title>{content.title}</Card.Title>

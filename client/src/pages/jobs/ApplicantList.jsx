@@ -12,6 +12,7 @@ const ApplicantList = () => {
   const { isEmployerMode } = useAuth();
 
 
+
   const navigate = useNavigate();
 
   if (role === "GUEST") {

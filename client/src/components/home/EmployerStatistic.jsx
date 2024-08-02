@@ -48,10 +48,6 @@ function EmployerStatistic({ user }) {
     });
 
     let formatted = formatter.format(amount);
-    if (currencyCode === 'USD') {
-      formatted = formatted.replace('$', '').trim() + '$';
-    }
-
     return formatted.replace(/\s/g, '');
   };
 
