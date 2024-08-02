@@ -89,4 +89,14 @@ router.delete('/delete/:id', async (req, res) => {
   }
 });
 
+router.get('/post-count', async (req, res) => {
+  try {
+    const count = await Post.count();
+    res.json(count);
+  } catch (err) {
+    console.error("Error fetching post count:", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
 module.exports = router;

@@ -9,7 +9,7 @@ const useCountUser = () => {
   useEffect(() => {
     const fetchCount = async () => {
       try {
-        const url = `http://localhost:8000/api/posts-count`;
+        const url = `http://localhost:8000/api/post-manage/post-count`;
         const response = await http.get(url);
         setCount(response.data);
         setLoading(false);
