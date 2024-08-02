@@ -3,12 +3,13 @@ const db = require("../models/DBContext");
 const User = require("../models/user/User");
 const Job = require("../models/job/Job");
 const Application = require("../models/job/Application");
+const Compensation = require("../models/job/Compensation");
 const { Op } = require('sequelize');
 // const { get3JobCreatedRecent, get3JobAppliedRecent, getTotalCompletedJob, getTotalCurrentAppliedJob, getTotalCreatedJob, get3JobCompletedRecent } = require("./jobDashBoard/dashboard");
-const { getUserJobbyStatus, getUserJobHistory , getUserCreatedJob} = require("./jobDashBoard/jobhistory");
+const { getUserJobbyStatus, getUserJobHistory, getUserCreatedJob } = require("./jobDashBoard/jobhistory");
 const { route } = require("./Auth");
 const router = express.Router();
-
+const getNextPaymentDate = require("../services/schedulers/JobsPayment");
 router.get("/history", getUserJobHistory);
 
 
@@ -327,6 +328,8 @@ router.delete("/deleteapplication", async (req, res) => {
   }
 });
 
+
+
 router.get("/jobapplication", async (req, res) => {
   try {
     const jobApplication = await Application.findAll({
@@ -418,7 +421,14 @@ router.get("/employer/jobcompleted", async (req, res) => {
 //Get all applications of a jobs
 router.get("/employer/jobapplication", async (req, res) => {
   try {
-    const { jobId } = req.body;
+    const { jobId, userId } = req.query;
+    const job = await Job.findOne({
+      where: { id: jobId },
+    });
+
+    if (job.UserId != userId) {
+      res.status(401).json({ message: `You are not authorized to access this job ${jobId}` });
+    }
     const jobApplicationList = await Application.findAll({
       where: { jobId: jobId },
       include: [
@@ -440,13 +450,12 @@ router.get("/employer/jobapplication", async (req, res) => {
             'salaryCurrency',
             'status' // Assuming you want to include job status
           ],
-          include: [
-            {
-              model: User,
-              attributes: ['username'],
-            }
-          ]
+
         },
+        {
+          model: User,
+          attributes: ['username'],
+        }
       ]
     });
     res.status(200).json(jobApplicationList);
@@ -456,25 +465,43 @@ router.get("/employer/jobapplication", async (req, res) => {
   }
 });
 
+const updateApplicationStatus = async (req, res) => {
+  try {
+    const { jobId, userId, status } = req.body;
+    const application = await Application.findOne({
+      where: { jobId: jobId, userId: userId },
+    });
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+    application.status = status;
+    await application.save();
+    res.status(200).json({ message: "Application status updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while updating the application status" });
+  }
+};
+
 const getJobCreatedRecently = async (req, res) => {
   try {
-      const {userId} = req.params;
-      const jobs = await Job.findAll({
-          where: { 
-            UserId: userId, 
-            status: 'ACTIVE' 
-          },
-          include: [
-              {
-                  model: User,
-                  attributes: ['username']
-              }
-          ],
-          order: [['createdAt', 'DESC']],
-      });
-      res.status(200).json(jobs);
+    const { userId } = req.params;
+    const jobs = await Job.findAll({
+      where: {
+        UserId: userId,
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['username']
+        }
+      ],
+      order: [['createdAt', 'DESC']],
+    });
+    res.status(200).json(jobs);
   } catch (error) {
-      res.status(500).send(error);
+    res.status(500).send(error);
   }
 }
 
@@ -483,52 +510,92 @@ const getJobProcessedRecently = async (req, res) => {
   try {
     const { userId } = req.params;
     const jobs = await Job.findAll({
-        where: { 
-          UserId: userId, 
-          status: {
-            // [Op.or]: ['ACTIVE', 'COMPLETED']
-            [Op.notIn]: ['ACTIVE', 'COMPLETED']
-          } 
-        },
-        include: [
-            {
-                model: User,
-                attributes: ['username']
-            }
-        ],
-        order: [['createdAt', 'DESC']],
+      where: {
+        UserId: userId,
+        status: {
+          // [Op.or]: ['ACTIVE', 'COMPLETED']
+          [Op.notIn]: ['ACTIVE', 'COMPLETED']
+        }
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['username']
+        }
+      ],
+      order: [['createdAt', 'DESC']],
     });
     res.status(200).json(jobs);
-} catch (error) {
+  } catch (error) {
     res.status(500).send(error);
-}
+  }
 }
 
 const getJobCompletedRecently = async (req, res) => {
   try {
-      const { userId } = req.body;
-      const jobs = await Job.findAll({
-          where: { UserId: userId, status: 'COMPLETED' },
-          include: [
-              {
-                  model: User,
-                  attributes: ['username']
-              }
-          ],
-          order: [['updatedAt', 'DESC']],
-      });
-      res.status(200).json(jobs);
+    const { userId } = req.body;
+    const jobs = await Job.findAll({
+      where: { UserId: userId, status: 'COMPLETED' },
+      include: [
+        {
+          model: User,
+          attributes: ['username']
+        }
+      ],
+      order: [['updatedAt', 'DESC']],
+    });
+    res.status(200).json(jobs);
   } catch (error) {
-      res.status(500).send(error);
+    res.status(500).send(error);
   }
 }
-//Employer Dashboard
+
+const updateJobStatus = async (req, res) => {
+  try {
+    const { jobId, status} = req.body;
+    const job = await Job.findOne({
+      where: { id: jobId },
+    });
+    job.status = status;
+    await job.save();
+    const applicationList = await Application.findAll({
+      where: { jobId: jobId },
+    })
+    if (status === 'ONGOING') {
+      for (const application of applicationList) {
+        const  userId  = application.UserId;
+
+        // Update application status
+        application.status = status;
+        await application.save();
+        //Create compensation record for each application
+        await Compensation.create({
+          from: job.UserId, // Assuming the job creator is the payer
+          to: userId, // The applicant
+          amount: job.salary, // Assuming salary is the compensation amount
+          nextPayment: getNextPaymentDate(job.startDate, job.salaryType), // Implement this function to calculate the next payment date
+          // nextPayment:job.startDate,
+          status: "PENDING", // Initial status
+          JobId: jobId,
+        });
+      }
+    }
+    // res.status(200).json(applicationList);
+    res.status(200).json({ message: "Job status updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while updating the job status" });
+  }
+}
 router.get('/employer/jobcreated/:userId', getJobCreatedRecently);
 router.get('/employer/jobprogress/:userId', getJobProcessedRecently);
 router.get('/employer/jobcompleted/:userId', getJobCompletedRecently);
-
+router.put('/employer/updateapplication/', updateApplicationStatus);
 
 //Employer History
 router.get('/employer/createdhistory/:userId', getUserCreatedJob);
+
+//Employer Update Job Status
+router.put('/employer/updatejobstatus/', updateJobStatus);
 
 module.exports = router;

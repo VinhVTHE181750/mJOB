@@ -4,7 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import http from "../../functions/httpService";
 import Sidebar from '../../components/job/SideBar';
 import { useAuth } from '../../context/UserContext';
-
+import useJobApplicationList from '../../hooks/job/dashboard/useJobApplicationList';
+import ModalList from '../../components/job/ModalList';
+import { Button, Modal } from 'react-bootstrap';
+import useWhoAmI from '../../hooks/user/useWhoAmI';
+import useUpdateJobStatus from '../../hooks/job/dashboard/useUpdateJobStatus';
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -83,10 +87,16 @@ const DeleteButton = styled.button`
 `;
 
 const CreatedJobs = ({ searchQuery }) => {
+  const { userId } = useWhoAmI();
   const [createdJobs, setCreatedJobs] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [selectedJobId, setSelectedJobId] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
   const { isEmployerMode } = useAuth();
-
+  const { data, loading, error, fetchJobApplications } = useJobApplicationList();
+  const { updateJobStatus } = useUpdateJobStatus();
   if (!isEmployerMode) {
     navigate('/myjobs/applied');
   }
@@ -104,6 +114,17 @@ const CreatedJobs = ({ searchQuery }) => {
     fetchCreatedJobs();
   }, []);
 
+  const handleFetch = async (jobId) => {
+    if (jobId && userId) {
+      try {
+        await fetchJobApplications(jobId, userId); // Fetch applications before opening modal
+        setShowModal(true); // Show the modal only after data is fetched
+      } catch (error) {
+        console.error('Error fetching job applications:', error);
+      }
+    }
+  };
+
   const handleViewClick = (id) => {
     navigate(`/jobs/${id}`);
   };
@@ -116,6 +137,36 @@ const CreatedJobs = ({ searchQuery }) => {
       console.error('Error deleting job:', error);
     }
   };
+
+  const handleStartJob = async (jobId) => {
+    try {
+      await updateJobStatus(jobId, 'ONGOING');
+      setSelectedJobId(jobId);
+      setSuccessMessage('Job has been started successfully.');
+      setShowSuccessModal(true);
+      // Refresh job list
+      const response = await http.get('/jobs/created-jobs');
+      setCreatedJobs(response.data);
+    } catch (error) {
+      console.error('Error starting job:', error);
+    }
+  };
+
+  const handleCompleteJob = async (jobId) => {
+    try {
+      await updateJobStatus(jobId, 'COMPLETED');
+      setSelectedJobId(jobId);
+      setSuccessMessage('Job has been completed successfully.');
+      setShowSuccessModal(true);
+      // Refresh job list
+      const response = await http.get('/jobs/created-jobs');
+      setCreatedJobs(response.data);
+    } catch (error) {
+      console.error('Error completing job:', error);
+    }
+  };
+ 
+
 
   const getStatusStyle = (status) => {
     switch (formatStatus(status)) {
@@ -154,6 +205,8 @@ const CreatedJobs = ({ searchQuery }) => {
     }
   };
 
+
+
   return (
     <>
       <div className="div">
@@ -168,6 +221,7 @@ const CreatedJobs = ({ searchQuery }) => {
                     <Th>Job</Th>
                     <Th>Next Payment</Th>
                     <Th>Status</Th>
+                    <Th>View Application</Th>
                     <Th>Action</Th>
                   </tr>
                 </thead>
@@ -183,10 +237,20 @@ const CreatedJobs = ({ searchQuery }) => {
                           {formatStatus(job.status)}
                         </Td>
                         <Td>
+                          <ViewButton onClick={() => handleFetch(job.id)}>View</ViewButton>
+                        </Td>
+                        <Td>
                           <ViewButton onClick={() => handleViewClick(job.id)}>View</ViewButton>
                           <EditButton onClick={() => navigate(`/jobs/edit/${job.id}`)}>Edit</EditButton>
                           <ApplyButton onClick={() => navigate(`/apply/${job.id}`)}>Apply</ApplyButton>
                           <DeleteButton onClick={() => handleDeleteClick(job.id)}>Delete</DeleteButton>
+                          {job.status === 'ONGOING' && (
+                            <Button onClick={() => handleCompleteJob(job.id)}>Complete Job</Button>
+                          )}
+                          {job.status === 'ACTIVE' && (
+                            <Button onClick={() => handleStartJob(job.id)}>Start Job</Button>
+                          )}
+                          
                         </Td>
                       </tr>
                     ))}
@@ -194,6 +258,17 @@ const CreatedJobs = ({ searchQuery }) => {
               </Table>
             </Container>
           </div>
+          <ModalList show={showModal} onHide={() => setShowModal(false)} data={data} />
+             {/* Success Modal */}
+          <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Success</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{successMessage}</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowSuccessModal(false)}>Close</Button>
+            </Modal.Footer>
+          </Modal>
         </div>
       </div>
     </>
