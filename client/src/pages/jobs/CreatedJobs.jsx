@@ -4,7 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import http from "../../functions/httpService";
 import Sidebar from '../../components/job/SideBar';
 import { useAuth } from '../../context/UserContext';
-
+import useJobApplicationList from '../../hooks/job/dashboard/useJobApplicationList';
+import ModalList from '../../components/job/ModalList';
+import { Button } from 'react-bootstrap';
+import useWhoAmI from '../../hooks/user/useWhoAmI';
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -83,14 +86,16 @@ const DeleteButton = styled.button`
 `;
 
 const CreatedJobs = ({ searchQuery }) => {
+  const { userId } = useWhoAmI();
   const [createdJobs, setCreatedJobs] = useState([]);
   const navigate = useNavigate();
   const { isEmployerMode } = useAuth();
-
+  const [showModal, setShowModal] = useState(false);
+  const { data, loading, error, fetchJobApplications } = useJobApplicationList();
   if (!isEmployerMode) {
     navigate('/myjobs/applied');
   }
-
+  console.log(data);
   useEffect(() => {
     const fetchCreatedJobs = async () => {
       try {
@@ -104,6 +109,18 @@ const CreatedJobs = ({ searchQuery }) => {
     fetchCreatedJobs();
   }, []);
 
+  const handleFetch = async (jobId) => {
+    if (jobId && userId) {
+      try {
+        await fetchJobApplications(jobId, userId); // Fetch applications before opening modal
+        console.log(data);
+        setShowModal(true); // Show the modal only after data is fetched
+      } catch (error) {
+        console.error('Error fetching job applications:', error);
+      }
+    }
+  };
+
   const handleViewClick = (id) => {
     navigate(`/jobs/${id}`);
   };
@@ -116,6 +133,9 @@ const CreatedJobs = ({ searchQuery }) => {
       console.error('Error deleting job:', error);
     }
   };
+
+ 
+
 
   const getStatusStyle = (status) => {
     switch (formatStatus(status)) {
@@ -154,6 +174,8 @@ const CreatedJobs = ({ searchQuery }) => {
     }
   };
 
+
+
   return (
     <>
       <div className="div">
@@ -168,6 +190,7 @@ const CreatedJobs = ({ searchQuery }) => {
                     <Th>Job</Th>
                     <Th>Next Payment</Th>
                     <Th>Status</Th>
+                    <Th>View Application</Th>
                     <Th>Action</Th>
                   </tr>
                 </thead>
@@ -183,6 +206,9 @@ const CreatedJobs = ({ searchQuery }) => {
                           {formatStatus(job.status)}
                         </Td>
                         <Td>
+                          <ViewButton onClick={() => handleFetch(job.id)}>View</ViewButton>
+                        </Td>
+                        <Td>
                           <ViewButton onClick={() => handleViewClick(job.id)}>View</ViewButton>
                           <EditButton onClick={() => navigate(`/jobs/edit/${job.id}`)}>Edit</EditButton>
                           <ApplyButton onClick={() => navigate(`/apply/${job.id}`)}>Apply</ApplyButton>
@@ -194,6 +220,7 @@ const CreatedJobs = ({ searchQuery }) => {
               </Table>
             </Container>
           </div>
+          <ModalList show={showModal} onHide={() => setShowModal(false)} data={data} />
         </div>
       </div>
     </>

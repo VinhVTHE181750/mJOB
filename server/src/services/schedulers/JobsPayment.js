@@ -108,3 +108,5 @@ sequelize.sync().then(async () => {
     });
   }
 });
+
+module.exports = getNextPaymentDate;
