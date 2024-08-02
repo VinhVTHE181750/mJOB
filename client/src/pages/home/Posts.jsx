@@ -115,7 +115,7 @@ const Posts = () => {
                                                     variant="success"
                                                     onClick={() => handleActivatePost(post.id)}
                                                 >
-                                                    Activate
+                                                    Approve
                                                 </Button>
                                             )}
                                         </td>
