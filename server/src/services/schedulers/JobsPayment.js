@@ -37,8 +37,8 @@ const parseCronExpression = (date) => {
   const hour = d.getHours();
   const day = d.getDate();
   const month = d.getMonth() + 1;
-  const year = d.getFullYear();
-  return `${second} ${minute} ${hour} ${day} ${month} ${year}`;
+  // const year = d.getFullYear(); ${year}
+  return `${second} ${minute} ${hour} ${day} ${month} *`;
 };
 
 const schedulePayment = (c) => {

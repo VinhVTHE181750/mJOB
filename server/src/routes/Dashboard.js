@@ -490,7 +490,6 @@ const getJobCreatedRecently = async (req, res) => {
     const jobs = await Job.findAll({
       where: {
         UserId: userId,
-        status: 'ACTIVE'
       },
       include: [
         {
@@ -574,9 +573,10 @@ const updateJobStatus = async (req, res) => {
           from: job.UserId, // Assuming the job creator is the payer
           to: userId, // The applicant
           amount: job.salary, // Assuming salary is the compensation amount
-          nextPayment: job.startDate, // Implement this function to calculate the next payment date
+          nextPayment: getNextPaymentDate(job.startDate, job.salaryType), // Implement this function to calculate the next payment date
           // nextPayment:job.startDate,
           status: "PENDING", // Initial status
+          JobId: jobId,
         });
       }
     }

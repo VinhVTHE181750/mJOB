@@ -6,8 +6,9 @@ import Sidebar from '../../components/job/SideBar';
 import { useAuth } from '../../context/UserContext';
 import useJobApplicationList from '../../hooks/job/dashboard/useJobApplicationList';
 import ModalList from '../../components/job/ModalList';
-import { Button } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import useWhoAmI from '../../hooks/user/useWhoAmI';
+import useUpdateJobStatus from '../../hooks/job/dashboard/useUpdateJobStatus';
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -88,14 +89,18 @@ const DeleteButton = styled.button`
 const CreatedJobs = ({ searchQuery }) => {
   const { userId } = useWhoAmI();
   const [createdJobs, setCreatedJobs] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [selectedJobId, setSelectedJobId] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
   const { isEmployerMode } = useAuth();
-  const [showModal, setShowModal] = useState(false);
   const { data, loading, error, fetchJobApplications } = useJobApplicationList();
+  const { updateJobStatus } = useUpdateJobStatus();
   if (!isEmployerMode) {
     navigate('/myjobs/applied');
   }
-  console.log(data);
+
   useEffect(() => {
     const fetchCreatedJobs = async () => {
       try {
@@ -113,7 +118,6 @@ const CreatedJobs = ({ searchQuery }) => {
     if (jobId && userId) {
       try {
         await fetchJobApplications(jobId, userId); // Fetch applications before opening modal
-        console.log(data);
         setShowModal(true); // Show the modal only after data is fetched
       } catch (error) {
         console.error('Error fetching job applications:', error);
@@ -134,6 +138,33 @@ const CreatedJobs = ({ searchQuery }) => {
     }
   };
 
+  const handleStartJob = async (jobId) => {
+    try {
+      await updateJobStatus(jobId, 'ONGOING');
+      setSelectedJobId(jobId);
+      setSuccessMessage('Job has been started successfully.');
+      setShowSuccessModal(true);
+      // Refresh job list
+      const response = await http.get('/jobs/created-jobs');
+      setCreatedJobs(response.data);
+    } catch (error) {
+      console.error('Error starting job:', error);
+    }
+  };
+
+  const handleCompleteJob = async (jobId) => {
+    try {
+      await updateJobStatus(jobId, 'COMPLETED');
+      setSelectedJobId(jobId);
+      setSuccessMessage('Job has been completed successfully.');
+      setShowSuccessModal(true);
+      // Refresh job list
+      const response = await http.get('/jobs/created-jobs');
+      setCreatedJobs(response.data);
+    } catch (error) {
+      console.error('Error completing job:', error);
+    }
+  };
  
 
 
@@ -213,6 +244,13 @@ const CreatedJobs = ({ searchQuery }) => {
                           <EditButton onClick={() => navigate(`/jobs/edit/${job.id}`)}>Edit</EditButton>
                           <ApplyButton onClick={() => navigate(`/apply/${job.id}`)}>Apply</ApplyButton>
                           <DeleteButton onClick={() => handleDeleteClick(job.id)}>Delete</DeleteButton>
+                          {job.status === 'ONGOING' && (
+                            <Button onClick={() => handleCompleteJob(job.id)}>Complete Job</Button>
+                          )}
+                          {job.status === 'ACTIVE' && (
+                            <Button onClick={() => handleStartJob(job.id)}>Start Job</Button>
+                          )}
+                          
                         </Td>
                       </tr>
                     ))}
@@ -221,6 +259,16 @@ const CreatedJobs = ({ searchQuery }) => {
             </Container>
           </div>
           <ModalList show={showModal} onHide={() => setShowModal(false)} data={data} />
+             {/* Success Modal */}
+          <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Success</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{successMessage}</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowSuccessModal(false)}>Close</Button>
+            </Modal.Footer>
+          </Modal>
         </div>
       </div>
     </>
