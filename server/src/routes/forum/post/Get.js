@@ -16,13 +16,14 @@ const getAllPosts = async (req, res) => {
     } else if (req.userId) {
       posts = await Post.findAll({
         where: {
-          [Op.or]: [{ status: "PUBLISHED" }, { UserId: req.userId }],
+          [Op.or]: [{ status: "PUBLISHED", isVerified: true }, { UserId: req.userId }],
         },
       });
     } else {
       posts = await Post.findAll({
         where: {
           status: "PUBLISHED",
+          isVerified: true,
         },
       });
     }
@@ -118,6 +119,7 @@ const getPostById = async (req, res) => {
       likes: likes || 0,
       liked: liked || false,
       isDislike: isDislike || false,
+      isVerified: post.isVerified,
       comments: comments || 0,
       dislikes: dislikes || 0,
       author: author || "Unknown",
@@ -126,9 +128,21 @@ const getPostById = async (req, res) => {
       UserId: post.UserId,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
+      status: post.status,
     };
 
-    if (post.status === "PUBLISHED") {
+    if (req.role === "ADMIN" || req.role === "MOD") {
+      // does not count view from ADMIN, MOD or author if not published
+      return res.status(200).json(response);
+    }
+
+    if (userId) {
+      if (post.UserId === userId) {
+        return res.status(200).json(response);
+      }
+    }
+
+    if (post.status === "PUBLISHED" && post.isVerified) {
       const [todayMetric, tmCreated] = await PostMetric.findOrCreate({
         where: {
           PostId: id,
@@ -145,18 +159,10 @@ const getPostById = async (req, res) => {
 
       return res.status(200).json(response);
     }
-    if (req.role === "ADMIN" || req.role === "MOD") {
-      // does not count view from ADMIN, MOD or author if not published
-      return res.status(200).json(response);
-    }
 
-    if (userId) {
-      if (post.UserId === userId) {
-        return res.status(200).json(response);
-      }
-    }
     return res.status(404).json({ message: "Post not found" });
   } catch (err) {
+    console.log(err);
     log(err, "ERROR", "FORUM");
     // console.log(err);
     res.status(500).json({ message: "Unexpected error while fetching this post" });

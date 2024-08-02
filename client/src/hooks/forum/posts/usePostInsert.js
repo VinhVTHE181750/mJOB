@@ -7,8 +7,7 @@ const usePostInsert = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const insertPost = async (title, content, status, category, tags) => {
-    alert(status);
+  const insertPost = async (title, content, status, category, tags, isAutoVerified) => {
     setLoading(true);
     setError(null);
 
@@ -19,6 +18,7 @@ const usePostInsert = () => {
         status,
         category,
         tags,
+        isAutoVerified
       });
       setLoading(false);
       return response.data;

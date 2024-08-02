@@ -28,6 +28,16 @@ Post.init(
             type: DataTypes.ENUM("PUBLISHED", "DRAFT", "DELISTED"),
             allowNull: false,
         },
+        isAutoVerified: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: true,
+        },
+        isVerified: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
+        },
     },
     {
         sequelize,
