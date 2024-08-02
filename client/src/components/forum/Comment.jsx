@@ -31,7 +31,7 @@ const Comment = ({ comment }) => {
       <div className="card-body">
         <div
           role="button"
-          onClick={() => navigate(`/profile/${comment.username}`)}
+          onClick={() => navigate(`/profile/${comment.UserId}`)}
         >
           <h5 className="mb-0 me-2 text-primary">
             <img

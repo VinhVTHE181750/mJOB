@@ -194,7 +194,7 @@ const Post = ({ id }) => {
         >
           <div
             role="button"
-            onClick={() => navigate(`/profile/${post.author}`)}
+            onClick={() => navigate(`/profile/${post.UserId}`)}
           >
             <div className="d-flex justify-content-center">
               <img
