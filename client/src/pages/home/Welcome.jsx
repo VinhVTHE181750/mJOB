@@ -6,7 +6,6 @@ import axios from "axios";
 
 const WelcomePage = () => {
   const { userInformation } = useAuth();
-  console.log(userInformation);
   const navigate = useNavigate();
 
   const handleChoice = async (choice) => {
@@ -82,7 +81,7 @@ const WelcomePage = () => {
               you to a vast network of professionals and potential job
               opportunities.
             </p>
-            <Button onClick={() => handleChoice("/find-job")}>Proceed</Button>
+            <Button onClick={() => handleChoice("/market")}>Proceed</Button>
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="1">
@@ -101,7 +100,7 @@ const WelcomePage = () => {
               it's about fostering a long-term partnership that drives mutual
               growth and innovation.
             </p>
-            <Button onClick={() => handleChoice("/hire")}>Proceed</Button>
+            <Button onClick={() => handleChoice("/employer")}>Proceed</Button>
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="2">

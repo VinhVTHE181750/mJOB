@@ -31,3 +31,4 @@ yarn-debug.log*
 yarn-error.log*
 server/package-lock.json
 client/package-lock.json
+combined.csv

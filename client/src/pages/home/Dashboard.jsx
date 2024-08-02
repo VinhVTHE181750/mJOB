@@ -21,6 +21,7 @@ import {
 } from "react-icons/fa";
 import useCountUser from "../../hooks/useCountUser.js";
 import useCountJob from "../../hooks/useCountJob.js";
+import useCountPost from "../../hooks/useCountPost.js";
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -28,16 +29,18 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const AdminDashboard = () => {
   const { count: countUsers } = useCountUser();
   const { count: countJob } = useCountJob();
+  const { count: countPost } = useCountPost();
 
-  const activeUsers = 0;
-  const guests = 0;
+
+  
+  
 
   const data = {
-    labels: ["Total Users", "Active Users", "Guests"],
+    labels: ["Total Users", "Posts", "Jobs"],
     datasets: [
       {
-        label: "User Statistics",
-        data: [countUsers, activeUsers, countJob],
+        label: "System Statistics",
+        data: [countUsers, countPost, countJob],
         backgroundColor: ["rgba(75, 192, 192, 0.2)"],
         borderColor: ["rgba(75, 192, 192, 1)"],
         borderWidth: 1,
@@ -54,7 +57,7 @@ const AdminDashboard = () => {
       },
       title: {
         display: true,
-        text: "User Statistics:",
+        text: "System Statistics:",
       },
     },
     scales: {
@@ -109,14 +112,16 @@ const AdminDashboard = () => {
                 </Nav.Link>
               </Col>
               <Col md={4}>
+              <Nav.Link href="/posts" className="p-0">
                 <Card className="text-white bg-success text-center p-4">
                   <Card.Body>
                     <Card.Title>
-                      <FaUser className="me-2" /> 0
+                      <FaComments className="me-2" /> {countPost}
                     </Card.Title>
-                    <Card.Text>Active Users</Card.Text>
+                    <Card.Text>Total Posts</Card.Text>
                   </Card.Body>
                 </Card>
+                </Nav.Link>
               </Col>
               <Col md={4}>
                 <Nav.Link href="/jobs" className="p-0">
