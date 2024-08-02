@@ -79,7 +79,7 @@ const PostCard = ({ post, onClick, category }) => {
         <Card.Text className="post-card-content">{post.content}</Card.Text>
 
         <Link
-          to={`/users/${post.author}`}
+          to={`/profile/${post.author}`}
           className="card-author"
           data-toggle="tooltip"
           title={`Author: ${post.author}`}
@@ -90,7 +90,8 @@ const PostCard = ({ post, onClick, category }) => {
               className="align-middle me-2"
               src={post.avatar}
               alt={`${post.author}'s avatar`}
-              style={{ width: "1.5em", height: "1.5em", borderRadius: "50%" }}
+              width={24}
+              height={24}
             />
           ) : (
             <img
