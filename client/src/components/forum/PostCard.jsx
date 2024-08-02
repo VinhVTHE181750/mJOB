@@ -85,10 +85,10 @@ const PostCard = ({ post, onClick, category }) => {
           title={`Author: ${post.author}`}
           onClick={(e) => e.stopPropagation()}
         >
-          {post.authorAvatar ? (
+          {post.avatar ? (
             <img
               className="align-middle me-2"
-              src={post.authorAvatar}
+              src={post.avatar}
               alt={`${post.author}'s avatar`}
               style={{ width: "1.5em", height: "1.5em", borderRadius: "50%" }}
             />

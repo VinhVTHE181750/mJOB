@@ -1,3 +1,4 @@
+import avatar from "../../assets/img/default_avatar.webp";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import { BsExclamationTriangleFill, BsPencilFill, BsTrash3 } from "react-icons/bs";
@@ -37,7 +38,7 @@ const Comment = ({ comment }) => {
               width={40}
               height={40}
               alt={`${comment.username}'s avatar`}
-              src={comment.avatar}
+              src={comment.avatar || avatar}
               className="me-2"
             />
             {comment.username}
