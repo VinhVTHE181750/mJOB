@@ -10,9 +10,7 @@ const Profile = () => {
   const [profile, setProfile] = useState({});
   const whoAmI = useWhoAmI();
   const params = useParams();
-  const userId = whoAmI?.userId ?? params;
-  console.log("userId:", params);
-
+  const userId = params.userId;
   const navigate = useNavigate();
 
   const [jobTitle, setJobTitle] = useState("");
@@ -143,14 +141,7 @@ const Profile = () => {
                   </p>
                 </Col>
               </Row>
-              <Button
-                onClick={handleEditClick}
-                variant="primary"
-                className="edit-btn"
-                style={{ borderRadius: "5px" }}
-              >
-                Edit
-              </Button>
+              
             </Card.Body>
           </Card>
           <Card className="profile-card project-status shadow-lg" style={{ borderRadius: "10px", backgroundColor: "#ffffff" }}>
@@ -177,14 +168,7 @@ const Profile = () => {
               <p>
                 <strong>End Date:</strong> <span id="endDate">{endDate}</span>
               </p>
-              <Button
-                onClick={handleWorkEdit}
-                variant="primary"
-                className="edit-btn"
-                style={{ borderRadius: "5px" }}
-              >
-                Edit
-              </Button>
+              
             </Card.Body>
           </Card>
         </Col>

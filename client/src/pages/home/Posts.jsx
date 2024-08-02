@@ -1,15 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Nav, Button, Table } from 'react-bootstrap';
 import { FaChartBar, FaBriefcase, FaComments, FaUsers, FaSignOutAlt } from 'react-icons/fa';
+import axios from 'axios';
+import { useNavigate } from "react-router";
+
 
 const Posts = () => {
+    const [posts, setPosts] = useState([]);
+    const navigate = useNavigate();
 
-    const handleEditPost = () => {
-        alert('Edit Post function not implemented!');
+    useEffect(() => {
+        fetchPosts();
+    }, []);
+
+    const fetchPosts = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/post-manage');
+            setPosts(response.data);
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
     };
 
-    const handleDeletePost = () => {
-        alert('Delete Post function not implemented!');
+    const handleEditPost = (id) => {
+        navigate(`/forum/posts/${id}`);
+    };
+
+    const handleDeletePost = async (id) => {
+        try {
+            await axios.delete(`http://localhost:8000/api/post-manage/delete/${id}`);
+            setPosts(posts.filter(post => post.id !== id));
+            alert("Post deleted successfully!");
+        } catch (error) {
+            console.error('Error deleting post:', error);
+            alert("Error deleting post");
+        }
+    };
+
+    const handleActivatePost = async (id) => {
+        try {
+            await axios.put(`http://localhost:8000/api/post-manage/activate/${id}`);
+            fetchPosts();
+            alert("Post activated successfully!");
+        } catch (error) {
+            console.error('Error activating post:', error);
+            alert("Error activating post");
+        }
     };
 
     return (
@@ -53,26 +89,35 @@ const Posts = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {[1, 2, 3].map((_, idx) => (
-                                    <tr key={idx}>
-                                        <td>{idx + 1}</td>
-                                        <td>Title Here</td>
-                                        <td>Author Name</td>
-                                        <td>Posted Date</td>
+                                {posts.map((post) => (
+                                    <tr key={post.id}>
+                                        <td>{post.id}</td>
+                                        <td>{post.title}</td>
+                                        <td>{post.User ? post.User.username : 'UNDEFINED'}</td>
+                                        <td>{new Date(post.createdAt).toLocaleDateString()}</td>
                                         <td>
                                             <Button
                                                 variant="primary"
-                                                className="mr-2"
-                                                onClick={handleEditPost}
+                                                className="m-2"
+                                                onClick={() => handleEditPost(post.id)}
                                             >
                                                 Detail
                                             </Button>
                                             <Button
                                                 variant="danger"
-                                                onClick={handleDeletePost}
+                                                className="m-2"
+                                                onClick={() => handleDeletePost(post.id)}
                                             >
                                                 Delete
                                             </Button>
+                                            {post.status === 'PUBLISHED' && post.isAutoVerified ===false && post.isVerified  === false&& (
+                                                <Button
+                                                    variant="success"
+                                                    onClick={() => handleActivatePost(post.id)}
+                                                >
+                                                    Approve
+                                                </Button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}
