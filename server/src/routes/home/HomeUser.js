@@ -85,6 +85,7 @@ const getRelatedJob = async (req, res) => {
 const getNewPost = async (req, res) => {
     try {   
         const jobHistory = await Post.findAll({
+            where: { status: 'PUBLISHED', isVerified: true },
             include: [
                 {
                     model: User,
@@ -103,6 +104,8 @@ const getNewPost = async (req, res) => {
 const getHotPosts = async (req, res) => {
     try {
         const posts = await Post.findAll({
+            where: { status: 'PUBLISHED', isVerified: true },
+
             include: [
                 {
                     model: PostMetric,
