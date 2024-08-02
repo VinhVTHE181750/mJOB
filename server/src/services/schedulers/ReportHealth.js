@@ -11,7 +11,7 @@ cron.schedule('* * * * *', () => {
    OS Memory total: ${os.totalmem()}
          CPU usage: ${process.cpuUsage().user/1000} ms user / ${process.cpuUsage().system/1000} ms system
     `
-    log(`\n${stats}`, 'INFO', 'node-cron');
+    log(`\n${stats}`, 'DEBUG', 'node-cron');
   } catch (err) {
     log(`Error in scheduled task: exampleScheduler - ${err.message}`, 'ERROR', 'node-cron');
   }

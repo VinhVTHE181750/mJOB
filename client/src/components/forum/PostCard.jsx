@@ -79,7 +79,7 @@ const PostCard = ({ post, onClick, category }) => {
         <Card.Text className="post-card-content">{post.content}</Card.Text>
 
         <Link
-          to={`/profile/${post.author}`}
+          to={`/profile/${post.UserId}`}
           className="card-author"
           data-toggle="tooltip"
           title={`Author: ${post.author}`}

@@ -93,9 +93,9 @@ const Users = () => {
                       <Button variant="primary" className="mr-2" onClick={() => handleEditUser(user.id)}>
                         Detail
                       </Button>
-                      <Button variant="danger" onClick={() => handleDeleteUser(user.id)}>
+                      {/* <Button variant="danger" onClick={() => handleDeleteUser(user.id)}>
                         Delete
-                      </Button>
+                      </Button> */}
                     </td>
                   </tr>
                 ))}
