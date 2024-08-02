@@ -12,7 +12,6 @@ const Requirement = require("../../models/job/Requirement");
 const RequirementStorage = require("../../models/job/RequirementStorage");
 const Application = require("../../models/job/Application");
 const formidable = require('formidable');
-const { calcRelevance } = require("../../utils/OpenAI");
 const CVs = require("../../models/user/CV"); // Import your CVs model
 app.use(fileUpload());
 
@@ -40,6 +39,7 @@ router.post("/", async (req, res) => {
     job_tags, // str,str,str
     job_max_applications, // int
     job_description, // str
+    job_approval_method,
     job_contact_info, // str
     job_start_date, // date
     job_end_date, // date
@@ -130,6 +130,17 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ message: "Invalid job number of recruits" });
   }
 
+  if (job_approval_method === undefined || job_approval_method === null || job_approval_method === "") {
+    return res.status(400).json({ message: "Job approval method is required" });
+  } else {
+    if (
+      job_approval_method !== "True" &&
+      job_approval_method !== "False" 
+    ) {
+      return res.status(400).json({ message: "Invalid job approval method" });
+    }
+  }
+
   let cStatus;
   if (status === undefined || status === null || status === "") {
     cStatus = "ACTIVE";
@@ -142,6 +153,7 @@ router.post("/", async (req, res) => {
   const newJob = new Job({
     title: job_title,
     description: job_description,
+    isAutoSelected: job_approval_method,
     location: job_work_location,
     tags: job_tags,
     maxApplicants: job_max_applications,
@@ -155,14 +167,6 @@ router.post("/", async (req, res) => {
     status: status || "ACTIVE",
     UserId: req.userId,
   });
-  
-  if(newJob.approvalMethod){
-    const description = `Description: ${job_description} \nTags: ${job_tags}`;
-    const result = await calcRelevance("job",job_title,description);
-    console.log(result);
-    return result.relevanceScore > 50 && result.harmfulnessScore<20 ? res.status(201).json(newJob) : res.status(400).json({ message: "Job not suited " });
-  }
-
 
   try {
     const job = await newJob.save();
