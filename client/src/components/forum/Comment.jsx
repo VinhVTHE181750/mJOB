@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
+import { BsExclamationTriangleFill, BsPencilFill, BsTrash3 } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import { getMoment } from "../../functions/Converter";
 import useCommentDelete from "../../hooks/forum/comments/useCommentDelete";
 import useWhoAmI from "../../hooks/user/useWhoAmI";
-import LikeButton from "./micro/LikeButton";
-import { BsExclamationTriangleFill, BsTrash3 } from "react-icons/bs";
 import NavigateButton from "../ui/buttons/NavigateButton";
+import LikeButton from "./micro/LikeButton";
 
 const Comment = ({ comment }) => {
   const { username } = useWhoAmI();
@@ -33,11 +33,17 @@ const Comment = ({ comment }) => {
           onClick={() => navigate(`/profile/${comment.username}`)}
         >
           <h5 className="mb-0 me-2 text-primary">
-            {comment.avatar}
+            <img
+              width={40}
+              height={40}
+              alt={`${comment.username}'s avatar`}
+              src={comment.avatar}
+              className="me-2"
+            />
             {comment.username}
           </h5>
         </div>
-        <p>{comment.content}</p>
+        <p className="post-content p-2">{comment.content}</p>
         <p className="card-text float-start">
           <small className="text-muted">{getMoment(comment.updatedAt)}</small>
         </p>
