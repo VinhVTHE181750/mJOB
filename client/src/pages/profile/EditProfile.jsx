@@ -195,8 +195,8 @@ const EditProfile = () => {
                         placeholder="UserName"
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
-                        // isInvalid={!!errors.userName}
-                        aria-label="Username"
+                        isInvalid={!!errors.userName}
+                        // aria-label="Username"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.userName}
@@ -213,7 +213,7 @@ const EditProfile = () => {
                         placeholder="FirstName"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
-                        // isInvalid={!!errors.firstName}
+                        isInvalid={!!errors.firstName}
                         aria-label="First Name"
                       />
                       <Form.Control.Feedback type="invalid">
@@ -232,8 +232,8 @@ const EditProfile = () => {
                         placeholder="LastName"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
-                        // isInvalid={!!errors.lastName}
-                        aria-label="Last Name"
+                        isInvalid={!!errors.lastName}
+                        // aria-label="Last Name"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.lastName}
@@ -250,8 +250,8 @@ const EditProfile = () => {
                         type="date"
                         value={dob}
                         onChange={(e) => setDob(e.target.value)}
-                        // isInvalid={!!errors.dob}
-                        aria-label="Date of Birth"
+                        isInvalid={!!errors.dob}
+                        // aria-label="Date of Birth"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.dob}
@@ -269,8 +269,8 @@ const EditProfile = () => {
                         placeholder="Address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
-                        // isInvalid={!!errors.address}
-                        aria-label="Address"
+                        isInvalid={!!errors.address}
+                        // aria-label="Address"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.address}
@@ -287,8 +287,8 @@ const EditProfile = () => {
                         placeholder="Citizen ID"
                         value={citizenId}
                         onChange={(e) => setCitizenId(e.target.value)}
-                        // isInvalid={!!errors.citizenId}
-                        aria-label="Citizen ID"
+                        isInvalid={!!errors.citizenId}
+                        // aria-label="Citizen ID"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.citizenId}
@@ -306,8 +306,8 @@ const EditProfile = () => {
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        // isInvalid={!!errors.email}
-                        aria-label="Email"
+                        isInvalid={!!errors.email}
+                        // aria-label="Email"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.email}
@@ -325,8 +325,8 @@ const EditProfile = () => {
                         placeholder="Contact Number"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        // isInvalid={!!errors.phone}
-                        aria-label="Contact Number"
+                        isInvalid={!!errors.phone}
+                        // aria-label="Contact Number"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.phone}
@@ -344,8 +344,8 @@ const EditProfile = () => {
                         placeholder="Bio"
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
-                        // isInvalid={!!errors.bio}
-                        aria-label="Bio"
+                        isInvalid={!!errors.bio}
+                        // aria-label="Bio"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.bio}
