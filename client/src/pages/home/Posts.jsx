@@ -15,7 +15,7 @@ const Posts = () => {
 
     const fetchPosts = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/posts-manage');
+            const response = await axios.get('http://localhost:8000/api/post-manage');
             setPosts(response.data);
         } catch (error) {
             console.error('Error fetching posts:', error);
@@ -28,12 +28,23 @@ const Posts = () => {
 
     const handleDeletePost = async (id) => {
         try {
-            await axios.delete(`http://localhost:8000/api/delete-post/${id}`);
+            await axios.delete(`http://localhost:8000/api/post-manage/delete/${id}`);
             setPosts(posts.filter(post => post.id !== id));
             alert("Post deleted successfully!");
         } catch (error) {
             console.error('Error deleting post:', error);
             alert("Error deleting post");
+        }
+    };
+
+    const handleActivatePost = async (id) => {
+        try {
+            await axios.put(`http://localhost:8000/api/post-manage/activate/${id}`);
+            fetchPosts();
+            alert("Post activated successfully!");
+        } catch (error) {
+            console.error('Error activating post:', error);
+            alert("Error activating post");
         }
     };
 
@@ -87,17 +98,26 @@ const Posts = () => {
                                         <td>
                                             <Button
                                                 variant="primary"
-                                                className="mr-2"
+                                                className="m-2"
                                                 onClick={() => handleEditPost(post.id)}
                                             >
                                                 Detail
                                             </Button>
                                             <Button
                                                 variant="danger"
+                                                className="m-2"
                                                 onClick={() => handleDeletePost(post.id)}
                                             >
                                                 Delete
                                             </Button>
+                                            {post.status === 'PUBLISHED' && post.isAutoVerified ===false && post.isVerified  === false&& (
+                                                <Button
+                                                    variant="success"
+                                                    onClick={() => handleActivatePost(post.id)}
+                                                >
+                                                    Activate
+                                                </Button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}

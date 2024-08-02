@@ -1,5 +1,14 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Container, Row, Col, Form, Button, Card, Nav, Modal } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  Card,
+  Nav,
+  Modal,
+} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router";
@@ -19,7 +28,6 @@ const EditProfile = () => {
   const [bio, setBio] = useState("");
   const [errors, setErrors] = useState({});
   const [avatar, setAvatar] = useState("");
-
   const fileInputRef = useRef(null);
   const { userId } = useParams();
   const [showImageInput, setShowImageInput] = useState(false);
@@ -365,11 +373,18 @@ const EditProfile = () => {
               <Form.Control type="text" onChange={handleImageChange} />
             </Form.Group>
             <Form.Group className="d-flex justify-content-center align-items-center">
-              <img src={avatar || "https://via.placeholder.com/150"} alt="Profile" style={{ width: "150px", height: "150px" }} />
+              <img
+                src={avatar || "https://via.placeholder.com/150"}
+                alt="Profile"
+                style={{ width: "150px", height: "150px" }}
+              />
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowImageInput(false)}>
+            <Button
+              variant="secondary"
+              onClick={() => setShowImageInput(false)}
+            >
               Close
             </Button>
           </Modal.Footer>
