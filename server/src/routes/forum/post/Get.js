@@ -98,6 +98,22 @@ const getPostById = async (req, res) => {
       }
     }
 
+    const todayMetric = await PostMetric.findOne({
+      where: {
+        PostId: id,
+        day: new Date().toISOString().split("T")[0],
+      },
+    });
+
+    if(!todayMetric) {
+      await PostMetric.create({
+        PostId: id,
+        day: new Date().toISOString().split("T")[0],
+        views: 1,
+      });
+    } else {
+      await todayMetric.increment("views");
+    }
     let views = await PostMetric.sum("views", { where: { PostId: id } });
 
     let dislikes = await PostLike.count({

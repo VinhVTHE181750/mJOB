@@ -257,6 +257,13 @@ const Post = ({ id }) => {
           </Col>
         )}
       </Row>
+      <Row>
+        {post.status === "PUBLISHED" && !post.isVerified && (
+          <Col>
+            <h3 className="text-center text-danger">This post is only visible to you as it is not approved.</h3>
+          </Col>
+        )}
+      </Row>
       {post.status === "DELISTED" ? (
         <Row className="mt-2">
           <Col>
